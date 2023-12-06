@@ -1,0 +1,113 @@
+﻿@using Common;
+@model WebApplication1.Models.PostInvestAdViewModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Create</h1>
+
+<h4>Заповніть заявку на залучення інвестицій</h4>
+<hr />
+<div class="container">
+    <form asp-action="Create">
+        <input asp-for="AuthorId" type="hidden" value="@Model.AuthorId" />
+        <div class="row mb-4">
+            <div class="form-group col-12">
+                <label asp-for="Title">Назва</label>
+                <input asp-for="Title" class="form-control" placeholder="Вкажіть короткий опис, не більше 200 символів" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="form-group col-6">
+                <label asp-for="Description">Дайте детальний опис вашого бізнесу:</label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+                @* <span asp-validation-for="Description" class="text-danger"></span> *@
+            </div>
+            <div class="form-group col-6 ">
+                <label asp-for="SpendInvestDesc">Як ви збираєтесь витратити гроші інвесторів:</label>
+                <textarea asp-for="SpendInvestDesc" class="form-control"></textarea>
+                @* <span asp-validation-for="SpendInvestDesc" class="text-danger"></span> *@
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="form-group  col-6">
+                <label asp-for="ProfitPaymentScheme">Схема виплати відсотків:</label>
+                <textarea asp-for="ProfitPaymentScheme" class="form-control"></textarea>
+                @* <span asp-validation-for="ProfitPaymentScheme" class="text-danger"></span> *@
+            </div>
+
+            <div class="form-group  col-6">
+                <label asp-for="OtherInfo">Інша корисна інформація:</label>
+                <textarea asp-for="OtherInfo" class="form-control"></textarea>
+                @* <span asp-validation-for="OtherInfo" class="text-danger"></span> *@
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="form-group col-6">
+                <div class="form-group col-6">
+                    <label asp-for="InvestPeriods">На який термін залучаються інвестиції (вкажіть кількість років та місяців):</label>
+                    @foreach (var spanPeriod in Enum.GetValues(typeof(InvestPeriodSpan)))
+                    {
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <input placeholder="@spanPeriod" type="number" id="InvestPeriods[@spanPeriod]" name="InvestPeriods[@spanPeriod]" class="form-control" />
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="form-group col-6">
+                <label asp-for="TotalInvestment">Зальний обсяг інвестицій (у $):</label>
+                <input type="number" asp-for="TotalInvestment" class="form-control" />
+                @* <span asp-validation-for="TotalInvestment" class="text-danger"></span> *@
+            </div>
+
+        </div>
+        <div class="row mb-4">
+            <div class="form-group col-6">
+                @{
+                    var options = ViewData["InvestFields"] as Dictionary<Guid, string>;
+                    if (options != null)
+                    {
+                        <label asp-for="InvestFields">Галузь інвестування</label>
+
+                        <select asp-for="InvestFields" class="form-control">
+                            @foreach (var (k, v) in options)
+                            {
+                                <option value="@k">@v</option>
+                            }
+                        </select>
+                    }
+                }
+                
+            </div>
+            <div class="form-group col-6">
+                <label asp-for="InvestFields">Введіть мінімальний поріг входу для тих валют, в яких приймаєте інвестиції</label>
+                @foreach (var currency in Enum.GetValues(typeof(Currency)))
+                {
+                    <div class="input-group">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                <input placeholder="@currency" type="number" id="AcceptedCurrencies[@currency]" name="AcceptedCurrencies[@currency]" class="form-control" />
+                    </div>
+                }
+            </div>
+        </div>
+
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+
+    </form>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

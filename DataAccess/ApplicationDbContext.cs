@@ -1,0 +1,56 @@
+﻿using DataAccess.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+
+namespace DataAccess
+{
+    public class ApplicationDbContext: IdentityDbContext<User>
+    {
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
+        {
+        }
+
+        public DbSet<InvestAd> InvestAds { get; set; }
+        public DbSet<InvestAdExtraInfo> InvestAdExtraInfo { get; set; }
+        
+        public DbSet<InvestField> InvestFields { get; set; }
+        public DbSet<ContactPerson> ContactPersons { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<InvestAdExtraInfoInvestField>()
+            .HasKey(x => new { x.InvestAdExtraInfoId, x.InvestFieldId });
+
+            modelBuilder.Entity<InvestAdExtraInfoInvestField>()
+                .HasOne(x => x.InvestAdExtraInfo)
+                .WithMany(x => x.InvestFields)
+                .HasForeignKey(x => x.InvestAdExtraInfoId);
+
+            modelBuilder.Entity<InvestAdExtraInfoInvestField>()
+                .HasOne(x => x.InvestField)
+                .WithMany(x => x.InvestAdExtraInfos)
+                .HasForeignKey(x => x.InvestFieldId);
+
+            Seed(modelBuilder);
+        }
+
+        private void Seed(ModelBuilder modelBuilder)
+        {
+            // Seed your initial data here
+
+            // Example: Seed a user
+            modelBuilder.Entity<InvestField>().HasData(
+                new InvestField { Id = Guid.NewGuid(), Title = "Фінанси" },
+                new InvestField { Id = Guid.NewGuid(), Title = "Сільськогосподарська техніка" },
+                new InvestField { Id = Guid.NewGuid(), Title = "Займи" },
+                new InvestField { Id = Guid.NewGuid(), Title = "Лізинг Авто" },
+                new InvestField { Id = Guid.NewGuid(), Title = "Кафе та ресторани" }
+            );
+
+            // Add more seed data as needed
+        }
+    }
+}

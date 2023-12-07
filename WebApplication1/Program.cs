@@ -10,9 +10,10 @@ using WebApplication1.Extensions;
 using WebApplication1.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Configuration.AddJsonFile("appsettings.private.json", optional: true, reloadOnChange: true);
 
 // Add services to the container.
-var connectionString = "Server=localhost,1433;Database=YourDatabase;User Id=sa;Password=SuperS@cr12;MultipleActiveResultSets=true";//builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();

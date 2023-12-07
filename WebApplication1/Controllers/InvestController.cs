@@ -12,6 +12,7 @@ namespace WebApplication1.Controllers
         private readonly IInvestAdRepository _investAdRepository;
         private readonly IMapper _mapper;
         private readonly Dictionary<Guid, string> _investFields;
+        private const int ItemsPerPage = 10; // Set the desired items per page
 
         public InvestController(IInvestAdRepository investAdRepository, IMapper mapper)
         {
@@ -20,11 +21,28 @@ namespace WebApplication1.Controllers
             _investFields = _investAdRepository.GetFields().GetAwaiter().GetResult().ToDictionary(x => x.Id, y => y.Title);
         }
 
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int page = 1)
         {
-            var resultDb = await _investAdRepository.GetAllShorted();
+            var resultDb = await _investAdRepository.GetAllShorted(page, ItemsPerPage);
             var resultView = _mapper.Map<IEnumerable<GetAllAdsView>>(resultDb);
-            return View(resultView);
+
+
+            var totalItems = (await _investAdRepository.Count())!;
+            var totalPages = (int)Math.Ceiling((double)totalItems / ItemsPerPage);
+
+
+            var viewModel = new CurrentInvAdsListViewModel
+            {
+                Entities = resultView,
+                PaginationInfo = new PaginationInfo
+                {
+                    CurrentPage = page,
+                    TotalPages = totalPages,
+                    PageSize = ItemsPerPage
+                }
+            };
+
+            return View(viewModel);
         }
 
         //[Authorize]
@@ -79,6 +97,11 @@ namespace WebApplication1.Controllers
             var userId = GetCurrentUserId();
             ViewData["InvestFieldsOptions"] = _investFields;
             ViewData["UserId"] = userId;
+        }
+
+        private int CalculateTotalPages(int itemsPerPage, int totalItems)
+        {
+            return (int)Math.Ceiling((double)totalItems / itemsPerPage);
         }
 
         // GET: InvestController/Details/5

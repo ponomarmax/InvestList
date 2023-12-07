@@ -26,7 +26,9 @@ namespace WebApplication1.Models
 
         public ICollection<MinimalInvestEntrance> AcceptedCurrencies { get; set; }
 
-        public TimeSpan InvestPeriod { get; set; }
+        public int InvestDurationYears { get; set; }
+
+        public int InvestDurationMonths { get; set; }
 
         public decimal TotalInvestment { get; set; }
 

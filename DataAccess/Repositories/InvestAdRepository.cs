@@ -17,12 +17,19 @@ namespace DataAccess.Repositories
         {
             return await _dbContext.InvestAds
                 //.Where(x => x.Published)
-                //.OrderBy(x => x.CreatedAt)
-                //.Skip((page - 1) * offset)
-                //.Take(offset)
+                .OrderByDescending(x => x.CreatedAt)
+                .Skip((page - 1) * offset)
+                .Take(offset)
                 .Include(x => x.History.OrderByDescending(y => y.CreatedAt).Take(1))
                     .ThenInclude(x => x.InvestFields)
                 .ToListAsync();
+        }
+
+        public async Task<int> Count()
+        {
+            return await _dbContext.InvestAds
+                //.Where(x => x.Published)
+                .CountAsync();
         }
 
         public async Task<InvestAd?> Get(Guid id) => await _dbContext.InvestAds

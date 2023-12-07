@@ -28,9 +28,17 @@ namespace WebApplication1.Validators
                .NotNull()
                .WithMessage("Вкажіть хоча б одну галузь інвестування");
 
-            RuleFor(vm => vm.InvestPeriods)
-              .Must(HaveAtLeastOneNonNullAndPositiveValue)
-              .WithMessage("Ви маєте вказати термін інвестування. Значення має бути позитивним");
+            RuleFor(x => x.InvestDurationYears)
+                .Cascade(CascadeMode.StopOnFirstFailure)
+                .Must(x => x.HasValue && x > 0)
+                .When(x => x.InvestDurationMonths == null || x.InvestDurationMonths <= 0)
+                .WithMessage("Either InvestDurationYears or InvestDurationMonths must have a positive value.");
+
+            RuleFor(x => x.InvestDurationMonths)
+                .Cascade(CascadeMode.StopOnFirstFailure)
+                .Must(x => x.HasValue && x > 0)
+                .When(x => x.InvestDurationYears == null || x.InvestDurationYears <= 0)
+                .WithMessage("Either InvestDurationYears or InvestDurationMonths must have a positive value.");
         }
        
         private static bool HaveAtLeastOneNonNullAndPositiveValue(IDictionary<Currency, decimal?> acceptedCurrencies)

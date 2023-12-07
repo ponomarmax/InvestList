@@ -17,8 +17,10 @@ namespace WebApplication1.Models
         public string? OtherInfo { get; set; }
 
         public IDictionary<Currency, decimal?>? AcceptedCurrencies { get; set; }
-        
-        public IDictionary<InvestPeriodSpan, int?>? InvestPeriods { get; set; }
+
+        public int? InvestDurationYears { get; set; }
+
+        public int? InvestDurationMonths { get; set; }
 
         public decimal? TotalInvestment { get; set; }
 

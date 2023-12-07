@@ -10,7 +10,9 @@ namespace WebApplication1.Models
 
         public ICollection<MinimalInvestEntrance> AcceptedCurrencies { get; set; }
 
-        public TimeSpan InvestPeriod { get; set; }
+        public int InvestDurationYears { get; set; }
+
+        public int InvestDurationMonths { get; set; }
 
         public string[] InvestFields { get; set; }
 

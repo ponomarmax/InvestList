@@ -56,27 +56,79 @@
         <div class="row mb-4">
             <div class="form-group col-6">
                 <div class="form-group col-6">
-                    <span asp-validation-for="InvestPeriods" class="text-danger"></span>
-                    <label asp-for="InvestPeriods">На який термін залучаються інвестиції (вкажіть кількість років та місяців):</label>
-                    @foreach (var spanPeriod in Enum.GetValues(typeof(InvestPeriodSpan)))
-                    {
+                    
+                    <div class="form-group col-6">
+                        <label>На який термін залучаються інвестиції (вкажіть кількість років та місяців):</label>
+                        <span asp-validation-for="InvestDurationYears" class="text-danger"></span>
                         <div class="input-group">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                            <input placeholder="@spanPeriod" type="number" id="InvestPeriods[@spanPeriod]" name="InvestPeriods[@spanPeriod]" class="form-control" value="@Model?.InvestPeriods[(InvestPeriodSpan)spanPeriod]" />
+                            <input placeholder="Кількість років" type="number" id="InvestDurationYears" class="form-control" value="@((Model?.InvestDurationYears > 0) ? Model?.InvestDurationYears : null)" />
                         </div>
-                    }
+                        <span asp-validation-for="InvestDurationMonths" class="text-danger"></span>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <input placeholder="Кількість місяців" type="number" id="InvestDurationMonths" class="form-control" value="@((Model?.InvestDurationMonths > 0) ? Model?.InvestDurationMonths : null)" />
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div class="form-group col-6">
                 <label asp-for="TotalInvestment">Загальний обсяг інвестицій (у $):</label>
-                <input type="number" asp-for="TotalInvestment" class="form-control" />
+                <input type="number" asp-for="TotalInvestment" class="form-control" value="@Model.TotalInvestment" />
                 <span asp-validation-for="TotalInvestment" class="text-danger"></span>
             </div>
 
         </div>
-      
 
+        <div class="row mb-4">
+            <span asp-validation-for="InvestFields" class="text-danger"></span>
+            <div class="form-group col-6">
+                @{
+                    var options = ViewData["InvestFieldsOptions"] as Dictionary<Guid, string>;
+                    if (options != null)
+                    {
+                        <label asp-for="InvestFields">Галузь інвестування</label>
+
+                        <select asp-for="InvestFields" class="form-control">
+                            @foreach (var (k, v) in options)
+                            {
+                                @if (Model.InvestFields.Contains(k.ToString()))
+                                {
+                                    <option selected value="@k">@v</option>
+
+                                }
+                                else
+                                {
+                                    <option value="@k">@v</option>
+                                }
+                            }
+                        </select>
+                    }
+                }
+
+            </div>
+            <div class="form-group col-6">
+                <span asp-validation-for="AcceptedCurrencies" class="text-danger"></span>
+                <label asp-for="AcceptedCurrencies">Введіть мінімальний поріг входу для тих валют, в яких приймаєте інвестиції</label>
+                @foreach (var currency in Enum.GetValues(typeof(Currency)))
+                {
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        @{
+                            if (Model.AcceptedCurrencies.TryGetValue((Currency)currency, out var value))
+                            {
+                                <input placeholder="@currency" type="number" id="AcceptedCurrencies[@currency]" name="AcceptedCurrencies[@currency]" class="form-control" value="@value" />
+                            }
+                            else
+                            {
+                                <input placeholder="@currency" type="number" id="AcceptedCurrencies[@currency]" name="AcceptedCurrencies[@currency]" class="form-control" />
+                            }
+                        }
+                    </div>
+                }
+            </div>
+        </div>
 
         <button type="submit" class="btn btn-primary">Submit</button>
 
@@ -88,5 +140,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

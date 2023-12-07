@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WebApplication1.Models.GetAllAdsView>
+﻿@model CurrentInvAdsListViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -10,41 +10,65 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-    <h1>Index</h1>
+<h1>Index</h1>
 
-    <p>
-        <a asp-action="Create" class="btn btn-primary">Create New</a>
-    </p>
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
+</p>
 
+<div class="pagination-container">
+    @if (Model.PaginationInfo.CurrentPage > 1)
+    {
+        <a href="@Url.Action("Index", new { page = Model.PaginationInfo.CurrentPage - 1 })">Previous</a>
+    }
+
+    <span>@Model.PaginationInfo.CurrentPage / @Model.PaginationInfo.TotalPages</span>
+
+    @if (Model.PaginationInfo.CurrentPage < Model.PaginationInfo.TotalPages)
+    {
+        <a href="@Url.Action("Index", new { page = Model.PaginationInfo.CurrentPage + 1})">Next</a>
+    }
+</div>
 <div class="container">
 
     <div class="row">
-        @foreach (var item in Model)
+        @foreach (var item in Model.Entities)
         {
             <div class="col-md-4 mb-4">
                 <div class="card">
                     <img class="card-img-top" src="https://via.placeholder.com/300" alt="Card image cap">
                     <div class="card-body">
-                        <div class="tag tag1">Автобізнес</div>
-                        <div class="tag tag2">Агробізнес</div>
-                        <div class="tag tag3">Нерухомість</div>
+                        @foreach(var tag in item.InvestFields)
+                        {
+                            <div class="tag tag1">@tag</div>
+                        }
                         <h5 class="card-title">@item.Title</h5>
                         <p><small class="text-muted">@item.CreatedAt.ToString("dd.MM.yyyy")</small></p>
                         <p class="card-text">
                             <small class="text-muted">
                                 <img src="https://via.placeholder.com/24" alt="Author Avatar" class="avatar">
-                                Author: Author Name
                                 <p class="card-text">Автор: <a href="#">@item.Author</a><br></p>
                             </small>
                         </p>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-                            content.</p>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item"><i class="fas fa-percent"></i> Feature 1</li>
-                                <li class="list-group-item"><i class="fas fa-money-bill"></i> Feature 2</li>
-                                <li class="list-group-item"><i class="fas fa-coins"></i> Feature 3</li>
-                                <li class="list-group-item"><i class="fas fa-coins"></i>@FormatTimeSpanAsYearsAndMonths(item.InvestPeriod)</li>
-                            </ul>
+                        <p class="card-text">
+                            Some quick example text to build on the card title and make up the bulk of the card's
+                            content.
+                        </p>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><i class="fas fa-percent"></i> Термін інвестиції
+                                @if (item.InvestDurationYears > 0)
+                                {
+                                    @($"{item.InvestDurationYears} {(item.InvestDurationYears == 1 ? "рік" : "роки")}")
+                                }
+
+                                @if (item.InvestDurationMonths > 0)
+                                {
+                                    @($"{item.InvestDurationMonths} {(item.InvestDurationMonths == 1 ? "місяць" : "місяці")}")
+                                }
+                            </li>
+                            <li class="list-group-item"><i class="fas fa-money-bill"></i> Feature 2</li>
+                            <li class="list-group-item"><i class="fas fa-coins"></i> Feature 3</li>
+                        </ul>
                         <div class="views-comments">
                             <p><small class="text-muted"><i class="fas fa-eye"></i> 100</small></p>
                             <p><small class="text-muted"><i class="fas fa-comment"></i> 20</small></p>
@@ -57,15 +81,16 @@
         }
     </div>
 </div>
-
-@functions {
-    public string FormatTimeSpanAsYearsAndMonths(TimeSpan duration)
+<div class="pagination-container">
+    @if (Model.PaginationInfo.CurrentPage > 1)
     {
-        var totalMonths = (int)duration.TotalDays / 30;
-        var years = totalMonths / 12;
-        var months = totalMonths % 12;
-        if (years>0)
-        return $"{years} років і {months} місяців";
-        return $"{months} місяців";
+        <a href="@Url.Action("Index", new { page = Model.PaginationInfo.CurrentPage - 1 })">Previous</a>
     }
-}
+
+    <span>@Model.PaginationInfo.CurrentPage / @Model.PaginationInfo.TotalPages</span>
+
+    @if (Model.PaginationInfo.CurrentPage < Model.PaginationInfo.TotalPages)
+    {
+        <a href="@Url.Action("Index", new { page = Model.PaginationInfo.CurrentPage + 1})">Next</a>
+    }
+</div>

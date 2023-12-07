@@ -16,7 +16,9 @@ namespace DataAccess.Models
 
         public virtual ICollection<MinimalInvestEntrance> AcceptedCurrencies { get; set; }
 
-        public TimeSpan InvestPeriod { get; set; }
+        public int InvestDurationYears { get; set; }
+        
+        public int InvestDurationMonths { get; set; }
 
         public decimal TotalInvestment { get; set; }
 

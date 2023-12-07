@@ -25,6 +25,13 @@ namespace DataAccess.Repositories
                 .ToListAsync();
         }
 
+        public async Task<InvestAd?> Get(Guid id) => await _dbContext.InvestAds
+                .Include(x => x.History.OrderByDescending(y => y.CreatedAt).Take(1))
+                    .ThenInclude(x => x.AcceptedCurrencies)
+                .Include(x => x.History.OrderByDescending(y => y.CreatedAt).Take(1))
+                    .ThenInclude(x => x.InvestFields).ThenInclude(x => x.InvestField)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
         public async Task<IEnumerable<InvestField>> GetFields()
         {
             return await _dbContext.InvestFields.ToArrayAsync();
@@ -33,6 +40,7 @@ namespace DataAccess.Repositories
         public async Task Create(InvestAd investAd, InvestAdExtraInfo investAdExtraInfo)
         {
             investAd.History = new List<InvestAdExtraInfo>() { investAdExtraInfo };
+            investAd.Id = Guid.NewGuid();
             _ = await _dbContext.InvestAds.AddAsync(investAd);
             await _dbContext.SaveChangesAsync();
         }

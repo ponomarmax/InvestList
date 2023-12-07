@@ -32,7 +32,6 @@ namespace WebApplication1.Controllers
         {
             if (User != null && User.Identity != null && User.Identity.IsAuthenticated)
             {
-
                 PrepopulateCreate();
                 return View("Create");
 
@@ -55,7 +54,15 @@ namespace WebApplication1.Controllers
             await _investAdRepository.Create(inv, invMeta);
 
 
-            return View("Success");
+            //return View("Success");
+            return RedirectToAction("Details", new { id = inv.Id });
+        }
+
+        public async Task<ActionResult> Details(Guid id)
+        {
+            var db = await _investAdRepository.Get(id);
+            var result = _mapper.Map<InvestAdViewModel>(db);
+            return View(result);
         }
 
         private void PrepopulateCreate()
@@ -66,10 +73,7 @@ namespace WebApplication1.Controllers
         }
 
         // GET: InvestController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
+
 
         public string GetCurrentUserId()
         {

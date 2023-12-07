@@ -1,0 +1,45 @@
+﻿@using System.Security.Claims;
+@model InvestAdViewModel
+
+@{
+    ViewData["Title"] = "Investment Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h1>@Model.Title</h1>
+
+    <div class="row mb-4">
+        <div class="form-group col-6">
+            <label asp-for="Description">Опис бізнесу:</label>
+            <div class="well">@Model.Description</div>
+
+        </div>
+        <div class="form-group col-6 ">
+            <label asp-for="SpendInvestDesc">Як бізнес збираєтесь витратити гроші інвесторів:</label>
+            <div class="well">@Model.SpendInvestDesc</div>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="form-group  col-6">
+            <label asp-for="ProfitPaymentScheme">Схема виплати відсотків:</label>
+            <div class="well">@Model.ProfitPaymentScheme</div>
+        </div>
+
+        <div class="form-group  col-6">
+            <label asp-for="OtherInfo">Інша корисна інформація:</label>
+            <div class="well">@Model.OtherInfo</div>
+        </div>
+    </div>
+</div>
+
+@if (Model.AuthorId != null && User?.FindFirst(ClaimTypes.NameIdentifier)?.Value == Model.AuthorId)
+{
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    </div>
+}
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

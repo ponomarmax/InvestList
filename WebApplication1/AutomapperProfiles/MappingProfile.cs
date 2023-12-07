@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Common;
 using DataAccess.Models;
+using System.Linq.Expressions;
 using WebApplication1.Models;
 
 namespace WebApplication1.AutomapperProfiles
@@ -29,20 +31,81 @@ namespace WebApplication1.AutomapperProfiles
                 .ForMember(x => x.InvestFields, y => y.Ignore())
                 .ForMember(x => x.InvestAd, y => y.Ignore())
                 .ForMember(x => x.InvestAdId, y => y.Ignore())
-                .ForMember(x => x.AcceptedCurrencies,
-                                y => y.Ignore()
-                                //.MapFrom(z => z.AcceptedCurrencies.Select(u => new MinimalInvestEntrance
-                                //{
-                                //    Id = Guid.NewGuid(),
-                                //    MinValue = u.Value,
-                                //    Currency = u.Key
-                                //}))
-                                )
-                .ForMember(x => x.CreatedAt, y => y.MapFrom(z => DateTimeOffset.UtcNow));
+                .ForMember(x => x.AcceptedCurrencies, y => y
+                                    .MapFrom(z => z.AcceptedCurrencies
+                                        .Where(pair => pair.Value.HasValue)
+                                        .Select(pair => new MinimalInvestEntrance
+                                        {
+                                            Id = Guid.NewGuid(),
+                                            Currency = pair.Key,
+                                            MinValue = pair.Value.Value
+                                        })
+                                        .ToList()))
+                .ForMember(x => x.CreatedAt, y => y.MapFrom(z => DateTimeOffset.UtcNow))
+                .ForMember(x => x.InvestFields, y => y.MapFrom(z => z.InvestFields.Select(x => new InvestAdExtraInfoInvestField
+                {
+                    InvestFieldId = Guid.Parse(x)
+                })));
 
+            CreateMap<InvestAd, InvestAdViewModel>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => src.AuthorId))
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt.DateTime))
+                .ForMember(dest => dest.UpdateAt, opt => opt.MapFrom(src => src.UpdateAt.DateTime))
+                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.Title)))
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.Description)))
+                .ForMember(dest => dest.SpendInvestDesc, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.SpendInvestDesc)))
+                .ForMember(dest => dest.ProfitPaymentScheme, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.ProfitPaymentScheme)))
+                .ForMember(dest => dest.OtherInfo, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.OtherInfo)))
+                .ForMember(dest => dest.AcceptedCurrencies, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.AcceptedCurrencies)))
+                .ForMember(dest => dest.InvestPeriod, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.InvestPeriod)))
+                .ForMember(dest => dest.TotalInvestment, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.TotalInvestment)))
+                .ForMember(dest => dest.InvestFields, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.InvestFields.Select(y => y.InvestField))));
 
-            //PostInvestAdViewModel
-            // Add additional mappings as needed
+            CreateMap<InvestField, InvestFieldView>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title));
+
+            //CreateMap<InvestAd, PostInvestAdViewModel>()
+            //    .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => src.AuthorId))
+            //    .ForMember(dest => dest.Title, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.Title)))
+            //    .ForMember(dest => dest.Description, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.Description)))
+            //    .ForMember(dest => dest.SpendInvestDesc, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.SpendInvestDesc)))
+            //    .ForMember(dest => dest.ProfitPaymentScheme, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.ProfitPaymentScheme)))
+            //    .ForMember(dest => dest.OtherInfo, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.OtherInfo)))
+            //    .ForMember(dest => dest.AcceptedCurrencies, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.AcceptedCurrencies.ToDictionary(k=>k.Currency, v=>v.MinValue)))
+            //    .ForMember(dest => dest.InvestPeriod, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.InvestPeriod)))
+            //    .ForMember(dest => dest.TotalInvestment, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.TotalInvestment)))
+            //    .ForMember(dest => dest.InvestFields, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.InvestFields.Select(y => y.InvestField.Id))));
+
+            CreateMap<InvestField, InvestFieldView>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title));
+
         }
+
+        private static TProperty? GetLastHistoryItemProperty<T, TProperty>(
+               T source, Expression<Func<InvestAdExtraInfo, TProperty>> propertySelector)
+               where T : InvestAd
+        {
+            var lastItem = source.History.OrderByDescending(x => x.CreatedAt).FirstOrDefault();
+            return lastItem != null ? propertySelector.Compile()(lastItem) : default;
+        }
+
+        //private static IDictionary<InvestPeriodSpan, int> TimeSpanToYearMonthString(TimeSpan timeSpan)
+        //{
+        //    int totalDays = (int)timeSpan.TotalDays;
+
+        //    int years = totalDays / 365;
+        //    int remainingDays = totalDays % 365;
+        //    int months = remainingDays / 30;
+
+
+
+        //    //return new
+        //    //{
+        //    //    IDictionary<InvestPeriodSpan, int>
+        //    //};
+        //}
     }
 }

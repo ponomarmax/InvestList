@@ -2,13 +2,13 @@
 @model WebApplication1.Models.PostInvestAdViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Create</h1>
+<h1>Edit</h1>
 
-<h4>Заповніть заявку на залучення інвестицій</h4>
+<h4>PostInvestAdViewModel</h4>
 <hr />
 <div class="container">
     @if (!ViewData.ModelState.IsValid)
@@ -67,7 +67,7 @@
                     }
                 </div>
             </div>
-           
+
             <div class="form-group col-6">
                 <label asp-for="TotalInvestment">Загальний обсяг інвестицій (у $):</label>
                 <input type="number" asp-for="TotalInvestment" class="form-control" />
@@ -75,37 +75,7 @@
             </div>
 
         </div>
-        <div class="row mb-4">
-            <span asp-validation-for="InvestFields" class="text-danger"></span>
-            <div class="form-group col-6">
-                @{
-                    var options = ViewData["InvestFieldsOptions"] as Dictionary<Guid, string>;
-                    if (options != null)
-                    {
-                        <label asp-for="InvestFields">Галузь інвестування</label>
-
-                        <select asp-for="InvestFields" class="form-control">
-                            @foreach (var (k, v) in options)
-                            {
-                                <option value="@k">@v</option>
-                            }
-                        </select>
-                    }
-                }
-                
-            </div>
-            <div class="form-group col-6">
-                <span asp-validation-for="AcceptedCurrencies" class="text-danger"></span>
-                <label asp-for="AcceptedCurrencies">Введіть мінімальний поріг входу для тих валют, в яких приймаєте інвестиції</label>
-                @foreach (var currency in Enum.GetValues(typeof(Currency)))
-                {
-                    <div class="input-group">
-                                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                                <input placeholder="@currency" type="number" id="AcceptedCurrencies[@currency]" name="AcceptedCurrencies[@currency]" class="form-control" value="@Model?.AcceptedCurrencies?[(Currency)currency]" />
-                    </div>
-                }
-            </div>
-        </div>
+      
 
 
         <button type="submit" class="btn btn-primary">Submit</button>
@@ -118,7 +88,5 @@
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Common;
 using DataAccess.Models;
 using System.Linq.Expressions;
 using WebApplication1.Models;
@@ -65,6 +66,22 @@ namespace WebApplication1.AutomapperProfiles
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title));
 
+            //CreateMap<InvestAd, PostInvestAdViewModel>()
+            //    .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => src.AuthorId))
+            //    .ForMember(dest => dest.Title, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.Title)))
+            //    .ForMember(dest => dest.Description, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.Description)))
+            //    .ForMember(dest => dest.SpendInvestDesc, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.SpendInvestDesc)))
+            //    .ForMember(dest => dest.ProfitPaymentScheme, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.ProfitPaymentScheme)))
+            //    .ForMember(dest => dest.OtherInfo, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.OtherInfo)))
+            //    .ForMember(dest => dest.AcceptedCurrencies, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.AcceptedCurrencies.ToDictionary(k=>k.Currency, v=>v.MinValue)))
+            //    .ForMember(dest => dest.InvestPeriod, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.InvestPeriod)))
+            //    .ForMember(dest => dest.TotalInvestment, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.TotalInvestment)))
+            //    .ForMember(dest => dest.InvestFields, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.InvestFields.Select(y => y.InvestField.Id))));
+
+            CreateMap<InvestField, InvestFieldView>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title));
+
         }
 
         private static TProperty? GetLastHistoryItemProperty<T, TProperty>(
@@ -74,5 +91,21 @@ namespace WebApplication1.AutomapperProfiles
             var lastItem = source.History.OrderByDescending(x => x.CreatedAt).FirstOrDefault();
             return lastItem != null ? propertySelector.Compile()(lastItem) : default;
         }
+
+        //private static IDictionary<InvestPeriodSpan, int> TimeSpanToYearMonthString(TimeSpan timeSpan)
+        //{
+        //    int totalDays = (int)timeSpan.TotalDays;
+
+        //    int years = totalDays / 365;
+        //    int remainingDays = totalDays % 365;
+        //    int months = remainingDays / 30;
+
+
+
+        //    //return new
+        //    //{
+        //    //    IDictionary<InvestPeriodSpan, int>
+        //    //};
+        //}
     }
 }

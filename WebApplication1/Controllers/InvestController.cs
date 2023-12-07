@@ -65,6 +65,15 @@ namespace WebApplication1.Controllers
             return View(result);
         }
 
+        // GET: InvestController/Edit/5
+        public async Task<ActionResult> Edit(Guid id)
+        {
+            var db = await _investAdRepository.Get(id);
+            var result = _mapper.Map<PostInvestAdViewModel>(db);
+            PrepopulateCreate();
+            return View(result);
+        }
+
         private void PrepopulateCreate()
         {
             var userId = GetCurrentUserId();
@@ -102,11 +111,7 @@ namespace WebApplication1.Controllers
         //}
 
 
-        // GET: InvestController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
+
 
         // POST: InvestController/Edit/5
         [HttpPost]

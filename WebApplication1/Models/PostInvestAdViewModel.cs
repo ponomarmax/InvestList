@@ -1,6 +1,4 @@
 ﻿using Common;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System.ComponentModel.DataAnnotations;
 
 namespace WebApplication1.Models
 {
@@ -8,23 +6,22 @@ namespace WebApplication1.Models
     {
         public string AuthorId { get; set; }
 
-        [Required]
         public string Title { get; set; }
-        public string Description { get; set; }
-
-        public string SpendInvestDesc { get; set; }
-
-        public string ProfitPaymentScheme { get; set; }
-
-        public string OtherInfo { get; set; }
-
-        public IDictionary<Currency, decimal> AcceptedCurrencies { get; set; }
         
-        public IDictionary<InvestPeriodSpan, int> InvestPeriods { get; set; }
+        public string? Description { get; set; }
 
+        public string? SpendInvestDesc { get; set; }
 
-        public decimal TotalInvestment { get; set; }
+        public string? ProfitPaymentScheme { get; set; }
 
-        public ICollection<string> InvestFields { get; set; }
+        public string? OtherInfo { get; set; }
+
+        public IDictionary<Currency, decimal?>? AcceptedCurrencies { get; set; }
+        
+        public IDictionary<InvestPeriodSpan, int?>? InvestPeriods { get; set; }
+
+        public decimal? TotalInvestment { get; set; }
+
+        public ICollection<string>? InvestFields { get; set; }
     }
 }

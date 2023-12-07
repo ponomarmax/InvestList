@@ -2,7 +2,6 @@
 using DataAccess.Interfaces;
 using DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 using WebApplication1.Models;
 
@@ -12,11 +11,13 @@ namespace WebApplication1.Controllers
     {
         private readonly IInvestAdRepository _investAdRepository;
         private readonly IMapper _mapper;
+        private readonly Dictionary<Guid, string> _investFields;
 
         public InvestController(IInvestAdRepository investAdRepository, IMapper mapper)
         {
             _investAdRepository = investAdRepository;
             _mapper = mapper;
+            _investFields = _investAdRepository.GetFields().GetAwaiter().GetResult().ToDictionary(x => x.Id, y => y.Title);
         }
 
         public async Task<ActionResult> Index()
@@ -31,16 +32,9 @@ namespace WebApplication1.Controllers
         {
             if (User != null && User.Identity != null && User.Identity.IsAuthenticated)
             {
-                var userId = GetCurrentUserId();
-                var dict = (await _investAdRepository.GetFields()).ToDictionary(x => x.Id, y => y.Title);
-                ViewData["InvestFieldsOptions"] = new MultiSelectList(dict, "Key", "Value");
-                ViewData["InvestFields"] = dict;
-                var viewModel = new PostInvestAdViewModel
-                {
-                    AuthorId = userId,
-                };
 
-                return View("Create", viewModel);
+                PrepopulateCreate();
+                return View("Create");
 
             }
             return RedirectToAction("Index", "Login");
@@ -52,24 +46,23 @@ namespace WebApplication1.Controllers
         {
             if (!ModelState.IsValid)
             {
-                // Check ModelState errors and handle them if needed
-                var errors = ModelState.Values.SelectMany(v => v.Errors);
-                // Log or debug the errors
-                return View("Create", model); // Return the view with the model to display validation errors
+                PrepopulateCreate();
+                return View("Create", model);
             }
 
-            if (ModelState.IsValid)
-            {
-                var inv = _mapper.Map<InvestAd>(model);
-                var invMeta = _mapper.Map<InvestAdExtraInfo>(model);
-                await _investAdRepository.Create(inv, invMeta);
+            var inv = _mapper.Map<InvestAd>(model);
+            var invMeta = _mapper.Map<InvestAdExtraInfo>(model);
+            await _investAdRepository.Create(inv, invMeta);
 
 
-                return RedirectToAction("Success");
-            }
+            return View("Success");
+        }
 
-            // If the model is not valid, redisplay the form with validation errors
-            return View("Create", model);
+        private void PrepopulateCreate()
+        {
+            var userId = GetCurrentUserId();
+            ViewData["InvestFieldsOptions"] = _investFields;
+            ViewData["UserId"] = userId;
         }
 
         // GET: InvestController/Details/5

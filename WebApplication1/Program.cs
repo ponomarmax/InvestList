@@ -10,7 +10,7 @@ using WebApplication1.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = "Server=localhost,1433;Database=YourDatabase;User Id=sa;Password=SuperS@cr12;MultipleActiveResultSets=true";//builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();

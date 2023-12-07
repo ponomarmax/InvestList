@@ -15,4 +15,49 @@ html {
 
 body {
   margin-bottom: 60px;
+  padding: 20px;
+}
+.card-img-top {
+  max-height: 300px;
+  object-fit: cover;
+}
+
+.tag {
+  display: inline-block;
+  padding: 6px 12px;
+  margin-right: 5px;
+  margin-bottom: 15px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 15px;
+  text-transform: uppercase;
+}
+
+.tag.tag1 {
+  background-color: #D1E4FD;
+  color: #183F80;;
+}
+
+.tag.tag2 {
+  background-color: #D9ECDB;
+  color: #2A562A ;
+}
+
+.tag.tag3 {
+  background-color: #F3D8DA;
+  color: #692326;
+}
+.views-comments {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+.avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+.list-group-item i {
+  margin-right: 10px;
 }

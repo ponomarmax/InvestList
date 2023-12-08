@@ -18,6 +18,15 @@ namespace WebApplication1.AutomapperProfiles
                 .ForMember(x => x.CreatedAt, y => y.MapFrom(z => z.CreatedAt.DateTime))
                 .ForMember(x => x.Author, y => y.MapFrom(z => z.Author.Email));
 
+            CreateMap<InvestAdExtraInfo, SearchResultViewModel>()
+               .ForMember(x => x.Title, y => y.MapFrom(src => src.Title))
+               .ForMember(x => x.Description, y => y.MapFrom(src => src.Description))
+               .ForMember(x => x.ProfitPaymentScheme, y => y.MapFrom(src => src.ProfitPaymentScheme))
+               .ForMember(x => x.SpendInvestDesc, y => y.MapFrom(src => src.SpendInvestDesc))
+               .ForMember(x => x.OtherInfo, y => y.MapFrom(src => src.OtherInfo))
+               .ForMember(x => x.OtherInfo, y => y.MapFrom(src => src.OtherInfo))
+               .ForMember(x => x.InvestId, y => y.MapFrom(src => src.InvestAdId));
+
             CreateMap<PostInvestAdViewModel, InvestAd>()
                 .ForMember(x => x.Id, y => y.MapFrom(z => Guid.NewGuid()))
                 .ForMember(x => x.Author, y => y.Ignore())

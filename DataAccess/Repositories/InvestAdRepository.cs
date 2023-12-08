@@ -70,5 +70,31 @@ namespace DataAccess.Repositories
                 throw new ArgumentException("Attempt to modify unexisting object");
             }
         }
+
+        public async Task<IEnumerable<InvestAdExtraInfo>> Search(string searchTerm, int currentPage, int itemsPerPage)
+        {
+            var groupedQuery = _dbContext.InvestAdExtraInfo
+                .GroupBy(i => i.InvestAdId)
+                .Select(g => g
+                    .OrderByDescending(e => e.CreatedAt)
+                    .FirstOrDefault()).ToList();
+
+            // Apply search criteria to the grouped query
+            var filteredQuery = groupedQuery
+     .Where(e0 =>
+         (e0.Title.Contains(searchTerm)) ||
+         (e0.Description != null && e0.Description.Contains(searchTerm)) ||
+         (e0.SpendInvestDesc != null && e0.SpendInvestDesc.Contains(searchTerm)) ||
+         (e0.ProfitPaymentScheme != null && e0.ProfitPaymentScheme.Contains(searchTerm)) ||
+         (e0.OtherInfo != null && e0.OtherInfo.Contains(searchTerm)));
+
+
+            // Apply pagination
+            var r = filteredQuery
+                .Skip((currentPage - 1) * itemsPerPage)
+                .Take(itemsPerPage);
+
+            return r;
+        }
     }
 }

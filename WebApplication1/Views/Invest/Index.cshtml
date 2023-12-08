@@ -1,20 +1,29 @@
-﻿@model CurrentInvAdsListViewModel
+﻿@model ListInvestsViewModel
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
-
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">Створити новий</a>
 </p>
-<h1>Index</h1>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Create New</a>
-</p>
+<div class="container">
+    <div class="form-group">
+        <label for="searchTitle">Шукати: </label>
+        <input placeholder="Запит для пошуку" type="text" class="form-control" id="searchTitle" name="searchTitle" />
+    </div>
+    <button id="searchButton" class="btn btn-primary">Пошук</button>
+</div>
+
+<script>
+    document.getElementById( 'searchButton' ).addEventListener( 'click', function () {
+        var searchTerm = document.getElementById( 'searchTitle' ).value;
+        var url = '@Url.Action("Search", "Invest")' + '?searchTerm=' + encodeURIComponent( searchTerm ) + '&currentPage=1';
+        window.location.href = url;
+    } );
+</script>
 
 <div class="pagination-container">
     @if (Model.PaginationInfo.CurrentPage > 1)
@@ -70,7 +79,8 @@
                                 </i>
                             </li>
                             <li class="list-group-item">
-                                <i class="fas fa-money-bill"> Мінімальний поріг входу
+                                <i class="fas fa-money-bill">
+                                    Мінімальний поріг входу
                                     @if (item.AcceptedCurrencies != null)
                                         @foreach (var item1 in item.AcceptedCurrencies)
                                         {

@@ -1,6 +1,6 @@
 ﻿namespace WebApplication1.Models
 {
-    public class CurrentInvAdsListViewModel
+    public class ListInvestsViewModel
     {
         public IEnumerable<GetAllAdsView> Entities { get; set; }
         public PaginationInfo PaginationInfo { get; set; }

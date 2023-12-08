@@ -10,5 +10,6 @@ namespace DataAccess.Interfaces
         Task<InvestAd?> Get(Guid id);
         Task<IEnumerable<InvestAd>> GetAllShorted(int page = 1, int offset = 0);
         Task<IEnumerable<InvestField>> GetFields();
+        Task<IEnumerable<InvestAdExtraInfo>> Search(string searchTerm, int currentPage, int itemsPerPage);
     }
 }

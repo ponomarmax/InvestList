@@ -2,6 +2,7 @@
 using DataAccess.Interfaces;
 using DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Security.Claims;
 using WebApplication1.Models;
 
@@ -31,7 +32,7 @@ namespace WebApplication1.Controllers
             var totalPages = (int)Math.Ceiling((double)totalItems / ItemsPerPage);
 
 
-            var viewModel = new CurrentInvAdsListViewModel
+            var viewModel = new ListInvestsViewModel
             {
                 Entities = resultView,
                 PaginationInfo = new PaginationInfo
@@ -124,14 +125,6 @@ namespace WebApplication1.Controllers
             ViewData["UserId"] = userId;
         }
 
-        private int CalculateTotalPages(int itemsPerPage, int totalItems)
-        {
-            return (int)Math.Ceiling((double)totalItems / itemsPerPage);
-        }
-
-        // GET: InvestController/Details/5
-
-
         public string GetCurrentUserId()
         {
             // Check if the user is authenticated
@@ -149,35 +142,30 @@ namespace WebApplication1.Controllers
             throw new NullReferenceException("UserId null");
         }
 
-
-        // GET: InvestController/Create
-        //public ActionResult Create(Post post)
-        //{
-        //    _contextAccessor.Posts.Add(post);
-        //    _contextAccessor.SaveChanges();
-        //    return All();
-        //}
-
-
-        // GET: InvestController/Delete/5
-        public ActionResult Delete(int id)
+        [HttpGet]
+        public async Task<IActionResult> Search(SearchRequestViewModel model)
         {
-            return View();
-        }
+            var resultDb = await _investAdRepository.Search(model.SearchTerm, model.CurrentPage, ItemsPerPage);
+            var resultView = _mapper.Map<IEnumerable<SearchResultViewModel>>(resultDb);
 
-        // POST: InvestController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
+
+            var totalItems = (await _investAdRepository.Count())!;
+            var totalPages = (int)Math.Ceiling((double)totalItems / ItemsPerPage);
+
+
+            var viewModel = new ListSearchResultViewModel
             {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+                Entities = resultView,
+                SearchTerm = model.SearchTerm,
+                PaginationInfo = new PaginationInfo
+                {
+                    CurrentPage = model.CurrentPage,
+                    TotalPages = totalPages,
+                    PageSize = ItemsPerPage
+                }
+            };
+
+            return View("Search", viewModel);
         }
     }
 }

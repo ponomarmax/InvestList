@@ -35,5 +35,7 @@ namespace DataAccess.Models
         public Guid InvestAdId { get; set; }
         
         public virtual InvestAd InvestAd { get; set; }
+
+        public byte[] ImageData { get; set; }
     }
 }

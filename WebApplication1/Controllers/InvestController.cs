@@ -60,6 +60,7 @@ namespace WebApplication1.Controllers
 
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(PostInvestAdViewModel model)
         {
             if (!ModelState.IsValid)
@@ -67,14 +68,29 @@ namespace WebApplication1.Controllers
                 PrepopulateCreate();
                 return View("Create", model);
             }
-
+            
             var inv = _mapper.Map<InvestAd>(model);
             var invMeta = _mapper.Map<InvestAdExtraInfo>(model);
+            invMeta.ImageData = await ConvertImageToByteArray(model.Image);
             await _investAdRepository.Create(inv, invMeta);
 
 
             //return View("Success");
             return RedirectToAction("Details", new { id = inv.Id });
+        }
+
+        private async Task<byte[]> ConvertImageToByteArray(IFormFile? image)
+        {
+            if (image != null && image.Length > 0)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await image.CopyToAsync(memoryStream);
+                    return memoryStream.ToArray();
+                }
+            }
+
+            return null; // No image uploaded
         }
 
         public async Task<ActionResult> Details(Guid id)
@@ -111,6 +127,7 @@ namespace WebApplication1.Controllers
             var inv = _mapper.Map<InvestAd>(model);
             var invMeta = _mapper.Map<InvestAdExtraInfo>(model);
             inv.Id = id;
+            invMeta.ImageData = await ConvertImageToByteArray(model.Image);
             await _investAdRepository.Edit(inv, invMeta);
 
 

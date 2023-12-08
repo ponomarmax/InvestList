@@ -21,5 +21,7 @@ namespace WebApplication1.Models
         public Guid AuthorId { get; set; }
 
         public string Author { get; set; }
+
+        public byte[]? ImageData { get; set; }
     }
 }

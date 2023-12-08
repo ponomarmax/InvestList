@@ -25,5 +25,7 @@ namespace WebApplication1.Models
         public decimal? TotalInvestment { get; set; }
 
         public ICollection<string>? InvestFields { get; set; }
+
+        public IFormFile? Image { get; set; }
     }
 }

@@ -16,6 +16,7 @@ namespace WebApplication1.AutomapperProfiles
                 .ForMember(x => x.InvestDurationYears, y=>y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.InvestDurationYears)))
                 .ForMember(x => x.InvestDurationMonths, y=>y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.InvestDurationMonths)))
                 .ForMember(x => x.CreatedAt, y => y.MapFrom(z => z.CreatedAt.DateTime))
+                .ForMember(x => x.ImageData, y=>y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.ImageData)))
                 .ForMember(x => x.Author, y => y.MapFrom(z => z.Author.Email));
 
             CreateMap<InvestAdExtraInfo, SearchResultViewModel>()

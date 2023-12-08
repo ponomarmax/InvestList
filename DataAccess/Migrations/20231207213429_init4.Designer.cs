@@ -4,6 +4,7 @@ using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231207213429_init4")]
+    partial class init4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -100,6 +102,9 @@ namespace DataAccess.Migrations
                     b.Property<int>("InvestDurationYears")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsArchived")
+                        .HasColumnType("bit");
+
                     b.Property<string>("OtherInfo")
                         .HasColumnType("nvarchar(max)");
 
@@ -155,27 +160,27 @@ namespace DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("dddf8ab4-507c-4227-a4c0-5041b9b79aaf"),
+                            Id = new Guid("93b3b897-3b79-439b-94bf-6493b9e01084"),
                             Title = "Фінанси"
                         },
                         new
                         {
-                            Id = new Guid("5f0d6dc1-7553-4583-8ae6-2fa78bb53afc"),
+                            Id = new Guid("02c1ec3c-d5eb-4829-8d47-d767bab1b7af"),
                             Title = "Сільськогосподарська техніка"
                         },
                         new
                         {
-                            Id = new Guid("11c25857-c16d-4add-aeeb-9726a792c442"),
+                            Id = new Guid("cce85f32-f0fe-46d1-944f-9dbca0809187"),
                             Title = "Займи"
                         },
                         new
                         {
-                            Id = new Guid("6bbacd01-75f7-46e1-a7e8-cbd79e43e315"),
+                            Id = new Guid("d9529268-ce27-413c-a8f7-d3bc2e439dfa"),
                             Title = "Лізинг Авто"
                         },
                         new
                         {
-                            Id = new Guid("dad5ed15-c88a-4365-9dc2-93c0c3106411"),
+                            Id = new Guid("147a5a19-3594-4545-a452-c6dbbd9d977a"),
                             Title = "Кафе та ресторани"
                         });
                 });

@@ -1,14 +1,11 @@
 ﻿@using Common;
-@model WebApplication1.Models.PostInvestAdViewModel
+@model WebApplication1.Models.PostInvestAdViewModel;
 
 @{
     ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Edit</h1>
-
-<h4>PostInvestAdViewModel</h4>
 <hr />
 <div class="container">
     @if (!ViewData.ModelState.IsValid)
@@ -23,7 +20,8 @@
             </ul>
         </div>
     }
-    <form asp-action="Create">
+    <form method="post" asp-action="Edit" asp-route-id="@ViewData["Id"]">
+        @Html.AntiForgeryToken()
         <input asp-for="AuthorId" type="hidden" value="@ViewData["UserId"]" />
         <div class="row mb-4">
             <div class="form-group col-12">
@@ -62,12 +60,12 @@
                         <span asp-validation-for="InvestDurationYears" class="text-danger"></span>
                         <div class="input-group">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                            <input placeholder="Кількість років" type="number" id="InvestDurationYears" class="form-control" value="@((Model?.InvestDurationYears > 0) ? Model?.InvestDurationYears : null)" />
+                            <input placeholder="Кількість років" type="number" name="InvestDurationYears" class="form-control" value="@((Model?.InvestDurationYears > 0) ? Model?.InvestDurationYears : null)" />
                         </div>
                         <span asp-validation-for="InvestDurationMonths" class="text-danger"></span>
                         <div class="input-group">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                            <input placeholder="Кількість місяців" type="number" id="InvestDurationMonths" class="form-control" value="@((Model?.InvestDurationMonths > 0) ? Model?.InvestDurationMonths : null)" />
+                            <input placeholder="Кількість місяців" type="number" name="InvestDurationMonths" class="form-control" value="@((Model?.InvestDurationMonths > 0) ? Model?.InvestDurationMonths : null)" />
                         </div>
                     </div>
                 </div>

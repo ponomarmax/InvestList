@@ -38,7 +38,7 @@
                 <div class="card">
                     <img class="card-img-top" src="https://via.placeholder.com/300" alt="Card image cap">
                     <div class="card-body">
-                        @foreach(var tag in item.InvestFields)
+                        @foreach (var tag in item.InvestFields)
                         {
                             <div class="tag tag1">@tag</div>
                         }
@@ -50,29 +50,40 @@
                                 <p class="card-text">Автор: <a href="#">@item.Author</a><br></p>
                             </small>
                         </p>
-                        <p class="card-text">
-                            Some quick example text to build on the card title and make up the bulk of the card's
-                            content.
-                        </p>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item"><i class="fas fa-percent"></i> Термін інвестиції
-                                @if (item.InvestDurationYears > 0)
-                                {
-                                    @($"{item.InvestDurationYears} {(item.InvestDurationYears == 1 ? "рік" : "роки")}")
-                                }
+                            <li class="list-group-item">
+                                <i class="fas fa-percent">
+                                    Термін інвестиції
+                                    @if (item.InvestDurationYears > 0)
+                                    {
+                                        <kbd>
+                                            @($"{item.InvestDurationYears} {(item.InvestDurationYears == 1 ? "рік" : "роки")}")
+                                        </kbd>
+                                    }
 
-                                @if (item.InvestDurationMonths > 0)
-                                {
-                                    @($"{item.InvestDurationMonths} {(item.InvestDurationMonths == 1 ? "місяць" : "місяці")}")
-                                }
+                                    @if (item.InvestDurationMonths > 0)
+                                    {
+                                        <kbd>
+                                            @($"{item.InvestDurationMonths} {(item.InvestDurationMonths == 1 ? "місяць" : "місяці")}")
+                                        </kbd>
+                                    }
+                                </i>
                             </li>
-                            <li class="list-group-item"><i class="fas fa-money-bill"></i> Feature 2</li>
-                            <li class="list-group-item"><i class="fas fa-coins"></i> Feature 3</li>
+                            <li class="list-group-item">
+                                <i class="fas fa-money-bill"> Мінімальний поріг входу
+                                    @if (item.AcceptedCurrencies != null)
+                                        @foreach (var item1 in item.AcceptedCurrencies)
+                                        {
+                                            <span class="label label-info">@item1.Currency</span> @item1.MinValue
+                                        }
+                                </i>
+                            </li>
+                            @* <li class="list-group-item"><i class="fas fa-coins"></i> Feature 3</li> *@
                         </ul>
-                        <div class="views-comments">
-                            <p><small class="text-muted"><i class="fas fa-eye"></i> 100</small></p>
-                            <p><small class="text-muted"><i class="fas fa-comment"></i> 20</small></p>
-                        </div>
+                        @* <div class="views-comments">
+                    <p><small class="text-muted"><i class="fas fa-eye"></i> 100</small></p>
+                    <p><small class="text-muted"><i class="fas fa-comment"></i> 20</small></p>
+                    </div> *@
                         <a href="@Url.Action("Details", new { id = item.Id })" class="btn btn-primary">Детальніше</a>
                         <a href="#" class="card-link">GitHub</a>
                     </div>

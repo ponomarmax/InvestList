@@ -88,8 +88,33 @@ namespace WebApplication1.Controllers
         {
             var db = await _investAdRepository.Get(id);
             var result = _mapper.Map<PostInvestAdViewModel>(db);
+            ViewData["Id"] = id;
             PrepopulateCreate();
             return View(result);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Guid id, [FromForm] PostInvestAdViewModel model)
+        {
+            var db = await _investAdRepository.Get(id);
+            if (db == null)
+                return null;
+            if (!ModelState.IsValid)
+            {
+                ViewData["Id"] = id;
+                PrepopulateCreate();
+                return View("Edit", model);
+            }
+
+            var inv = _mapper.Map<InvestAd>(model);
+            var invMeta = _mapper.Map<InvestAdExtraInfo>(model);
+            inv.Id = id;
+            await _investAdRepository.Edit(inv, invMeta);
+
+
+            //return View("Success");
+            return RedirectToAction("Details", new { id = inv.Id });
         }
 
         private void PrepopulateCreate()
@@ -133,23 +158,6 @@ namespace WebApplication1.Controllers
         //    return All();
         //}
 
-
-
-
-        // POST: InvestController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
 
         // GET: InvestController/Delete/5
         public ActionResult Delete(int id)

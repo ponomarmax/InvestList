@@ -10,6 +10,8 @@ namespace WebApplication1.AutomapperProfiles
         public MappingProfile()
         {
             CreateMap<InvestAd, GetAllAdsView>()
+                .ForMember(x => x.Title, y=>y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.Title)))
+                .ForMember(x => x.AcceptedCurrencies, y=>y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.AcceptedCurrencies)))
                 .ForMember(x => x.InvestFields, y=>y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.InvestFields).Select(x=>x.InvestField.Title)))
                 .ForMember(x => x.InvestDurationYears, y=>y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.InvestDurationYears)))
                 .ForMember(x => x.InvestDurationMonths, y=>y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.InvestDurationMonths)))
@@ -81,7 +83,6 @@ namespace WebApplication1.AutomapperProfiles
             CreateMap<InvestField, InvestFieldView>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title));
-
         }
 
         private static TProperty? GetLastHistoryItemProperty<T, TProperty>(

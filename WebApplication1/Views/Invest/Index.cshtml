@@ -11,67 +11,93 @@
 
 @await Html.PartialAsync("_Pagination", Model.PaginationInfo);
 <div class="container">
-    <div class="row">
-        @foreach (var item in Model.Entities)
-        {
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img class="card-img-top" src="https://via.placeholder.com/300" alt="Card image cap">
-                    <div class="card-body">
-                        @foreach (var tag in item.InvestFields)
-                        {
-                            <div class="tag tag1">@tag</div>
-                        }
-                        <h5 class="card-title">@item.Title</h5>
-                        <p><small class="text-muted">@item.CreatedAt.ToString("dd.MM.yyyy")</small></p>
-                        <p class="card-text">
-                            <small class="text-muted">
-                                <img src="https://via.placeholder.com/24" alt="Author Avatar" class="avatar">
-                                <p class="card-text">Автор: <a href="#">@item.Author</a><br></p>
-                            </small>
-                        </p>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                <i class="fas fa-percent">
-                                    Термін інвестиції
-                                    @if (item.InvestDurationYears > 0)
+    @if (Model.Entities != null && Model.Entities.Any())
+    {
+        <div class="row">
+            @foreach (var ad in Model.Entities)
+            {
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h3 class="card-title">@ad.Title</h3>
+                            <p class="card-text">Автор: @ad.Author</p>
+                            <p class="card-text">Створено At: @ad.CreatedAt</p>
+
+                            @if (ad.InvestDurationYears > 0 || ad.InvestDurationMonths > 0)
+                            {
+                                <p class="card-text">
+                                    Період інвестування:
+                                    @if (ad.InvestDurationYears == 1)
                                     {
-                                        <kbd>
-                                            @($"{item.InvestDurationYears} {(item.InvestDurationYears == 1 ? "рік" : "роки")}")
-                                        </kbd>
+                                        @ad.InvestDurationYears <text> рік </text>
+                                    }
+                                    else if (ad.InvestDurationYears >= 2 && ad.InvestDurationYears <= 4)
+                                    {
+                                        @ad.InvestDurationYears <text> роки </text>
+                                    }
+                                    else if (ad.InvestDurationYears >= 5)
+                                    {
+                                        @ad.InvestDurationYears <text> років </text>
                                     }
 
-                                    @if (item.InvestDurationMonths > 0)
+                                    @if (ad.InvestDurationMonths > 0)
                                     {
-                                        <kbd>
-                                            @($"{item.InvestDurationMonths} {(item.InvestDurationMonths == 1 ? "місяць" : "місяці")}")
-                                        </kbd>
-                                    }
-                                </i>
-                            </li>
-                            <li class="list-group-item">
-                                <i class="fas fa-money-bill">
-                                    Мінімальний поріг входу
-                                    @if (item.AcceptedCurrencies != null)
-                                        @foreach (var item1 in item.AcceptedCurrencies)
+                                        @if (ad.InvestDurationMonths == 1)
                                         {
-                                            <span class="label label-info">@item1.Currency</span> @item1.MinValue
+                                            @ad.InvestDurationMonths <text> місяць </text>
                                         }
-                                </i>
-                            </li>
-                            @* <li class="list-group-item"><i class="fas fa-coins"></i> Feature 3</li> *@
-                        </ul>
-                        @* <div class="views-comments">
-                    <p><small class="text-muted"><i class="fas fa-eye"></i> 100</small></p>
-                    <p><small class="text-muted"><i class="fas fa-comment"></i> 20</small></p>
-                    </div> *@
-                        <a href="@Url.Action("Details", new { id = item.Id })" class="btn btn-primary">Детальніше</a>
-                        <a href="#" class="card-link">GitHub</a>
+                                        else if (ad.InvestDurationMonths >= 2 && ad.InvestDurationMonths <= 4)
+                                        {
+                                            @ad.InvestDurationMonths <text> місяці </text>
+                                        }
+                                        else
+                                        {
+                                            @ad.InvestDurationMonths <text> місяців </text>
+                                        }
+                                    }
+                                </p>
+                            }
+
+                            <p class="card-text">
+                                Мінімальний поріг входу у валютах:
+                                @if (ad.AcceptedCurrencies != null && ad.AcceptedCurrencies.Any())
+                                {
+                                    <ul>
+                                        @foreach (var currency in ad.AcceptedCurrencies)
+                                        {
+                                            <li>@currency.Currency - $@currency.MinValue</li>
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <span>Немає валют</span>
+                                }
+                            </p>
+
+                            @if (ad.InvestFields != null && ad.InvestFields.Any())
+                            {
+                                <p class="card-text">
+                                    Галузі інвестування:
+                                    @foreach (var field in ad.InvestFields)
+                                    {
+                                        <span class="badge bg-primary">@field</span>
+                                    }
+                                </p>
+                            }
+
+                            <a href="@Url.Action("Details", new { id = ad.Id })" class="btn btn-primary">Детальніше</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
-    </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p>No ads available.</p>
+    }
+
 </div>
 @await Html.PartialAsync("_Pagination", Model.PaginationInfo);
 

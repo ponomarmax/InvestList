@@ -20,8 +20,11 @@ namespace DataAccess.Repositories
                 .OrderByDescending(x => x.CreatedAt)
                 .Skip((page - 1) * offset)
                 .Take(offset)
+                .Include(x => x.Author)
                 .Include(x => x.History.OrderByDescending(y => y.CreatedAt).Take(1))
                     .ThenInclude(x => x.InvestFields)
+                 .Include(x => x.History.OrderByDescending(y => y.CreatedAt).Take(1))
+                    .ThenInclude(x => x.AcceptedCurrencies)
                 .ToListAsync();
         }
 
@@ -39,6 +42,8 @@ namespace DataAccess.Repositories
                     .ThenInclude(x => x.InvestFields).ThenInclude(x => x.InvestField)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
+        public async Task<bool> Contains(InvestAd ad) => await _dbContext.InvestAds.ContainsAsync(ad);
+
         public async Task<IEnumerable<InvestField>> GetFields()
         {
             return await _dbContext.InvestFields.ToArrayAsync();
@@ -50,6 +55,20 @@ namespace DataAccess.Repositories
             investAd.Id = Guid.NewGuid();
             _ = await _dbContext.InvestAds.AddAsync(investAd);
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task Edit(InvestAd investAd, InvestAdExtraInfo investAdExtraInfo)
+        {
+            if (await Contains(investAd))
+            {
+                investAdExtraInfo.InvestAdId = investAd.Id;
+                await _dbContext.InvestAdExtraInfo.AddAsync(investAdExtraInfo);
+                await _dbContext.SaveChangesAsync();
+            }
+            else
+            {
+                throw new ArgumentException("Attempt to modify unexisting object");
+            }
         }
     }
 }

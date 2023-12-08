@@ -39,8 +39,14 @@ namespace WebApplication1.Validators
                 .Must(x => x.HasValue && x > 0)
                 .When(x => x.InvestDurationYears == null || x.InvestDurationYears <= 0)
                 .WithMessage("Either InvestDurationYears or InvestDurationMonths must have a positive value.");
+
+            RuleFor(x => new { x.InvestDurationYears, x.InvestDurationMonths })
+               .Cascade(CascadeMode.StopOnFirstFailure)
+               .Must(pair => pair.InvestDurationMonths >= 0 && pair.InvestDurationYears >= 0)
+               .When(pair => pair.InvestDurationYears.HasValue && pair.InvestDurationMonths.HasValue)
+               .WithMessage("InvestDurationMonths must have a positive value.");
         }
-       
+
         private static bool HaveAtLeastOneNonNullAndPositiveValue(IDictionary<Currency, decimal?> acceptedCurrencies)
         {
             return acceptedCurrencies?.Values.Any(value => value != null && value > 0) == true;

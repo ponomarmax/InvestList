@@ -1,0 +1,12 @@
+﻿<div class="d-flex" role="search">
+    <input class="form-control me-2" type="search" placeholder="Шукати" aria-label="Search" id="searchTitle" name="searchTitle">
+    <button id="searchButton" class="btn btn-outline-success">Пошук</button>
+</div>
+
+<script>
+    document.getElementById( 'searchButton' ).addEventListener( 'click', function () {
+        var searchTerm = document.getElementById( 'searchTitle' ).value;
+        var url = '@Url.Action("Search", "Invest")' + '?searchTerm=' + encodeURIComponent( searchTerm ) + '&currentPage=1';
+        window.location.href = url;
+    } );
+</script>

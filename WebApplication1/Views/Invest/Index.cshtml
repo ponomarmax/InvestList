@@ -9,37 +9,8 @@
     <a asp-action="Create" class="btn btn-primary">Створити новий</a>
 </p>
 
+@await Html.PartialAsync("_Pagination", Model.PaginationInfo);
 <div class="container">
-    <div class="form-group">
-        <label for="searchTitle">Шукати: </label>
-        <input placeholder="Запит для пошуку" type="text" class="form-control" id="searchTitle" name="searchTitle" />
-    </div>
-    <button id="searchButton" class="btn btn-primary">Пошук</button>
-</div>
-
-<script>
-    document.getElementById( 'searchButton' ).addEventListener( 'click', function () {
-        var searchTerm = document.getElementById( 'searchTitle' ).value;
-        var url = '@Url.Action("Search", "Invest")' + '?searchTerm=' + encodeURIComponent( searchTerm ) + '&currentPage=1';
-        window.location.href = url;
-    } );
-</script>
-
-<div class="pagination-container">
-    @if (Model.PaginationInfo.CurrentPage > 1)
-    {
-        <a href="@Url.Action("Index", new { page = Model.PaginationInfo.CurrentPage - 1 })">Previous</a>
-    }
-
-    <span>@Model.PaginationInfo.CurrentPage / @Model.PaginationInfo.TotalPages</span>
-
-    @if (Model.PaginationInfo.CurrentPage < Model.PaginationInfo.TotalPages)
-    {
-        <a href="@Url.Action("Index", new { page = Model.PaginationInfo.CurrentPage + 1})">Next</a>
-    }
-</div>
-<div class="container">
-
     <div class="row">
         @foreach (var item in Model.Entities)
         {
@@ -102,21 +73,6 @@
         }
     </div>
 </div>
-<div class="pagination-container">
-    @if (Model.PaginationInfo.CurrentPage > 1)
-    {
-        <a href="@Url.Action("Index", new { page = Model.PaginationInfo.CurrentPage - 1 })">Previous</a>
-    }
+@await Html.PartialAsync("_Pagination", Model.PaginationInfo);
 
-    <span>@Model.PaginationInfo.CurrentPage / @Model.PaginationInfo.TotalPages</span>
 
-    @if (Model.PaginationInfo.CurrentPage < Model.PaginationInfo.TotalPages)
-    {
-        <a href="@Url.Action("Index", new { page = Model.PaginationInfo.CurrentPage + 1})">Next</a>
-    }
-</div>
-
- <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>

@@ -61,3 +61,54 @@ body {
 .list-group-item i {
   margin-right: 10px;
 }
+.profile-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.profile-picture {
+  width: 25px;
+  height: 25px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.cover-photo {
+  width: 430px;
+  height: 430px;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+.upload-button {
+  margin-top: 10px;
+}
+
+.map-card {
+  width: 300px;
+}
+
+.row-half {
+  margin-bottom: 20px;
+}
+
+.row-full {
+  margin-bottom: 40px;
+}
+.row-half {
+  margin-bottom: 20px;
+}
+
+.row-full {
+  margin-bottom: 40px;
+}
+
+.submit-button {
+  margin-top: 20px;
+}
+.tag.tag1 {
+background-color: #D1E4FD;
+color: #183F80;
+}

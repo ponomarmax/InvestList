@@ -6,32 +6,86 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container">
-    <h1>@Model.Title</h1>
-
-    <div class="row mb-4">
-        <div class="form-group col-6">
-            <label asp-for="Description">Опис бізнесу:</label>
-            <div class="well">@Model.Description</div>
-
+<!-- Header - Profile Section -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="profile-section">
+                <div>
+                    <img src="cover-photo.jpg" alt="Cover Photo" class="cover-photo">
+                </div>
+            </div>
         </div>
-        <div class="form-group col-6 ">
-            <label asp-for="SpendInvestDesc">Як бізнес збираєтесь витратити гроші інвесторів:</label>
-            <div class="well">@Model.SpendInvestDesc</div>
+
+        <div class="col-md-6">
+            <div class="card map-card">
+                <img class="card-img-top" src="profile-avatar.jpg" alt="Profile Avatar">
+                <div class="card-body">
+                    <h5 class="card-title">Автор</h5>
+                    <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><i class="fas fa-percent"></i> дата реєстрації</li>
+                                <li class="list-group-item"><i class="fas fa-money-bill"></i>кількість зірочок</li>
+                                <li class="list-group-item"><i class="fas fa-coins"></i> контакт в тг</li>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="row mb-4">
-        <div class="form-group  col-6">
-            <label asp-for="ProfitPaymentScheme">Схема виплати відсотків:</label>
-            <div class="well">@Model.ProfitPaymentScheme</div>
+    <!-- Rows with two fields each -->
+    <div class="row">
+        <h1>@Model.Title</h1>
+    </div>
+      
+    <div class="row row-half">
+        <div class="col-md-4">
+            <label for="field2">Напрям</label>
+            <input type="text" class="form-control" id="field2" placeholder="агробізнес + нерухомість">
         </div>
-
-        <div class="form-group  col-6">
-            <label asp-for="OtherInfo">Інша корисна інформація:</label>
-            <div class="well">@Model.OtherInfo</div>
+        <div class="col-md-2">
+            <label for="field2">Відсоток</label>
+            <input type="text" class="form-control" id="field2" placeholder="100">
+        </div>
+      <div class="col-md-3">
+            <label for="field3">Мінімальна сума</label>
+            <input type="text" class="form-control" id="field3" placeholder="Field 3">
         </div>
     </div>
-</div>
+
+    <div class="row row-half">
+        
+      <div class="col-md-3">
+            <label for="field3">Термін інвестиції</label>
+            <input type="text" class="form-control" id="field3" placeholder="Field 3">
+        </div>
+        <div class="col-md-4">
+            <label for="field4">Загальний обсяг інвестицій</label>
+            <input type="text" class="form-control" id="field4" placeholder="Field 4">
+        </div>
+       
+    </div>
+
+    <div class="row row-half">
+        <div class="col-md-6">
+            <label for="largeTextArea">На що гроші?</label>
+            <textarea class="form-control" id="largeTextArea" rows="5">@Model.SpendInvestDesc</textarea>
+        </div>
+      
+        <div class="col-md-6">
+            <label for="largeTextArea">Схема виплати відсотків</label>
+            <textarea class="form-control" id="largeTextArea" rows="5">@Model.ProfitPaymentScheme</textarea>
+        </div>
+    </div>
+  
+    <div class="row">
+        <div class="col-md-12">
+            <label for="largeTextArea">Детальний опис Вашого бізнесу</label>
+            <textarea class="form-control" id="largeTextArea" rows="7">@Model.Description</textarea>
+        </div>
+    </div>
+    
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
 @if (Model.AuthorId != null && User?.FindFirst(ClaimTypes.NameIdentifier)?.Value == Model.AuthorId)
 {

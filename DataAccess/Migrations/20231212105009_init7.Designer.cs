@@ -4,6 +4,7 @@ using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231212105009_init7")]
+    partial class init7
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +23,37 @@ namespace DataAccess.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("DataAccess.Models.ContactPerson", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneVerified")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("RelatedInvestAdId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RelatedInvestAdId");
+
+                    b.ToTable("ContactPersons");
+                });
 
             modelBuilder.Entity("DataAccess.Models.InvestAd", b =>
                 {
@@ -127,27 +160,27 @@ namespace DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("3835fb5e-90ed-4162-ab9d-b56889ff9d96"),
+                            Id = new Guid("34ed4a2b-381b-435b-a29a-d9065401fd47"),
                             Title = "Фінанси"
                         },
                         new
                         {
-                            Id = new Guid("6f629665-d2cf-4645-bcb3-a3bf9d43442f"),
+                            Id = new Guid("738b603a-5de9-4259-ae1a-c480f903cb0d"),
                             Title = "Сільськогосподарська техніка"
                         },
                         new
                         {
-                            Id = new Guid("f21c5b17-da09-41b4-a4fb-579162033d8c"),
+                            Id = new Guid("4d59f3bc-797a-46eb-89f1-753b2d6f44f1"),
                             Title = "Займи"
                         },
                         new
                         {
-                            Id = new Guid("0df3b7ac-5aa8-4c4e-8a3f-3128276871ad"),
+                            Id = new Guid("1264fbe9-8738-4731-9e32-38bb8787a285"),
                             Title = "Лізинг Авто"
                         },
                         new
                         {
-                            Id = new Guid("0ba89160-2f5a-41eb-9ecf-98377e279b5b"),
+                            Id = new Guid("71f2565c-c162-4966-8ef0-f18dc1b22fe8"),
                             Title = "Кафе та ресторани"
                         });
                 });
@@ -172,83 +205,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("InvestAdExtraInfoId");
 
                     b.ToTable("MinimalInvestEntrance");
-                });
-
-            modelBuilder.Entity("DataAccess.Models.News", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AuthorId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageBase64")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
-
-                    b.ToTable("News");
-                });
-
-            modelBuilder.Entity("DataAccess.Models.NewsToTags", b =>
-                {
-                    b.Property<Guid>("NewsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("TagId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("NewsId", "TagId");
-
-                    b.HasIndex("TagId");
-
-                    b.ToTable("NewsToTags");
-                });
-
-            modelBuilder.Entity("DataAccess.Models.Tag", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Tags");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("2016344b-6701-40c9-ae44-c9054d60edf9"),
-                            Name = "Шахраї"
-                        },
-                        new
-                        {
-                            Id = new Guid("dd36c733-469c-4bf4-a0e3-b9c31230c2c2"),
-                            Name = "Цікавинка"
-                        },
-                        new
-                        {
-                            Id = new Guid("121a3cba-1283-46c7-9510-232710fe10e0"),
-                            Name = "Сенсація"
-                        });
                 });
 
             modelBuilder.Entity("DataAccess.Models.User", b =>
@@ -453,6 +409,17 @@ namespace DataAccess.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("DataAccess.Models.ContactPerson", b =>
+                {
+                    b.HasOne("DataAccess.Models.InvestAdExtraInfo", "RelatedInvestAd")
+                        .WithMany()
+                        .HasForeignKey("RelatedInvestAdId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("RelatedInvestAd");
+                });
+
             modelBuilder.Entity("DataAccess.Models.InvestAd", b =>
                 {
                     b.HasOne("DataAccess.Models.User", "Author")
@@ -499,36 +466,6 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.Models.InvestAdExtraInfo", null)
                         .WithMany("AcceptedCurrencies")
                         .HasForeignKey("InvestAdExtraInfoId");
-                });
-
-            modelBuilder.Entity("DataAccess.Models.News", b =>
-                {
-                    b.HasOne("DataAccess.Models.User", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Author");
-                });
-
-            modelBuilder.Entity("DataAccess.Models.NewsToTags", b =>
-                {
-                    b.HasOne("DataAccess.Models.News", "News")
-                        .WithMany("Tags")
-                        .HasForeignKey("NewsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DataAccess.Models.Tag", "Tag")
-                        .WithMany()
-                        .HasForeignKey("TagId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("News");
-
-                    b.Navigation("Tag");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -597,11 +534,6 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("DataAccess.Models.InvestField", b =>
                 {
                     b.Navigation("InvestAdExtraInfos");
-                });
-
-            modelBuilder.Entity("DataAccess.Models.News", b =>
-                {
-                    b.Navigation("Tags");
                 });
 #pragma warning restore 612, 618
         }

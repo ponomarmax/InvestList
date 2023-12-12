@@ -36,6 +36,6 @@ namespace DataAccess.Models
         
         public virtual InvestAd InvestAd { get; set; }
 
-        public byte[] ImageData { get; set; }
+        public string? ImageBase64 { get; set; }
     }
 }

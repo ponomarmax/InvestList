@@ -1,13 +1,11 @@
-﻿@using Common;
-@model WebApplication1.Models.PostInvestAdViewModel
+﻿@* @using Common;
+@model WebApplication1.Models.PostInvestAdViewModel;
 
 @{
-    ViewData["Title"] = "Заявка на залучення інвестицій";
+    ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<hr />
-<h4>Заповніть заявку на залучення інвестицій</h4>
 <hr />
 <div class="container">
     @if (!ViewData.ModelState.IsValid)
@@ -22,7 +20,7 @@
             </ul>
         </div>
     }
-    <form asp-action="Create" enctype="multipart/form-data">
+    <form method="post" asp-action="Edit" asp-route-id="@ViewData["Id"]" enctype="multipart/form-data">
         @Html.AntiForgeryToken()
         <input asp-for="AuthorId" type="hidden" value="@ViewData["UserId"]" />
         <div class="row mb-4">
@@ -56,25 +54,31 @@
         <div class="row mb-4">
             <div class="form-group col-6">
                 <div class="form-group col-6">
-                    <label>На який термін залучаються інвестиції (вкажіть кількість років та місяців):</label>
-                    <span asp-validation-for="InvestDurationYears" class="text-danger"></span>
-                    <div class="input-group">
-                        <input placeholder="Кількість років" type="number" id="InvestDurationYears" name="InvestDurationYears" class="form-control" value="@((Model?.InvestDurationYears > 0) ? Model?.InvestDurationYears : null)" />
-                    </div>
-                    <span asp-validation-for="InvestDurationMonths" class="text-danger"></span>
-                    <div class="input-group">
-                        <input placeholder="Кількість місяців" type="number" id="InvestDurationMonths" name="InvestDurationMonths" class="form-control" value="@((Model?.InvestDurationMonths > 0) ? Model?.InvestDurationMonths : null)" />
+                    
+                    <div class="form-group col-6">
+                        <label>На який термін залучаються інвестиції (вкажіть кількість років та місяців):</label>
+                        <span asp-validation-for="InvestDurationYears" class="text-danger"></span>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <input placeholder="Кількість років" type="number" name="InvestDurationYears" class="form-control" value="@((Model?.InvestDurationYears > 0) ? Model?.InvestDurationYears : null)" />
+                        </div>
+                        <span asp-validation-for="InvestDurationMonths" class="text-danger"></span>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <input placeholder="Кількість місяців" type="number" name="InvestDurationMonths" class="form-control" value="@((Model?.InvestDurationMonths > 0) ? Model?.InvestDurationMonths : null)" />
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="form-group col-6">
                 <label asp-for="TotalInvestment">Загальний обсяг інвестицій (у $):</label>
-                <input type="number" asp-for="TotalInvestment" class="form-control" />
+                <input type="number" asp-for="TotalInvestment" class="form-control" value="@Model.TotalInvestment" />
                 <span asp-validation-for="TotalInvestment" class="text-danger"></span>
             </div>
 
         </div>
+
         <div class="row mb-4">
             <span asp-validation-for="InvestFields" class="text-danger"></span>
             <div class="form-group col-6">
@@ -87,7 +91,15 @@
                         <select asp-for="InvestFields" class="form-control">
                             @foreach (var (k, v) in options)
                             {
-                                <option value="@k">@v</option>
+                                @if (Model.InvestFields.Contains(k.ToString()))
+                                {
+                                    <option selected value="@k">@v</option>
+
+                                }
+                                else
+                                {
+                                    <option value="@k">@v</option>
+                                }
                             }
                         </select>
                     }
@@ -101,22 +113,31 @@
                 {
                     <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                        <input placeholder="@currency" type="number" id="AcceptedCurrencies[@currency]" name="AcceptedCurrencies[@currency]" class="form-control" value="@Model?.AcceptedCurrencies?[(Currency)currency]" />
+                        @{
+                            if (Model.AcceptedCurrencies.TryGetValue((Currency)currency, out var value))
+                            {
+                                <input placeholder="@currency" type="number" id="AcceptedCurrencies[@currency]" name="AcceptedCurrencies[@currency]" class="form-control" value="@value" />
+                            }
+                            else
+                            {
+                                <input placeholder="@currency" type="number" id="AcceptedCurrencies[@currency]" name="AcceptedCurrencies[@currency]" class="form-control" />
+                            }
+                        }
                     </div>
                 }
             </div>
         </div>
-
+        <div>
+            <img src="data:image;base64,@Model.ImageBase64" alt="Investment Image" class="img-fluid resized-image" />
+        </div>
         <div class="form-group col-6">
-            <label >Завантажте фото</label>
+            <label>Завантажте фото</label>
             <input id="imageFileInput" type="file" class="form-control" />
         </div>
         <div class="form-group col-6">
             <input asp-for="ImageBase64" type="hidden" />
             <span asp-validation-for="ImageBase64" class="text-danger"></span>
         </div>
-
-
         <button type="submit" class="btn btn-primary">Submit</button>
 
     </form>
@@ -131,33 +152,34 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script>
-               document.getElementById('imageFileInput').addEventListener('change', function () {
+        document.getElementById( 'imageFileInput' ).addEventListener( 'change', function () {
             var fileInput = this;
             var file = fileInput.files[0];
 
-            if (file) {
+            if ( file ) {
                 var reader = new FileReader();
-                reader.onload = function (e) {
+                reader.onload = function ( e ) {
                     var img = new Image();
                     img.src = e.target.result;
 
                     img.onload = function () {
-                        var canvas = document.createElement('canvas');
-                        var ctx = canvas.getContext('2d');
+                        var canvas = document.createElement( 'canvas' );
+                        var ctx = canvas.getContext( '2d' );
 
                         // Resize the image to 300x300
                         canvas.width = 300;
                         canvas.height = 300;
-                        ctx.drawImage(img, 0, 0, 300, 300);
+                        ctx.drawImage( img, 0, 0, 300, 300 );
 
                         // Convert the image to base64 without the data URL prefix
-                        var compressedBase64 = canvas.toDataURL('image/jpeg', 0.7).split(',')[1];
+                        var compressedBase64 = canvas.toDataURL( 'image/jpeg', 0.7 ).split( ',' )[1];
 
-                        document.getElementById('ImageBase64').value = compressedBase64;
+                        document.getElementById( 'ImageBase64' ).value = compressedBase64;
                     };
                 };
-                reader.readAsDataURL(file);
+                reader.readAsDataURL( file );
             }
-        });
+        } );
     </script>
 }
+ *@

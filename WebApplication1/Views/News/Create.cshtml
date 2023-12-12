@@ -1,5 +1,5 @@
 ﻿@using Common;
-@model WebApplication1.Models.PostInvestAdViewModel
+@model WebApplication1.Models.News.PostNewsViewModel
 
 @{
     ViewData["Title"] = "Заявка на залучення інвестицій";
@@ -33,49 +33,13 @@
             </div>
         </div>
         <div class="row mb-4">
-            <div class="form-group col-6">
+            <div class="form-group col-12">
                 <label asp-for="Description">Дайте детальний опис вашого бізнесу:</label>
                 <textarea asp-for="Description" class="form-control"></textarea>
             </div>
-            <div class="form-group col-6 ">
-                <label asp-for="SpendInvestDesc">Як ви збираєтесь витратити гроші інвесторів:</label>
-                <textarea asp-for="SpendInvestDesc" class="form-control"></textarea>
-            </div>
         </div>
-        <div class="row mb-4">
-            <div class="form-group  col-6">
-                <label asp-for="ProfitPaymentScheme">Схема виплати відсотків:</label>
-                <textarea asp-for="ProfitPaymentScheme" class="form-control"></textarea>
-            </div>
-
-            <div class="form-group  col-6">
-                <label asp-for="OtherInfo">Інша корисна інформація:</label>
-                <textarea asp-for="OtherInfo" class="form-control"></textarea>
-            </div>
-        </div>
-        <div class="row mb-4">
-            <div class="form-group col-6">
-                <div class="form-group col-6">
-                    <label>На який термін залучаються інвестиції (вкажіть кількість років та місяців):</label>
-                    <span asp-validation-for="InvestDurationYears" class="text-danger"></span>
-                    <div class="input-group">
-                        <input placeholder="Кількість років" type="number" id="InvestDurationYears" name="InvestDurationYears" class="form-control" value="@((Model?.InvestDurationYears > 0) ? Model?.InvestDurationYears : null)" />
-                    </div>
-                    <span asp-validation-for="InvestDurationMonths" class="text-danger"></span>
-                    <div class="input-group">
-                        <input placeholder="Кількість місяців" type="number" id="InvestDurationMonths" name="InvestDurationMonths" class="form-control" value="@((Model?.InvestDurationMonths > 0) ? Model?.InvestDurationMonths : null)" />
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group col-6">
-                <label asp-for="TotalInvestment">Загальний обсяг інвестицій (у $):</label>
-                <input type="number" asp-for="TotalInvestment" class="form-control" />
-                <span asp-validation-for="TotalInvestment" class="text-danger"></span>
-            </div>
-
-        </div>
-        <div class="row mb-4">
+       
+     @*    <div class="row mb-4">
             <span asp-validation-for="InvestFields" class="text-danger"></span>
             <div class="form-group col-6">
                 @{
@@ -105,7 +69,7 @@
                     </div>
                 }
             </div>
-        </div>
+        </div> *@
 
         <div class="form-group col-6">
             <label >Завантажте фото</label>

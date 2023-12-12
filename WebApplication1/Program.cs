@@ -27,7 +27,8 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.Load<EmailConfig>(builder.Configuration, "Email");
 builder.Services.AddTransient<IEmailSender, WebApplication1.Services.EmailSender>();
 builder.Services.AddTransient<IInvestAdRepository, InvestAdRepository>();
-
+builder.Services.AddScoped<IUserRepository,UserRepository>();
+builder.Services.AddScoped<INewsRepository,NewsRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

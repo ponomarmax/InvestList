@@ -2,12 +2,13 @@
 using DataAccess.Models;
 using System.Linq.Expressions;
 using WebApplication1.Models;
+using WebApplication1.Models.Invest;
 
 namespace WebApplication1.AutomapperProfiles
 {
-    public class MappingProfile: Profile
+    public class InvestMappingProfile: Profile
     {
-        public MappingProfile()
+        public InvestMappingProfile()
         {
             CreateMap<InvestAd, GetAllAdsView>()
                 .ForMember(x => x.Title, y=>y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.Title)))
@@ -16,7 +17,7 @@ namespace WebApplication1.AutomapperProfiles
                 .ForMember(x => x.InvestDurationYears, y=>y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.InvestDurationYears)))
                 .ForMember(x => x.InvestDurationMonths, y=>y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.InvestDurationMonths)))
                 .ForMember(x => x.CreatedAt, y => y.MapFrom(z => z.CreatedAt.DateTime))
-                .ForMember(x => x.ImageData, y=>y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.ImageData)))
+                .ForMember(x => x.ImageData, y=>y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.ImageBase64)))
                 .ForMember(x => x.Author, y => y.MapFrom(z => z.Author.Email));
 
             CreateMap<InvestAdExtraInfo, SearchResultViewModel>()
@@ -62,6 +63,7 @@ namespace WebApplication1.AutomapperProfiles
             CreateMap<InvestAd, InvestAdViewModel>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => src.AuthorId))
+                .ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.Author.Email))
                 .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt.DateTime))
                 .ForMember(dest => dest.UpdateAt, opt => opt.MapFrom(src => src.UpdateAt.DateTime))
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.Title)))
@@ -71,6 +73,7 @@ namespace WebApplication1.AutomapperProfiles
                 .ForMember(dest => dest.OtherInfo, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.OtherInfo)))
                 .ForMember(dest => dest.AcceptedCurrencies, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.AcceptedCurrencies)))
                 .ForMember(dest => dest.TotalInvestment, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.TotalInvestment)))
+                .ForMember(dest => dest.ImageBase64, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.ImageBase64)))
                 .ForMember(dest => dest.InvestFields, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.InvestFields.Select(y => y.InvestField))));
 
             CreateMap<InvestField, InvestFieldView>()

@@ -5,9 +5,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Створити новий</a>
-</p>
 <style>
     .resized-image {
         width: 300px;
@@ -26,7 +23,7 @@
                     <div class="card mb-4">
                         <div class="card-body">
                             <div>
-                                <img src="data:image;base64,@Convert.ToBase64String(ad.ImageData)" alt="Investment Image" class="img-fluid resized-image" />
+                                <img src="data:image;base64,@ad.ImageData" alt="Investment Image" class="img-fluid resized-image" />
                             </div>
                             <h3 class="card-title">@ad.Title</h3>
                             <p class="card-text">Автор: @ad.Author</p>
@@ -35,35 +32,7 @@
                             @if (ad.InvestDurationYears > 0 || ad.InvestDurationMonths > 0)
                             {
                                 <p class="card-text">
-                                    Період інвестування:
-                                    @if (ad.InvestDurationYears == 1)
-                                    {
-                                        @ad.InvestDurationYears <text> рік </text>
-                                    }
-                                    else if (ad.InvestDurationYears >= 2 && ad.InvestDurationYears <= 4)
-                                    {
-                                        @ad.InvestDurationYears <text> роки </text>
-                                    }
-                                    else if (ad.InvestDurationYears >= 5)
-                                    {
-                                        @ad.InvestDurationYears <text> років </text>
-                                    }
-
-                                    @if (ad.InvestDurationMonths > 0)
-                                    {
-                                        @if (ad.InvestDurationMonths == 1)
-                                        {
-                                            @ad.InvestDurationMonths <text> місяць </text>
-                                        }
-                                        else if (ad.InvestDurationMonths >= 2 && ad.InvestDurationMonths <= 4)
-                                        {
-                                            @ad.InvestDurationMonths <text> місяці </text>
-                                        }
-                                        else
-                                        {
-                                            @ad.InvestDurationMonths <text> місяців </text>
-                                        }
-                                    }
+                                    Період інвестування: @InvestmentHelper.FormatInvestmentDuration(ad.InvestDurationYears, ad.InvestDurationMonths)
                                 </p>
                             }
 

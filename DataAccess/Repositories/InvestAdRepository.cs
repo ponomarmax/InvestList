@@ -36,6 +36,7 @@ namespace DataAccess.Repositories
         }
 
         public async Task<InvestAd?> Get(Guid id) => await _dbContext.InvestAds
+                .Include(x=>x.Author)
                 .Include(x => x.History.OrderByDescending(y => y.CreatedAt).Take(1))
                     .ThenInclude(x => x.AcceptedCurrencies)
                 .Include(x => x.History.OrderByDescending(y => y.CreatedAt).Take(1))

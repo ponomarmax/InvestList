@@ -4,6 +4,7 @@ using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231212200250_init8")]
+    partial class init8
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -127,27 +129,27 @@ namespace DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("3835fb5e-90ed-4162-ab9d-b56889ff9d96"),
+                            Id = new Guid("a195c1d9-2ff8-40e9-bf44-697fe1653015"),
                             Title = "Фінанси"
                         },
                         new
                         {
-                            Id = new Guid("6f629665-d2cf-4645-bcb3-a3bf9d43442f"),
+                            Id = new Guid("e10f00b6-c107-4235-9bcd-70e9d473ed0d"),
                             Title = "Сільськогосподарська техніка"
                         },
                         new
                         {
-                            Id = new Guid("f21c5b17-da09-41b4-a4fb-579162033d8c"),
+                            Id = new Guid("2cd6537a-d77c-440b-b395-3a80b2950fc3"),
                             Title = "Займи"
                         },
                         new
                         {
-                            Id = new Guid("0df3b7ac-5aa8-4c4e-8a3f-3128276871ad"),
+                            Id = new Guid("96d73260-759c-4e9c-a7e2-88a4d23cec6f"),
                             Title = "Лізинг Авто"
                         },
                         new
                         {
-                            Id = new Guid("0ba89160-2f5a-41eb-9ecf-98377e279b5b"),
+                            Id = new Guid("970da07a-c915-4d9a-9a01-da9776e13bc0"),
                             Title = "Кафе та ресторани"
                         });
                 });
@@ -188,9 +190,6 @@ namespace DataAccess.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageBase64")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
@@ -236,17 +235,17 @@ namespace DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("2016344b-6701-40c9-ae44-c9054d60edf9"),
+                            Id = new Guid("5e5ebceb-7895-4805-aa2c-45831bcd9f04"),
                             Name = "Шахраї"
                         },
                         new
                         {
-                            Id = new Guid("dd36c733-469c-4bf4-a0e3-b9c31230c2c2"),
+                            Id = new Guid("4043bc2e-eb3d-4ab3-a6c7-8390df438a75"),
                             Name = "Цікавинка"
                         },
                         new
                         {
-                            Id = new Guid("121a3cba-1283-46c7-9510-232710fe10e0"),
+                            Id = new Guid("f23ae485-6f70-44e4-b143-f11f1348108c"),
                             Name = "Сенсація"
                         });
                 });

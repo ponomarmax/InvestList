@@ -1,0 +1,58 @@
+﻿@model ListNewsViewModel
+
+@{
+    ViewData["Title"] = "Новини";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .resized-image {
+        width: 300px;
+        height: 300px;
+        object-fit: cover; /* or object-fit: contain; depending on your preference */
+    }
+</style>
+@await Html.PartialAsync("_Pagination", Model.PaginationInfo);
+<div class="container">
+    @if (Model.Entities != null && Model.Entities.Any())
+    {
+        <div class="row">
+            @foreach (var ad in Model.Entities)
+            {
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div>
+                                <img src="data:image;base64,@ad.ImageBase64" alt="Investment Image" class="img-fluid resized-image" />
+                            </div>
+                            <h3 class="card-title">@ad.Title</h3>
+                            <p class="card-text">Автор: @ad.Author</p>
+                            <p class="card-text">Створено At: @ad.CreatedAt</p>
+
+                            @if (ad?.Tags?.Any() == true)
+                            {
+                                <p class="card-text">
+                                    Галузі інвестування:
+                                    @foreach (var field in ad.Tags)
+                                    {
+                                        <span class="badge bg-primary">@field.Name</span>
+                                    }
+                                </p>
+                            }
+
+                            <a href="@Url.Action("Details", new { id = ad.Id })" class="btn btn-primary">Детальніше</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p>No ads available.</p>
+    }
+
+</div>
+@await Html.PartialAsync("_Pagination", Model.PaginationInfo);
+
+

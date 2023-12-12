@@ -127,13 +127,16 @@
                 }
             </div>
         </div>
-        @* <div>
-            <img src="data:image;base64,@Convert.ToBase64String(Model.ImageData)" alt="Investment Image" class="img-fluid resized-image" />
-        </div> *@
+        <div>
+            <img src="data:image;base64,@Model.ImageBase64" alt="Investment Image" class="img-fluid resized-image" />
+        </div>
         <div class="form-group col-6">
-            <label asp-for="Image">Завантажте нове фото</label>
-            <input asp-for="Image" type="file" class="form-control" />
-            <span asp-validation-for="Image" class="text-danger"></span>
+            <label>Завантажте фото</label>
+            <input id="imageFileInput" type="file" class="form-control" />
+        </div>
+        <div class="form-group col-6">
+            <input asp-for="ImageBase64" type="hidden" />
+            <span asp-validation-for="ImageBase64" class="text-danger"></span>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
 
@@ -148,4 +151,34 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        document.getElementById( 'imageFileInput' ).addEventListener( 'change', function () {
+            var fileInput = this;
+            var file = fileInput.files[0];
+
+            if ( file ) {
+                var reader = new FileReader();
+                reader.onload = function ( e ) {
+                    var img = new Image();
+                    img.src = e.target.result;
+
+                    img.onload = function () {
+                        var canvas = document.createElement( 'canvas' );
+                        var ctx = canvas.getContext( '2d' );
+
+                        // Resize the image to 300x300
+                        canvas.width = 300;
+                        canvas.height = 300;
+                        ctx.drawImage( img, 0, 0, 300, 300 );
+
+                        // Convert the image to base64 without the data URL prefix
+                        var compressedBase64 = canvas.toDataURL( 'image/jpeg', 0.7 ).split( ',' )[1];
+
+                        document.getElementById( 'ImageBase64' ).value = compressedBase64;
+                    };
+                };
+                reader.readAsDataURL( file );
+            }
+        } );
+    </script>
 }

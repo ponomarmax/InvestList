@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
+using Common;
 using DataAccess.Interfaces;
 using DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Security.Claims;
+using WebApplication1.Filters;
 using WebApplication1.Models;
+using WebApplication1.Models.Invest;
 
 namespace WebApplication1.Controllers
 {
@@ -46,7 +49,7 @@ namespace WebApplication1.Controllers
             return View(viewModel);
         }
 
-        //[Authorize]
+        [EmailConfirmedAuthorize]
         public async Task<ActionResult> Create()
         {
             if (User != null && User.Identity != null && User.Identity.IsAuthenticated)
@@ -60,6 +63,7 @@ namespace WebApplication1.Controllers
 
 
         [HttpPost]
+        [EmailConfirmedAuthorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(PostInvestAdViewModel model)
         {
@@ -71,26 +75,12 @@ namespace WebApplication1.Controllers
             
             var inv = _mapper.Map<InvestAd>(model);
             var invMeta = _mapper.Map<InvestAdExtraInfo>(model);
-            invMeta.ImageData = await ConvertImageToByteArray(model.Image);
+            //invMeta.ImageData = await ConvertImageToByteArray(model.Image);
             await _investAdRepository.Create(inv, invMeta);
 
 
             //return View("Success");
             return RedirectToAction("Details", new { id = inv.Id });
-        }
-
-        private async Task<byte[]> ConvertImageToByteArray(IFormFile? image)
-        {
-            if (image != null && image.Length > 0)
-            {
-                using (var memoryStream = new MemoryStream())
-                {
-                    await image.CopyToAsync(memoryStream);
-                    return memoryStream.ToArray();
-                }
-            }
-
-            return null; // No image uploaded
         }
 
         public async Task<ActionResult> Details(Guid id)
@@ -110,6 +100,7 @@ namespace WebApplication1.Controllers
             return View(result);
         }
 
+        [EmailConfirmedAuthorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [FromForm] PostInvestAdViewModel model)
@@ -127,7 +118,6 @@ namespace WebApplication1.Controllers
             var inv = _mapper.Map<InvestAd>(model);
             var invMeta = _mapper.Map<InvestAdExtraInfo>(model);
             inv.Id = id;
-            invMeta.ImageData = await ConvertImageToByteArray(model.Image);
             await _investAdRepository.Edit(inv, invMeta);
 
 
@@ -137,27 +127,12 @@ namespace WebApplication1.Controllers
 
         private void PrepopulateCreate()
         {
-            var userId = GetCurrentUserId();
+            var userId = Utils.GetUserId(User);
             ViewData["InvestFieldsOptions"] = _investFields;
             ViewData["UserId"] = userId;
         }
 
-        public string GetCurrentUserId()
-        {
-            // Check if the user is authenticated
-            if (User.Identity.IsAuthenticated)
-            {
-                // Retrieve the user ID from the claims
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-
-                if (userIdClaim != null)
-                {
-                    // Return the user ID
-                    return userIdClaim.Value;
-                }
-            }
-            throw new NullReferenceException("UserId null");
-        }
+       
 
         [HttpGet]
         public async Task<IActionResult> Search(SearchRequestViewModel model)

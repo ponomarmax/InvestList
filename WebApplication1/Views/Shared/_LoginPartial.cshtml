@@ -3,22 +3,31 @@
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
 
-@if (SignInManager.IsSignedIn(User))
-{
-    <li class="nav-item">
-        <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"> @User.Identity?.Name!</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Invest", new { area = "" })"> Вийти</a>
-    </li>
-}
-else
-{
-    <li class="nav-item">
-        <a class="nav-link" asp-controller="Register" asp-action="Index"> Зареєструватися</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-controller="Login" asp-action="Index"> Війти</a>
-    </li>
-}
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Мій кабінет
+    </a>
+    <ul class="dropdown-menu">
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <li class="nav-item">
+                <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"> @User.Identity?.Name!</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Invest", new { area = "" })"> Вийти</a>
+            </li>
+        }
+        else
+        {
+
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Register" asp-action="Index"> Зареєструватися</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Login" asp-action="Index"> Війти</a>
+            </li>
+        }
+    </ul>
+</li>
+
 

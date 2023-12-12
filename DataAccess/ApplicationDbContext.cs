@@ -15,7 +15,10 @@ namespace DataAccess
         public DbSet<InvestAdExtraInfo> InvestAdExtraInfo { get; set; }
         
         public DbSet<InvestField> InvestFields { get; set; }
-        public DbSet<ContactPerson> ContactPersons { get; set; }
+        
+        public DbSet<Tag> Tags { get; set; }
+        
+        public DbSet<News> News { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -34,6 +37,18 @@ namespace DataAccess
                 .WithMany(x => x.InvestAdExtraInfos)
                 .HasForeignKey(x => x.InvestFieldId);
 
+            modelBuilder.Entity<NewsToTags>()
+            .HasKey(x => new { x.NewsId, x.TagId });
+
+            modelBuilder.Entity<NewsToTags>()
+                .HasOne(x => x.News)
+                .WithMany(x => x.Tags)
+                .HasForeignKey(x => x.NewsId);
+
+            //modelBuilder.Entity<NewsToTags>()
+            //    .HasOne(x => x.Tag)
+            //    .HasForeignKey(x => x.InvestFieldId);
+
             Seed(modelBuilder);
         }
 
@@ -48,6 +63,12 @@ namespace DataAccess
                 new InvestField { Id = Guid.NewGuid(), Title = "Займи" },
                 new InvestField { Id = Guid.NewGuid(), Title = "Лізинг Авто" },
                 new InvestField { Id = Guid.NewGuid(), Title = "Кафе та ресторани" }
+            );
+
+            modelBuilder.Entity<Tag>().HasData(
+                new Tag { Id = Guid.NewGuid(), Name = "Шахраї" },
+                new Tag { Id = Guid.NewGuid(), Name = "Цікавинка" },
+                new Tag { Id = Guid.NewGuid(), Name = "Сенсація" }
             );
 
             // Add more seed data as needed

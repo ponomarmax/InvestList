@@ -1,0 +1,56 @@
+﻿@using System.Security.Claims;
+@using Common;
+@using WebApplication1.Models.News;
+@model GetNewsViewModel;
+
+@{
+    ViewData["Title"] = "Investment Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Header - Profile Section -->
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-6">
+            <h2>@Model.Title</h2>
+            <div>Автор: <a href="#">@Model.Author</a></div>
+
+            @if (Model?.Tags?.Any() == true)
+            {
+                <div class="card-text">
+                    Теги:
+                    @foreach (var field in Model.Tags)
+                    {
+                        <span class="badge bg-primary">@field.Name</span>
+                    }
+                </div>
+            }
+        </div>
+        <div class="col-6">
+            <img src="data:image;base64,@Model.ImageBase64" alt="Investment Image" class="img-fluid resized-image" />
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="well col-12">
+            <label>Опис</label>
+            <div>@Model.Description</div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+@if (Model.AuthorId != null && User?.FindFirst(ClaimTypes.NameIdentifier)?.Value == Model.AuthorId)
+{
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.Id">Редагувати</a> |
+    </div>
+}
+
+<div>
+    <a asp-action="Index">Назад</a>
+</div>

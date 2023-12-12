@@ -1,6 +1,6 @@
 ﻿using DataAccess.Models;
 
-namespace WebApplication1.Models
+namespace WebApplication1.Models.Invest
 {
     public class GetAllAdsView
     {
@@ -22,6 +22,6 @@ namespace WebApplication1.Models
 
         public string Author { get; set; }
 
-        public byte[]? ImageData { get; set; }
+        public string? ImageData { get; set; }
     }
 }

@@ -8,6 +8,8 @@ namespace WebApplication1.Models
         public Guid Id { get; set; }
 
         public string AuthorId { get; set; }
+        
+        public string Author { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
@@ -33,5 +35,7 @@ namespace WebApplication1.Models
         public decimal TotalInvestment { get; set; }
 
         public virtual ICollection<InvestFieldView> InvestFields { get; set; }
+
+        public string? ImageBase64 { get; set; }
     }
 }

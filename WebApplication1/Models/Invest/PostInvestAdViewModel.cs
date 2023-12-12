@@ -26,6 +26,6 @@ namespace WebApplication1.Models
 
         public ICollection<string>? InvestFields { get; set; }
 
-        public IFormFile? Image { get; set; }
+        public string? ImageBase64 { get; set; }
     }
 }

@@ -112,3 +112,25 @@ body {
 background-color: #D1E4FD;
 color: #183F80;
 }
+
+.truncated-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 5; /* Number of lines to show */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.author-created-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tags .badge {
+  margin-right: 0.25rem;
+}
+
+.description label {
+  font-weight: bold;
+}

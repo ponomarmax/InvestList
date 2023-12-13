@@ -16,13 +16,27 @@
                 <div class="col-md-4">
                     <div class="card mb-4">
                         <div class="card-body">
-                            <div class="text-center">
+                            <div class="text-center mb-4">
                                 <img src="data:image;base64,@ad.ImageData" alt="Investment Image" class="img-fluid resized-image mx-auto" />
                             </div>
-                            <h3 class="card-title"><a href="@Url.Action("Details", new { id = ad.Id })">@ad.Title</a></h3>
-                            <p class="card-text"><a href="#">@ad.Author</a></p>
-                            <p class="card-text">Створено: @ad.CreatedAt.ToString("dd.MM.yyyy")</p>
+                            <h3 class="card-title">@ad.Title</h3>
 
+                            @if (ad.InvestFields != null && ad.InvestFields.Any())
+                            {
+                                <p class="card-text">
+                                    
+                                    @foreach (var field in ad.InvestFields)
+                                    {
+                                        <span class="badge bg-primary">@field</span>
+                                    }
+                                </p>
+                            }
+
+
+                            <div class="author-created-row mb-4">
+                                <span class="text-muted">Автор: <a href="#">@ad.Author</a></span>
+                                <span class="text-muted">  @ad.CreatedAt.ToString("dd.MM.yyyy")</span>
+                            </div>
                             @if (ad.InvestDurationYears > 0 || ad.InvestDurationMonths > 0)
                             {
                                 <p class="card-text">
@@ -31,32 +45,27 @@
                             }
 
                             <p class="card-text">
-                                Мінімальний поріг входу у валютах:
+                              
                                 @if (ad.AcceptedCurrencies != null && ad.AcceptedCurrencies.Any())
                                 {
                                     <ul>
                                         @foreach (var currency in ad.AcceptedCurrencies)
                                         {
-                                            <li>@currency.MinValue @currency.Currency</li>
+                                            <li>min @currency.MinValue @currency.Currency</li>
                                         }
                                     </ul>
+                                        <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><i class="fas fa-percent"></i> відсоток @ad.AnnualInvestmentReturn</li>
+                        
+                    </ul>
+
+
                                 }
                                 else
                                 {
                                     <span>Немає валют</span>
                                 }
                             </p>
-
-                            @if (ad.InvestFields != null && ad.InvestFields.Any())
-                            {
-                                <p class="card-text">
-                                    Галузі інвестування:
-                                    @foreach (var field in ad.InvestFields)
-                                    {
-                                        <span class="badge bg-primary">@field</span>
-                                    }
-                                </p>
-                            }
 
                             <a href="@Url.Action("Details", new { id = ad.Id })" class="btn btn-primary">Детальніше</a>
                         </div>

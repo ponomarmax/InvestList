@@ -11,11 +11,21 @@
 <!-- Header - Profile Section -->
 
 <div class="container">
-    <div class="row mb-4">
-        <div class="col-6">
-            <h2>@Model.Title</h2>
-            <div>Автор: <a href="#">@Model.Author</a></div>
+    <div class="row">
+        <div class="col-12">
+            <!-- Image -->
+            <img src="data:image;base64,@Model.ImageBase64" alt="Investment Image" class="img-fluid resized-image" />
 
+            <!-- Title -->
+            <h2>@Model.Title</h2>
+
+            <!-- Author and Post Time -->
+            <div class="mb-2">
+                <span>Автор: <a href="#">@Model.Author</a></span>
+                <span class="text-muted"> | 13 грудня 2023</span>
+            </div>
+
+            <!-- Tags -->
             @if (Model?.Tags?.Any() == true)
             {
                 <div class="card-text">
@@ -26,15 +36,21 @@
                     }
                 </div>
             }
-        </div>
-        <div class="col-6">
-            <img src="data:image;base64,@Model.ImageBase64" alt="Investment Image" class="img-fluid resized-image" />
-        </div>
-    </div>
-    <div class="row mb-4">
-        <div class="well col-12">
-            <label>Опис</label>
-            <div>@Model.Description</div>
+            <div class="tags mb-3">
+                Теги:
+                <span class="badge bg-primary">Технології</span>
+                <span class="badge bg-primary">Інвестиції</span>
+                <span class="badge bg-primary">Інновації</span>
+            </div>
+
+            <!-- Description -->
+            <div class="description mb-3">
+                <label>Опис</label>
+                <div>@Model.Description</div>
+            </div>
+
+            <!-- Back Button -->
+            <button type="button" class="btn btn-secondary">Назад</button>
         </div>
     </div>
 </div>

@@ -5,13 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<style>
-    .resized-image {
-        width: 300px;
-        height: 300px;
-        object-fit: cover; /* or object-fit: contain; depending on your preference */
-    }
-</style>
+
 @await Html.PartialAsync("_Pagination", Model.PaginationInfo);
 <div class="container">
     @if (Model.Entities != null && Model.Entities.Any())
@@ -22,12 +16,12 @@
                 <div class="col-md-4">
                     <div class="card mb-4">
                         <div class="card-body">
-                            <div>
-                                <img src="data:image;base64,@ad.ImageData" alt="Investment Image" class="img-fluid resized-image" />
+                            <div class="text-center">
+                                <img src="data:image;base64,@ad.ImageData" alt="Investment Image" class="img-fluid resized-image mx-auto" />
                             </div>
-                            <h3 class="card-title">@ad.Title</h3>
-                            <p class="card-text">Автор: @ad.Author</p>
-                            <p class="card-text">Створено At: @ad.CreatedAt</p>
+                            <h3 class="card-title"><a href="@Url.Action("Details", new { id = ad.Id })">@ad.Title</a></h3>
+                            <p class="card-text"><a href="#">@ad.Author</a></p>
+                            <p class="card-text">Створено: @ad.CreatedAt.ToString("dd.MM.yyyy")</p>
 
                             @if (ad.InvestDurationYears > 0 || ad.InvestDurationMonths > 0)
                             {
@@ -43,7 +37,7 @@
                                     <ul>
                                         @foreach (var currency in ad.AcceptedCurrencies)
                                         {
-                                            <li>@currency.Currency - $@currency.MinValue</li>
+                                            <li>@currency.MinValue @currency.Currency</li>
                                         }
                                     </ul>
                                 }

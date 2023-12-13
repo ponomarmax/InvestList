@@ -1,4 +1,7 @@
-﻿namespace WebApplication1
+﻿using Common;
+using static System.Net.Mime.MediaTypeNames;
+
+namespace WebApplication1
 {
     public static class InvestmentHelper
     {
@@ -17,6 +20,21 @@
             }
 
             return result;
+        }
+
+        public static string DisplayCurrencySymbol(Currency currency)
+        {
+            if (currency == Currency.UAH)
+            {
+                return "₴";
+            }
+            else if (currency == Currency.USD)
+            {
+                return "$";
+
+            }
+            return null;
+            // Add more conditions for other currencies if needed
         }
 
         private static string FormatYears(int years)

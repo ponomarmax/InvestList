@@ -6,43 +6,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Створити новий</a>
-</p>
 
-<div class="container">
-    <div class="form-group">
-        <label for="searchTitle">Шукати: </label>
-        <input placeholder="Запит для пошуку" type="text" class="form-control" id="searchTitle" name="searchTitle" value="@Model.SearchTerm"/>
-    </div>
-    <button id="searchButton" class="btn btn-primary">Пошук</button>
-</div>
-
-<script>
-    document.getElementById( 'searchButton' ).addEventListener( 'click', function () {
-        var searchTerm = document.getElementById( 'searchTitle' ).value;
-        var url = '@Url.Action("Search", "Invest")' + '?searchTerm=' + encodeURIComponent( searchTerm ) + '&currentPage=1';
-        window.location.href = url;
-    } );
-</script>
-
-<div class="pagination-container">
-    @if (Model.PaginationInfo.CurrentPage > 1)
-    {
-        <a href="@Url.Action("Search", new SearchRequestViewModel {
-            SearchTerm=Model.SearchTerm,
-            CurrentPage=Model.PaginationInfo.CurrentPage - 1 })">Назад</a>
-    }
-
-    <span>@Model.PaginationInfo.CurrentPage / @Model.PaginationInfo.TotalPages</span>
-
-    @if (Model.PaginationInfo.CurrentPage < Model.PaginationInfo.TotalPages)
-    {
-        <a href="@Url.Action("Search", new SearchRequestViewModel {
-            SearchTerm=Model.SearchTerm,
-            CurrentPage=Model.PaginationInfo.CurrentPage + 1 })">Вперед</a>
-    }
-</div>
 <div class="container">
     <div class="row mb-3">
         <div class="col-3">

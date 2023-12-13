@@ -14,6 +14,8 @@ namespace WebApplication1.Models.Invest
 
         public int InvestDurationMonths { get; set; }
 
+        public decimal AnnualInvestmentReturn { get; set; }
+
         public string[] InvestFields { get; set; }
 
         public DateTime CreatedAt { get; set; }

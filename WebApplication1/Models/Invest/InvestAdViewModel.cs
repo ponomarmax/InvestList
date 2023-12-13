@@ -1,14 +1,13 @@
 ﻿using DataAccess.Models;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace WebApplication1.Models
+namespace WebApplication1.Models.Invest
 {
     public class InvestAdViewModel
     {
         public Guid Id { get; set; }
 
         public string AuthorId { get; set; }
-        
+
         public string Author { get; set; }
 
         public DateTime CreatedAt { get; set; }
@@ -18,13 +17,10 @@ namespace WebApplication1.Models
         //public ICollection<InvestAdExtraInfo> History { get; set; }
 
         public string Title { get; set; }
+
         public string? Description { get; set; }
 
-        public string? SpendInvestDesc { get; set; }
-
-        public string? ProfitPaymentScheme { get; set; }
-
-        public string? OtherInfo { get; set; }
+        public decimal AnnualInvestmentReturn { get; set; }
 
         public ICollection<MinimalInvestEntrance> AcceptedCurrencies { get; set; }
 

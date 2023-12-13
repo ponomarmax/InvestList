@@ -1,5 +1,6 @@
 ﻿@using System.Security.Claims;
 @using Common;
+@using WebApplication1.Models.Invest;
 @model InvestAdViewModel
 
 @{
@@ -38,6 +39,7 @@
                 }
             </div>
             <div>Загальний обсяг інвестицій (у $): @Model.TotalInvestment</div>
+            <div>Річна дохідність (у %): @Model.AnnualInvestmentReturn</div>
 
             @if (Model.InvestFields != null && Model.InvestFields.Any())
             {
@@ -55,24 +57,9 @@
         </div>
     </div>
     <div class="row mb-4">
-        <div class="well col-6">
+        <div class="well col-12">
             <label>Опис</label>
             <div>@Model.Description</div>
-        </div>
-        <div class="well col-6 ">
-            <label>Як будуть витрачені кошти інвесторів?</label>
-            <div>@Model.SpendInvestDesc</div>
-        </div>
-    </div>
-    <div class="row mb-4">
-        <div class="well  col-6">
-            <label>Схема виплати відсотків</label>
-            <div>@Model.ProfitPaymentScheme</div>
-        </div>
-
-        <div class="well col-6">
-            <label>Інша інформація</label>
-            <div>@Model.OtherInfo</div>
         </div>
     </div>
 </div>

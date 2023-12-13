@@ -1,7 +1,6 @@
 ﻿using Common;
 using FluentValidation;
 using SixLabors.ImageSharp;
-using WebApplication1.Models;
 using WebApplication1.Models.Invest;
 
 namespace WebApplication1.Validators

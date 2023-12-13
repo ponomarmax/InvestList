@@ -8,12 +8,6 @@ namespace DataAccess.Models
         public string Title { get; set; }
         public string? Description { get; set; }
         
-        public string? SpendInvestDesc { get; set; }
-
-        public string? ProfitPaymentScheme { get; set; }
-        
-        public string? OtherInfo { get; set; }
-
         public virtual ICollection<MinimalInvestEntrance> AcceptedCurrencies { get; set; }
 
         public int InvestDurationYears { get; set; }
@@ -21,6 +15,8 @@ namespace DataAccess.Models
         public int InvestDurationMonths { get; set; }
 
         public decimal TotalInvestment { get; set; }
+
+        public decimal AnnualInvestmentReturn { get; set; }
 
         public virtual ICollection<InvestAdExtraInfoInvestField> InvestFields { get; set; }
 

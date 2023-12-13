@@ -1,6 +1,4 @@
-﻿using WebApplication1.Models.Invest;
-
-namespace WebApplication1.Models
+﻿namespace WebApplication1.Models.Invest
 {
     public class ListInvestsViewModel
     {

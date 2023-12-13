@@ -1,6 +1,6 @@
 ﻿using Common;
 
-namespace WebApplication1.Models
+namespace WebApplication1.Models.Invest
 {
     public class PostInvestAdViewModel
     {
@@ -10,11 +10,7 @@ namespace WebApplication1.Models
 
         public string? Description { get; set; }
 
-        public string? SpendInvestDesc { get; set; }
-
-        public string? ProfitPaymentScheme { get; set; }
-
-        public string? OtherInfo { get; set; }
+        public decimal AnnualInvestmentReturn { get; set; }
 
         public IDictionary<Currency, decimal?>? AcceptedCurrencies { get; set; }
 

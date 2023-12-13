@@ -84,10 +84,7 @@ namespace DataAccess.Repositories
             var filteredQuery = groupedQuery
      .Where(e0 =>
          (e0.Title.Contains(searchTerm)) ||
-         (e0.Description != null && e0.Description.Contains(searchTerm)) ||
-         (e0.SpendInvestDesc != null && e0.SpendInvestDesc.Contains(searchTerm)) ||
-         (e0.ProfitPaymentScheme != null && e0.ProfitPaymentScheme.Contains(searchTerm)) ||
-         (e0.OtherInfo != null && e0.OtherInfo.Contains(searchTerm)));
+         (e0.Description != null && e0.Description.Contains(searchTerm)));
 
 
             // Apply pagination

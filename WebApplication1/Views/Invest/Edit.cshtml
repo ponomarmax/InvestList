@@ -1,5 +1,5 @@
 ﻿@using Common;
-@model WebApplication1.Models.PostInvestAdViewModel;
+@model WebApplication1.Models.Invest.PostInvestAdViewModel;
 
 @{
     ViewData["Title"] = "Edit";
@@ -24,64 +24,91 @@
         @Html.AntiForgeryToken()
         <input asp-for="AuthorId" type="hidden" value="@ViewData["UserId"]" />
         <div class="row mb-4">
-            <div class="form-group col-12">
-                <label asp-for="Title">Назва</label>
-                <input asp-for="Title" class="form-control" placeholder="Вкажіть короткий опис, не більше 200 символів" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="row mb-4">
             <div class="form-group col-6">
-                <label asp-for="Description">Дайте детальний опис вашого бізнесу:</label>
-                <textarea asp-for="Description" class="form-control"></textarea>
-            </div>
-            <div class="form-group col-6 ">
-                <label asp-for="SpendInvestDesc">Як ви збираєтесь витратити гроші інвесторів:</label>
-                <textarea asp-for="SpendInvestDesc" class="form-control"></textarea>
-            </div>
-        </div>
-        <div class="row mb-4">
-            <div class="form-group  col-6">
-                <label asp-for="ProfitPaymentScheme">Схема виплати відсотків:</label>
-                <textarea asp-for="ProfitPaymentScheme" class="form-control"></textarea>
-            </div>
-
-            <div class="form-group  col-6">
-                <label asp-for="OtherInfo">Інша корисна інформація:</label>
-                <textarea asp-for="OtherInfo" class="form-control"></textarea>
-            </div>
-        </div>
-        <div class="row mb-4">
-            <div class="form-group col-6">
-                <div class="form-group col-6">
-                    
-                    <div class="form-group col-6">
-                        <label>На який термін залучаються інвестиції (вкажіть кількість років та місяців):</label>
-                        <span asp-validation-for="InvestDurationYears" class="text-danger"></span>
+                <div class="mb-4">
+                    <p asp-for="Title">Надайте короткий опис, що буде відображатись на головній сторінці.</p>
+                    <input asp-for="Title" class="form-control" placeholder="Вкажіть не менше 10 символів, не більше 200 символів" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+                <div class="mb-4">
+                    <label asp-for="AnnualInvestmentReturn">Річна дохідність у %</label>
+                    <input asp-for="AnnualInvestmentReturn" class="form-control" type="number" />
+                    <span asp-validation-for="AnnualInvestmentReturn" class="text-danger"></span>
+                </div>
+                <div class="mb-4">
+                    <label asp-for="TotalInvestment">Загальний обсяг інвестицій (у $):</label>
+                    <input type="number" asp-for="TotalInvestment" class="form-control" />
+                    <span asp-validation-for="TotalInvestment" class="text-danger"></span>
+                </div>
+                <div class="mb-4">
+                    <span asp-validation-for="AcceptedCurrencies" class="text-danger"></span>
+                    <label asp-for="AcceptedCurrencies">Введіть мінімальний поріг входу для тих валют, в яких приймаєте інвестиції</label>
+                    @foreach (var currency in Enum.GetValues(typeof(Currency)))
+                    {
                         <div class="input-group">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                            <input placeholder="Кількість років" type="number" name="InvestDurationYears" class="form-control" value="@((Model?.InvestDurationYears > 0) ? Model?.InvestDurationYears : null)" />
+                            @{
+                                if (Model.AcceptedCurrencies.TryGetValue((Currency)currency, out var value))
+                                {
+                                    <input placeholder="@currency" type="number" id="AcceptedCurrencies[@currency]" name="AcceptedCurrencies[@currency]" class="form-control" value="@value" />
+                                }
+                                else
+                                {
+                                    <input placeholder="@currency" type="number" id="AcceptedCurrencies[@currency]" name="AcceptedCurrencies[@currency]" class="form-control" />
+                                }
+                            }
                         </div>
-                        <span asp-validation-for="InvestDurationMonths" class="text-danger"></span>
-                        <div class="input-group">
-                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                            <input placeholder="Кількість місяців" type="number" name="InvestDurationMonths" class="form-control" value="@((Model?.InvestDurationMonths > 0) ? Model?.InvestDurationMonths : null)" />
-                        </div>
-                    </div>
+                    }
                 </div>
             </div>
 
             <div class="form-group col-6">
-                <label asp-for="TotalInvestment">Загальний обсяг інвестицій (у $):</label>
-                <input type="number" asp-for="TotalInvestment" class="form-control" value="@Model.TotalInvestment" />
-                <span asp-validation-for="TotalInvestment" class="text-danger"></span>
+                <label>Завантажте фото:</label>
+                <input id="imageFileInput" type="file" class="form-control mb-2" placeholder="Виберіть файл" />
+                <button id="removePhotoButton" type="button" class="btn btn-outline-danger mb-2" style="display: none;">Видалити фото</button>
+                <img id="uploadedImage" src="#" alt="Investment Image" class="img-fluid resized-image mb-2" style="display: none;" />
+                <input asp-for="ImageBase64" type="hidden" value="@Model.ImageBase64" />
             </div>
+        </div>
+        <div class="row mb-4">
+            <div class="form-group">
+                <p>Дайте детальний опис вашого бізнесу. Радимо відповісти на наступні питання в описі:</p>
+                <div class="row">
+                    <div class="col-6">
+                        <ul>
+                            <li>Опишіть чим займається ваш бізнес</li>
+                            <li>Як будуть витрачені кошти інвесторів</li>
+                            <li>Як будуть виплачуватись відсотки інвесторам</li>
+                        </ul>
+                    </div>
+                    <div class="col-6">
+                        <ul>
+                            <li>Як буде повертатись тіло інвестиції</li>
+                            <li>Яким договором будуть регулюватись відносини з інвестором</li>
+                        </ul>
+                    </div>
+                </div>
 
+                <textarea rows="10" asp-for="Description" class="form-control"></textarea>
+            </div>
         </div>
 
         <div class="row mb-4">
-            <span asp-validation-for="InvestFields" class="text-danger"></span>
             <div class="form-group col-6">
+                <label>На який термін залучаються інвестиції (вкажіть кількість років та місяців):</label>
+                <span asp-validation-for="InvestDurationYears" class="text-danger"></span>
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                    <input placeholder="Кількість років" type="number" name="InvestDurationYears" class="form-control" value="@((Model?.InvestDurationYears > 0) ? Model?.InvestDurationYears : null)" />
+                </div>
+                <span asp-validation-for="InvestDurationMonths" class="text-danger"></span>
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                    <input placeholder="Кількість місяців" type="number" name="InvestDurationMonths" class="form-control" value="@((Model?.InvestDurationMonths > 0) ? Model?.InvestDurationMonths : null)" />
+                </div>
+            </div>
+            <div class="form-group col-6">
+                <span asp-validation-for="InvestFields" class="text-danger"></span>
                 @{
                     var options = ViewData["InvestFieldsOptions"] as Dictionary<Guid, string>;
                     if (options != null)
@@ -106,39 +133,9 @@
                 }
 
             </div>
-            <div class="form-group col-6">
-                <span asp-validation-for="AcceptedCurrencies" class="text-danger"></span>
-                <label asp-for="AcceptedCurrencies">Введіть мінімальний поріг входу для тих валют, в яких приймаєте інвестиції</label>
-                @foreach (var currency in Enum.GetValues(typeof(Currency)))
-                {
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                        @{
-                            if (Model.AcceptedCurrencies.TryGetValue((Currency)currency, out var value))
-                            {
-                                <input placeholder="@currency" type="number" id="AcceptedCurrencies[@currency]" name="AcceptedCurrencies[@currency]" class="form-control" value="@value" />
-                            }
-                            else
-                            {
-                                <input placeholder="@currency" type="number" id="AcceptedCurrencies[@currency]" name="AcceptedCurrencies[@currency]" class="form-control" />
-                            }
-                        }
-                    </div>
-                }
-            </div>
         </div>
-        <div>
-            <img src="data:image;base64,@Model.ImageBase64" alt="Investment Image" class="img-fluid resized-image" />
-        </div>
-        <div class="form-group col-6">
-            <label>Завантажте фото</label>
-            <input id="imageFileInput" type="file" class="form-control" />
-        </div>
-        <div class="form-group col-6">
-            <input asp-for="ImageBase64" type="hidden" />
-            <span asp-validation-for="ImageBase64" class="text-danger"></span>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+
+<button type="submit" class="btn btn-primary">Внести зміни</button>
 
     </form>
 </div>
@@ -151,34 +148,5 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    <script>
-        document.getElementById( 'imageFileInput' ).addEventListener( 'change', function () {
-            var fileInput = this;
-            var file = fileInput.files[0];
-
-            if ( file ) {
-                var reader = new FileReader();
-                reader.onload = function ( e ) {
-                    var img = new Image();
-                    img.src = e.target.result;
-
-                    img.onload = function () {
-                        var canvas = document.createElement( 'canvas' );
-                        var ctx = canvas.getContext( '2d' );
-
-                        // Resize the image to 300x300
-                        canvas.width = 300;
-                        canvas.height = 300;
-                        ctx.drawImage( img, 0, 0, 300, 300 );
-
-                        // Convert the image to base64 without the data URL prefix
-                        var compressedBase64 = canvas.toDataURL( 'image/jpeg', 0.7 ).split( ',' )[1];
-
-                        document.getElementById( 'ImageBase64' ).value = compressedBase64;
-                    };
-                };
-                reader.readAsDataURL( file );
-            }
-        } );
-    </script>
+    <script src="~/js/handleImageUpload.js"></script>
 }

@@ -37,35 +37,36 @@
                                 <span class="text-muted">Автор: <a href="#">@ad.Author</a></span>
                                 <span class="text-muted">  @ad.CreatedAt.ToString("dd.MM.yyyy")</span>
                             </div>
+                            <ul class="list-group list-group-flush">
                             @if (ad.InvestDurationYears > 0 || ad.InvestDurationMonths > 0)
                             {
-                                <p class="card-text">
-                                    Період інвестування: @InvestmentHelper.FormatInvestmentDuration(ad.InvestDurationYears, ad.InvestDurationMonths)
-                                </p>
+                                
+                                   <li class="list-group-item"> Період інвестування: @InvestmentHelper.FormatInvestmentDuration(ad.InvestDurationYears, ad.InvestDurationMonths)</li>
+                                
                             }
 
-                            <p class="card-text">
+                            
                               
                                 @if (ad.AcceptedCurrencies != null && ad.AcceptedCurrencies.Any())
                                 {
-                                    <ul>
+                                    
                                         @foreach (var currency in ad.AcceptedCurrencies)
                                         {
-                                            <li>min @currency.MinValue @currency.Currency</li>
+                                            <li class="list-group-item">min @currency.MinValue @currency.Currency</li>
                                         }
-                                    </ul>
-                                        <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><i class="fas fa-percent"></i> відсоток @ad.AnnualInvestmentReturn</li>
+                                            
                         
-                    </ul>
+                                    
 
 
                                 }
+                        
                                 else
                                 {
                                     <span>Немає валют</span>
                                 }
-                            </p>
+                                <li class="list-group-item mb-4">відсоток:@ad.AnnualInvestmentReturn</li>
+                            </ul>
 
                             <a href="@Url.Action("Details", new { id = ad.Id })" class="btn btn-primary">Детальніше</a>
                         </div>

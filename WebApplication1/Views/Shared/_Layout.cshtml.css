@@ -46,3 +46,20 @@ button.accept-policy {
   white-space: nowrap;
   line-height: 60px;
 }
+
+body {
+  font-family: 'Arial', sans-serif;
+}
+
+header {
+  background-color: #f8f9fa;
+}
+
+nav .nav-link {
+  color: #495057;
+}
+
+nav .nav-link:hover {
+  color: #0056b3;
+}
+

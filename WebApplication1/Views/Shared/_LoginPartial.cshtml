@@ -20,12 +20,12 @@
         else
         {
 
-            <li class="nav-item">
-                <a class="nav-link" asp-controller="Register" asp-action="Index"> Зареєструватися</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" asp-controller="Login" asp-action="Index"> Війти</a>
-            </li>
+            <div class="col-md-3 text-end">
+                <button type="button" class="btn btn-primary" asp-controller="Register" asp-action="Index"> Зареєструватися</button>
+            
+            
+                <button type="button" class="btn btn-outline-primary me-2" asp-controller="Login" asp-action="Index"> Війти</button>
+            </div>
         }
     </ul>
 </li>

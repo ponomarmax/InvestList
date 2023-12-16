@@ -135,3 +135,50 @@ color: #183F80;
 .description label {
   font-weight: bold;
 }
+
+    .footer {
+        background-color: #f8f9fa;
+        padding: 5px 0;
+    }
+    .footer-column {
+        margin-bottom: 5px;
+    }
+    .footer-title {
+        font-weight: 600;
+        color: #343a40;
+        margin-bottom: 5px;
+    }
+    .footer-link {
+        display: block;
+        color: #343a40;
+        margin-bottom: 5px;
+        text-decoration: none;
+    }
+    .footer-link:hover {
+        text-decoration: none;
+        color: #007bff;
+    }
+    .social-icons {
+        font-size: 10px;
+    }
+    .social-icons a {
+        color: #343a40;
+        margin-right: 5px;
+    }
+    .social-icons a:hover {
+        color: #007bff;
+    }
+    .newsletter {
+        text-align: right;
+    }
+    .newsletter input[type="email"] {
+        max-width: 250px;
+        margin-bottom: 5px;
+    }
+    .copyright {
+        text-align: center;
+        color: #6c757d;
+        border-top: 1px solid #dee2e6;
+        padding-top: 5px;
+        margin-top: 0px;
+    }

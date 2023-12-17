@@ -61,9 +61,45 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer">
         <div class="container">
-            &copy; 2023 - InvestHub - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <div class="row">
+                <div class="col-md-3 footer-column">
+                    <p class="footer-title">Section</p>
+                    <a href="#" class="footer-link">Home</a>
+
+                </div>
+                <div class="col-md-3 footer-column">
+                    <p class="footer-title">Section</p>
+                    <a href="#" class="footer-link">Home</a>
+
+                </div>
+                <div class="col-md-3 footer-column">
+                    <p class="footer-title">Section</p>
+                    <a href="#" class="footer-link">Home</a>
+
+                </div>
+                <div class="col-md-3 footer-column newsletter">
+                    <p class="footer-title">Subscribe to our newsletter</p>
+                    <p>Monthly digest of what's new and exciting from us.</p>
+                    <input type="email" class="form-control" placeholder="Email address">
+                    <button type="submit" class="btn btn-primary mt-2">Subscribe</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <p class="copyright">
+                        © 2023 Company, Inc. All rights reserved.
+                    </p>
+                </div>
+            </div>
         </div>
     </footer>
     @await RenderSectionAsync("Scripts", required: false)

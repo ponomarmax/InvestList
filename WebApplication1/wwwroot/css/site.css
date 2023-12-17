@@ -1,114 +1,201 @@
 ﻿html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
-  padding: 20px;
+    margin-bottom: 60px;
+    padding: 20px;
 }
+
 .card-img-top {
-  max-height: 300px;
-  object-fit: cover;
+    max-height: 300px;
+    object-fit: cover;
 }
 
 .tag {
-  display: inline-block;
-  padding: 6px 12px;
-  margin-right: 5px;
-  margin-bottom: 15px;
-  font-size: 12px;
-  font-weight: 600;
-  border-radius: 15px;
-  text-transform: uppercase;
+    display: inline-block;
+    padding: 6px 12px;
+    margin-right: 5px;
+    margin-bottom: 15px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 15px;
+    text-transform: uppercase;
 }
 
-.tag.tag1 {
-  background-color: #D1E4FD;
-  color: #183F80;;
-}
+    .tag.tag1 {
+        background-color: #D1E4FD;
+        color: #183F80;
+        ;
+    }
 
-.tag.tag2 {
-  background-color: #D9ECDB;
-  color: #2A562A ;
-}
+    .tag.tag2 {
+        background-color: #D9ECDB;
+        color: #2A562A;
+    }
 
-.tag.tag3 {
-  background-color: #F3D8DA;
-  color: #692326;
-}
+    .tag.tag3 {
+        background-color: #F3D8DA;
+        color: #692326;
+    }
+
 .views-comments {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
 }
+
 .avatar {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  margin-right: 5px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    margin-right: 5px;
 }
+
 .list-group-item i {
-  margin-right: 10px;
+    margin-right: 10px;
 }
+
 .profile-section {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
 .profile-picture {
-  width: 25px;
-  height: 25px;
-  object-fit: cover;
-  border-radius: 10px;
+    width: 25px;
+    height: 25px;
+    object-fit: cover;
+    border-radius: 10px;
 }
 
 .cover-photo {
-  width: 430px;
-  height: 430px;
-  object-fit: cover;
-  border-radius: 2px;
+    width: 430px;
+    height: 430px;
+    object-fit: cover;
+    border-radius: 2px;
 }
 
 .upload-button {
-  margin-top: 10px;
+    margin-top: 10px;
 }
 
 .map-card {
-  width: 300px;
+    width: 300px;
 }
 
 .row-half {
-  margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 .row-full {
-  margin-bottom: 40px;
+    margin-bottom: 40px;
 }
+
 .row-half {
-  margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 .row-full {
-  margin-bottom: 40px;
+    margin-bottom: 40px;
 }
 
 .submit-button {
-  margin-top: 20px;
+    margin-top: 20px;
 }
+
 .tag.tag1 {
-background-color: #D1E4FD;
-color: #183F80;
+    background-color: #D1E4FD;
+    color: #183F80;
+}
+
+.truncated-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 5; /* Number of lines to show */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.author-created-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tags .badge {
+    margin-right: 0.25rem;
+}
+
+.description label {
+    font-weight: bold;
+}
+
+.footer {
+    background-color: #f8f9fa;
+    padding: 5px 0;
+}
+
+.footer-column {
+    margin-bottom: 5px;
+}
+
+.footer-title {
+    font-weight: 600;
+    color: #343a40;
+    margin-bottom: 5px;
+}
+
+.footer-link {
+    display: block;
+    color: #343a40;
+    margin-bottom: 5px;
+    text-decoration: none;
+}
+
+    .footer-link:hover {
+        text-decoration: none;
+        color: #007bff;
+    }
+
+.social-icons {
+    font-size: 10px;
+}
+
+    .social-icons a {
+        color: #343a40;
+        margin-right: 5px;
+    }
+
+        .social-icons a:hover {
+            color: #007bff;
+        }
+
+.newsletter {
+    text-align: right;
+}
+
+    .newsletter input[type="email"] {
+        max-width: 250px;
+        margin-bottom: 5px;
+    }
+
+.copyright {
+    text-align: center;
+    color: #6c757d;
+    border-top: 1px solid #dee2e6;
+    padding-top: 5px;
+    margin-top: 0px;
 }

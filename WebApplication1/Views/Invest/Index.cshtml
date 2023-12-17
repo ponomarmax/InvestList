@@ -6,59 +6,58 @@
 }
 
 
-@await Html.PartialAsync("_Pagination", Model.PaginationInfo);
+@await Html.PartialAsync("_Pagination", Model.PaginationInfo)
 <div class="container">
     @if (Model.Entities != null && Model.Entities.Any())
     {
         <div class="row">
             @foreach (var ad in Model.Entities)
             {
-                <div class="col-md-4">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <div class="text-center">
-                                <img src="data:image;base64,@ad.ImageData" alt="Investment Image" class="img-fluid resized-image mx-auto" />
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <div class="card-title">@ad.Title</div>
+                            <div class="card-info">
+                                <div>
+                                    <i class="fas fa-user"></i>
+                                    <span class="text-muted">@ad.Author</span>
+                                </div>
+                                <div>
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>@ad.CreatedAt</span>
+                                </div>
                             </div>
-                            <h3 class="card-title"><a href="@Url.Action("Details", new { id = ad.Id })">@ad.Title</a></h3>
-                            <p class="card-text"><a href="#">@ad.Author</a></p>
-                            <p class="card-text">Створено: @ad.CreatedAt.ToString("dd.MM.yyyy")</p>
-
-                            @if (ad.InvestDurationYears > 0 || ad.InvestDurationMonths > 0)
-                            {
-                                <p class="card-text">
-                                    Період інвестування: @InvestmentHelper.FormatInvestmentDuration(ad.InvestDurationYears, ad.InvestDurationMonths)
-                                </p>
-                            }
-
-                            <p class="card-text">
-                                Мінімальний поріг входу у валютах:
-                                @if (ad.AcceptedCurrencies != null && ad.AcceptedCurrencies.Any())
-                                {
-                                    <ul>
-                                        @foreach (var currency in ad.AcceptedCurrencies)
-                                        {
-                                            <li>@currency.MinValue @currency.Currency</li>
-                                        }
-                                    </ul>
-                                }
-                                else
-                                {
-                                    <span>Немає валют</span>
-                                }
-                            </p>
-
+                        </div>
+                        <!-- ... Вміст картки ... -->
+                        <div class="card-body">
                             @if (ad.InvestFields != null && ad.InvestFields.Any())
                             {
-                                <p class="card-text">
-                                    Галузі інвестування:
+                                <div class="tags-container">
                                     @foreach (var field in ad.InvestFields)
                                     {
-                                        <span class="badge bg-primary">@field</span>
+                                        <span class="tag">@field</span>
                                     }
-                                </p>
+                                </div>
                             }
+                           
+                            <div class="card-text">
+                                <i class="fas fa-check-circle"></i>
+                                <span>від прибутку (@ad.AnnualInvestmentReturn %)</span>
+                                @if (ad.AcceptedCurrencies != null && ad.AcceptedCurrencies.Any())
+                                {
+                                    @foreach (var currency in ad.AcceptedCurrencies)
+                                    {
+                                        <span class="text-right">@currency.MinValue @currency.Currency<i class="icon-right fas fa-dollar-sign"></i></span>
+                                    }
+                                }
+                            </div>
+                            <div class="card-text">
+                                <i class="fas fa-times-circle"></i>
+                                <span>@InvestmentHelper.FormatInvestmentDuration(ad.InvestDurationYears, ad.InvestDurationMonths)</span>
+                                <span class="text-right">ще щось<i class="icon-right fas fa-info-circle"></i></span>
+                            </div>
+                            <a href="@Url.Action("Details", new { id = ad.Id })" class="btn btn-primary mb-1">Детальніше</a>
 
-                            <a href="@Url.Action("Details", new { id = ad.Id })" class="btn btn-primary">Детальніше</a>
                         </div>
                     </div>
                 </div>
@@ -71,6 +70,6 @@
     }
 
 </div>
-@await Html.PartialAsync("_Pagination", Model.PaginationInfo);
+@await Html.PartialAsync("_Pagination", Model.PaginationInfo)
 
 

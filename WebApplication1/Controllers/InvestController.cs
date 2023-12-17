@@ -91,6 +91,7 @@ namespace WebApplication1.Controllers
         }
 
         // GET: InvestController/Edit/5
+        [EmailConfirmedAuthorize]
         public async Task<ActionResult> Edit(Guid id)
         {
             var db = await _investAdRepository.Get(id);

@@ -13,7 +13,7 @@
         </form>
 
         <div class="text-end">
-            
+
             <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#filterForm" aria-expanded="false" aria-controls="filterForm">
                 <i class="bi bi-filter-square"></i> Показати фільтри
             </button>
@@ -67,90 +67,84 @@
         <div class="row">
             @foreach (var ad in Model.Entities)
             {
-                <div class="col-6">
-                    <div class="card h-100">
-                        <div class="card-header">
-                            <div class="card-title">@ad.Title</div>
-                            
-                        </div>
-                        <!-- ... Вміст картки ... -->
-                        <div class="card-body">
+                <div class="col-6 mb-3">
+                    <a class="card-link" href="@Url.Action("Details", new { id = ad.Id })">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">@ad.Title</div>
 
-                            @if (ad.InvestFields != null && ad.InvestFields.Any())
-                            {
-                                <div class="tags-container">
-                                    @foreach (var field in ad.InvestFields)
-                                    {
-                                        <span class="tag">@field</span>
-                                    }
-                                </div>
-                            }
-                            
-                                
-
-                                <div class="card-text">
-                                <i class="fas fa-check-circle"></i>
-                                <span>@ad.AnnualInvestmentReturn %</span>
-                                    <i class="fas fa-calendar-alt"></i>
-                                    <span class="text-right">@ad.CreatedAt</span>
-                                </div>
                             </div>
-                           
-                            <div class="card-text">
-                                <i class="fas fa-check-circle"></i>
-                                @if (ad.AcceptedCurrencies != null && ad.AcceptedCurrencies.Any())
+                            <!-- ... Вміст картки ... -->
+                            <div class="card-body">
+
+                                @if (ad.InvestFields != null && ad.InvestFields.Any())
                                 {
-                                    @foreach (var currency in ad.AcceptedCurrencies)
-                                    {
-                                        <span class="text-right">@currency.MinValue @currency.Currency</span>
-                                    }
+                                    <div class="tags-container">
+                                        @foreach (var field in ad.InvestFields)
+                                        {
+                                            <span class="tag">@field</span>
+                                        }
+                                    </div>
                                 }
-                                <i class="fas fa-times-circle"></i>
-                                <span>@InvestmentHelper.FormatInvestmentDuration(ad.InvestDurationYears, ad.InvestDurationMonths)</span>
-                            </div>
+                                <div class="d-flex justify-content-between">
+                                    <span> <i class="bi bi-percent"></i> @ad.AnnualInvestmentReturn</span>
+                                    <span><i class="bi bi-calendar-range"></i> @InvestmentHelper.FormatInvestmentDuration(ad.InvestDurationYears, ad.InvestDurationMonths)</span>
+                                    @if (ad.AcceptedCurrencies != null && ad.AcceptedCurrencies.Any())
+                                    {
+                                        <ul>
+                                            @foreach (var currency in ad.AcceptedCurrencies)
+                                            {
+                                                <li> <i class="bi bi-check-circle"></i>@currency.MinValue @currency.Currency</li>
+                                            }
+                                        </ul>
 
-                        
-                    </div>
+                                    }
+                                </div>
+
+                                <span class="text-muted"><i class="bi bi-clock-history"></i> @ad.CreatedAt.ToString("dd.MM.yyyy")</span>
+                            </div>
+                        </div>
+                    </a>
                 </div>
             }
         </div>
     }
     else
     {
-        <p>No ads available.</p>
+        <p>Немає оголошень</p>
     }
 
 </div>
 @await Html.PartialAsync("_Pagination", Model.PaginationInfo)
 
 @section Scripts{
-<script>
-    $( document ).ready( function () {
-        // Set initial placeholder on page load
-        updatePlaceholders( $( '#currency' ).val() );
+    <script>
+        $( document ).ready( function () {
+            // Set initial placeholder on page load
+            updatePlaceholders( $( '#currency' ).val() );
 
-        $( '#currency' ).change( function () {
-            var selectedCurrency = $( this ).val();
-            updatePlaceholders( selectedCurrency );
+            $( '#currency' ).change( function () {
+                var selectedCurrency = $( this ).val();
+                updatePlaceholders( selectedCurrency );
+            } );
+
+            function updatePlaceholders( selectedCurrency ) {
+                var placeholdersMin = {
+                    'UAH': 'Min сума (UAH)',
+                    'USD': 'Min сума (USD)',
+                    '': 'Min сума'
+                };
+
+                var placeholdersMax = {
+                    'UAH': 'Max сума (UAH)',
+                    'USD': 'Max сума (USD)',
+                    '': 'Max сума'
+                };
+
+                $( '#minInvestment' ).attr( 'placeholder', placeholdersMin[selectedCurrency] );
+                $( '#maxInvestment' ).attr( 'placeholder', placeholdersMax[selectedCurrency] );
+            }
         } );
-
-        function updatePlaceholders( selectedCurrency ) {
-            var placeholdersMin = {
-                'UAH': 'Min сума (UAH)',
-                'USD': 'Min сума (USD)',
-                '': 'Min сума'
-            };
-
-            var placeholdersMax = {
-                'UAH': 'Max сума (UAH)',
-                'USD': 'Max сума (USD)',
-                '': 'Max сума'
-            };
-
-            $( '#minInvestment' ).attr( 'placeholder', placeholdersMin[selectedCurrency] );
-            $( '#maxInvestment' ).attr( 'placeholder', placeholdersMax[selectedCurrency] );
-        }
-    } );
-</script>
+    </script>
 }
 

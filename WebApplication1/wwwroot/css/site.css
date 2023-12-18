@@ -274,10 +274,9 @@ body {
     margin-left: 10px; /* Відступ після тексту для правої іконки */
 }
 
-.card-info .author,
 .card-info .date {
     display: flex;
     align-items: center;
     font-size: 0.85rem;
-    color: #6c757d;
+    
 }

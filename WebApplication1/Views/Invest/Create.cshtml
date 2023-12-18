@@ -27,6 +27,10 @@
         @Html.AntiForgeryToken()
         <input asp-for="AuthorId" type="hidden" value="@ViewData["UserId"]" />
         <div class="row mb-4">
+            <div class="form-group d-flex mb-3 align-items-center">
+                <input type="checkbox" class="bigger-checkbox" checked asp-for="Published" />
+                <label asp-for="Published">Оголошення буде відображене після публікації</label>
+            </div>
             <div class="form-group col-6">
                 <div class="mb-4">
                     <p asp-for="Title">Надайте короткий опис, що буде відображатись на головній сторінці.</p>

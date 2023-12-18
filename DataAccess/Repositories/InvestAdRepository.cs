@@ -17,7 +17,7 @@ namespace DataAccess.Repositories
         public async Task<IEnumerable<InvestAd>> GetAllShorted(int page = 1, int offset = 10)
         {
             return await _dbContext.InvestAds
-                //.Where(x => x.Published)
+                .Where(x => x.Published)
                 .OrderByDescending(x => x.CreatedAt)
                 .Skip((page - 1) * offset)
                 .Take(offset)
@@ -32,7 +32,7 @@ namespace DataAccess.Repositories
         public async Task<IEnumerable<InvestAd>> Filter(decimal? minUsd, decimal? maxUSd, decimal? minAnnualInvestmentReturn, decimal? maxAnnualInvestmentReturn, int page, int offset)
         {
             var query = _dbContext.InvestAds
-                .Where(x => x.History.Any()); // Ensure there is at least one item in the History list
+                .Where(x => x.Published && x.History.Any()); // Ensure there is at least one item in the History list
 
             // Apply other filters as needed
             if (minUsd.HasValue)
@@ -70,7 +70,7 @@ namespace DataAccess.Repositories
         public async Task<int> Count()
         {
             return await _dbContext.InvestAds
-                //.Where(x => x.Published)
+                .Where(x => x.Published)
                 .CountAsync();
         }
 
@@ -80,6 +80,10 @@ namespace DataAccess.Repositories
                     .ThenInclude(x => x.AcceptedCurrencies)
                 .Include(x => x.History.OrderByDescending(y => y.CreatedAt).Take(1))
                     .ThenInclude(x => x.InvestFields).ThenInclude(x => x.InvestField)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+        private async Task<InvestAd?> GetRaw(Guid id) => await _dbContext.InvestAds
+
                 .FirstOrDefaultAsync(x => x.Id == id);
 
         public async Task<bool> Contains(InvestAd ad) => await _dbContext.InvestAds.ContainsAsync(ad);
@@ -99,8 +103,10 @@ namespace DataAccess.Repositories
 
         public async Task Edit(InvestAd investAd, InvestAdExtraInfo investAdExtraInfo)
         {
-            if (await Contains(investAd))
+            var inv = await GetRaw(investAd.Id);
+            if (inv != null)
             {
+                inv.Published = investAd.Published;
                 investAdExtraInfo.InvestAdId = investAd.Id;
                 await _dbContext.InvestAdExtraInfo.AddAsync(investAdExtraInfo);
                 await _dbContext.SaveChangesAsync();

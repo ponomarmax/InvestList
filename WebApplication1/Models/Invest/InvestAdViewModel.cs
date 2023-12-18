@@ -33,5 +33,6 @@ namespace WebApplication1.Models.Invest
         public virtual ICollection<InvestFieldView> InvestFields { get; set; }
 
         public string? ImageBase64 { get; set; }
+        public bool Published { get; set; }
     }
 }

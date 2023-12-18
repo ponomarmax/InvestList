@@ -283,3 +283,9 @@ body {
 .card-link {
     text-decoration: none;
 }
+
+.bigger-checkbox {
+    width: 30px; /* Adjust the width as needed */
+    height: 30px; /* Adjust the height as needed */
+    margin-right: 10px; /* Adjust the spacing as needed */
+}

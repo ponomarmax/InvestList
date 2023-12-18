@@ -23,6 +23,10 @@
     <form method="post" asp-action="Edit" asp-route-id="@ViewData["Id"]" enctype="multipart/form-data">
         @Html.AntiForgeryToken()
         <input asp-for="AuthorId" type="hidden" value="@ViewData["UserId"]" />
+        <div class="form-group d-flex mb-3 align-items-center">
+            <input type="checkbox" class="bigger-checkbox" checked="@Model.Published" asp-for="Published" />
+            <label asp-for="Published">Оголошення буде відображене після публікації</label>
+        </div>
         <div class="row mb-4">
             <div class="form-group col-6">
                 <div class="mb-4">
@@ -32,12 +36,14 @@
                 </div>
                 <div class="mb-4">
                     <label asp-for="AnnualInvestmentReturn">Річна дохідність у %</label>
-                    <input asp-for="AnnualInvestmentReturn" class="form-control" type="number" />
+                    <input asp-for="AnnualInvestmentReturn" class="form-control" type="number"
+                           value="@((Model.AnnualInvestmentReturn != default(decimal)) ? Model.AnnualInvestmentReturn : null)" />
                     <span asp-validation-for="AnnualInvestmentReturn" class="text-danger"></span>
                 </div>
                 <div class="mb-4">
                     <label asp-for="TotalInvestment">Загальний обсяг інвестицій (у $):</label>
-                    <input type="number" asp-for="TotalInvestment" class="form-control" />
+                    <input type="number" asp-for="TotalInvestment" class="form-control"
+                           value="@((Model.TotalInvestment != default(decimal)) ? Model.TotalInvestment : null)" />
                     <span asp-validation-for="TotalInvestment" class="text-danger"></span>
                 </div>
                 <div class="mb-4">

@@ -29,7 +29,6 @@ namespace WebApplication1.AutomapperProfiles
             CreateMap<PostInvestAdViewModel, InvestAd>()
                 .ForMember(x => x.Id, y => y.MapFrom(z => Guid.NewGuid()))
                 .ForMember(x => x.Author, y => y.Ignore())
-                .ForMember(x => x.Published, y => y.MapFrom(z => true))
                 .ForMember(x => x.History, y => y.Ignore())
                 .ForMember(x => x.CreatedAt, y => y.MapFrom(z => DateTimeOffset.UtcNow))
                 .ForMember(x => x.UpdateAt, y => y.MapFrom(z => DateTimeOffset.UtcNow));

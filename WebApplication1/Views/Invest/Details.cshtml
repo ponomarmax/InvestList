@@ -12,6 +12,18 @@
 
 <div class="container">
     <div class="row mb-4">
+
+        <div class="form-group">
+            @if (@Model.Published)
+            {
+                <label asp-for="Published">Оголошення активне</label>
+            }
+            else
+            {
+                <label asp-for="Published">Оголошення вимкнене</label>
+            }
+        </div>
+
         <div class="col-6">
             <h2>@Model.Title</h2>
             <div>Автор: <a href="#">@Model.Author</a></div>

@@ -3,31 +3,29 @@
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
 
-<li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-        Мій кабінет
-    </a>
-    <ul class="dropdown-menu">
-        @if (SignInManager.IsSignedIn(User))
-        {
-            <li class="nav-item">
-                <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"> @User.Identity?.Name!</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Invest", new { area = "" })"> Вийти</a>
-            </li>
-        }
-        else
-        {
 
-            <li class="nav-item">
-                <a class="nav-link" asp-controller="Register" asp-action="Index"> Зареєструватися</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" asp-controller="Login" asp-action="Index"> Війти</a>
-            </li>
-        }
-    </ul>
-</li>
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="col-md-3 dropdown text-end">
+        <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-person"></i>
+        </a>
+        <ul class="dropdown-menu text-small" style="">
+            <li><a class="dropdown-item" href="#">New project...</a></li>
+            <li><a class="dropdown-item" href="#">Settings</a></li>
+            <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">@User.Identity?.Name!</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Invest", new { area = "" })">Вийти</a></li>
+        </ul>
+    </div>
+}
+else
+{
+    <div class="col-md-3 text-end">
+        <a href="@Url.Action("Index", "Login")" class="btn btn-outline-primary me-2">Війти</a>
+        <a href="@Url.Action("Index", "Register")" class="btn btn-primary">Зареєструватися</a>
+    </div>
+}
+
 
 

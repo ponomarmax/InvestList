@@ -8,10 +8,12 @@ namespace WebApplication1.Filters
     public class EmailConfirmedAuthorizeFilter: IAuthorizationFilter
     {
         private readonly IUserRepository _repository;
+        private readonly IInvestAdRepository _inVepository;
 
-        public EmailConfirmedAuthorizeFilter(IUserRepository repository)
+        public EmailConfirmedAuthorizeFilter(IUserRepository repository, IInvestAdRepository inVepository)
         {
             _repository = repository;
+            _inVepository = inVepository;
         }
 
         public void OnAuthorization(AuthorizationFilterContext context)
@@ -29,6 +31,14 @@ namespace WebApplication1.Filters
             {
                 context.Result = new ForbidResult();
             }
+
+            var postId = context.HttpContext.Request.RouteValues["id"] as string;
+            if (!string.IsNullOrEmpty(postId))
+            {
+                if (!_inVepository.IsOwnerOfPost(userId, postId).GetAwaiter().GetResult())
+                    context.Result = new ForbidResult();
+            }
+
         }
     }
     public class EmailConfirmedAuthorizeAttribute: TypeFilterAttribute
@@ -37,4 +47,4 @@ namespace WebApplication1.Filters
         {
         }
     }
-    }
+}

@@ -49,6 +49,66 @@ namespace WebApplication1.Controllers
             return View(viewModel);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Search(SearchRequestViewModel model)
+        {
+            var resultDb = await _investAdRepository.Search(model.SearchTerm, model.CurrentPage, ItemsPerPage);
+            var resultView = _mapper.Map<IEnumerable<SearchResultViewModel>>(resultDb);
+
+
+            var totalItems = (await _investAdRepository.Count())!;
+            var totalPages = (int)Math.Ceiling((double)totalItems / ItemsPerPage);
+
+
+            var viewModel = new ListSearchResultViewModel
+            {
+                Entities = resultView,
+                SearchTerm = model.SearchTerm,
+                PaginationInfo = new PaginationInfo
+                {
+                    CurrentPage = model.CurrentPage,
+                    TotalPages = totalPages,
+                    PageSize = ItemsPerPage
+                }
+            };
+
+            return View("Search", viewModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Filter(FilterRequestModel model)
+        {
+            var range = getUsdRange(model.Currency, model.MinInvestment, model.MaxInvestment);
+            var resultDb = await _investAdRepository.Filter(range.minUsd, range.maxUSd, model.MinAnnualInvestmentReturn, model.MaxAnnualInvestmentReturn, model.CurrentPage+1, ItemsPerPage);
+            var resultView = _mapper.Map<IEnumerable<GetAllAdsView>>(resultDb);
+
+
+            var totalItems = (await _investAdRepository.Count())!;
+            var totalPages = (int)Math.Ceiling((double)totalItems / ItemsPerPage);
+
+
+            var viewModel = new ListInvestsViewModel
+            {
+                Entities = resultView,
+                //SearchTerm = model.SearchTerm,
+                PaginationInfo = new PaginationInfo
+                {
+                    CurrentPage = model.CurrentPage,
+                    TotalPages = totalPages,
+                    PageSize = ItemsPerPage
+                }
+            };
+
+            return View("Index",viewModel);
+        }
+
+        private (decimal? minUsd, decimal? maxUSd) getUsdRange(Currency currency, decimal? min, decimal? max)
+        {
+            if (currency == Currency.USD)
+                return (min, max);
+            return (min / 37, max / 37);
+        }
+
         [EmailConfirmedAuthorize]
         public async Task<ActionResult> Create()
         {
@@ -72,7 +132,7 @@ namespace WebApplication1.Controllers
                 PrepopulateCreate();
                 return View("Create", model);
             }
-            
+
             var inv = _mapper.Map<InvestAd>(model);
             var invMeta = _mapper.Map<InvestAdExtraInfo>(model);
             //invMeta.ImageData = await ConvertImageToByteArray(model.Image);
@@ -133,32 +193,8 @@ namespace WebApplication1.Controllers
             ViewData["UserId"] = userId;
         }
 
-       
-
-        [HttpGet]
-        public async Task<IActionResult> Search(SearchRequestViewModel model)
-        {
-            var resultDb = await _investAdRepository.Search(model.SearchTerm, model.CurrentPage, ItemsPerPage);
-            var resultView = _mapper.Map<IEnumerable<SearchResultViewModel>>(resultDb);
 
 
-            var totalItems = (await _investAdRepository.Count())!;
-            var totalPages = (int)Math.Ceiling((double)totalItems / ItemsPerPage);
 
-
-            var viewModel = new ListSearchResultViewModel
-            {
-                Entities = resultView,
-                SearchTerm = model.SearchTerm,
-                PaginationInfo = new PaginationInfo
-                {
-                    CurrentPage = model.CurrentPage,
-                    TotalPages = totalPages,
-                    PageSize = ItemsPerPage
-                }
-            };
-
-            return View("Search", viewModel);
-        }
     }
 }

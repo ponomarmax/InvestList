@@ -1,4 +1,5 @@
-﻿using DataAccess.Interfaces;
+﻿using Common;
+using DataAccess.Interfaces;
 using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,6 +29,44 @@ namespace DataAccess.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<InvestAd>> Filter(decimal? minUsd, decimal? maxUSd, decimal? minAnnualInvestmentReturn, decimal? maxAnnualInvestmentReturn, int page, int offset)
+        {
+            var query = _dbContext.InvestAds
+                .Where(x => x.History.Any()); // Ensure there is at least one item in the History list
+
+            // Apply other filters as needed
+            if (minUsd.HasValue)
+            {
+                query = query.Where(x => x.History.OrderByDescending(y => y.CreatedAt).First().AcceptedCurrencies.Any(c => c.Currency == Currency.USD && c.MinValue >= minUsd.Value));
+            }
+
+            if (maxUSd.HasValue)
+            {
+                query = query.Where(x => x.History.OrderByDescending(y => y.CreatedAt).First().AcceptedCurrencies.Any(c => c.Currency == Currency.USD && c.MinValue <= maxUSd.Value));
+            }
+
+            if (minAnnualInvestmentReturn.HasValue)
+            {
+                query = query.Where(x => x.History.OrderByDescending(y => y.CreatedAt).First().AnnualInvestmentReturn >= minAnnualInvestmentReturn.Value);
+            }
+
+            if (maxAnnualInvestmentReturn.HasValue)
+            {
+                query = query.Where(x => x.History.OrderByDescending(y => y.CreatedAt).First().AnnualInvestmentReturn <= maxAnnualInvestmentReturn.Value);
+            }
+
+            return await query
+                .OrderByDescending(x => x.CreatedAt)
+                .Skip((page - 1) * offset)
+                .Take(offset)
+                .Include(x => x.Author)
+                .Include(x => x.History.OrderByDescending(y => y.CreatedAt).Take(1))
+                    .ThenInclude(x => x.InvestFields)
+                 .Include(x => x.History.OrderByDescending(y => y.CreatedAt).Take(1))
+                    .ThenInclude(x => x.AcceptedCurrencies)
+                .ToListAsync();
+        }
+
         public async Task<int> Count()
         {
             return await _dbContext.InvestAds
@@ -36,7 +75,7 @@ namespace DataAccess.Repositories
         }
 
         public async Task<InvestAd?> Get(Guid id) => await _dbContext.InvestAds
-                .Include(x=>x.Author)
+                .Include(x => x.Author)
                 .Include(x => x.History.OrderByDescending(y => y.CreatedAt).Take(1))
                     .ThenInclude(x => x.AcceptedCurrencies)
                 .Include(x => x.History.OrderByDescending(y => y.CreatedAt).Take(1))
@@ -93,6 +132,11 @@ namespace DataAccess.Repositories
                 .Take(itemsPerPage);
 
             return r;
+        }
+
+        public async Task<bool> IsOwnerOfPost(string userId, string invId)
+        {
+            return await _dbContext.InvestAds.AnyAsync(x => x.Id == Guid.Parse(invId) && x.AuthorId == userId);
         }
     }
 }

@@ -16,7 +16,7 @@ namespace WebApplication1.Controllers
         private readonly IInvestAdRepository _investAdRepository;
         private readonly IMapper _mapper;
         private readonly Dictionary<Guid, string> _investFields;
-        private const int ItemsPerPage = 10; // Set the desired items per page
+        private const int ItemsPerPage = 4; // Set the desired items per page
 
         public InvestController(IInvestAdRepository investAdRepository, IMapper mapper)
         {
@@ -25,15 +25,13 @@ namespace WebApplication1.Controllers
             _investFields = _investAdRepository.GetFields().GetAwaiter().GetResult().ToDictionary(x => x.Id, y => y.Title);
         }
 
-        public async Task<ActionResult> Index(int page = 1)
+        public async Task<ActionResult> Index(int page = 1, FilterRequestModel filterModel = null)
         {
-            var resultDb = await _investAdRepository.GetAllShorted(page, ItemsPerPage);
+                var range = filterModel == null ? (null, null) : getUsdRange(filterModel.Currency, filterModel.MinInvestment, filterModel.MaxInvestment);
+            var (count, resultDb) = await _investAdRepository.Filter(range.minUsd, range.maxUSd, filterModel?.MinAnnualInvestmentReturn, filterModel?.MaxAnnualInvestmentReturn, page, ItemsPerPage);
             var resultView = _mapper.Map<IEnumerable<GetAllAdsView>>(resultDb);
 
-
-            var totalItems = (await _investAdRepository.Count())!;
-            var totalPages = (int)Math.Ceiling((double)totalItems / ItemsPerPage);
-
+            var totalPages = (int)Math.Ceiling((double)count / ItemsPerPage);
 
             var viewModel = new ListInvestsViewModel
             {
@@ -43,10 +41,11 @@ namespace WebApplication1.Controllers
                     CurrentPage = page,
                     TotalPages = totalPages,
                     PageSize = ItemsPerPage
-                }
+                },
+                FilterModel = filterModel
             };
 
-            return View(viewModel);
+            return View("Index", viewModel);
         }
 
         [HttpGet]
@@ -79,18 +78,14 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult> Filter(FilterRequestModel model)
         {
             var range = getUsdRange(model.Currency, model.MinInvestment, model.MaxInvestment);
-            var resultDb = await _investAdRepository.Filter(range.minUsd, range.maxUSd, model.MinAnnualInvestmentReturn, model.MaxAnnualInvestmentReturn, model.CurrentPage+1, ItemsPerPage);
+            var (count, resultDb) = await _investAdRepository.Filter(range.minUsd, range.maxUSd, model.MinAnnualInvestmentReturn, model.MaxAnnualInvestmentReturn, model.CurrentPage, ItemsPerPage);
             var resultView = _mapper.Map<IEnumerable<GetAllAdsView>>(resultDb);
 
-
-            var totalItems = (await _investAdRepository.Count())!;
-            var totalPages = (int)Math.Ceiling((double)totalItems / ItemsPerPage);
-
+            var totalPages = (int)Math.Ceiling((double)count / ItemsPerPage);
 
             var viewModel = new ListInvestsViewModel
             {
                 Entities = resultView,
-                //SearchTerm = model.SearchTerm,
                 PaginationInfo = new PaginationInfo
                 {
                     CurrentPage = model.CurrentPage,
@@ -99,7 +94,7 @@ namespace WebApplication1.Controllers
                 }
             };
 
-            return View("Index",viewModel);
+            return View("Index", viewModel);
         }
 
         private (decimal? minUsd, decimal? maxUSd) getUsdRange(Currency currency, decimal? min, decimal? max)

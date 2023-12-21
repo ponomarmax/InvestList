@@ -7,7 +7,7 @@ namespace DataAccess.Interfaces
         Task<int> Count();
         Task Create(InvestAd investAd, InvestAdExtraInfo investAdExtraInfo);
         Task Edit(InvestAd investAd, InvestAdExtraInfo investAdExtraInfo);
-        Task<IEnumerable<InvestAd>> Filter(decimal? minUsd, decimal? maxUSd, decimal? minAnnualInvestmentReturn, decimal? maxAnnualInvestmentReturn, int page, int offset);
+        Task<(int count, IEnumerable<InvestAd> list)> Filter(decimal? minUsd, decimal? maxUSd, decimal? minAnnualInvestmentReturn, decimal? maxAnnualInvestmentReturn, int page, int offset);
         Task<InvestAd?> Get(Guid id);
         Task<IEnumerable<InvestAd>> GetAllShorted(int page = 1, int offset = 0);
         Task<IEnumerable<InvestField>> GetFields();

@@ -29,21 +29,49 @@ namespace DataAccess.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<InvestAd>> Filter(decimal? minUsd, decimal? maxUSd, decimal? minAnnualInvestmentReturn, decimal? maxAnnualInvestmentReturn, int page, int offset)
+        public async Task<(int count, IEnumerable<InvestAd> list)> Filter(decimal? minUsd, decimal? maxUSd, decimal? minAnnualInvestmentReturn, decimal? maxAnnualInvestmentReturn, int page, int offset)
         {
             var query = _dbContext.InvestAds
                 .Where(x => x.Published && x.History.Any()); // Ensure there is at least one item in the History list
 
             // Apply other filters as needed
-            if (minUsd.HasValue)
-            {
-                query = query.Where(x => x.History.OrderByDescending(y => y.CreatedAt).First().AcceptedCurrencies.Any(c => c.Currency == Currency.USD && c.MinValue >= minUsd.Value));
-            }
+            //if (minUsd.HasValue)
+            //{
+            //    query = query.Where(x => x.History.OrderByDescending(y => y.CreatedAt).First().AcceptedCurrencies.Any(c => c.Currency == Currency.USD && c.MinValue >= minUsd.Value));
+            //}
 
-            if (maxUSd.HasValue)
-            {
-                query = query.Where(x => x.History.OrderByDescending(y => y.CreatedAt).First().AcceptedCurrencies.Any(c => c.Currency == Currency.USD && c.MinValue <= maxUSd.Value));
-            }
+            //if (maxUSd.HasValue)
+            //{
+            //    query = query.Where(x => x.History.OrderByDescending(y => y.CreatedAt).First().AcceptedCurrencies.Any(c => c.Currency == Currency.USD && c.MinValue <= maxUSd.Value));
+            //}
+            var (uahMin, uahMax) = getUahRange(minUsd, maxUSd);
+
+            //if (uahMin.HasValue)
+            //{
+            //    query = query.Where(x => x.History.OrderByDescending(y => y.CreatedAt).First().AcceptedCurrencies.Any(c => c.Currency == Currency.UAH && c.MinValue >= uahMin.Value));
+            //}
+
+            //if (uahMax.HasValue)
+            //{
+            //    query = query.Where(x => x.History.OrderByDescending(y => y.CreatedAt).First().AcceptedCurrencies.Any(c => c.Currency == Currency.UAH && c.MinValue <= uahMax.Value));
+            //}
+
+            bool hasUsdFilter = minUsd.HasValue || maxUSd.HasValue;
+            bool hasUahFilter = uahMin.HasValue || uahMax.HasValue;
+
+            if (hasUsdFilter || hasUahFilter)
+
+                query = query.Where(x =>
+                    x.History.OrderByDescending(y => y.CreatedAt)
+                        .First()
+                        .AcceptedCurrencies.Any(c =>
+                            ((hasUsdFilter && c.Currency == Currency.USD) || (hasUahFilter && c.Currency == Currency.UAH)) &&
+                            (
+                                (hasUsdFilter && (minUsd == null || c.Currency == Currency.USD && c.MinValue >= minUsd.Value) && (maxUSd == null || c.Currency == Currency.USD && c.MinValue <= maxUSd.Value)) ||
+                                (hasUahFilter && (uahMin == null || c.Currency == Currency.UAH && c.MinValue >= uahMin.Value) && (uahMax == null || c.Currency == Currency.UAH && c.MinValue <= uahMax.Value))
+                            )
+                        )
+                );
 
             if (minAnnualInvestmentReturn.HasValue)
             {
@@ -55,7 +83,11 @@ namespace DataAccess.Repositories
                 query = query.Where(x => x.History.OrderByDescending(y => y.CreatedAt).First().AnnualInvestmentReturn <= maxAnnualInvestmentReturn.Value);
             }
 
-            return await query
+            var count = await query.CountAsync();
+
+            if (count > 0)
+            {
+                return (count, await query
                 .OrderByDescending(x => x.CreatedAt)
                 .Skip((page - 1) * offset)
                 .Take(offset)
@@ -64,7 +96,14 @@ namespace DataAccess.Repositories
                     .ThenInclude(x => x.InvestFields)
                  .Include(x => x.History.OrderByDescending(y => y.CreatedAt).Take(1))
                     .ThenInclude(x => x.AcceptedCurrencies)
-                .ToListAsync();
+                .ToListAsync());
+            }
+            return (0, Array.Empty<InvestAd>());
+        }
+
+        private (decimal? minUsd, decimal? maxUSd) getUahRange(decimal? min, decimal? max)
+        {
+            return (min * 37, max * 37);
         }
 
         public async Task<int> Count()

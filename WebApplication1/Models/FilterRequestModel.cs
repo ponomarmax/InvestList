@@ -13,7 +13,7 @@ namespace WebApplication1.Models
         public decimal? MinAnnualInvestmentReturn { get; set; }
         
         public decimal? MaxAnnualInvestmentReturn { get; set; }
-        
-        public int CurrentPage { get; set; }
+
+        public int CurrentPage { get; set; } = 1;
     }
 }

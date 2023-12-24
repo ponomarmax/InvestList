@@ -72,7 +72,7 @@
         <div class="row">
             @foreach (var ad in Model.Entities)
             {
-                <div class="col-6 mb-3">
+                <div class="col-6 col-lg-3 mb-3">
                     <a class="card-link" href="@Url.Action("Details", new { id = ad.Id })">
                         <div class="card">
                             <div class="card-header">
@@ -91,22 +91,25 @@
                                         }
                                     </div>
                                 }
-                                <div class="d-flex justify-content-between">
-                                    <span> <i class="bi bi-percent"></i> @ad.AnnualInvestmentReturn</span>
-                                    <span><i class="bi bi-calendar-range"></i> @InvestmentHelper.FormatInvestmentDuration(ad.InvestDurationYears, ad.InvestDurationMonths)</span>
+                                
+                                    
+                                    <div> <i class="bi bi-percent"></i> @ad.AnnualInvestmentReturn</div>
+                                    <div><i class="bi bi-calendar-range"></i> @InvestmentHelper.FormatInvestmentDuration(ad.InvestDurationYears, ad.InvestDurationMonths)</div>
                                     @if (ad.AcceptedCurrencies != null && ad.AcceptedCurrencies.Any())
                                     {
-                                        <ul>
+                                        
                                             @foreach (var currency in ad.AcceptedCurrencies)
                                             {
-                                                <li> <i class="bi bi-check-circle"></i>@currency.MinValue @currency.Currency</li>
+                                                <div> <i class="bi bi-check-circle"></i> @currency.MinValue @currency.Currency</div>
                                             }
-                                        </ul>
+                                        
 
                                     }
-                                </div>
+                                    <div class="text-muted"><i class="bi bi-clock-history"></i> @ad.CreatedAt.ToString("dd.MM.yyyy")</div>
+                                
+                                
 
-                                <span class="text-muted"><i class="bi bi-clock-history"></i> @ad.CreatedAt.ToString("dd.MM.yyyy")</span>
+                                
                             </div>
                         </div>
                     </a>

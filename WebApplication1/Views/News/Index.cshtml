@@ -12,7 +12,7 @@
         object-fit: cover; /* or object-fit: contain; depending on your preference */
     }
 </style>
-@await Html.PartialAsync("_Pagination", Model.PaginationInfo);
+
 <div class="container">
     @if (Model.Entities != null && Model.Entities.Any())
     {
@@ -33,7 +33,7 @@
                             </div>
                             <div class="author-created-row">
                                 <span>Автор: <a href="#">@ad.Author</a></span>
-                                <span class="text-muted"> | @ad.CreatedAt</span>
+                                <span class="text-muted"> @ad.CreatedAt</span>
                             </div>
 
                             <div class="truncated-text mb-4">
@@ -70,5 +70,5 @@
     }
 
 </div>
-@await Html.PartialAsync("_Pagination", Model.PaginationInfo);
+
 

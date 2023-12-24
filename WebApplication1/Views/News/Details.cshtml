@@ -46,11 +46,11 @@
 
 @if (Model.AuthorId != null && User?.FindFirst(ClaimTypes.NameIdentifier)?.Value == Model.AuthorId)
 {
-    <div>
-        <a asp-action="Edit" asp-route-id="@Model.Id">Редагувати</a> |
-    </div>
+    <div class="d-flex justify-content-start">
+    <!-- Кнопка Редагувати -->
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary me-2">Редагувати</a>
 }
 
-<div>
-    <a asp-action="Index">Назад</a>
+<!-- Кнопка Назад -->
+    <a asp-action="Index" class="btn btn-secondary">Назад</a>
 </div>

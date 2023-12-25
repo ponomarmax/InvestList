@@ -36,14 +36,12 @@
                 </div>
                 <div class="mb-4">
                     <label asp-for="AnnualInvestmentReturn">Річна дохідність у %</label>
-                    <input asp-for="AnnualInvestmentReturn" class="form-control" type="number"
-                           value="@((Model.AnnualInvestmentReturn != default(decimal)) ? Model.AnnualInvestmentReturn : null)" />
+                    <input asp-for="AnnualInvestmentReturn" class="form-control" type="number" value="@((Model?.AnnualInvestmentReturn > 0) ? Model?.AnnualInvestmentReturn : null)"/>
                     <span asp-validation-for="AnnualInvestmentReturn" class="text-danger"></span>
                 </div>
                 <div class="mb-4">
                     <label asp-for="TotalInvestment">Загальний обсяг інвестицій (у $):</label>
-                    <input type="number" asp-for="TotalInvestment" class="form-control"
-                           value="@((Model.TotalInvestment != default(decimal)) ? Model.TotalInvestment : null)" />
+                    <input type="number" asp-for="TotalInvestment" class="form-control" value="@((Model?.TotalInvestment > 0) ? Model?.TotalInvestment : null)" />
                     <span asp-validation-for="TotalInvestment" class="text-danger"></span>
                 </div>
                 <div class="mb-4">

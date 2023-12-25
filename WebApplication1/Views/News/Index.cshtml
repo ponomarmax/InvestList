@@ -5,62 +5,45 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<style>
-    .resized-image {
-        width: 300px;
-        height: 300px;
-        object-fit: cover; /* or object-fit: contain; depending on your preference */
-    }
-</style>
-
 <div class="container">
     @if (Model.Entities != null && Model.Entities.Any())
     {
         <div class="row">
             @foreach (var ad in Model.Entities)
             {
-                <div class="col-md-4">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <div class="text-center mb-4">
-                                <img src="data:image;base64,@ad.ImageBase64" alt="Investment Image" class="img-fluid resized-image" />
-                            </div>
-                            <h3 class="card-title">@ad.Title</h3>
-                            <div class="tags mb-3">
-                                <span class="badge bg-primary">Технології</span>
-                                <span class="badge bg-primary">Інвестиції</span>
-                                <span class="badge bg-primary">Інновації</span>
-                            </div>
-                            <div class="author-created-row">
-                                <span>Автор: <a href="#">@ad.Author</a></span>
-                                <span class="text-muted"> @ad.CreatedAt</span>
-                            </div>
 
-                            <div class="truncated-text mb-4">
-                                <!-- Container for truncated text -->
-                                <p class="card-text">
-                                    Наша мета - не просто задовольнити потреби наших клієнтів,
-                                    але й виходити за їхні рамки, створюючи інноваційні рішення, які перевершують
-                                    очікування. Ми розуміємо важливість стійкості та надійності, тому кожен етап виробництва
-                                    відбувається з особливою увагою до деталей та контролю якості.
-                                </p>
+                <div class="col-6 col-lg-3 mb-3">
+                    <a class="card-link" href="@Url.Action("Details", new { id = ad.Id })">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">@ad.Title</div>
                             </div>
-                            @if (ad?.Tags?.Any() == true)
-                            {
-                                <p class="card-text mb-4">
-                                    Галузі інвестування:
-                                    @foreach (var field in ad.Tags)
-                                    {
-                                        <span class="badge bg-primary">@field.Name</span>
-                                    }
-                                </p>
-                            }
+                            <div class="card-body">
+                                <div class="tags mb-3">
+                                    <span class="badge bg-primary">Технології</span>
+                                    <span class="badge bg-primary">Інвестиції</span>
+                                    <span class="badge bg-primary">Інновації</span>
+                                </div>
+                                <div class="author-created-row">
+                                    <span>Автор: <a href="#">@ad.Author</a></span>
+                                    <span class="text-muted"> @ad.CreatedAt.ToString("dd.MM.yyyy")</span>
+                                </div>
 
-
-                            <a href="@Url.Action("Details", new { id = ad.Id })" class="btn btn-primary">Детальніше</a>
+                                @if (ad?.Tags?.Any() == true)
+                                {
+                                    <p class="card-text mb-4">
+                                        Галузі інвестування:
+                                        @foreach (var field in ad.Tags)
+                                        {
+                                            <span class="badge bg-primary">@field.Name</span>
+                                        }
+                                    </p>
+                                }
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
+
             }
         </div>
     }

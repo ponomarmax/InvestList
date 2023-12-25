@@ -28,7 +28,7 @@ public class LoginController: Controller
 
             if (result.Succeeded)
             {
-                return RedirectToAction("Index", "Home"); // Redirect to home page on successful login
+                return RedirectToAction("Index", "Invest"); // Redirect to home page on successful login
             }
 
             ModelState.AddModelError(string.Empty, "Invalid login attempt");

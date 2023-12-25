@@ -8,8 +8,8 @@
 
 <div class="px-3 py-2 border-bottom mb-3">
     <div class="container d-flex flex-wrap justify-content-center">
-@*         <form class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto" role="search">
-            <partial name="_Search" />
+        @*         <form class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto" role="search">
+        <partial name="_Search" />
         </form> *@
 
         <div class="text-end">
@@ -29,13 +29,13 @@
             <div class="col-md-6">
                 <div class="mb-3">
                     @{
-            var selectedCurrency = Model.FilterModel?.Currency;
-        }
-        <label>Мінімальний поріг входу</label>
-        <select class="form-select" name="currency" id="currency">
-            <option value="UAH" selected="@(Currency.UAH == selectedCurrency)">UAH</option>
-            <option value="USD" selected="@(Currency.USD == selectedCurrency)">USD</option>
-            </select>
+                        var selectedCurrency = Model.FilterModel?.Currency;
+                    }
+                    <label>Мінімальний поріг входу</label>
+                    <select class="form-select" name="currency" id="currency">
+                        <option value="UAH" selected="@(Currency.UAH == selectedCurrency)">UAH</option>
+                        <option value="USD" selected="@(Currency.USD == selectedCurrency)">USD</option>
+                    </select>
 
                 </div>
                 <div class="mb-3">
@@ -91,25 +91,21 @@
                                         }
                                     </div>
                                 }
-                                
-                                    
-                                    <div> <i class="bi bi-percent"></i> @ad.AnnualInvestmentReturn</div>
-                                    <div><i class="bi bi-calendar-range"></i> @InvestmentHelper.FormatInvestmentDuration(ad.InvestDurationYears, ad.InvestDurationMonths)</div>
-                                    @if (ad.AcceptedCurrencies != null && ad.AcceptedCurrencies.Any())
+
+
+                                <div> <i class="bi bi-percent"></i> @ad.AnnualInvestmentReturn.ToString("0.")</div>
+                                <div><i class="bi bi-calendar-range"></i> @InvestmentHelper.FormatInvestmentDuration(ad.InvestDurationYears, ad.InvestDurationMonths)</div>
+                                @if (ad.AcceptedCurrencies != null && ad.AcceptedCurrencies.Any())
+                                {
+
+                                    @foreach (var currency in ad.AcceptedCurrencies)
                                     {
-                                        
-                                            @foreach (var currency in ad.AcceptedCurrencies)
-                                            {
-                                                <div> <i class="bi bi-check-circle"></i> @currency.MinValue @currency.Currency</div>
-                                            }
-                                        
-
+                                        <div> <i class="bi bi-check-circle"></i> @currency.MinValue @currency.Currency</div>
                                     }
-                                    <div class="text-muted"><i class="bi bi-clock-history"></i> @ad.CreatedAt.ToString("dd.MM.yyyy")</div>
-                                
-                                
 
-                                
+
+                                }
+                                <div class="text-muted"><i class="bi bi-clock-history"></i> @ad.CreatedAt.ToString("dd.MM.yyyy")</div>
                             </div>
                         </div>
                     </a>
@@ -127,25 +123,25 @@
 
 @section Scripts{
     <script>
-        document.getElementById('filterButton').addEventListener('click', function() {
-        // Handle the click event here
-        arrangeAndSubmit();
-    });
+        document.getElementById( 'filterButton' ).addEventListener( 'click', function () {
+            // Handle the click event here
+            arrangeAndSubmit();
+        } );
 
-    function arrangeAndSubmit() {
-        // Remove disabled inputs before submitting the form
-var form = document.getElementById('filterForm');
-        
-        // Remove empty parameters
-        Array.from(form.elements).forEach(function (element) {
-            if (element.type !== 'submit' && element.value.trim() === "") {
-                element.disabled = true;
-            }
-        });
+        function arrangeAndSubmit() {
+            // Remove disabled inputs before submitting the form
+            var form = document.getElementById( 'filterForm' );
 
-        // Submit the form
-        form.submit();
-    }
+            // Remove empty parameters
+            Array.from( form.elements ).forEach( function ( element ) {
+                if ( element.type !== 'submit' && element.value.trim() === "" ) {
+                    element.disabled = true;
+                }
+            } );
+
+            // Submit the form
+            form.submit();
+        }
     </script>
 }
 

@@ -99,7 +99,7 @@
 
                                     @foreach (var currency in ad.AcceptedCurrencies)
                                     {
-                                        <div> <i class="bi bi-check-circle"></i> @currency.MinValue @currency.Currency</div>
+                                        <div> <i class="bi bi-check-circle"></i> @currency.MinValue.ToString("0.") @currency.Currency</div>
                                     }
 
 

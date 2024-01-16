@@ -8,18 +8,23 @@ namespace WebApplication1.AutomapperProfiles
 {
     public class InvestMappingProfile: Profile
     {
+        string GetPartBeforeAt(string email)
+        {
+            return email?.Split('@')[0];
+        }
+        
         public InvestMappingProfile()
         {
             CreateMap<InvestAd, GetAllAdsView>()
-                .ForMember(x => x.Title, y=>y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.Title)))
-                .ForMember(x => x.AcceptedCurrencies, y=>y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.AcceptedCurrencies)))
-                .ForMember(x => x.InvestFields, y=>y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.InvestFields).Select(x=>x.InvestField.Title)))
-                .ForMember(x => x.InvestDurationYears, y=>y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.InvestDurationYears)))
-                .ForMember(x => x.AnnualInvestmentReturn, y=>y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.AnnualInvestmentReturn)))
-                .ForMember(x => x.InvestDurationMonths, y=>y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.InvestDurationMonths)))
+                .ForMember(x => x.Title, y => y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.Title)))
+                .ForMember(x => x.AcceptedCurrencies, y => y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.AcceptedCurrencies)))
+                .ForMember(x => x.InvestFields, y => y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.InvestFields).Select(x => x.InvestField.Title)))
+                .ForMember(x => x.InvestDurationYears, y => y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.InvestDurationYears)))
+                .ForMember(x => x.AnnualInvestmentReturn, y => y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.AnnualInvestmentReturn)))
+                .ForMember(x => x.InvestDurationMonths, y => y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.InvestDurationMonths)))
                 .ForMember(x => x.CreatedAt, y => y.MapFrom(z => z.CreatedAt.DateTime))
-                .ForMember(x => x.ImageData, y=>y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.ImageBase64)))
-                .ForMember(x => x.Author, y => y.MapFrom(z => z.Author.Email));
+                .ForMember(x => x.ImageData, y => y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.ImageBase64)))
+                .ForMember(x => x.Author, y => y.MapFrom(z => GetPartBeforeAt(z.Author.Email)));
 
             CreateMap<InvestAdExtraInfo, SearchResultViewModel>()
                .ForMember(x => x.Title, y => y.MapFrom(src => src.Title))
@@ -36,7 +41,7 @@ namespace WebApplication1.AutomapperProfiles
             CreateMap<PostInvestAdViewModel, InvestAdExtraInfo>()
                 .ForMember(x => x.Id, y => y.MapFrom(z => Guid.NewGuid()))
                 .ForMember(x => x.InvestDurationMonths, y => y.MapFrom(z => z.InvestDurationMonths.HasValue ? z.InvestDurationMonths - z.InvestDurationMonths / 12 * 12 : 0))
-                .ForMember(x => x.InvestDurationYears, y => y.MapFrom(z => z.InvestDurationYears.HasValue ? z.InvestDurationYears + z.InvestDurationMonths / 12 : 0))
+                .ForMember(x => x.InvestDurationYears, y => y.MapFrom(z => z.InvestDurationYears.HasValue ? z.InvestDurationYears + (z.InvestDurationMonths.HasValue ? z.InvestDurationMonths / 12 : 0) : 0))
                 .ForMember(x => x.Id, y => y.MapFrom(z => Guid.NewGuid()))
                 .ForMember(x => x.InvestAd, y => y.Ignore())
                 .ForMember(x => x.InvestAdId, y => y.Ignore())
@@ -59,7 +64,7 @@ namespace WebApplication1.AutomapperProfiles
             CreateMap<InvestAd, InvestAdViewModel>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => src.AuthorId))
-                .ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.Author.Email))
+                .ForMember(dest => dest.Author, opt => opt.MapFrom(src => GetPartBeforeAt(src.Author.Email)))
                 .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt.DateTime))
                 .ForMember(dest => dest.UpdateAt, opt => opt.MapFrom(src => src.UpdateAt.DateTime))
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.Title)))

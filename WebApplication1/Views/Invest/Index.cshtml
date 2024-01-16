@@ -2,7 +2,7 @@
 @model WebApplication1.Models.Invest.ListInvestsViewModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Головна";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -79,7 +79,6 @@
                                 <div class="card-title">@ad.Title</div>
 
                             </div>
-                            <!-- ... Вміст картки ... -->
                             <div class="card-body">
 
                                 @if (ad.InvestFields != null && ad.InvestFields.Any())

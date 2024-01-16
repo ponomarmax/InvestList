@@ -11,7 +11,6 @@
         <div class="row">
             @foreach (var ad in Model.Entities)
             {
-
                 <div class="col-6 col-lg-3 mb-3">
                     <a class="card-link" href="@Url.Action("Details", new { id = ad.Id })">
                         <div class="card">
@@ -24,10 +23,8 @@
                                     <span class="badge bg-primary">Інвестиції</span>
                                     <span class="badge bg-primary">Інновації</span>
                                 </div>
-                                <div class="author-created-row">
-                                    <span>Автор: <a href="#">@ad.Author</a></span>
-                                    <span class="text-muted"> @ad.CreatedAt.ToString("dd.MM.yyyy")</span>
-                                </div>
+                                <div> <i class="bi bi-percent"></i>Автор: <a href="#">@ad.Author</a></div>
+                                <div><i class="bi bi-calendar-range"></i>@ad.CreatedAt.ToString("dd.MM.yyyy")</div>
 
                                 @if (ad?.Tags?.Any() == true)
                                 {
@@ -49,7 +46,7 @@
     }
     else
     {
-        <p>No ads available.</p>
+        <p>Немає новин</p>
     }
 
 </div>

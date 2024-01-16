@@ -5,6 +5,7 @@ using DataAccess.Repositories;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using WebApplication1.Configs;
 using WebApplication1.Extensions;
 using WebApplication1.Validators;
@@ -21,15 +22,26 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews()
-.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<PostInvestAdViewModelValidator>());
+.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<PostInvestAdViewModelValidator>())
+.AddRazorRuntimeCompilation();
 builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.Load<EmailConfig>(builder.Configuration, "Email");
 builder.Services.AddTransient<IEmailSender, WebApplication1.Services.EmailSender>();
 builder.Services.AddTransient<IInvestAdRepository, InvestAdRepository>();
-builder.Services.AddScoped<IUserRepository,UserRepository>();
-builder.Services.AddScoped<INewsRepository,NewsRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<INewsRepository, NewsRepository>();
+Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(builder.Configuration)
+            .CreateLogger();
+Log.Logger.Information("App is starting");
+builder.Services.AddLogging(loggingBuilder =>
+{
+    loggingBuilder.AddSerilog();
+});
 var app = builder.Build();
+
+Log.CloseAndFlush();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

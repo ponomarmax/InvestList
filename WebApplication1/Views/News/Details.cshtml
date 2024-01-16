@@ -44,11 +44,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
-<div class="d-flex justify-content-start">
-    @if (Model.AuthorId != null && User?.FindFirst(ClaimTypes.NameIdentifier)?.Value == Model.AuthorId)
-    {
-        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary me-2">Редагувати</a>
-    }
+@if (Model.AuthorId != null && User?.FindFirst(ClaimTypes.NameIdentifier)?.Value == Model.AuthorId)
+{
+    <div class="d-flex justify-content-start">
+    <!-- Кнопка Редагувати -->
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary me-2">Редагувати</a>
+}
 
+<!-- Кнопка Назад -->
     <a asp-action="Index" class="btn btn-secondary">Назад</a>
 </div>

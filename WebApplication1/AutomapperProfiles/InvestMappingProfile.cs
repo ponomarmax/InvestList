@@ -72,6 +72,8 @@ namespace WebApplication1.AutomapperProfiles
                 .ForMember(dest => dest.AnnualInvestmentReturn, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.AnnualInvestmentReturn)))
                 .ForMember(dest => dest.AcceptedCurrencies, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.AcceptedCurrencies)))
                 .ForMember(dest => dest.TotalInvestment, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.TotalInvestment)))
+                .ForMember(dest => dest.InvestDurationYears, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.InvestDurationYears)))
+                .ForMember(dest => dest.InvestDurationMonths, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.InvestDurationMonths)))
                 .ForMember(dest => dest.ImageBase64, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.ImageBase64)))
                 .ForMember(dest => dest.InvestFields, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.InvestFields.Select(y => y.InvestField))));
 

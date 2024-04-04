@@ -39,12 +39,12 @@
                 </div>
                 <div class="mb-4">
                     <label asp-for="AnnualInvestmentReturn">Річна дохідність у %</label>
-                    <input asp-for="AnnualInvestmentReturn" class="form-control" type="number" />
+                    <input asp-for="AnnualInvestmentReturn" class="form-control" type="decimal" />
                     <span asp-validation-for="AnnualInvestmentReturn" class="text-danger"></span>
                 </div>
                 <div class="mb-4">
                     <label asp-for="TotalInvestment">Загальний обсяг інвестицій (у $):</label>
-                    <input type="number" asp-for="TotalInvestment" class="form-control" />
+                    <input type="decimal" asp-for="TotalInvestment" class="form-control" />
                     <span asp-validation-for="TotalInvestment" class="text-danger"></span>
                 </div>
                 <div class="mb-4">
@@ -54,7 +54,7 @@
                     {
                         <div class="input-group">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                            <input placeholder="@currency" type="number" id="AcceptedCurrencies[@currency]" name="AcceptedCurrencies[@currency]" class="form-control" value="@Model?.AcceptedCurrencies?[(Currency)currency]" />
+                            <input placeholder="@currency" type="decimal" id="AcceptedCurrencies[@currency]" name="AcceptedCurrencies[@currency]" class="form-control" value="@Model?.AcceptedCurrencies?[(Currency)currency]" />
                         </div>
                     }
                 </div>

@@ -1,4 +1,5 @@
 ﻿using DataAccess.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -69,6 +70,11 @@ namespace DataAccess
                 new Tag { Id = Guid.NewGuid(), Name = "Шахраї" },
                 new Tag { Id = Guid.NewGuid(), Name = "Цікавинка" },
                 new Tag { Id = Guid.NewGuid(), Name = "Сенсація" }
+            );
+
+            modelBuilder.Entity<IdentityRole>().HasData(
+                new IdentityRole() { Name = "business", NormalizedName = "BUSINESS"},
+                new IdentityRole() { Name = "admin", NormalizedName = "ADMIN"}
             );
 
             // Add more seed data as needed

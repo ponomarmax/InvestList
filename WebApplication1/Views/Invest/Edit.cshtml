@@ -36,12 +36,12 @@
                 </div>
                 <div class="mb-4">
                     <label asp-for="AnnualInvestmentReturn">Річна дохідність у %</label>
-                    <input asp-for="AnnualInvestmentReturn" class="form-control" type="number" value="@((Model?.AnnualInvestmentReturn > 0) ? Model?.AnnualInvestmentReturn : null)"/>
+                    <input asp-for="AnnualInvestmentReturn" class="form-control" type="decimal" value="@((Model?.AnnualInvestmentReturn > 0) ? (decimal)Model?.AnnualInvestmentReturn : null)"/>
                     <span asp-validation-for="AnnualInvestmentReturn" class="text-danger"></span>
                 </div>
                 <div class="mb-4">
                     <label asp-for="TotalInvestment">Загальний обсяг інвестицій (у $):</label>
-                    <input type="number" asp-for="TotalInvestment" class="form-control" value="@((Model?.TotalInvestment > 0) ? Model?.TotalInvestment : null)" />
+                    <input type="decimal" asp-for="TotalInvestment" class="form-control" value="@((Model?.TotalInvestment > 0) ? (decimal)Model?.TotalInvestment : null)" />
                     <span asp-validation-for="TotalInvestment" class="text-danger"></span>
                 </div>
                 <div class="mb-4">
@@ -54,11 +54,11 @@
                             @{
                                 if (Model.AcceptedCurrencies.TryGetValue((Currency)currency, out var value))
                                 {
-                                    <input placeholder="@currency" type="number" id="AcceptedCurrencies[@currency]" name="AcceptedCurrencies[@currency]" class="form-control" value="@value" />
+                                    <input placeholder="@currency" type="decimal" id="AcceptedCurrencies[@currency]" name="AcceptedCurrencies[@currency]" class="form-control" value="@value" />
                                 }
                                 else
                                 {
-                                    <input placeholder="@currency" type="number" id="AcceptedCurrencies[@currency]" name="AcceptedCurrencies[@currency]" class="form-control" />
+                                    <input placeholder="@currency" type="decimal" id="AcceptedCurrencies[@currency]" name="AcceptedCurrencies[@currency]" class="form-control" />
                                 }
                             }
                         </div>

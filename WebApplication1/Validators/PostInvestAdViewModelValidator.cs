@@ -15,6 +15,12 @@ namespace WebApplication1.Validators
                 .Length(10, 200)
                 .WithMessage("Кількість символів має бути в діпазоні (10,200)");
 
+            RuleFor(vm => vm.AnnualInvestmentReturn)
+                .NotEmpty()
+                .WithMessage("Поле обов'язкове для заповення")
+                .GreaterThan(0)
+                .WithMessage("Значення має бути позитивним");
+
             RuleFor(vm => vm.TotalInvestment)
                 .NotNull()
                 .WithMessage("Поле обов'язкове для заповення")
@@ -33,22 +39,22 @@ namespace WebApplication1.Validators
                 .Cascade(CascadeMode.StopOnFirstFailure)
                 .Must(x => x.HasValue && x > 0)
                 .When(x => x.InvestDurationMonths == null || x.InvestDurationMonths <= 0)
-                .WithMessage("Either InvestDurationYears or InvestDurationMonths must have a positive value.");
+                .WithMessage("Вкажіть скільки років триває інвестаційний період. Значення має бути позитивним");
 
             RuleFor(x => x.InvestDurationMonths)
                 .Cascade(CascadeMode.StopOnFirstFailure)
                 .Must(x => x.HasValue && x > 0)
                 .When(x => x.InvestDurationYears == null || x.InvestDurationYears <= 0)
-                .WithMessage("Either InvestDurationYears or InvestDurationMonths must have a positive value.");
+                .WithMessage("Вкажіть скільки місяців триває інвестаційний період. Значення має бути позитивним");
 
             RuleFor(x => new { x.InvestDurationYears, x.InvestDurationMonths })
                .Cascade(CascadeMode.StopOnFirstFailure)
                .Must(pair => pair.InvestDurationMonths >= 0 && pair.InvestDurationYears >= 0)
                .When(pair => pair.InvestDurationYears.HasValue && pair.InvestDurationMonths.HasValue)
-               .WithMessage("InvestDurationMonths must have a positive value.");
+               .WithMessage("Значення має бути позитивним");
 
             RuleFor(x => x.ImageBase64)
-               .Must(BeAValidBase64String).WithMessage("Invalid base64-encoded image data.");
+               .Must(BeAValidBase64String).WithMessage("Завантажте зображення");
         }
 
         private static bool HaveAtLeastOneNonNullAndPositiveValue(IDictionary<Currency, decimal?> acceptedCurrencies)

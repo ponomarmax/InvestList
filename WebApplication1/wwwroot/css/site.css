@@ -18,6 +18,10 @@ body {
     padding: 20px;
 }
 
+pre {
+    white-space: pre-line;
+}
+
 .card-img-top {
     max-height: 300px;
     object-fit: cover;

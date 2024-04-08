@@ -34,8 +34,11 @@
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="#">Мої заявки</a></li>
                         <li><a asp-action="Create" class="dropdown-item">Створити заявку про пошук інвестицій</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a asp-action="Create" asp-controller="News" class="dropdown-item">Створити новину</a></li>
+                        @if (User.IsInRole(Const.AdminRole))
+                        {
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a asp-action="Create" asp-controller="News" class="dropdown-item">Створити новину</a></li>
+                        }
                     }
                 </ul>
             </li>

@@ -3,14 +3,14 @@ using Common;
 using DataAccess.Interfaces;
 using DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using WebApplication1.Filters;
 using WebApplication1.Models;
 using WebApplication1.Models.Invest;
 
 namespace WebApplication1.Controllers
 {
+    [Authorize(Roles = $"{Const.BusinessRole},{Const.AdminRole}")]
     public class InvestController: Controller
     {
         private readonly IInvestAdRepository _investAdRepository;
@@ -25,6 +25,7 @@ namespace WebApplication1.Controllers
             _investFields = _investAdRepository.GetFields().GetAwaiter().GetResult().ToDictionary(x => x.Id, y => y.Title);
         }
 
+        [AllowAnonymous]
         public async Task<ActionResult> Index(int page = 1, FilterRequestModel filterModel = null)
         {
                 var range = filterModel == null ? (null, null) : getUsdRange(filterModel.Currency, filterModel.MinInvestment, filterModel.MaxInvestment);
@@ -49,6 +50,7 @@ namespace WebApplication1.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Search(SearchRequestViewModel model)
         {
             var resultDb = await _investAdRepository.Search(model.SearchTerm, model.CurrentPage, ItemsPerPage);
@@ -75,6 +77,7 @@ namespace WebApplication1.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Filter(FilterRequestModel model)
         {
             var range = getUsdRange(model.Currency, model.MinInvestment, model.MaxInvestment);
@@ -138,6 +141,7 @@ namespace WebApplication1.Controllers
             return RedirectToAction("Details", new { id = inv.Id });
         }
 
+        [AllowAnonymous]
         public async Task<ActionResult> Details(Guid id)
         {
             var db = await _investAdRepository.Get(id);
@@ -187,9 +191,5 @@ namespace WebApplication1.Controllers
             ViewData["InvestFieldsOptions"] = _investFields;
             ViewData["UserId"] = userId;
         }
-
-
-
-
     }
 }

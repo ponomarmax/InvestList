@@ -14,14 +14,12 @@
     <div class="row mb-4">
         <div class="col-6">
             <h2>@Model.Title</h2>
-            <div>Автор: <a href="#">@Model.Author</a><br><br>
                 <div class="row mb-4">
                     <div class="well col-12">
                         <label>Опис</label>
                         <pre>@Model.Description</pre>
                     </div>
                 </div>
-            </div>
 
             @if (Model?.Tags?.Any() == true)
             {

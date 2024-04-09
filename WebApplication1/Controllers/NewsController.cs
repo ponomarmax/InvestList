@@ -2,6 +2,7 @@
 using Common;
 using DataAccess.Interfaces;
 using DataAccess.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Filters;
 using WebApplication1.Models;
@@ -9,6 +10,7 @@ using WebApplication1.Models.News;
 
 namespace WebApplication1.Controllers
 {
+    [Authorize(Roles = $"{Const.AdminRole}")]
     public class NewsController: Controller
     {
         private readonly INewsRepository _repository;
@@ -23,6 +25,7 @@ namespace WebApplication1.Controllers
             //_investFields = _investAdRepository.GetFields().GetAwaiter().GetResult().ToDictionary(x => x.Id, y => y.Title);
         }
 
+        [AllowAnonymous]
         public async Task<ActionResult> Index(int page = 1)
         {
             var resultDb = await _repository.GetPage(page, ItemsPerPage);
@@ -47,6 +50,7 @@ namespace WebApplication1.Controllers
             return View(viewModel);
         }
 
+        [AllowAnonymous]
         public async Task<ActionResult> Details(Guid id)
         {
             var db = await _repository.Get(id);

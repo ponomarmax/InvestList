@@ -4,6 +4,7 @@ using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240408143048_seed-roles")]
+    partial class seedroles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -346,15 +348,13 @@ namespace DataAccess.Migrations
                         {
                             Id = "43f568be-9943-40b2-9afe-e4204fb622f8",
                             ConcurrencyStamp = "2d082636-24ca-4798-a1e6-7aaa33cb3c59",
-                            Name = "business",
-                            NormalizedName = "BUSINESS"
+                            Name = "business"
                         },
                         new
                         {
                             Id = "9ec17071-35bc-4910-ad12-ca4b5cef0ce5",
                             ConcurrencyStamp = "8d25da6b-f780-4062-8a63-d37775d7e319",
-                            Name = "admin",
-                            NormalizedName = "ADMIN"
+                            Name = "admin"
                         });
                 });
 

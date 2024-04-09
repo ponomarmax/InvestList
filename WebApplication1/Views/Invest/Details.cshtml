@@ -54,13 +54,13 @@
 
             @if (Model.InvestFields != null && Model.InvestFields.Any())
             {
-                <div class="card-text">
+                <pre class="card-text">
                     Галузі інвестування:
                     @foreach (var field in Model.InvestFields)
                     {
                         <span class="badge bg-primary">@field.Title</span>
                     }
-                </div>
+                </pre>
             }
         </div>
         <div class="col-6">
@@ -82,11 +82,7 @@
 
 @if (Model.AuthorId != null && User?.FindFirst(ClaimTypes.NameIdentifier)?.Value == Model.AuthorId)
 {
-    <div>
-        <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    </div>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary me-2">Edit</a>
 }
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>

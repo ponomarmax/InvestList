@@ -20,6 +20,7 @@ body {
 
 pre {
     white-space: pre-line;
+    font-family: 'Arial', sans-serif;
 }
 
 .card-img-top {

@@ -82,7 +82,7 @@
 
 @if (Model.AuthorId != null && User?.FindFirst(ClaimTypes.NameIdentifier)?.Value == Model.AuthorId)
 {
-        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary me-2">Edit</a>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary me-2">Редагувати</a>
 }
 
-    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    <a asp-action="Index" class="btn btn-secondary">Повернутись до списку</a>

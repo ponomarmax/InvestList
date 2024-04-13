@@ -18,6 +18,11 @@ body {
     padding: 20px;
 }
 
+pre {
+    white-space: pre-line;
+    font-family: 'Arial', sans-serif;
+}
+
 .card-img-top {
     max-height: 300px;
     object-fit: cover;
@@ -210,6 +215,7 @@ body {
 
 .card-title {
     font-size: 1.5rem; /* Розмір заголовка картки */
+    color: #333333;
 }
 
 .card-subtitle {

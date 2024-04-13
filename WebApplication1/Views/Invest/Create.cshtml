@@ -87,7 +87,7 @@
                     </div>
                 </div>
 
-                <label asp-for="Description"></label>
+                <label asp-for="Description">Опис</label>
                 <textarea rows="10" asp-for="Description" class="form-control"></textarea>
             </div>
         </div>
@@ -126,15 +126,12 @@
 
         </div>
 
-        <button type="submit" class="btn btn-primary">Опублікувати</button>
-
+        <button type="submit" class="btn btn-primary">Опублікувати</button> 
+        <a asp-action="Index" class="btn btn-secondary">Повернутись до списку</a>
     </form>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
+    
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");

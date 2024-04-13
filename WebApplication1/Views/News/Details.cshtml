@@ -14,7 +14,12 @@
     <div class="row mb-4">
         <div class="col-6">
             <h2>@Model.Title</h2>
-            <div>Автор: <a href="#">@Model.Author</a></div>
+                <div class="row mb-4">
+                    <div class="well col-12">
+                        <label>Опис</label>
+                        <pre>@Model.Description</pre>
+                    </div>
+                </div>
 
             @if (Model?.Tags?.Any() == true)
             {
@@ -31,12 +36,6 @@
             <img src="data:image;base64,@Model.ImageBase64" alt="Investment Image" class="img-fluid resized-image" />
         </div>
     </div>
-    <div class="row mb-4">
-        <div class="well col-12">
-            <label>Опис</label>
-            <div>@Model.Description</div>
-        </div>
-    </div>
 </div>
 
 <!-- Bootstrap JS and dependencies -->
@@ -46,10 +45,10 @@
 <div class="d-flex justify-content-start">
     @if (Model.AuthorId != null && User?.FindFirst(ClaimTypes.NameIdentifier)?.Value == Model.AuthorId)
     {
-        <!-- Кнопка Редагувати -->
+        // Кнопка Редагувати
         <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary me-2">Редагувати</a>
     }
 
     <!-- Кнопка Назад -->
-    <a asp-action="Index" class="btn btn-secondary">Назад</a>
+    <a asp-action="Index" class="btn btn-secondary">Повернутись до списку</a>
 </div>

@@ -23,8 +23,7 @@
                                     <span class="badge bg-primary">Інвестиції</span>
                                     <span class="badge bg-primary">Інновації</span>
                                 </div>
-                                <div> <i class="bi bi-percent"></i>Автор: <a href="#">@ad.Author</a></div>
-                                <div><i class="bi bi-calendar-range"></i>@ad.CreatedAt.ToString("dd.MM.yyyy")</div>
+                                <div><i class="bi bi-calendar-range"></i>@ad.CreatedAt.ToString(" dd.MM.yyyy")</div>
 
                                 @if (ad?.Tags?.Any() == true)
                                 {

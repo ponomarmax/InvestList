@@ -13,14 +13,14 @@ html {
     min-height: 100%;
 }
 
-body {
-    margin-bottom: 60px;
-    padding: 20px;
+header {
+    padding: 10px;
 }
 
 pre {
     white-space: pre-line;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 16px;
 }
 
 .card-img-top {
@@ -150,7 +150,7 @@ pre {
 
 .footer {
     background-color: #f8f9fa;
-    padding: 5px 0;
+    padding: 0px;
 }
 
 .footer-column {
@@ -258,7 +258,6 @@ pre {
 
 .card-text {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     width: 100%; /* Заповнення ширини картки */
 }
@@ -290,4 +289,9 @@ pre {
     width: 30px; /* Adjust the width as needed */
     height: 30px; /* Adjust the height as needed */
     margin-right: 10px; /* Adjust the spacing as needed */
+}
+
+#tag {
+    margin-left: 10px;
+    font-size: 14px;
 }

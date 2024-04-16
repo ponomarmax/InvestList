@@ -16,11 +16,11 @@
         <div class="form-group">
             @if (@Model.Published)
             {
-                <label asp-for="Published">Оголошення активне</label>
+                <label style="background-color: #77dd77" asp-for="Published">Оголошення активне</label>
             }
             else
             {
-                <label asp-for="Published">Оголошення вимкнене</label>
+                <label style="background-color: #dc143c" asp-for="Published">Оголошення вимкнене</label>
             }
         </div>
 

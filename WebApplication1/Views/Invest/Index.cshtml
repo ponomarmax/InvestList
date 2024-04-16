@@ -6,7 +6,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="px-3 py-2 border-bottom mb-3">
+<div class="px-3 py-2 border-top mb-3 border-bottom mb-3">
     <div class="container d-flex flex-wrap justify-content-center">
         @*         <form class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto" role="search">
         <partial name="_Search" />
@@ -48,18 +48,17 @@
 
             <!-- Annual Investment Return Filter Column -->
             <div class="col-md-6">
-                <label for="minAnnualInvestmentReturn" class="form-label">Річний прибуток (%)</label>
+                <label for="minAnnualInvestmentReturn" class="form-label mb-0">Річний прибуток (%)</label>
                 <div class="mb-3">
                     <input type="number" class="form-control" name="minAnnualInvestmentReturn" id="minAnnualInvestmentReturn" step="0.01" placeholder="min" value="@Model.FilterModel?.MinAnnualInvestmentReturn" />
                 </div>
                 <div class="mb-3">
                     <input type="number" class="form-control" name="maxAnnualInvestmentReturn" id="maxAnnualInvestmentReturn" step="0.01" placeholder="max" value="@Model.FilterModel?.MaxAnnualInvestmentReturn" />
                 </div>
-            </div>
-
-            <!-- Button -->
-            <div class="col-12 mb-3">
-                <button type="submit" class="btn btn-primary me-2" id="filterButton">Фільтрувати</button>
+                 <!-- Button -->
+                <div class="col-12 mb-3">
+                    <button type="submit" class="btn btn-primary me-2" id="filterButton">Фільтрувати</button>
+                </div>
             </div>
         </div>
     </form>

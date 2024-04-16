@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.HttpLogging;
+﻿using System.Diagnostics;
+using Microsoft.AspNetCore.HttpLogging;
 using Serilog;
 using Serilog.Events;
 
@@ -10,6 +11,7 @@ namespace WebApplication1.Logging
         /// <param name="extendLoggerConfiguration">Add the ability to extend existing logger configuration</param>
         public static WebApplicationBuilder ConfigureLogging(this WebApplicationBuilder builder, Action<HostBuilderContext, IServiceProvider, LoggerConfiguration>? customLoggerConfiguration = null, Action<LoggerConfiguration>? extendLoggerConfiguration = null)
         {
+            Activity.DefaultIdFormat = ActivityIdFormat.W3C;
             Environment.CurrentDirectory = AppContext.BaseDirectory;
             builder.Host.UseSerilog(customLoggerConfiguration?? ConfigureDefaultLogger);
             builder.Services.AddHttpLogging(logging =>
@@ -31,7 +33,8 @@ namespace WebApplication1.Logging
         {
             return loggerConfiguration
                 .ReadFrom.Configuration(configuration)
-                .Enrich.FromLogContext();
+                .Enrich.FromLogContext()
+                .Enrich.WithClientIp();
         }
     }
 }

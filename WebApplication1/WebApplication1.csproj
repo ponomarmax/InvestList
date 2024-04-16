@@ -25,6 +25,7 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.23" />
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" ExcludeAssets="All" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.18" />
+		<PackageReference Include="Serilog.Enrichers.ClientInfo" Version="2.0.3" />
 		<PackageReference Include="Serilog.Enrichers.Context" Version="4.6.5" />
 		<PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
 		<PackageReference Include="Serilog.Settings.Configuration" Version="8.0.0" />

@@ -30,12 +30,13 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult> Index(RegisterViewModel model)
         {
             if (ModelState.IsValid)
-            {
-                var user = new User { UserName = model.Email, Email = model.Email };
+            { var user = new User { UserName = model.Email, Email = model.Email};
                 var result = await _userManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)
                 {
+                    await _signInManager.UserManager.AddToRoleAsync(user, Const.BusinessRole);
+
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.Action("ConfirmEmail", "Register", new { userId = user.Id, code }, protocol: HttpContext.Request.Scheme);

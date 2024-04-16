@@ -22,37 +22,6 @@ namespace DataAccess.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("DataAccess.Models.ContactPerson", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneVerified")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("RelatedInvestAdId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RelatedInvestAdId");
-
-                    b.ToTable("ContactPersons");
-                });
-
             modelBuilder.Entity("DataAccess.Models.InvestAd", b =>
                 {
                     b.Property<Guid>("Id")
@@ -85,30 +54,26 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<decimal>("AnnualInvestmentReturn")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Description")
-                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageBase64")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("InvestAdId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<TimeSpan>("InvestPeriod")
-                        .HasColumnType("time");
+                    b.Property<int>("InvestDurationMonths")
+                        .HasColumnType("int");
 
-                    b.Property<string>("OtherInfo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProfitPaymentScheme")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SpendInvestDesc")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("InvestDurationYears")
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -156,27 +121,27 @@ namespace DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("8f4e8da4-0839-4363-9c0c-ea8091c9ec94"),
+                            Id = new Guid("1b0483b4-c724-4e6f-a3cf-82e8bfe28b42"),
                             Title = "Фінанси"
                         },
                         new
                         {
-                            Id = new Guid("e62a727b-9cb4-4189-955d-c0e3d1692435"),
+                            Id = new Guid("bc972689-8b2a-48cc-91c9-501ab1282129"),
                             Title = "Сільськогосподарська техніка"
                         },
                         new
                         {
-                            Id = new Guid("0a2020e6-3076-4f8b-be00-8f7f7d16d995"),
+                            Id = new Guid("bde5a537-9e5f-45b4-9d9e-21be47ef8de1"),
                             Title = "Займи"
                         },
                         new
                         {
-                            Id = new Guid("c562bb0c-4982-470b-acf4-77f03d09a75b"),
+                            Id = new Guid("b5d92a84-f627-44ea-bdcb-31f5eb1782ae"),
                             Title = "Лізинг Авто"
                         },
                         new
                         {
-                            Id = new Guid("a3487350-2bb1-46dd-8617-489f60522c8f"),
+                            Id = new Guid("a29bacac-0b19-4543-b275-0fac79657308"),
                             Title = "Кафе та ресторани"
                         });
                 });
@@ -201,6 +166,83 @@ namespace DataAccess.Migrations
                     b.HasIndex("InvestAdExtraInfoId");
 
                     b.ToTable("MinimalInvestEntrance");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.News", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AuthorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageBase64")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.ToTable("News");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.NewsToTags", b =>
+                {
+                    b.Property<Guid>("NewsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TagId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("NewsId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("NewsToTags");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.Tag", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tags");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("357e5238-d21d-460d-9cdc-045ff24fb0b7"),
+                            Name = "Шахраї"
+                        },
+                        new
+                        {
+                            Id = new Guid("c557d1ad-29d7-4c88-9a99-535f83d3802a"),
+                            Name = "Цікавинка"
+                        },
+                        new
+                        {
+                            Id = new Guid("0b4c3d4f-b3bf-472d-9109-993d0e000872"),
+                            Name = "Сенсація"
+                        });
                 });
 
             modelBuilder.Entity("DataAccess.Models.User", b =>
@@ -285,6 +327,9 @@ namespace DataAccess.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
@@ -292,7 +337,25 @@ namespace DataAccess.Migrations
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "43f568be-9943-40b2-9afe-e4204fb622f8",
+                            ConcurrencyStamp = "2d082636-24ca-4798-a1e6-7aaa33cb3c59",
+                            Name = "business",
+                            NormalizedName = "BUSINESS"
+                        },
+                        new
+                        {
+                            Id = "9ec17071-35bc-4910-ad12-ca4b5cef0ce5",
+                            ConcurrencyStamp = "8d25da6b-f780-4062-8a63-d37775d7e319",
+                            Name = "admin",
+                            NormalizedName = "ADMIN"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -405,17 +468,6 @@ namespace DataAccess.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("DataAccess.Models.ContactPerson", b =>
-                {
-                    b.HasOne("DataAccess.Models.InvestAdExtraInfo", "RelatedInvestAd")
-                        .WithMany()
-                        .HasForeignKey("RelatedInvestAdId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("RelatedInvestAd");
-                });
-
             modelBuilder.Entity("DataAccess.Models.InvestAd", b =>
                 {
                     b.HasOne("DataAccess.Models.User", "Author")
@@ -462,6 +514,43 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.Models.InvestAdExtraInfo", null)
                         .WithMany("AcceptedCurrencies")
                         .HasForeignKey("InvestAdExtraInfoId");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.News", b =>
+                {
+                    b.HasOne("DataAccess.Models.User", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Author");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.NewsToTags", b =>
+                {
+                    b.HasOne("DataAccess.Models.News", "News")
+                        .WithMany("Tags")
+                        .HasForeignKey("NewsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DataAccess.Models.Tag", "Tag")
+                        .WithMany()
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("News");
+
+                    b.Navigation("Tag");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.HasOne("DataAccess.Models.User", null)
+                        .WithMany("Roles")
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -530,6 +619,16 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("DataAccess.Models.InvestField", b =>
                 {
                     b.Navigation("InvestAdExtraInfos");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.News", b =>
+                {
+                    b.Navigation("Tags");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.User", b =>
+                {
+                    b.Navigation("Roles");
                 });
 #pragma warning restore 612, 618
         }

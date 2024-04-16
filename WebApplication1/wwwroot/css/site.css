@@ -1,18 +1,297 @@
 ﻿html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
-body {
-  margin-bottom: 60px;
+header {
+    padding: 10px;
+}
+
+pre {
+    white-space: pre-line;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 16px;
+}
+
+.card-img-top {
+    max-height: 300px;
+    object-fit: cover;
+}
+
+.tag {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-right: 5px;
+    margin-bottom: 15px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 15px;
+    text-transform: uppercase;
+}
+
+    .tag.tag1 {
+        background-color: #D1E4FD;
+        color: #183F80;
+        ;
+    }
+
+    .tag.tag2 {
+        background-color: #D9ECDB;
+        color: #2A562A;
+    }
+
+    .tag.tag3 {
+        background-color: #F3D8DA;
+        color: #692326;
+    }
+
+.views-comments {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.list-group-item i {
+    margin-right: 10px;
+}
+
+.profile-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.profile-picture {
+    width: 25px;
+    height: 25px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.cover-photo {
+    width: 430px;
+    height: 430px;
+    object-fit: cover;
+    border-radius: 2px;
+}
+
+.upload-button {
+    margin-top: 10px;
+}
+
+.map-card {
+    width: 300px;
+}
+
+.row-half {
+    margin-bottom: 20px;
+}
+
+.row-full {
+    margin-bottom: 40px;
+}
+
+.row-half {
+    margin-bottom: 20px;
+}
+
+.row-full {
+    margin-bottom: 40px;
+}
+
+.submit-button {
+    margin-top: 20px;
+}
+
+.tag.tag1 {
+    background-color: #D1E4FD;
+    color: #183F80;
+}
+
+.truncated-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 5; /* Number of lines to show */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.author-created-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tags .badge {
+    margin-right: 0.25rem;
+}
+
+.description label {
+    font-weight: bold;
+}
+
+.footer {
+    background-color: #f8f9fa;
+    padding: 0px;
+}
+
+.footer-column {
+    margin-bottom: 5px;
+}
+
+.footer-title {
+    font-weight: 600;
+    color: #343a40;
+    margin-bottom: 5px;
+}
+
+.footer-link {
+    display: block;
+    color: #343a40;
+    margin-bottom: 5px;
+    text-decoration: none;
+}
+
+    .footer-link:hover {
+        text-decoration: none;
+        color: #007bff;
+    }
+
+.social-icons {
+    font-size: 10px;
+}
+
+    .social-icons a {
+        color: #343a40;
+        margin-right: 5px;
+    }
+
+        .social-icons a:hover {
+            color: #007bff;
+        }
+
+.newsletter {
+    text-align: right;
+}
+
+    .newsletter input[type="email"] {
+        max-width: 250px;
+        margin-bottom: 5px;
+    }
+
+.copyright {
+    text-align: center;
+    color: #6c757d;
+    border-top: 1px solid #dee2e6;
+    padding-top: 5px;
+    margin-top: 0px;
+}
+
+.card {
+    margin-bottom: 30px; /* Відступ між картками */
+}
+
+.card-header {
+    font-weight: bold;
+}
+
+.card-title {
+    font-size: 1.5rem; /* Розмір заголовка картки */
+    color: #333333;
+}
+
+.card-subtitle {
+    font-size: 0.85rem; /* Розмір підзаголовка картки */
+    color: #6c757d; /* Колір підзаголовка */
+}
+
+.tag {
+    display: inline-block;
+    padding: 0.25em 0.75em;
+    font-size: 75%;
+    color: #fff;
+    background-color: #007bff;
+    border-radius: 0.25rem;
+    margin-right: 5px;
+}
+
+.card-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-bottom: 15px;
+}
+
+    .card-info i {
+        margin-right: 5px;
+    }
+
+.card-body {
+    display: flex;
+    flex-direction: column; /* Стек елементів вертикально */
+}
+
+    .card-body .btn {
+        margin-top: auto; /* Кнопка на дно картки */
+        margin-bottom: 10px; /* Менший відступ під кнопкою */
+    }
+
+.card-text {
+    display: flex;
+    align-items: center;
+    width: 100%; /* Заповнення ширини картки */
+}
+
+    .card-text i {
+        margin-right: 10px; /* Відступ перед текстом */
+    }
+
+    .card-text .text-right {
+        flex: 1;
+        text-align: right; /* Текст вирівняний праворуч */
+    }
+
+.icon-right {
+    margin-left: 10px; /* Відступ після тексту для правої іконки */
+}
+
+.card-info .date {
+    display: flex;
+    align-items: center;
+    font-size: 0.85rem;
+}
+
+.card-link {
+    text-decoration: none;
+}
+
+.bigger-checkbox {
+    width: 30px; /* Adjust the width as needed */
+    height: 30px; /* Adjust the height as needed */
+    margin-right: 10px; /* Adjust the spacing as needed */
+}
+
+#tag {
+    margin-left: 10px;
+    font-size: 14px;
 }

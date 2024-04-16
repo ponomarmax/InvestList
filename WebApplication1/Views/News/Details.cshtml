@@ -1,0 +1,54 @@
+﻿@using System.Security.Claims;
+@using Common;
+@using WebApplication1.Models.News;
+@model GetNewsViewModel;
+
+@{
+    ViewData["Title"] = "Investment Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Header - Profile Section -->
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-6">
+            <h2>@Model.Title</h2>
+                <div class="row mb-4">
+                    <div class="well col-12">
+                        <label>Опис</label>
+                        <pre>@Model.Description</pre>
+                    </div>
+                </div>
+
+            @if (Model?.Tags?.Any() == true)
+            {
+                <div class="card-text">
+                    Теги:
+                    @foreach (var field in Model.Tags)
+                    {
+                        <span class="badge bg-primary">@field.Name</span>
+                    }
+                </div>
+            }
+        </div>
+        <div class="col-6">
+            <img src="data:image;base64,@Model.ImageBase64" alt="Investment Image" class="img-fluid resized-image" />
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<div class="d-flex justify-content-start">
+    @if (Model.AuthorId != null && User?.FindFirst(ClaimTypes.NameIdentifier)?.Value == Model.AuthorId)
+    {
+        // Кнопка Редагувати
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary me-2">Редагувати</a>
+    }
+
+    <!-- Кнопка Назад -->
+    <a asp-action="Index" class="btn btn-secondary">Повернутись до списку</a>
+</div>

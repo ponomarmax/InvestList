@@ -1,46 +1,119 @@
 ﻿using AutoMapper;
+using Common;
 using DataAccess.Interfaces;
 using DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using WebApplication1.Filters;
 using WebApplication1.Models;
+using WebApplication1.Models.Invest;
 
 namespace WebApplication1.Controllers
 {
+    [Authorize(Roles = $"{Const.BusinessRole},{Const.AdminRole}")]
     public class InvestController: Controller
     {
         private readonly IInvestAdRepository _investAdRepository;
         private readonly IMapper _mapper;
+        private readonly Dictionary<Guid, string> _investFields;
+        private const int ItemsPerPage = 10; // Set the desired items per page
 
         public InvestController(IInvestAdRepository investAdRepository, IMapper mapper)
         {
             _investAdRepository = investAdRepository;
             _mapper = mapper;
+            _investFields = _investAdRepository.GetFields().GetAwaiter().GetResult().ToDictionary(x => x.Id, y => y.Title);
         }
 
-        public async Task<ActionResult> Index()
+        [AllowAnonymous]
+        public async Task<ActionResult> Index(int page = 1, FilterRequestModel filterModel = null)
         {
-            var resultDb = await _investAdRepository.GetAllShorted();
+                var range = filterModel == null ? (null, null) : getUsdRange(filterModel.Currency, filterModel.MinInvestment, filterModel.MaxInvestment);
+            var (count, resultDb) = await _investAdRepository.Filter(range.minUsd, range.maxUSd, filterModel?.MinAnnualInvestmentReturn, filterModel?.MaxAnnualInvestmentReturn, page, ItemsPerPage);
             var resultView = _mapper.Map<IEnumerable<GetAllAdsView>>(resultDb);
-            return View(resultView);
+
+            var totalPages = (int)Math.Ceiling((double)count / ItemsPerPage);
+
+            var viewModel = new ListInvestsViewModel
+            {
+                Entities = resultView,
+                PaginationInfo = new PaginationInfo
+                {
+                    CurrentPage = page,
+                    TotalPages = totalPages,
+                    PageSize = ItemsPerPage
+                },
+                FilterModel = filterModel
+            };
+
+            return View("Index", viewModel);
         }
 
-        //[Authorize]
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Search(SearchRequestViewModel model)
+        {
+            var resultDb = await _investAdRepository.Search(model.SearchTerm, model.CurrentPage, ItemsPerPage);
+            var resultView = _mapper.Map<IEnumerable<SearchResultViewModel>>(resultDb);
+
+
+            var totalItems = (await _investAdRepository.Count())!;
+            var totalPages = (int)Math.Ceiling((double)totalItems / ItemsPerPage);
+
+
+            var viewModel = new ListSearchResultViewModel
+            {
+                Entities = resultView,
+                SearchTerm = model.SearchTerm,
+                PaginationInfo = new PaginationInfo
+                {
+                    CurrentPage = model.CurrentPage,
+                    TotalPages = totalPages,
+                    PageSize = ItemsPerPage
+                }
+            };
+
+            return View("Search", viewModel);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Filter(FilterRequestModel model)
+        {
+            var range = getUsdRange(model.Currency, model.MinInvestment, model.MaxInvestment);
+            var (count, resultDb) = await _investAdRepository.Filter(range.minUsd, range.maxUSd, model.MinAnnualInvestmentReturn, model.MaxAnnualInvestmentReturn, model.CurrentPage, ItemsPerPage);
+            var resultView = _mapper.Map<IEnumerable<GetAllAdsView>>(resultDb);
+
+            var totalPages = (int)Math.Ceiling((double)count / ItemsPerPage);
+
+            var viewModel = new ListInvestsViewModel
+            {
+                Entities = resultView,
+                PaginationInfo = new PaginationInfo
+                {
+                    CurrentPage = model.CurrentPage,
+                    TotalPages = totalPages,
+                    PageSize = ItemsPerPage
+                }
+            };
+
+            return View("Index", viewModel);
+        }
+
+        private (decimal? minUsd, decimal? maxUSd) getUsdRange(Currency currency, decimal? min, decimal? max)
+        {
+            if (currency == Currency.USD)
+                return (min, max);
+            return (min / 37, max / 37);
+        }
+
+        [EmailConfirmedAuthorize]
         public async Task<ActionResult> Create()
         {
             if (User != null && User.Identity != null && User.Identity.IsAuthenticated)
             {
-                var userId = GetCurrentUserId();
-                var dict = (await _investAdRepository.GetFields()).ToDictionary(x => x.Id, y => y.Title);
-                ViewData["InvestFieldsOptions"] = new MultiSelectList(dict, "Key", "Value");
-                ViewData["InvestFields"] = dict;
-                var viewModel = new PostInvestAdViewModel
-                {
-                    AuthorId = userId,
-                };
-
-                return View("Create", viewModel);
+                PrepopulateCreate();
+                return View("Create");
 
             }
             return RedirectToAction("Index", "Login");
@@ -48,103 +121,75 @@ namespace WebApplication1.Controllers
 
 
         [HttpPost]
+        [EmailConfirmedAuthorize]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(PostInvestAdViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                // Check ModelState errors and handle them if needed
-                var errors = ModelState.Values.SelectMany(v => v.Errors);
-                // Log or debug the errors
-                return View("Create", model); // Return the view with the model to display validation errors
+                PrepopulateCreate();
+                return View("Create", model);
             }
 
-            if (ModelState.IsValid)
-            {
-                var inv = _mapper.Map<InvestAd>(model);
-                var invMeta = _mapper.Map<InvestAdExtraInfo>(model);
-                await _investAdRepository.Create(inv, invMeta);
+            var inv = _mapper.Map<InvestAd>(model);
+            var invMeta = _mapper.Map<InvestAdExtraInfo>(model);
+            //invMeta.ImageData = await ConvertImageToByteArray(model.Image);
+            await _investAdRepository.Create(inv, invMeta);
 
 
-                return RedirectToAction("Success");
-            }
-
-            // If the model is not valid, redisplay the form with validation errors
-            return View("Create", model);
+            //return View("Success");
+            return RedirectToAction("Details", new { id = inv.Id });
         }
 
-        // GET: InvestController/Details/5
-        public ActionResult Details(int id)
+        [AllowAnonymous]
+        public async Task<ActionResult> Details(Guid id)
         {
-            return View();
+            var db = await _investAdRepository.Get(id);
+            var result = _mapper.Map<InvestAdViewModel>(db);
+            return View(result);
         }
-
-        public string GetCurrentUserId()
-        {
-            // Check if the user is authenticated
-            if (User.Identity.IsAuthenticated)
-            {
-                // Retrieve the user ID from the claims
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-
-                if (userIdClaim != null)
-                {
-                    // Return the user ID
-                    return userIdClaim.Value;
-                }
-            }
-            throw new NullReferenceException("UserId null");
-        }
-
-
-        // GET: InvestController/Create
-        //public ActionResult Create(Post post)
-        //{
-        //    _contextAccessor.Posts.Add(post);
-        //    _contextAccessor.SaveChanges();
-        //    return All();
-        //}
-
 
         // GET: InvestController/Edit/5
-        public ActionResult Edit(int id)
+        [EmailConfirmedAuthorize]
+        public async Task<ActionResult> Edit(Guid id)
         {
-            return View();
+            var db = await _investAdRepository.Get(id);
+            var result = _mapper.Map<PostInvestAdViewModel>(db);
+            ViewData["Id"] = id;
+            PrepopulateCreate();
+            return View(result);
         }
 
-        // POST: InvestController/Edit/5
+        [EmailConfirmedAuthorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(Guid id, [FromForm] PostInvestAdViewModel model)
         {
-            try
+            var db = await _investAdRepository.Get(id);
+            if (db == null)
+                return null;
+            if (!ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                ViewData["Id"] = id;
+                PrepopulateCreate();
+                return View("Edit", model);
             }
-            catch
-            {
-                return View();
-            }
+
+            var inv = _mapper.Map<InvestAd>(model);
+            var invMeta = _mapper.Map<InvestAdExtraInfo>(model);
+            inv.Id = id;
+            await _investAdRepository.Edit(inv, invMeta);
+
+
+            //return View("Success");
+            return RedirectToAction("Details", new { id = inv.Id });
         }
 
-        // GET: InvestController/Delete/5
-        public ActionResult Delete(int id)
+        private void PrepopulateCreate()
         {
-            return View();
-        }
-
-        // POST: InvestController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var userId = Utils.GetUserId(User);
+            ViewData["InvestFieldsOptions"] = _investFields;
+            ViewData["UserId"] = userId;
         }
     }
 }

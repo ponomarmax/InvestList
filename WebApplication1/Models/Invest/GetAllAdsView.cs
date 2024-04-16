@@ -1,6 +1,6 @@
 ﻿using DataAccess.Models;
 
-namespace WebApplication1.Models
+namespace WebApplication1.Models.Invest
 {
     public class GetAllAdsView
     {
@@ -10,7 +10,11 @@ namespace WebApplication1.Models
 
         public ICollection<MinimalInvestEntrance> AcceptedCurrencies { get; set; }
 
-        public TimeSpan InvestPeriod { get; set; }
+        public int InvestDurationYears { get; set; }
+
+        public int InvestDurationMonths { get; set; }
+
+        public decimal AnnualInvestmentReturn { get; set; }
 
         public string[] InvestFields { get; set; }
 
@@ -19,5 +23,7 @@ namespace WebApplication1.Models
         public Guid AuthorId { get; set; }
 
         public string Author { get; set; }
+
+        public string? ImageData { get; set; }
     }
 }

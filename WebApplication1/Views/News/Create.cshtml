@@ -1,0 +1,89 @@
+﻿@using Common;
+@model WebApplication1.Models.News.PostNewsViewModel
+
+@{
+    ViewData["Title"] = "Заявка на залучення інвестицій";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<hr />
+<h4>Заповніть заявку на створення новини</h4>
+<hr />
+<div class="container">
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            <strong>Виправте наступні помилки:</strong>
+            <ul>
+                @foreach (var modelError in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <li>@modelError.ErrorMessage</li>
+                }
+            </ul>
+        </div>
+    }
+    <form asp-action="Create" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <input asp-for="AuthorId" type="hidden" value="@ViewData["UserId"]" />
+        <div class="row mb-4">
+            <div class="form-group col-12">
+                <label asp-for="Title">Назва</label>
+                <input asp-for="Title" class="form-control" placeholder="Вкажіть короткий опис, не більше 200 символів" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="form-group col-12">
+                <label asp-for="Description">Дайте детальний опис новини</label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="form-group col-6">
+                <label>Виберіть файл</label>
+                <input id="imageFileInput" type="file" class="form-control" />
+                <img id="previewImage" src="#" alt="Preview" style="max-width: 100%; max-height: 200px; display: none; margin-top: 10px;" />
+                <input asp-for="ImageBase64" type="hidden" />
+                <span asp-validation-for="ImageBase64" class="text-danger"></span>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Опублікувати</button>
+        <a asp-action="Index" class="btn btn-secondary">Повернутись до списку</a>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('imageFileInput').addEventListener('change', function () {
+            var fileInput = this;
+            var file = fileInput.files[0];
+
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var img = new Image();
+                    img.src = e.target.result;
+
+                    img.onload = function () {
+                        var previewImage = document.getElementById('previewImage');
+                        previewImage.src = img.src;
+                        previewImage.style.display = 'block';
+
+                        var canvas = document.createElement('canvas');
+                        var ctx = canvas.getContext('2d');
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        ctx.drawImage(img, 0, 0, img.width, img.height);
+                        var compressedBase64 = canvas.toDataURL('image/jpeg', 0.7).split(',')[1];
+
+                        document.querySelector('input[name="ImageBase64"]').value = compressedBase64;
+                    };
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+}

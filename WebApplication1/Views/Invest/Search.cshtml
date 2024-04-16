@@ -1,0 +1,83 @@
+﻿@using Microsoft.AspNetCore.Html;
+@model ListSearchResultViewModel
+
+@{
+    ViewData["Title"] = "Результати пошуку";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container">
+    <div class="row mb-3">
+        <div class="col-3">
+            <label>Опис інвестиції</label>
+        </div>
+        <div class="col-3">
+            <label>Схема виплати відсотків</label>
+        </div>
+        <div class="col-3">
+            <label>Як тратимуться кошти</label>
+        </div>
+        <div class="col-3">
+            <label>Інша інформація</label>
+        </div>
+    </div>
+    @foreach (var item in Model.Entities)
+    {
+        <div class="row border mb-3">
+            <div class="row">
+                <h3>@Html.Raw(HighlightKeyword(item.Title, Model.SearchTerm))</h3>
+            </div>
+            <div class="row mb-3">
+                <div class="col-3">
+                    @Html.Raw(HighlightKeyword(item.Description, Model.SearchTerm))
+                </div>
+                <div class="col-3">
+                    @Html.Raw(HighlightKeyword(item.ProfitPaymentScheme, Model.SearchTerm))
+                </div>
+                <div class="col-3">
+                    @Html.Raw(HighlightKeyword(item.SpendInvestDesc, Model.SearchTerm))
+                </div>
+                <div class="col-3">
+                    @Html.Raw(HighlightKeyword(item.OtherInfo, Model.SearchTerm))
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@functions {
+    public IHtmlContent HighlightKeyword(string text, string keyword)
+    {
+        if (text == null)
+        {
+            return new HtmlString(string.Empty);
+        }
+
+        string highlightedText = text.Replace(keyword, $"<span class=\"highlight\">{keyword}</span>", StringComparison.OrdinalIgnoreCase);
+        return new HtmlString(highlightedText);
+    }
+}
+
+<style>
+    .highlight {
+        background-color: yellow;
+        font-weight: bold;
+    }
+</style>
+<div class="pagination-container">
+    @if (Model.PaginationInfo.CurrentPage > 1)
+    {
+        <a href="@Url.Action("Search", new SearchRequestViewModel {
+            SearchTerm=Model.SearchTerm,
+            CurrentPage=Model.PaginationInfo.CurrentPage - 1 })">Назад</a>
+    }
+
+    <span>@Model.PaginationInfo.CurrentPage / @Model.PaginationInfo.TotalPages</span>
+
+    @if (Model.PaginationInfo.CurrentPage < Model.PaginationInfo.TotalPages)
+    {
+        <a href="@Url.Action("Search", new SearchRequestViewModel {
+            SearchTerm=Model.SearchTerm,
+            CurrentPage=Model.PaginationInfo.CurrentPage + 1 })">Вперед</a>
+    }
+</div>

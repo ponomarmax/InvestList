@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231212200250_init8")]
-    partial class init8
+    [Migration("20240418122633_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -56,6 +56,9 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<decimal>("AnnualInvestmentReturn")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("datetimeoffset");
 
@@ -73,15 +76,6 @@ namespace DataAccess.Migrations
 
                     b.Property<int>("InvestDurationYears")
                         .HasColumnType("int");
-
-                    b.Property<string>("OtherInfo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProfitPaymentScheme")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SpendInvestDesc")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -129,27 +123,27 @@ namespace DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("a195c1d9-2ff8-40e9-bf44-697fe1653015"),
+                            Id = new Guid("4f711134-52bb-4bbf-a2d2-e59eda732d67"),
                             Title = "Фінанси"
                         },
                         new
                         {
-                            Id = new Guid("e10f00b6-c107-4235-9bcd-70e9d473ed0d"),
+                            Id = new Guid("92ee46d1-5461-4772-8dbd-0ef62a8a1d34"),
                             Title = "Сільськогосподарська техніка"
                         },
                         new
                         {
-                            Id = new Guid("2cd6537a-d77c-440b-b395-3a80b2950fc3"),
+                            Id = new Guid("42c6356d-6754-434e-ab92-99a6fdfd1d88"),
                             Title = "Займи"
                         },
                         new
                         {
-                            Id = new Guid("96d73260-759c-4e9c-a7e2-88a4d23cec6f"),
+                            Id = new Guid("7a6926ce-6ac8-4a41-85fa-708d9e26e27e"),
                             Title = "Лізинг Авто"
                         },
                         new
                         {
-                            Id = new Guid("970da07a-c915-4d9a-9a01-da9776e13bc0"),
+                            Id = new Guid("da5eab20-13aa-4f44-a30b-7be764dbcfbf"),
                             Title = "Кафе та ресторани"
                         });
                 });
@@ -190,6 +184,9 @@ namespace DataAccess.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageBase64")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
@@ -235,17 +232,17 @@ namespace DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("5e5ebceb-7895-4805-aa2c-45831bcd9f04"),
+                            Id = new Guid("2090e53b-74ff-472a-bf38-5aa151a49b91"),
                             Name = "Шахраї"
                         },
                         new
                         {
-                            Id = new Guid("4043bc2e-eb3d-4ab3-a6c7-8390df438a75"),
+                            Id = new Guid("8d5f713c-c098-4825-b6c0-48d81c5d3bd5"),
                             Name = "Цікавинка"
                         },
                         new
                         {
-                            Id = new Guid("f23ae485-6f70-44e4-b143-f11f1348108c"),
+                            Id = new Guid("8c0a9944-3ee2-49b3-be23-ea3b9eae1e05"),
                             Name = "Сенсація"
                         });
                 });
@@ -340,6 +337,22 @@ namespace DataAccess.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "6d13c839-26bb-4358-b895-aad006aa6134",
+                            ConcurrencyStamp = "42c6e015-f7b3-4822-a377-1012db3002d5",
+                            Name = "business",
+                            NormalizedName = "BUSINESS"
+                        },
+                        new
+                        {
+                            Id = "5f6217f5-00f5-45fd-b2ae-3b02ca7b6b62",
+                            ConcurrencyStamp = "08b9f7df-baf1-4834-8b37-f81e487b49ab",
+                            Name = "admin",
+                            NormalizedName = "ADMIN"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

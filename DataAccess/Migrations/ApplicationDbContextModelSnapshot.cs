@@ -121,27 +121,27 @@ namespace DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("1b0483b4-c724-4e6f-a3cf-82e8bfe28b42"),
+                            Id = new Guid("4f711134-52bb-4bbf-a2d2-e59eda732d67"),
                             Title = "Фінанси"
                         },
                         new
                         {
-                            Id = new Guid("bc972689-8b2a-48cc-91c9-501ab1282129"),
+                            Id = new Guid("92ee46d1-5461-4772-8dbd-0ef62a8a1d34"),
                             Title = "Сільськогосподарська техніка"
                         },
                         new
                         {
-                            Id = new Guid("bde5a537-9e5f-45b4-9d9e-21be47ef8de1"),
+                            Id = new Guid("42c6356d-6754-434e-ab92-99a6fdfd1d88"),
                             Title = "Займи"
                         },
                         new
                         {
-                            Id = new Guid("b5d92a84-f627-44ea-bdcb-31f5eb1782ae"),
+                            Id = new Guid("7a6926ce-6ac8-4a41-85fa-708d9e26e27e"),
                             Title = "Лізинг Авто"
                         },
                         new
                         {
-                            Id = new Guid("a29bacac-0b19-4543-b275-0fac79657308"),
+                            Id = new Guid("da5eab20-13aa-4f44-a30b-7be764dbcfbf"),
                             Title = "Кафе та ресторани"
                         });
                 });
@@ -230,17 +230,17 @@ namespace DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("357e5238-d21d-460d-9cdc-045ff24fb0b7"),
+                            Id = new Guid("2090e53b-74ff-472a-bf38-5aa151a49b91"),
                             Name = "Шахраї"
                         },
                         new
                         {
-                            Id = new Guid("c557d1ad-29d7-4c88-9a99-535f83d3802a"),
+                            Id = new Guid("8d5f713c-c098-4825-b6c0-48d81c5d3bd5"),
                             Name = "Цікавинка"
                         },
                         new
                         {
-                            Id = new Guid("0b4c3d4f-b3bf-472d-9109-993d0e000872"),
+                            Id = new Guid("8c0a9944-3ee2-49b3-be23-ea3b9eae1e05"),
                             Name = "Сенсація"
                         });
                 });
@@ -327,9 +327,6 @@ namespace DataAccess.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
@@ -337,22 +334,20 @@ namespace DataAccess.Migrations
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("AspNetRoles", (string)null);
 
                     b.HasData(
                         new
                         {
-                            Id = "43f568be-9943-40b2-9afe-e4204fb622f8",
-                            ConcurrencyStamp = "2d082636-24ca-4798-a1e6-7aaa33cb3c59",
+                            Id = "6d13c839-26bb-4358-b895-aad006aa6134",
+                            ConcurrencyStamp = "42c6e015-f7b3-4822-a377-1012db3002d5",
                             Name = "business",
                             NormalizedName = "BUSINESS"
                         },
                         new
                         {
-                            Id = "9ec17071-35bc-4910-ad12-ca4b5cef0ce5",
-                            ConcurrencyStamp = "8d25da6b-f780-4062-8a63-d37775d7e319",
+                            Id = "5f6217f5-00f5-45fd-b2ae-3b02ca7b6b62",
+                            ConcurrencyStamp = "08b9f7df-baf1-4834-8b37-f81e487b49ab",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         });
@@ -546,13 +541,6 @@ namespace DataAccess.Migrations
                     b.Navigation("Tag");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
-                {
-                    b.HasOne("DataAccess.Models.User", null)
-                        .WithMany("Roles")
-                        .HasForeignKey("UserId");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -624,11 +612,6 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("DataAccess.Models.News", b =>
                 {
                     b.Navigation("Tags");
-                });
-
-            modelBuilder.Entity("DataAccess.Models.User", b =>
-                {
-                    b.Navigation("Roles");
                 });
 #pragma warning restore 612, 618
         }

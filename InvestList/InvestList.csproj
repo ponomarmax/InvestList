@@ -11,6 +11,7 @@
 		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
 		<PreserveCompilationContext>true</PreserveCompilationContext>
 		<MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
+		<RootNamespace>WebApplication1</RootNamespace>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -40,6 +41,12 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\DataAccess\DataAccess.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Update="appsettings.private.json">
+	    <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+	  </Content>
 	</ItemGroup>
 
 </Project>

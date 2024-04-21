@@ -15,14 +15,12 @@ namespace WebApplication1.Controllers
     {
         private readonly INewsRepository _repository;
         private readonly IMapper _mapper;
-        private readonly Dictionary<Guid, string> _tags;
-        private const int ItemsPerPage = 10; // Set the desired items per page
+        private const int ItemsPerPage = 24; // Set the desired items per page
 
         public NewsController(INewsRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
-            //_investFields = _investAdRepository.GetFields().GetAwaiter().GetResult().ToDictionary(x => x.Id, y => y.Title);
         }
 
         [AllowAnonymous]
@@ -54,14 +52,17 @@ namespace WebApplication1.Controllers
         public async Task<ActionResult> Details(Guid id)
         {
             var db = await _repository.Get(id);
+            var similarNews = await _repository.GetSimilarNews(id);
             var result = _mapper.Map<GetNewsViewModel>(db);
+            var similarNewsViewModels = _mapper.Map<IEnumerable<GetNewsViewModel>>(similarNews);
+            result.SimilarNews = similarNewsViewModels;
             return View(result);
         }
 
         [EmailConfirmedAuthorize]
         public async Task<ActionResult> Create()
         {
-            PrepopulateCreate();
+            await PrepopulateCreate();
             return View("Create");
         }
 
@@ -73,7 +74,7 @@ namespace WebApplication1.Controllers
         {
             if (!ModelState.IsValid)
             {
-                PrepopulateCreate();
+                await PrepopulateCreate();
                 return View("Create", model);
             }
 
@@ -83,10 +84,12 @@ namespace WebApplication1.Controllers
             return RedirectToAction("Details", new { id = news.Id });
         }
 
-        private void PrepopulateCreate()
+        private async Task PrepopulateCreate()
         {
             var userId = Utils.GetUserId(User);
             ViewData["UserId"] = userId;
+            var dictionary = await _repository.GetTags();
+            ViewData["Tags"] = dictionary;
         }
     }
 }

@@ -8,7 +8,7 @@
 
         public string? Description { get; set; }
 
-        public ICollection<string>? InvestFields { get; set; }
+        public ICollection<string>? Tags { get; set; }
 
         public string? ImageBase64 { get; set; }
     }

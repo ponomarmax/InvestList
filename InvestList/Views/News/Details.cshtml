@@ -12,27 +12,54 @@
 
 <div class="container">
     <div class="row mb-4">
-        <div class="col-6">
+        <div class="col-8">
             <h2>@Model.Title</h2>
-                <div class="row mb-4">
-                    <div class="well col-12">
-                        <pre>@Model.Description</pre>
-                    </div>
-                </div>
-
             @if (Model?.Tags?.Any() == true)
             {
                 <div class="card-text">
-                    Теги:
-                    @foreach (var field in Model.Tags)
-                    {
-                        <span class="badge bg-primary">@field.Name</span>
-                    }
+                    <div class="tags mb-3">
+                        @foreach (var field in Model.Tags)
+                        {
+                            <span class="badge bg-primary"># @field.Name</span>
+                        }
+                    </div>
                 </div>
             }
+            <img src="data:image;base64,@Model.ImageBase64" alt="Investment Image" class="img-fluid resized-image"/>
+            <div class="row mb-4">
+                <div class="well col-12">
+                    <pre>@Model.Description</pre>
+                </div>
+            </div>
         </div>
-        <div class="col-6">
-            <img src="data:image;base64,@Model.ImageBase64" alt="Investment Image" class="img-fluid resized-image" />
+        <div class="col-4">
+            @if (Model.SimilarNews?.Any() == true)
+            {
+                <p>Схожі новини</p>
+                foreach (var similarNew in Model.SimilarNews)
+                {
+                    <div class="row">
+                        <a class="card-link" href="@Url.Action("Details", new { id = similarNew.Id })">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-title">@similarNew.Title</div>
+                                </div>
+                                <div class="card-body">
+                                    @if (similarNew.Tags != null && similarNew.Tags.Any())
+                                    {
+                                        <div class="tags mb-3">
+                                            @foreach (var field in similarNew.Tags)
+                                            {
+                                                <span class="badge bg-primary"># @field.Name</span>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+            }
         </div>
     </div>
 </div>
@@ -45,7 +72,7 @@
     @if (Model.AuthorId != null && User?.FindFirst(ClaimTypes.NameIdentifier)?.Value == Model.AuthorId)
     {
         // Кнопка Редагувати
-        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary me-2">Редагувати</a>
+        <a asp-action="Edit" asp-controller="News" asp-route-id="@Model.Id" class="btn btn-primary me-2">Редагувати</a>
     }
 
     <!-- Кнопка Назад -->

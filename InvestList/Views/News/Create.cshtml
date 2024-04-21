@@ -6,9 +6,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<hr />
+<hr/>
 <h4>Заповніть заявку на створення новини</h4>
-<hr />
+<hr/>
 <div class="container">
     @if (!ViewData.ModelState.IsValid)
     {
@@ -24,11 +24,11 @@
     }
     <form asp-action="Create" enctype="multipart/form-data">
         @Html.AntiForgeryToken()
-        <input asp-for="AuthorId" type="hidden" value="@ViewData["UserId"]" />
+        <input asp-for="AuthorId" type="hidden" value="@ViewData["UserId"]"/>
         <div class="row mb-4">
             <div class="form-group col-12">
                 <label asp-for="Title">Назва</label>
-                <input asp-for="Title" class="form-control" placeholder="Вкажіть короткий опис, не більше 200 символів" />
+                <input asp-for="Title" class="form-control" placeholder="Вкажіть короткий опис, не більше 200 символів"/>
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
         </div>
@@ -43,11 +43,29 @@
         <div class="row mb-4">
             <div class="form-group col-6">
                 <label>Виберіть файл</label>
-                <input id="imageFileInput" type="file" class="form-control" />
-                <img id="previewImage" src="#" alt="Preview" style="max-width: 100%; max-height: 200px; display: none; margin-top: 10px;" />
-                <input asp-for="ImageBase64" type="hidden" />
+                <input id="imageFileInput" type="file" class="form-control"/>
+                <img id="previewImage" src="#" alt="Preview" style="max-width: 100%; max-height: 200px; display: none; margin-top: 10px;"/>
+                <input asp-for="ImageBase64" type="hidden"/>
                 <span asp-validation-for="ImageBase64" class="text-danger"></span>
             </div>
+        </div>
+
+        <div class="row mb-4">
+            <span asp-validation-for="Tags" class="text-danger"></span>
+            @{
+                var options = ViewData["Tags"] as Dictionary<Guid, string>;
+                if (options != null)
+                {
+                    <label asp-for="Tags">Теги</label>
+
+                    <select asp-for="Tags" class="form-control">
+                        @foreach (var (k, v) in options)
+                        {
+                            <option value="@k">@v</option>
+                        }
+                    </select>
+                }
+            }
         </div>
 
         <button type="submit" class="btn btn-primary">Опублікувати</button>

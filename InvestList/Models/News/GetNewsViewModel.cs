@@ -16,7 +16,9 @@ namespace WebApplication1.Models.News
        
         public string? Description { get; set; }
 
-        public ICollection<Tag> Tags { get; set; }
+        public ICollection<TagView> Tags { get; set; }
+        
+        public IEnumerable<GetNewsViewModel> SimilarNews { get; set; }
 
         public string? ImageBase64 { get; set; }
     }

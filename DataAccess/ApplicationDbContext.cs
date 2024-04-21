@@ -77,9 +77,10 @@ namespace DataAccess
             );
 
             modelBuilder.Entity<Tag>().HasData(
-                new Tag { Id = Guid.Parse("2090E53B-74FF-472A-BF38-5AA151A49B91"), Name = "Шахраї" },
-                new Tag { Id = Guid.Parse("8D5F713C-C098-4825-B6C0-48D81C5D3BD5"), Name = "Цікавинка" },
-                new Tag { Id = Guid.Parse("8C0A9944-3EE2-49B3-BE23-EA3B9EAE1E05"), Name = "Сенсація" }
+                new Tag { Id = Guid.Parse("6A48934D-6459-4AAA-806A-594B4F05C7C3"), Name = "SCUM" },
+                new Tag { Id = Guid.Parse("A4A1BB92-EB6A-4538-AE0D-DFCF70D0528C"), Name = "Держрегулювання" },
+                new Tag { Id = Guid.Parse("D12CB617-608E-4109-85CB-AF9F2CB95B6F"), Name = "Рейтинги" },
+                new Tag { Id = Guid.Parse("681E4BC1-DE4E-42A7-98F6-4425476EFB03"), Name = "Інше" }
             );
 
             modelBuilder.Entity<IdentityRole>().HasData(

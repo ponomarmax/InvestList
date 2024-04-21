@@ -26,7 +26,7 @@
 
         <div class="col-6">
             <h2>@Model.Title</h2>
-            <div>Автор: <a href="#">@Model.Author</a></div>
+            @* <div>Автор: <a href="#">@Model.Author</a></div> *@
             <div>Загальний обсяг інвестицій (у $): @Model.TotalInvestment</div>
             @if (Model.InvestDurationYears > 0 || Model.InvestDurationMonths > 0)
             {

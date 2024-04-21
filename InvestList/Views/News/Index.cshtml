@@ -18,28 +18,23 @@
                                 <div class="card-title">@ad.Title</div>
                             </div>
                             <div class="card-body">
-                                <div class="tags mb-3">
-                                    <span class="badge bg-primary">Технології</span>
-                                    <span class="badge bg-primary">Інвестиції</span>
-                                    <span class="badge bg-primary">Інновації</span>
-                                </div>
-                                <div><i class="bi bi-calendar-range"></i>@ad.CreatedAt.ToString(" dd.MM.yyyy")</div>
-
-                                @if (ad?.Tags?.Any() == true)
+                                @if (ad.Tags != null && ad.Tags.Any())
                                 {
-                                    <p class="card-text mb-4">
-                                        Галузі інвестування:
+                                    <div class="tags mb-3">
                                         @foreach (var field in ad.Tags)
                                         {
-                                            <span class="badge bg-primary">@field.Name</span>
+                                            <span class="badge bg-primary"># @field.Name</span>
                                         }
-                                    </p>
+                                    </div>
                                 }
+
+                                <div>
+                                    <i class="bi bi-calendar-range"></i>@ad.CreatedAt.ToString(" dd.MM.yyyy")
+                                </div>
                             </div>
                         </div>
                     </a>
                 </div>
-
             }
         </div>
     }
@@ -49,5 +44,3 @@
     }
 
 </div>
-
-

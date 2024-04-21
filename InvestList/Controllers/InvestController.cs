@@ -16,7 +16,7 @@ namespace WebApplication1.Controllers
         private readonly IInvestAdRepository _investAdRepository;
         private readonly IMapper _mapper;
         private readonly Dictionary<Guid, string> _investFields;
-        private const int ItemsPerPage = 10; // Set the desired items per page
+        private const int ItemsPerPage = 24; // Set the desired items per page
 
         public InvestController(IInvestAdRepository investAdRepository, IMapper mapper)
         {

@@ -12,8 +12,8 @@ namespace WebApplication1.Validators
             RuleFor(vm => vm.Title)
                 .NotEmpty()
                 .WithMessage("Поле обов'язкове для заповення")
-                .Length(10, 200)
-                .WithMessage("Кількість символів має бути в діпазоні (10,200)");
+                .Length(10, 60)
+                .WithMessage("Кількість символів має бути в діпазоні від 10 до 60");
 
             RuleFor(vm => vm.AnnualInvestmentReturn)
                 .NotEmpty()

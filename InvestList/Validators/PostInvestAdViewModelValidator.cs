@@ -12,8 +12,8 @@ namespace WebApplication1.Validators
             RuleFor(vm => vm.Title)
                 .NotEmpty()
                 .WithMessage("Поле обов'язкове для заповення")
-                .Length(10, 200)
-                .WithMessage("Кількість символів має бути в діпазоні (10,200)");
+                .Length(10, 60)
+                .WithMessage("Кількість символів має бути в діпазоні від 10 до 60");
 
             RuleFor(vm => vm.AnnualInvestmentReturn)
                 .NotEmpty()
@@ -22,9 +22,8 @@ namespace WebApplication1.Validators
                 .WithMessage("Значення має бути позитивним");
 
             RuleFor(vm => vm.TotalInvestment)
-                .NotNull()
-                .WithMessage("Поле обов'язкове для заповення")
                 .GreaterThan(0)
+                .When(x=>x.TotalInvestment.HasValue)
                 .WithMessage("Значення має бути позитивним");
 
             RuleFor(vm => vm.AcceptedCurrencies)
@@ -54,7 +53,8 @@ namespace WebApplication1.Validators
                .WithMessage("Значення має бути позитивним");
 
             RuleFor(x => x.ImageBase64)
-               .Must(BeAValidBase64String).WithMessage("Завантажте зображення");
+               .Must(BeAValidBase64String)
+               .When(x=>!string.IsNullOrWhiteSpace(x.ImageBase64)).WithMessage("Завантажте зображення");
         }
 
         private static bool HaveAtLeastOneNonNullAndPositiveValue(IDictionary<Currency, decimal?> acceptedCurrencies)

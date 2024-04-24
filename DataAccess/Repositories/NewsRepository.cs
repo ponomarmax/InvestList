@@ -33,9 +33,9 @@ namespace DataAccess.Repositories
             }
         }
 
-        public async Task<int> Count()
+        public async Task<int> Count(List<Guid>? tagIds = null)
         {
-            return await _dbContext.InvestAds
+            return await GetNewsEnumerable(tagIds)
                 .CountAsync();
         }
 
@@ -59,9 +59,7 @@ namespace DataAccess.Repositories
 
         public async Task<IEnumerable<News>> GetPage(int page, int itemsPerPage, List<Guid>? tagIds)
         {
-            var newsEnumerable = _dbContext.News.AsQueryable();
-            if (tagIds?.Count > 0)
-                newsEnumerable = newsEnumerable.Where(x => x.Tags.Any(t => tagIds.Contains(t.TagId)));
+            var newsEnumerable = GetNewsEnumerable(tagIds);
 
             return await newsEnumerable
                 .OrderByDescending(x => x.CreatedAt)
@@ -71,6 +69,14 @@ namespace DataAccess.Repositories
                 .Include(x => x.Tags)
                 .ThenInclude(x => x.Tag)
                 .ToListAsync();
+        }
+
+        private IQueryable<News> GetNewsEnumerable(List<Guid>? tagIds)
+        {
+            var newsEnumerable = _dbContext.News.AsQueryable();
+            if (tagIds?.Count > 0)
+                newsEnumerable = newsEnumerable.Where(x => x.Tags.Any(t => tagIds.Contains(t.TagId)));
+            return newsEnumerable;
         }
 
         public async Task<IEnumerable<News>> GetSimilarNews(Guid id)

@@ -6,5 +6,6 @@ namespace InvestList.Models
     {
         public IEnumerable<GetNewsViewModel> Entities { get; set; }
         public PaginationInfo PaginationInfo { get; set; }
+        public FilterNewsRequestModel FilterModel { get; set; }
     }
 }

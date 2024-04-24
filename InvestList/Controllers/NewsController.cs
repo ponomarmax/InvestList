@@ -15,7 +15,7 @@ namespace InvestList.Controllers
     {
         private readonly INewsRepository _repository;
         private readonly IMapper _mapper;
-        private const int ItemsPerPage = 24; // Set the desired items per page
+        private const int ItemsPerPage = 1; // Set the desired items per page
 
         public NewsController(INewsRepository repository, IMapper mapper)
         {
@@ -26,12 +26,13 @@ namespace InvestList.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Index(int page = 1, FilterNewsRequestModel requestModel = null)
         {
+            var tagIds = requestModel?.TagIds?.Where(x => Guid.TryParse(x, out _)).Select(Guid.Parse).ToList();
             var resultDb = await _repository.GetPage(page, ItemsPerPage,
-                requestModel?.TagIds?.Where(x => Guid.TryParse(x, out _)).Select(Guid.Parse).ToList());
+                tagIds);
             var resultView = _mapper.Map<IEnumerable<GetNewsViewModel>>(resultDb);
 
 
-            var totalItems = (await _repository.Count())!;
+            var totalItems = (await _repository.Count(tagIds))!;
             var totalPages = (int)Math.Ceiling((double)totalItems / ItemsPerPage);
 
 
@@ -43,7 +44,8 @@ namespace InvestList.Controllers
                     CurrentPage = page,
                     TotalPages = totalPages,
                     PageSize = ItemsPerPage
-                }
+                },
+                FilterModel = requestModel
             };
 
             return View(viewModel);

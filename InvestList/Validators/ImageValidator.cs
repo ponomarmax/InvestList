@@ -1,6 +1,6 @@
 ﻿using SixLabors.ImageSharp;
 
-namespace WebApplication1.Validators
+namespace InvestList.Validators
 {
     public class ImageValidator
     {

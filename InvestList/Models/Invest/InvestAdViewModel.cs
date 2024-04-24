@@ -1,6 +1,6 @@
 ﻿using DataAccess.Models;
 
-namespace WebApplication1.Models.Invest
+namespace InvestList.Models.Invest
 {
     public class InvestAdViewModel
     {

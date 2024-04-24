@@ -1,4 +1,4 @@
-﻿namespace WebApplication1.Models.News
+﻿namespace InvestList.Models.News
 {
     public class PostNewsViewModel
     {

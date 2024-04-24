@@ -2,13 +2,13 @@
 using Common;
 using DataAccess.Interfaces;
 using DataAccess.Models;
+using InvestList.Filters;
+using InvestList.Models;
+using InvestList.Models.Invest;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using WebApplication1.Filters;
-using WebApplication1.Models;
-using WebApplication1.Models.Invest;
 
-namespace WebApplication1.Controllers
+namespace InvestList.Controllers
 {
     [Authorize(Roles = $"{Const.BusinessRole},{Const.AdminRole}")]
     public class InvestController: Controller

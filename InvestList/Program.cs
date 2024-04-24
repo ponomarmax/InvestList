@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
-using WebApplication1;
-using WebApplication1.Configs;
-using WebApplication1.Extensions;
-using WebApplication1.Logging;
-using WebApplication1.Validators;
+using InvestList;
+using InvestList.Configs;
+using InvestList.Extensions;
+using InvestList.Logging;
+using InvestList.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.LoadAppSettingAndEnvValues();
@@ -35,7 +35,7 @@ try
     builder.Services.AddAutoMapper(typeof(Program));
 
     builder.Services.Load<EmailConfig>(builder.Configuration, "Email");
-    builder.Services.AddTransient<IEmailSender, WebApplication1.Services.EmailSender>();
+    builder.Services.AddTransient<IEmailSender, InvestList.Services.EmailSender>();
     builder.Services.AddTransient<IInvestAdRepository, InvestAdRepository>();
     builder.Services.AddScoped<IUserRepository, UserRepository>();
     builder.Services.AddScoped<INewsRepository, NewsRepository>();

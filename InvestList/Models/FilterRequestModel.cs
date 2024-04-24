@@ -1,6 +1,6 @@
 ﻿using Common;
 
-namespace WebApplication1.Models
+namespace InvestList.Models
 {
     public class FilterRequestModel
     {

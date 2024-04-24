@@ -1,9 +1,9 @@
 ﻿using Common;
 using FluentValidation;
+using InvestList.Models.Invest;
 using SixLabors.ImageSharp;
-using WebApplication1.Models.Invest;
 
-namespace WebApplication1.Validators
+namespace InvestList.Validators
 {
     public class PostInvestAdViewModelValidator: AbstractValidator<PostInvestAdViewModel>
     {

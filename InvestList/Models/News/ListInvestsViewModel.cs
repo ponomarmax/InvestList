@@ -1,6 +1,6 @@
-﻿using WebApplication1.Models.News;
+﻿using InvestList.Models.News;
 
-namespace WebApplication1.Models
+namespace InvestList.Models
 {
     public class ListNewsViewModel
     {

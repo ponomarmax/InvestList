@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using DataAccess.Models;
 using System.Linq.Expressions;
-using WebApplication1.Models;
-using WebApplication1.Models.Invest;
+using InvestList.Models;
+using InvestList.Models.Invest;
 
-namespace WebApplication1.AutomapperProfiles
+namespace InvestList.AutomapperProfiles
 {
     public class InvestMappingProfile: Profile
     {

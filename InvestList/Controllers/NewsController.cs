@@ -2,13 +2,13 @@
 using Common;
 using DataAccess.Interfaces;
 using DataAccess.Models;
+using InvestList.Filters;
+using InvestList.Models;
+using InvestList.Models.News;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WebApplication1.Filters;
-using WebApplication1.Models;
-using WebApplication1.Models.News;
 
-namespace WebApplication1.Controllers
+namespace InvestList.Controllers
 {
     [Authorize(Roles = $"{Const.AdminRole}")]
     public class NewsController: Controller

@@ -119,6 +119,7 @@ namespace DataAccess.Repositories
                     .ThenInclude(x => x.AcceptedCurrencies)
                 .Include(x => x.History.OrderByDescending(y => y.CreatedAt).Take(1))
                     .ThenInclude(x => x.InvestFields).ThenInclude(x => x.InvestField)
+                .Include(x=>x.Comments)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
         private async Task<InvestAd?> GetRaw(Guid id) => await _dbContext.InvestAds

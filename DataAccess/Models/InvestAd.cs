@@ -20,6 +20,6 @@ namespace DataAccess.Models
         public DateTimeOffset UpdateAt { get; set; }
 
         public virtual ICollection<InvestAdExtraInfo> History { get; set; }
-        //public virtual ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
     }
 }

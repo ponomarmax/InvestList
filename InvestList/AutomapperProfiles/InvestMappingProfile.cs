@@ -2,6 +2,7 @@
 using DataAccess.Models;
 using System.Linq.Expressions;
 using InvestList.Models;
+using InvestList.Models.Comment;
 using InvestList.Models.Invest;
 
 namespace InvestList.AutomapperProfiles
@@ -26,6 +27,11 @@ namespace InvestList.AutomapperProfiles
                 .ForMember(x => x.ImageData, y => y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.ImageBase64)))
                 .ForMember(x => x.Author, y => y.MapFrom(z => GetPartBeforeAt(z.Author.Email)));
 
+            CreateMap<PostCommentRequest, Comment>();
+            CreateMap<Comment, CommentView>()
+                .ForMember(x => x.CreatedAt, y => y.MapFrom(z => z.CreatedAt.DateTime));
+
+            
             CreateMap<InvestAdExtraInfo, SearchResultViewModel>()
                .ForMember(x => x.Title, y => y.MapFrom(src => src.Title))
                .ForMember(x => x.Description, y => y.MapFrom(src => src.Description))

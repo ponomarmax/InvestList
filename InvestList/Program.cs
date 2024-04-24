@@ -39,6 +39,7 @@ try
     builder.Services.AddTransient<IInvestAdRepository, InvestAdRepository>();
     builder.Services.AddScoped<IUserRepository, UserRepository>();
     builder.Services.AddScoped<INewsRepository, NewsRepository>();
+    builder.Services.AddScoped<ICommentRepository, CommentRepository>();
     Log.Logger.Information("App is starting");
 
     var app = builder.Build();

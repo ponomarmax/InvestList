@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DataAccess.Models;
 
 namespace DataAccess.Repositories
 {
@@ -21,5 +22,7 @@ namespace DataAccess.Repositories
         {
             return await _dbContext.Users.AnyAsync(x => x.Id == userId && x.EmailConfirmed);
         }
+
+        public async Task<User?> Get(string id) => await _dbContext.Users.FindAsync(id);
     }
 }

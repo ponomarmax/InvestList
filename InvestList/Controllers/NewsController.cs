@@ -84,6 +84,36 @@ namespace WebApplication1.Controllers
             return RedirectToAction("Details", new { id = news.Id });
         }
 
+        public async Task<ActionResult> Edit(Guid id)
+        {
+            var db = await _repository.Get(id);
+            var result = _mapper.Map<PostNewsViewModel>(db);
+            ViewData["Id"] = id;
+            await PrepopulateCreate();
+            return View(result);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Guid id, [FromForm] PostNewsViewModel model)
+        {
+            var db = await _repository.Get(id);
+            if (db == null) return null;
+            if (!ModelState.IsValid)
+            {
+                ViewData["Id"] = id;
+                await PrepopulateCreate();
+                return View("Edit", model);
+            }
+
+            var inv = _mapper.Map<News>(model);
+            inv.Id = id;
+            await _repository.Edit(inv);
+            
+            return RedirectToAction("Details", new { id = inv.Id });
+        }
+
+
         private async Task PrepopulateCreate()
         {
             var userId = Utils.GetUserId(User);

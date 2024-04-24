@@ -13,6 +13,26 @@ namespace DataAccess.Repositories
             _dbContext = dbContext;
         }
 
+        private async Task<News?> GetRaw(Guid id) => await _dbContext.News
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+        public async Task Edit(News news)
+        {
+            var inv = await GetRaw(news.Id);
+            if (inv != null)
+            {
+                inv.Title = news.Title;
+                inv.Description = news.Description;
+                inv.ImageBase64 = news.ImageBase64;
+                inv.Tags = news.Tags;
+                await _dbContext.SaveChangesAsync();
+            }
+            else
+            {
+                throw new ArgumentException("Attempt to modify unexisting object");
+            }
+        }
+
         public async Task<int> Count()
         {
             return await _dbContext.InvestAds

@@ -24,9 +24,10 @@ namespace WebApplication1.Controllers
         }
 
         [AllowAnonymous]
-        public async Task<ActionResult> Index(int page = 1)
+        public async Task<ActionResult> Index(int page = 1, FilterNewsRequestModel requestModel = null)
         {
-            var resultDb = await _repository.GetPage(page, ItemsPerPage);
+            var resultDb = await _repository.GetPage(page, ItemsPerPage,
+                requestModel?.TagIds?.Where(x => Guid.TryParse(x, out _)).Select(Guid.Parse).ToList());
             var resultView = _mapper.Map<IEnumerable<GetNewsViewModel>>(resultDb);
 
 
@@ -66,7 +67,7 @@ namespace WebApplication1.Controllers
             return View("Create");
         }
 
-        
+
         [HttpPost]
         [EmailConfirmedAuthorize]
         [ValidateAntiForgeryToken]
@@ -80,7 +81,7 @@ namespace WebApplication1.Controllers
 
             var news = _mapper.Map<News>(model);
             await _repository.Create(news);
-            
+
             return RedirectToAction("Details", new { id = news.Id });
         }
 
@@ -109,7 +110,7 @@ namespace WebApplication1.Controllers
             var inv = _mapper.Map<News>(model);
             inv.Id = id;
             await _repository.Edit(inv);
-            
+
             return RedirectToAction("Details", new { id = inv.Id });
         }
 

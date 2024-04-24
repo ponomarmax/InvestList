@@ -59,6 +59,7 @@
                         </a>
                     </div>
                 }
+                <a href="@Url.Action("Index", new { tagIds = Model.Tags.Select(x=>x.Id) })">Більше новин...</a>
             }
         </div>
     </div>

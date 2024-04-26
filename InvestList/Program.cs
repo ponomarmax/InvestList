@@ -43,6 +43,7 @@ try
     Log.Logger.Information("App is starting");
 
     var app = builder.Build();
+    app.UseMiddleware<WwwRedirectMiddleware>();
     if (app.Environment.IsDevelopment())
     {
         app.UseMigrationsEndPoint();

@@ -28,8 +28,17 @@ namespace InvestList.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Index(int page = 1, FilterRequestModel filterModel = null)
         {
-                var range = filterModel == null ? (null, null) : getUsdRange(filterModel.Currency, filterModel.MinInvestment, filterModel.MaxInvestment);
+            if (page < 1)
+            {
+                return NotFound();
+            }
+            
+            var range = filterModel == null ? (null, null) : getUsdRange(filterModel.Currency, filterModel.MinInvestment, filterModel.MaxInvestment);
             var (count, resultDb) = await _investAdRepository.Filter(range.minUsd, range.maxUSd, filterModel?.MinAnnualInvestmentReturn, filterModel?.MaxAnnualInvestmentReturn, page, ItemsPerPage);
+            if (!resultDb.Any())
+            {
+                return NotFound();
+            }
             var resultView = _mapper.Map<IEnumerable<GetAllAdsView>>(resultDb);
 
             var totalPages = (int)Math.Ceiling((double)count / ItemsPerPage);

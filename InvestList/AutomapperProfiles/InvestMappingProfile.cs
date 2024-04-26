@@ -29,7 +29,8 @@ namespace InvestList.AutomapperProfiles
 
             CreateMap<PostCommentRequest, Comment>();
             CreateMap<Comment, CommentView>()
-                .ForMember(x => x.CreatedAt, y => y.MapFrom(z => z.CreatedAt.DateTime));
+                .ForMember(x => x.CreatedAt, y => y.MapFrom(z => z.CreatedAt.DateTime))
+                .ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.User.Email));
 
             
             CreateMap<InvestAdExtraInfo, SearchResultViewModel>()
@@ -108,7 +109,7 @@ namespace InvestList.AutomapperProfiles
                T source, Expression<Func<InvestAdExtraInfo, TProperty>> propertySelector)
                where T : InvestAd
         {
-            var lastItem = source.History.OrderByDescending(x => x.CreatedAt).FirstOrDefault();
+            var lastItem = source.History.FirstOrDefault();
             return lastItem != null ? propertySelector.Compile()(lastItem) : default;
         }
     }

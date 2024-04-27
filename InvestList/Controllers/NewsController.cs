@@ -30,7 +30,7 @@ namespace InvestList.Controllers
             {
                 return NotFound();
             }
-            
+
             var tagIds = requestModel?.TagIds?.Where(x => Guid.TryParse(x, out _)).Select(Guid.Parse).ToList();
             var resultDb = await _repository.GetPage(page, ItemsPerPage,
                 tagIds);
@@ -38,6 +38,7 @@ namespace InvestList.Controllers
             {
                 return NotFound();
             }
+
             var resultView = _mapper.Map<IEnumerable<GetNewsViewModel>>(resultDb);
             if (page != 1)
             {
@@ -47,7 +48,16 @@ namespace InvestList.Controllers
             var totalItems = (await _repository.Count(tagIds))!;
             var totalPages = (int)Math.Ceiling((double)totalItems / ItemsPerPage);
 
-            ViewData["CustomTitle"] = "Останні новини зі світу інвестицій";
+            if (requestModel?.TagIds!=null && requestModel?.TagIds?.Count != 0)
+            {
+                var tags = resultView.SelectMany(x => x.Tags.Where(t=> requestModel.TagIds.Contains(t.Id.ToString())).Select(t => t.Name)).Distinct();
+                ViewData["CustomTitle"] = $"Інвестиційні новини в категоріях {string.Join(' ', tags)}";
+            }
+            else
+            {
+                ViewData["CustomTitle"] = "Останні новини зі світу інвестицій";
+            }
+
             var viewModel = new ListNewsViewModel
             {
                 Entities = resultView,
@@ -130,12 +140,13 @@ namespace InvestList.Controllers
         }
 
 
-        private async Task PrepopulateCreate()
+        private async Task<Dictionary<Guid,string>> PrepopulateCreate()
         {
             var userId = Utils.GetUserId(User);
             ViewData["UserId"] = userId;
             var dictionary = await _repository.GetTags();
             ViewData["Tags"] = dictionary;
+            return dictionary;
         }
     }
 }

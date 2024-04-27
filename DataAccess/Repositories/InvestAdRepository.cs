@@ -14,21 +14,6 @@ namespace DataAccess.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<InvestAd>> GetAllShorted(int page = 1, int offset = 10)
-        {
-            return await _dbContext.InvestAds
-                .Where(x => x.Published)
-                .OrderByDescending(x => x.CreatedAt)
-                .Skip((page - 1) * offset)
-                .Take(offset)
-                .Include(x => x.Author)
-                .Include(x => x.History.OrderByDescending(y => y.CreatedAt).Take(1))
-                .ThenInclude(x => x.InvestFields)
-                .Include(x => x.History.OrderByDescending(y => y.CreatedAt).Take(1))
-                .ThenInclude(x => x.AcceptedCurrencies)
-                .ToListAsync();
-        }
-
         public async Task<(int count, IEnumerable<InvestAd> list)> Filter(decimal? minUsd,
             decimal? maxUSd,
             decimal? minAnnualInvestmentReturn,
@@ -106,6 +91,7 @@ namespace DataAccess.Repositories
                     .Skip((page - 1) * offset)
                     .Take(offset)
                     .Include(x => x.Author)
+                    .Include(x=>x.Tags).ThenInclude(x=>x.Tag)
                     .Include(x => x.History.OrderByDescending(y => y.CreatedAt).Take(1))
                     .ThenInclude(x => x.InvestFields)
                     .Include(x => x.History.OrderByDescending(y => y.CreatedAt).Take(1))
@@ -132,6 +118,7 @@ namespace DataAccess.Repositories
         {
             var invest = _dbContext.InvestAds
                 .Include(x => x.Author)
+                .Include(x=>x.Tags).ThenInclude(x=>x.Tag)
                 .Include(x => x.Comments).ThenInclude(x => x.User)
                 .Where(x => x.Id == id);
             var lastRecord = _dbContext.InvestAdExtraInfo
@@ -148,13 +135,6 @@ namespace DataAccess.Repositories
         private async Task<InvestAd?> GetRaw(Guid id) => await _dbContext.InvestAds
             .FirstOrDefaultAsync(x => x.Id == id);
 
-        public async Task<bool> Contains(InvestAd ad) => await _dbContext.InvestAds.ContainsAsync(ad);
-
-        public async Task<IEnumerable<InvestField>> GetFields()
-        {
-            return await _dbContext.InvestFields.ToArrayAsync();
-        }
-
         public async Task Create(InvestAd investAd, InvestAdExtraInfo investAdExtraInfo)
         {
             investAd.History = new List<InvestAdExtraInfo>() { investAdExtraInfo };
@@ -169,6 +149,7 @@ namespace DataAccess.Repositories
             if (inv != null)
             {
                 inv.Published = investAd.Published;
+                inv.Tags = investAd.Tags;
                 investAdExtraInfo.InvestAdId = investAd.Id;
                 await _dbContext.InvestAdExtraInfo.AddAsync(investAdExtraInfo);
                 await _dbContext.SaveChangesAsync();

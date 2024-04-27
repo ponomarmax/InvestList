@@ -31,7 +31,9 @@ namespace InvestList.Models.Invest
 
         public decimal TotalInvestment { get; set; }
 
-        public virtual ICollection<InvestFieldView> InvestFields { get; set; }
+        public ICollection<TagView> Tags { get; set; }
+
+        // public virtual ICollection<InvestFieldView> InvestFields { get; set; }
 
         public string? ImageBase64 { get; set; }
         public bool Published { get; set; }

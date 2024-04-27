@@ -230,6 +230,21 @@ namespace DataAccess.Migrations
                         });
                 });
 
+            modelBuilder.Entity("DataAccess.Models.InvestTags", b =>
+                {
+                    b.Property<Guid>("InvestId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TagId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("InvestId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("InvestTags");
+                });
+
             modelBuilder.Entity("DataAccess.Models.MinimalInvestEntrance", b =>
                 {
                     b.Property<Guid>("Id")
@@ -612,6 +627,25 @@ namespace DataAccess.Migrations
                     b.Navigation("InvestField");
                 });
 
+            modelBuilder.Entity("DataAccess.Models.InvestTags", b =>
+                {
+                    b.HasOne("DataAccess.Models.InvestAd", "Invest")
+                        .WithMany("Tags")
+                        .HasForeignKey("InvestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DataAccess.Models.Tag", "Tag")
+                        .WithMany()
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Invest");
+
+                    b.Navigation("Tag");
+                });
+
             modelBuilder.Entity("DataAccess.Models.MinimalInvestEntrance", b =>
                 {
                     b.HasOne("DataAccess.Models.InvestAdExtraInfo", null)
@@ -705,6 +739,8 @@ namespace DataAccess.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("History");
+
+                    b.Navigation("Tags");
                 });
 
             modelBuilder.Entity("DataAccess.Models.InvestAdExtraInfo", b =>

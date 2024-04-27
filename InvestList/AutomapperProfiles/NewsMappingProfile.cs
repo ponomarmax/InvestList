@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DataAccess.Models;
+using InvestList.Models;
 using InvestList.Models.News;
 
 namespace InvestList.AutomapperProfiles

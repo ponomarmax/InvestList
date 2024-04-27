@@ -46,12 +46,12 @@
             }
         </div>
 
-        @if (Model.InvestFields != null && Model.InvestFields.Any())
+        @if (Model.Tags != null && Model.Tags.Any())
         {
             <div class="flex-fill mb-2">
-                @foreach (var field in Model.InvestFields)
+                @foreach (var field in Model.Tags)
                 {
-                    <span id="tag" class="badge bg-primary">@field.Title</span>
+                    <span id="tag" class="badge bg-primary">@field.Name</span>
                 }
 
             </div>

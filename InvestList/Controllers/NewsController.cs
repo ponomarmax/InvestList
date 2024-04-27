@@ -140,13 +140,12 @@ namespace InvestList.Controllers
         }
 
 
-        private async Task<Dictionary<Guid,string>> PrepopulateCreate()
+        private async Task PrepopulateCreate()
         {
             var userId = Utils.GetUserId(User);
             ViewData["UserId"] = userId;
             var dictionary = await _repository.GetTags();
             ViewData["Tags"] = dictionary;
-            return dictionary;
         }
     }
 }

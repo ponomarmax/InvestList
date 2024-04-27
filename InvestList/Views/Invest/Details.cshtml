@@ -1,5 +1,4 @@
 ﻿@using System.Security.Claims;
-@using Common;
 @using DataAccess.Models
 @using InvestList.Models.Comment
 @using InvestList.Models.Invest;
@@ -14,81 +13,85 @@
 }
 
 <!-- Header - Profile Section -->
+<div class="container mb-4">
+    @if (Model.AuthorId != null && User?.FindFirst(ClaimTypes.NameIdentifier)?.Value == Model.AuthorId)
+    {
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary me-2">Редагувати</a>
+    }
 
-<div class="container">
-    <div class="row mb-4">
+    <a asp-action="Index" class="btn btn-secondary">Повернутись до списку</a>
+</div>
+<div class="card border-success mb-3">
+    <h1 class="card-header">@Model.Title</h1>
 
-        <div class="form-group">
-            @if (@Model.Published)
+    <div class="d-flex border align-content-start flex-wrap">
+        <div class="p-2 flex-fill">Загальний обсяг інвестицій (у $): @Model.TotalInvestment</div>
+        <div class="p-2 flex-fill">Період інвестування: @InvestmentHelper.FormatInvestmentDuration(Model.InvestDurationYears, Model.InvestDurationMonths)</div>
+        <div class="p-2 flex-fill">Річна дохідність (у %): @Model.AnnualInvestmentReturn</div>
+    </div>
+
+    <div class="d-flex border align-content-start flex-wrap">
+        <div class="d-flex card-text p-2 flex-fill">
+            <span style="padding-right: 10px;">Мінімальний поріг входу </span>
+            @if (Model.AcceptedCurrencies != null && Model.AcceptedCurrencies.Any())
             {
-                <label style="background-color: #77dd77" asp-for="Published">Оголошення активне</label>
+                @foreach (var currency in Model.AcceptedCurrencies)
+                {
+                    <span > @currency.MinValue @currency.Currency </span>
+                }
             }
             else
             {
-                <label style="background-color: #dc143c" asp-for="Published">Оголошення вимкнене</label>
+                <span>Немає валют</span>
             }
         </div>
 
-        <div class="col-6">
-            <h2>@Model.Title</h2>
-            @* <div>Автор: <a href="#">@Model.Author</a></div> *@
-            <div>Загальний обсяг інвестицій (у $): @Model.TotalInvestment</div>
-            @if (Model.InvestDurationYears > 0 || Model.InvestDurationMonths > 0)
-            {
-                <div>
-                    Період інвестування: @InvestmentHelper.FormatInvestmentDuration(Model.InvestDurationYears, Model.InvestDurationMonths)
-                </div>
-            }
-            <div>
-                Мінімальний поріг входу у валютах:
-                @if (Model.AcceptedCurrencies != null && Model.AcceptedCurrencies.Any())
+        @if (Model.InvestFields != null && Model.InvestFields.Any())
+        {
+            <div class="flex-fill mb-2">
+                @foreach (var field in Model.InvestFields)
                 {
-                    <ul>
-                        @foreach (var currency in Model.AcceptedCurrencies)
-                        {
-                            <li>@currency.Currency - $@currency.MinValue</li>
-                        }
-                    </ul>
+                    <span id="tag" class="badge bg-primary">@field.Title</span>
                 }
-                else
-                {
-                    <span>Немає валют</span>
-                }
+
             </div>
-            <div>Річна дохідність (у %): @Model.AnnualInvestmentReturn</div>
+        }
+    </div>
 
-            @if (Model.InvestFields != null && Model.InvestFields.Any())
-            {
-                <pre class="card-text">
-                    Галузі інвестування:
-                    @foreach (var field in Model.InvestFields)
-                    {
-                        <span id="tag" class="badge bg-primary">@field.Title</span>
-                    }
-                </pre>
-            }
-        </div>
-        <div class="col-6">
-            <img src="data:image;base64,@Model.ImageBase64" alt="Investment Image" class="img-fluid resized-image"/>
-        </div>
+    <p class="p-2 card-text">
+        <small class="text-body-secondary">@Model.CreatedAt.ToString("dd-MM-yyyy")</small>
+    </p>
+    <div class="d-flex flex-wrap justify-content-center">
+        <pre class="card-body md:order-2 order-1" style="width: 50%">
+            @Model.Description
+        </pre>
+        @if (!string.IsNullOrEmpty(Model.ImageBase64))
+        {
+            <div class="md:order-1 order-md-2">
+                <img src="data:image;base64,@Model.ImageBase64" alt="Investment Image"/>
+            </div>
+        }
     </div>
-    <div class="row mb-4">
-        <div class="well col-12">
-            <label>Опис</label>
-            <pre>@Model.Description</pre>
-        </div>
-    </div>
+
+
+    @* *@
+
+
+
 </div>
-@if (Model.AuthorId != null && User?.FindFirst(ClaimTypes.NameIdentifier)?.Value == Model.AuthorId)
-{
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary me-2">Редагувати</a>
-}
 
-<a asp-action="Index" class="btn btn-secondary">Повернутись до списку</a>
 @if (!SignInManager.IsSignedIn(User))
 {
-    <p>Для написання відгуку, будь ласка, увійдіть у свій обліковий запис.</p>
-    <a href="@Url.Action("Index", "Login")" class="btn btn-outline-primary me-2">Увійти</a>
+    <div class="row row-cols-lg-auto g-3 align-items-center">
+        <div class="col-12">
+            <a href="@Url.Action("Index", "Login")" class="btn btn-outline-primary me-2">Увійти</a>
+        </div>
+        <div class="col-12">
+            <label class="form-check-label" for="inlineFormCheck">
+                Для написання відгуку, будь ласка, увійдіть у свій обліковий запис
+            </label>
+        </div>
+    </div>
 }
 else
 {
@@ -102,19 +105,11 @@ else
         {
             <div class="card mb-4">
                 <div class="card-body">
-                    <p>@comment.Text</p>
-
-                    <div class="d-flex justify-content-between">
-                        <div class="d-flex flex-row align-items-center">
-                            <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(4).webp" alt="avatar" width="25" height="25">
-                            <p class="small mb-0 ms-2">@comment.CreatedAt</p>
-                        </div>
-                        <div class="d-flex flex-row align-items-center">
-                            <p class="small text-muted mb-0">Upvote?</p>
-                            <i class="far fa-thumbs-up mx-2 fa-xs text-body" style="margin-top: -0.16rem;"></i>
-                            <p class="small text-muted mb-0">3</p>
-                        </div>
+                    <div class="d-flex flex-row justify-content-between mb-0">
+                            <div class="text-muted">@comment.Author</div>
+                            <div class="text-muted" >@comment.CreatedAt.ToString("yy-MMM-dd HH:mm")</div>
                     </div>
+                    <p class="card-text">@comment.Text</p>
                 </div>
             </div>
         }

@@ -44,6 +44,12 @@ try
 
     var app = builder.Build();
     app.UseMiddleware<WwwRedirectMiddleware>();
+    app.Use(async (context, next) =>
+    {
+        context.Response.Headers.Add("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://www.google-analytics.com; frame-src 'self'; object-src 'none'; connect-src 'self' https://www.google-analytics.com;");
+        await next();
+    });
+
     if (app.Environment.IsDevelopment())
     {
         app.UseMigrationsEndPoint();

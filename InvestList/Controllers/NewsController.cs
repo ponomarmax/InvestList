@@ -39,12 +39,15 @@ namespace InvestList.Controllers
                 return NotFound();
             }
             var resultView = _mapper.Map<IEnumerable<GetNewsViewModel>>(resultDb);
-
+            if (page != 1)
+            {
+                ViewData["DisplayNoIndexTag"] = true;
+            }
 
             var totalItems = (await _repository.Count(tagIds))!;
             var totalPages = (int)Math.Ceiling((double)totalItems / ItemsPerPage);
 
-
+            ViewData["CustomTitle"] = "Останні новини зі світу інвестицій";
             var viewModel = new ListNewsViewModel
             {
                 Entities = resultView,
@@ -68,6 +71,7 @@ namespace InvestList.Controllers
             var result = _mapper.Map<GetNewsViewModel>(db);
             var similarNewsViewModels = _mapper.Map<IEnumerable<GetNewsViewModel>>(similarNews);
             result.SimilarNews = similarNewsViewModels;
+            ViewData["CustomTitle"] = result.Title;
             return View(result);
         }
 

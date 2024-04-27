@@ -22,23 +22,35 @@ namespace InvestList.Controllers
         {
             _investAdRepository = investAdRepository;
             _mapper = mapper;
-            _investFields = _investAdRepository.GetFields().GetAwaiter().GetResult().ToDictionary(x => x.Id, y => y.Title);
+            _investFields = _investAdRepository.GetFields().GetAwaiter().GetResult()
+                .ToDictionary(x => x.Id, y => y.Title);
         }
 
         [AllowAnonymous]
         public async Task<ActionResult> Index(int page = 1, FilterRequestModel filterModel = null)
         {
+            ViewData["CustomTitle"] = "Бізнес шукає інвесторів";
+
             if (page < 1)
             {
                 return NotFound();
             }
-            
-            var range = filterModel == null ? (null, null) : getUsdRange(filterModel.Currency, filterModel.MinInvestment, filterModel.MaxInvestment);
-            var (count, resultDb) = await _investAdRepository.Filter(range.minUsd, range.maxUSd, filterModel?.MinAnnualInvestmentReturn, filterModel?.MaxAnnualInvestmentReturn, page, ItemsPerPage);
+
+            var range = filterModel == null
+                ? (null, null)
+                : getUsdRange(filterModel.Currency, filterModel.MinInvestment, filterModel.MaxInvestment);
+            var (count, resultDb) = await _investAdRepository.Filter(range.minUsd, range.maxUSd,
+                filterModel?.MinAnnualInvestmentReturn, filterModel?.MaxAnnualInvestmentReturn, page, ItemsPerPage);
             if (!resultDb.Any())
             {
                 return NotFound();
             }
+
+            if (page != 1)
+            {
+                ViewData["DisplayNoIndexTag"] = true;
+            }
+
             var resultView = _mapper.Map<IEnumerable<GetAllAdsView>>(resultDb);
 
             var totalPages = (int)Math.Ceiling((double)count / ItemsPerPage);
@@ -90,7 +102,8 @@ namespace InvestList.Controllers
         public async Task<IActionResult> Filter(FilterRequestModel model)
         {
             var range = getUsdRange(model.Currency, model.MinInvestment, model.MaxInvestment);
-            var (count, resultDb) = await _investAdRepository.Filter(range.minUsd, range.maxUSd, model.MinAnnualInvestmentReturn, model.MaxAnnualInvestmentReturn, model.CurrentPage, ItemsPerPage);
+            var (count, resultDb) = await _investAdRepository.Filter(range.minUsd, range.maxUSd,
+                model.MinAnnualInvestmentReturn, model.MaxAnnualInvestmentReturn, model.CurrentPage, ItemsPerPage);
             var resultView = _mapper.Map<IEnumerable<GetAllAdsView>>(resultDb);
 
             var totalPages = (int)Math.Ceiling((double)count / ItemsPerPage);
@@ -123,8 +136,8 @@ namespace InvestList.Controllers
             {
                 PrepopulateCreate();
                 return View("Create");
-
             }
+
             return RedirectToAction("Index", "Login");
         }
 
@@ -155,6 +168,7 @@ namespace InvestList.Controllers
         {
             var db = await _investAdRepository.Get(id);
             var result = _mapper.Map<InvestAdViewModel>(db);
+            ViewData["CustomTitle"] = result.Title;
             return View(result);
         }
 

@@ -135,9 +135,9 @@ namespace DataAccess.Repositories
                 .Include(x => x.Comments).ThenInclude(x => x.User)
                 .Where(x => x.Id == id);
             var lastRecord = _dbContext.InvestAdExtraInfo
-                .OrderByDescending(x => x.CreatedAt).Take(1).Include(x => x.AcceptedCurrencies)
                 .Include(x => x.InvestFields)
-                .Where(x => x.InvestAdId == id);
+                .Where(x => x.InvestAdId == id)
+                .OrderByDescending(x => x.CreatedAt).Take(1).Include(x => x.AcceptedCurrencies);
             var invTask = await invest.FirstOrDefaultAsync().ConfigureAwait(false);
             if (invTask == null) return null;
             var invHTask = await lastRecord.FirstOrDefaultAsync().ConfigureAwait(false);

@@ -12,6 +12,7 @@
     </script>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="icon" type="image/svg+xml" href="/ico/favicon.svg">
     <title>@(ViewData["CustomTitle"] ?? ViewData["Title"])</title>
    
     @if (Context.Request.QueryString.HasValue && Context.Request.QueryString.Value.Contains("page"))
@@ -30,7 +31,7 @@
 <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
     <div class="col-md-3 mb-2 mb-md-0">
         <a class="navbar-brand" asp-area="" asp-controller="Invest" asp-action="Index">
-            <img src="ico/logo1.svg" alt="" height="40"/>
+            <img src="/ico/logo1.svg" alt="" height="40"/>
             <span class="fs-4">Invest Radar</span>
         </a>
     </div>

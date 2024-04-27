@@ -2,6 +2,7 @@
 using Common;
 using DataAccess.Interfaces;
 using DataAccess.Models;
+using DataAccess.Repositories;
 using InvestList.Filters;
 using InvestList.Models;
 using InvestList.Models.News;
@@ -13,14 +14,16 @@ namespace InvestList.Controllers
     [Authorize(Roles = $"{Const.AdminRole}")]
     public class NewsController: Controller
     {
+        private readonly ITagRepository _tagRepository;
         private readonly INewsRepository _repository;
         private readonly IMapper _mapper;
         private const int ItemsPerPage = 24; // Set the desired items per page
 
-        public NewsController(INewsRepository repository, IMapper mapper)
+        public NewsController(INewsRepository repository, IMapper mapper, ITagRepository tagRepository)
         {
             _repository = repository;
             _mapper = mapper;
+            _tagRepository = tagRepository;
         }
 
         [AllowAnonymous]
@@ -144,7 +147,7 @@ namespace InvestList.Controllers
         {
             var userId = Utils.GetUserId(User);
             ViewData["UserId"] = userId;
-            var dictionary = await _repository.GetTags();
+            var dictionary = await _tagRepository.GetTags();
             ViewData["Tags"] = dictionary;
         }
     }

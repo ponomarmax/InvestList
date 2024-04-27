@@ -2,6 +2,7 @@
 using Common;
 using DataAccess.Interfaces;
 using DataAccess.Models;
+using DataAccess.Repositories;
 using InvestList.Filters;
 using InvestList.Models;
 using InvestList.Models.Invest;
@@ -14,16 +15,15 @@ namespace InvestList.Controllers
     public class InvestController: Controller
     {
         private readonly IInvestAdRepository _investAdRepository;
+        private readonly ITagRepository _tagRepository;
         private readonly IMapper _mapper;
-        private readonly Dictionary<Guid, string> _investFields;
         private const int ItemsPerPage = 24; // Set the desired items per page
 
-        public InvestController(IInvestAdRepository investAdRepository, IMapper mapper)
+        public InvestController(IInvestAdRepository investAdRepository, IMapper mapper, ITagRepository tagRepository)
         {
             _investAdRepository = investAdRepository;
             _mapper = mapper;
-            _investFields = _investAdRepository.GetFields().GetAwaiter().GetResult()
-                .ToDictionary(x => x.Id, y => y.Title);
+            _tagRepository = tagRepository;
         }
 
         [AllowAnonymous]
@@ -134,7 +134,7 @@ namespace InvestList.Controllers
         {
             if (User != null && User.Identity != null && User.Identity.IsAuthenticated)
             {
-                PrepopulateCreate();
+                await PrepopulateCreate();
                 return View("Create");
             }
 
@@ -149,17 +149,15 @@ namespace InvestList.Controllers
         {
             if (!ModelState.IsValid)
             {
-                PrepopulateCreate();
+                await PrepopulateCreate();
                 return View("Create", model);
             }
 
             var inv = _mapper.Map<InvestAd>(model);
             var invMeta = _mapper.Map<InvestAdExtraInfo>(model);
-            //invMeta.ImageData = await ConvertImageToByteArray(model.Image);
             await _investAdRepository.Create(inv, invMeta);
 
 
-            //return View("Success");
             return RedirectToAction("Details", new { id = inv.Id });
         }
 
@@ -179,7 +177,7 @@ namespace InvestList.Controllers
             var db = await _investAdRepository.Get(id);
             var result = _mapper.Map<PostInvestAdViewModel>(db);
             ViewData["Id"] = id;
-            PrepopulateCreate();
+            await PrepopulateCreate();
             return View(result);
         }
 
@@ -194,7 +192,7 @@ namespace InvestList.Controllers
             if (!ModelState.IsValid)
             {
                 ViewData["Id"] = id;
-                PrepopulateCreate();
+                await PrepopulateCreate();
                 return View("Edit", model);
             }
 
@@ -203,16 +201,15 @@ namespace InvestList.Controllers
             inv.Id = id;
             await _investAdRepository.Edit(inv, invMeta);
 
-
-            //return View("Success");
             return RedirectToAction("Details", new { id = inv.Id });
         }
 
-        private void PrepopulateCreate()
+        private async Task PrepopulateCreate()
         {
             var userId = Utils.GetUserId(User);
-            ViewData["InvestFieldsOptions"] = _investFields;
             ViewData["UserId"] = userId;
+            var dictionary = await _tagRepository.GetTags();
+            ViewData["Tags"] = dictionary;
         }
     }
 }

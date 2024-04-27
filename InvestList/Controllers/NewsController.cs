@@ -2,6 +2,7 @@
 using Common;
 using DataAccess.Interfaces;
 using DataAccess.Models;
+using DataAccess.Repositories;
 using InvestList.Filters;
 using InvestList.Models;
 using InvestList.Models.News;
@@ -13,14 +14,16 @@ namespace InvestList.Controllers
     [Authorize(Roles = $"{Const.AdminRole}")]
     public class NewsController: Controller
     {
+        private readonly ITagRepository _tagRepository;
         private readonly INewsRepository _repository;
         private readonly IMapper _mapper;
         private const int ItemsPerPage = 24; // Set the desired items per page
 
-        public NewsController(INewsRepository repository, IMapper mapper)
+        public NewsController(INewsRepository repository, IMapper mapper, ITagRepository tagRepository)
         {
             _repository = repository;
             _mapper = mapper;
+            _tagRepository = tagRepository;
         }
 
         [AllowAnonymous]
@@ -30,7 +33,7 @@ namespace InvestList.Controllers
             {
                 return NotFound();
             }
-            
+
             var tagIds = requestModel?.TagIds?.Where(x => Guid.TryParse(x, out _)).Select(Guid.Parse).ToList();
             var resultDb = await _repository.GetPage(page, ItemsPerPage,
                 tagIds);
@@ -38,6 +41,7 @@ namespace InvestList.Controllers
             {
                 return NotFound();
             }
+
             var resultView = _mapper.Map<IEnumerable<GetNewsViewModel>>(resultDb);
             if (page != 1)
             {
@@ -47,7 +51,16 @@ namespace InvestList.Controllers
             var totalItems = (await _repository.Count(tagIds))!;
             var totalPages = (int)Math.Ceiling((double)totalItems / ItemsPerPage);
 
-            ViewData["CustomTitle"] = "Останні новини зі світу інвестицій";
+            if (requestModel?.TagIds!=null && requestModel?.TagIds?.Count != 0)
+            {
+                var tags = resultView.SelectMany(x => x.Tags.Where(t=> requestModel.TagIds.Contains(t.Id.ToString())).Select(t => t.Name)).Distinct();
+                ViewData["CustomTitle"] = $"Інвестиційні новини в категоріях {string.Join(' ', tags)}";
+            }
+            else
+            {
+                ViewData["CustomTitle"] = "Останні новини зі світу інвестицій";
+            }
+
             var viewModel = new ListNewsViewModel
             {
                 Entities = resultView,
@@ -134,7 +147,7 @@ namespace InvestList.Controllers
         {
             var userId = Utils.GetUserId(User);
             ViewData["UserId"] = userId;
-            var dictionary = await _repository.GetTags();
+            var dictionary = await _tagRepository.GetTags();
             ViewData["Tags"] = dictionary;
         }
     }

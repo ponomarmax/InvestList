@@ -21,5 +21,6 @@ namespace DataAccess.Models
 
         public virtual ICollection<InvestAdExtraInfo> History { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<InvestTags> Tags { get; set; }
     }
 }

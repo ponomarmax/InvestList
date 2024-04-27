@@ -19,7 +19,8 @@ namespace InvestList.AutomapperProfiles
             CreateMap<InvestAd, GetAllAdsView>()
                 .ForMember(x => x.Title, y => y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.Title)))
                 .ForMember(x => x.AcceptedCurrencies, y => y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.AcceptedCurrencies)))
-                .ForMember(x => x.InvestFields, y => y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.InvestFields).Select(x => x.InvestField.Title)))
+                .ForMember(x => x.Tags,
+                    y => y.MapFrom(z => z.Tags.Select(x => new TagView() { Id = x.TagId, Name = x.Tag.Name })))
                 .ForMember(x => x.InvestDurationYears, y => y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.InvestDurationYears)))
                 .ForMember(x => x.AnnualInvestmentReturn, y => y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.AnnualInvestmentReturn)))
                 .ForMember(x => x.InvestDurationMonths, y => y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.InvestDurationMonths)))
@@ -43,30 +44,41 @@ namespace InvestList.AutomapperProfiles
                 .ForMember(x => x.Author, y => y.Ignore())
                 .ForMember(x => x.History, y => y.Ignore())
                 .ForMember(x => x.CreatedAt, y => y.MapFrom(z => DateTimeOffset.UtcNow))
-                .ForMember(x => x.UpdateAt, y => y.MapFrom(z => DateTimeOffset.UtcNow));
+                .ForMember(x => x.UpdateAt, y => y.MapFrom(z => DateTimeOffset.UtcNow))
+                .ForMember(x => x.Tags,
+                y => y.MapFrom(z => z.Tags.Select(x => new InvestTags() { TagId = Guid.Parse(x) })));
 
             CreateMap<PostInvestAdViewModel, InvestAdExtraInfo>()
                 .ForMember(x => x.Id, y => y.MapFrom(z => Guid.NewGuid()))
-                .ForMember(x => x.InvestDurationMonths, y => y.MapFrom(z => z.InvestDurationMonths.HasValue ? z.InvestDurationMonths - z.InvestDurationMonths / 12 * 12 : 0))
-                .ForMember(x => x.InvestDurationYears, y => y.MapFrom(z => z.InvestDurationYears.HasValue ? z.InvestDurationYears + (z.InvestDurationMonths.HasValue ? z.InvestDurationMonths / 12 : 0) : 0))
+                .ForMember(x => x.InvestDurationMonths,
+                    y => y.MapFrom(z =>
+                        z.InvestDurationMonths.HasValue
+                            ? z.InvestDurationMonths - z.InvestDurationMonths / 12 * 12
+                            : 0))
+                .ForMember(x => x.InvestDurationYears,
+                    y => y.MapFrom(z =>
+                        z.InvestDurationYears.HasValue
+                            ? z.InvestDurationYears +
+                              (z.InvestDurationMonths.HasValue ? z.InvestDurationMonths / 12 : 0)
+                            : 0))
                 .ForMember(x => x.Id, y => y.MapFrom(z => Guid.NewGuid()))
                 .ForMember(x => x.InvestAd, y => y.Ignore())
                 .ForMember(x => x.InvestAdId, y => y.Ignore())
                 .ForMember(x => x.AcceptedCurrencies, y => y
-                                    .MapFrom(z => z.AcceptedCurrencies
-                                        .Where(pair => pair.Value.HasValue)
-                                        .Select(pair => new MinimalInvestEntrance
-                                        {
-                                            Id = Guid.NewGuid(),
-                                            Currency = pair.Key,
-                                            MinValue = pair.Value.Value
-                                        })
-                                        .ToList()))
-                .ForMember(x => x.CreatedAt, y => y.MapFrom(z => DateTimeOffset.UtcNow))
-                .ForMember(x => x.InvestFields, y => y.MapFrom(z => z.InvestFields.Select(x => new InvestAdExtraInfoInvestField
-                {
-                    InvestFieldId = Guid.Parse(x)
-                })));
+                    .MapFrom(z => z.AcceptedCurrencies
+                        .Where(pair => pair.Value.HasValue)
+                        .Select(pair => new MinimalInvestEntrance
+                        {
+                            Id = Guid.NewGuid(),
+                            Currency = pair.Key,
+                            MinValue = pair.Value.Value
+                        })
+                        .ToList()))
+                .ForMember(x => x.CreatedAt, y => y.MapFrom(z => DateTimeOffset.UtcNow));
+                // .ForMember(x => x.InvestFields, y => y.MapFrom(z => z.InvestFields.Select(x => new InvestAdExtraInfoInvestField
+                // {
+                //     InvestFieldId = Guid.Parse(x)
+                // })));
 
             CreateMap<InvestAd, InvestAdViewModel>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
@@ -82,11 +94,11 @@ namespace InvestList.AutomapperProfiles
                 .ForMember(dest => dest.InvestDurationYears, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.InvestDurationYears)))
                 .ForMember(dest => dest.InvestDurationMonths, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.InvestDurationMonths)))
                 .ForMember(dest => dest.ImageBase64, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.ImageBase64)))
-                .ForMember(dest => dest.InvestFields, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.InvestFields.Select(y => y.InvestField))));
-
-            CreateMap<InvestField, InvestFieldView>()
-                .ForMember(dest => dest.Id, opt => opt.Ignore())
-                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title));
+                .ForMember(x => x.Tags,
+                    y => y.MapFrom(z => z.Tags.Select(x => new TagView() { Id = x.TagId, Name = x.Tag.Name })));
+            // CreateMap<InvestField, InvestFieldView>()
+            //     .ForMember(dest => dest.Id, opt => opt.Ignore())
+            //     .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title));
 
             CreateMap<InvestAd, PostInvestAdViewModel>()
                 .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => src.AuthorId))
@@ -98,11 +110,11 @@ namespace InvestList.AutomapperProfiles
                 .ForMember(dest => dest.InvestDurationYears, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.InvestDurationYears)))
                 .ForMember(dest => dest.InvestDurationMonths, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.InvestDurationMonths)))
                 .ForMember(dest => dest.ImageBase64, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.ImageBase64)))
-                .ForMember(dest => dest.InvestFields, opt => opt.MapFrom(src => GetLastHistoryItemProperty(src, x => x.InvestFields.Select(y => y.InvestField.Id))));
+                .ForMember(x => x.Tags, y => y.MapFrom(z => z.Tags.Select(x => x.TagId.ToString())));
 
-            CreateMap<InvestField, InvestFieldView>()
-                .ForMember(dest => dest.Id, opt => opt.Ignore())
-                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title));
+            // CreateMap<InvestField, InvestFieldView>()
+            //     .ForMember(dest => dest.Id, opt => opt.Ignore())
+            //     .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title));
         }
 
         private static TProperty? GetLastHistoryItemProperty<T, TProperty>(

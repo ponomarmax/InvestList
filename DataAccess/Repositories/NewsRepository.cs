@@ -39,11 +39,6 @@ namespace DataAccess.Repositories
                 .CountAsync();
         }
 
-        public async Task<Dictionary<Guid, string>> GetTags()
-        {
-            return (await _dbContext.Tags.ToListAsync()).ToDictionary(x => x.Id, x => x.Name);
-        }
-
         public async Task Create(News news)
         {
             await _dbContext.News.AddAsync(news);

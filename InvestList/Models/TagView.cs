@@ -1,4 +1,4 @@
-namespace InvestList.Models.News
+namespace InvestList.Models
 {
     public class TagView
     {

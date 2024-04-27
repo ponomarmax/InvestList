@@ -30,9 +30,9 @@ namespace InvestList.Validators
                .Must(HaveAtLeastOneNonNullAndPositiveValue)
                .WithMessage("Ви маєте вказати мінімальний поріг входу хоча б для якоїсь валюти. Значення має бути позитивним");
 
-            RuleFor(vm => vm.InvestFields)
+            RuleFor(vm => vm.Tags)
                .NotNull()
-               .WithMessage("Вкажіть хоча б одну галузь інвестування");
+               .WithMessage("Вкажіть хоча б один тег, що характерезує Ваш бізнес");
 
             RuleFor(x => x.InvestDurationYears)
                 .Cascade(CascadeMode.StopOnFirstFailure)

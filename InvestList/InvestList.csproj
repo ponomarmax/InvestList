@@ -11,7 +11,7 @@
 		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
 		<PreserveCompilationContext>true</PreserveCompilationContext>
 		<MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
-		<RootNamespace>WebApplication1</RootNamespace>
+		<RootNamespace>InvestList</RootNamespace>
 	</PropertyGroup>
 
 	<ItemGroup>

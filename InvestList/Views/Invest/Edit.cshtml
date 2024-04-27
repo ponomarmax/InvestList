@@ -119,17 +119,17 @@
                 </div>
             </div>
             <div class="form-group col-6">
-                <span asp-validation-for="InvestFields" class="text-danger"></span>
+                <span asp-validation-for="Tags" class="text-danger"></span>
                 @{
-                    var options = ViewData["InvestFieldsOptions"] as Dictionary<Guid, string>;
+                    var options = ViewData["Tags"] as Dictionary<Guid, string>;
                     if (options != null)
                     {
-                        <label asp-for="InvestFields">Галузь інвестування</label>
+                        <label asp-for="Tags">Теги</label>
 
-                        <select asp-for="InvestFields" class="form-control">
+                        <select asp-for="Tags" class="form-control">
                             @foreach (var (k, v) in options)
                             {
-                                @if (Model.InvestFields.Contains(k.ToString()))
+                                @if (Model.Tags.Contains(k.ToString()))
                                 {
                                     <option selected value="@k">@v</option>
                                 }

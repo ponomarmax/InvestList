@@ -20,7 +20,9 @@ namespace InvestList.Models.Invest
 
         public decimal? TotalInvestment { get; set; }
 
-        public ICollection<string>? InvestFields { get; set; }
+        public ICollection<string>? Tags { get; set; }
+
+        // public ICollection<string>? InvestFields { get; set; }
 
         public string? ImageBase64 { get; set; }
 

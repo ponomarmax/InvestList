@@ -4,10 +4,11 @@ namespace DataAccess.Interfaces
 {
     public interface INewsRepository
     {
+        Task Edit(News news);
         Task<News?> Get(Guid id);
         Task Create(News news);
-        Task<IEnumerable<News>> GetPage(int page, int itemsPerPage);
-        Task<int> Count();
+        Task<IEnumerable<News>> GetPage(int page, int itemsPerPage, List<Guid>? tagIds);
+        Task<int> Count(List<Guid>? tagIds = null);
         Task<Dictionary<Guid, string>> GetTags();
         Task<IEnumerable<News>> GetSimilarNews(Guid id);
     }

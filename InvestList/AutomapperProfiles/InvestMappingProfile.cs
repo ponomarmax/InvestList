@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using DataAccess.Models;
 using System.Linq.Expressions;
-using WebApplication1.Models;
-using WebApplication1.Models.Invest;
+using InvestList.Models;
+using InvestList.Models.Comment;
+using InvestList.Models.Invest;
 
-namespace WebApplication1.AutomapperProfiles
+namespace InvestList.AutomapperProfiles
 {
     public class InvestMappingProfile: Profile
     {
@@ -26,6 +27,12 @@ namespace WebApplication1.AutomapperProfiles
                 .ForMember(x => x.ImageData, y => y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.ImageBase64)))
                 .ForMember(x => x.Author, y => y.MapFrom(z => GetPartBeforeAt(z.Author.Email)));
 
+            CreateMap<PostCommentRequest, Comment>();
+            CreateMap<Comment, CommentView>()
+                .ForMember(x => x.CreatedAt, y => y.MapFrom(z => z.CreatedAt.DateTime))
+                .ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.User.Email));
+
+            
             CreateMap<InvestAdExtraInfo, SearchResultViewModel>()
                .ForMember(x => x.Title, y => y.MapFrom(src => src.Title))
                .ForMember(x => x.Description, y => y.MapFrom(src => src.Description))
@@ -102,7 +109,7 @@ namespace WebApplication1.AutomapperProfiles
                T source, Expression<Func<InvestAdExtraInfo, TProperty>> propertySelector)
                where T : InvestAd
         {
-            var lastItem = source.History.OrderByDescending(x => x.CreatedAt).FirstOrDefault();
+            var lastItem = source.History.FirstOrDefault();
             return lastItem != null ? propertySelector.Compile()(lastItem) : default;
         }
     }

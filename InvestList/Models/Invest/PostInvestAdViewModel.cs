@@ -1,6 +1,6 @@
 ﻿using Common;
 
-namespace WebApplication1.Models.Invest
+namespace InvestList.Models.Invest
 {
     public class PostInvestAdViewModel
     {

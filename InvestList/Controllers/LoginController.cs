@@ -2,7 +2,7 @@
 using DataAccess.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using WebApplication1.Models;
+using InvestList.Models;
 
 public class LoginController: Controller
 {

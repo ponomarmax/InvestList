@@ -2,9 +2,9 @@
 using Microsoft.Extensions.Options;
 using System.Net.Mail;
 using System.Net;
-using WebApplication1.Configs;
+using InvestList.Configs;
 
-namespace WebApplication1.Services
+namespace InvestList.Services
 {
     public class EmailSender: IEmailSender
     {

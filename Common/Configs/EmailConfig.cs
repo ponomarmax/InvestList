@@ -1,4 +1,4 @@
-﻿namespace WebApplication1.Configs
+﻿namespace InvestList.Configs
 {
     public record EmailConfig
     {

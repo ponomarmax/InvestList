@@ -1,6 +1,7 @@
 ﻿using DataAccess.Models;
+using InvestList.Models.Comment;
 
-namespace WebApplication1.Models.Invest
+namespace InvestList.Models.Invest
 {
     public class InvestAdViewModel
     {
@@ -34,5 +35,7 @@ namespace WebApplication1.Models.Invest
 
         public string? ImageBase64 { get; set; }
         public bool Published { get; set; }
+        
+        public List<CommentView> Comments { get; set; }
     }
 }

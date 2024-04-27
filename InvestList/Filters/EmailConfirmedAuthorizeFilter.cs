@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using DataAccess.Interfaces;
 using Common;
 
-namespace WebApplication1.Filters
+namespace InvestList.Filters
 {
     public class EmailConfirmedAuthorizeFilter: IAuthorizationFilter
     {

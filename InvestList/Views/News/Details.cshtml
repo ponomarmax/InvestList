@@ -1,6 +1,4 @@
-﻿@using System.Security.Claims;
-@using Common;
-@using WebApplication1.Models.News;
+﻿@using InvestList.Models.News;
 @model GetNewsViewModel;
 
 @{
@@ -59,17 +57,14 @@
                         </a>
                     </div>
                 }
+                <a href="@Url.Action("Index", new { tagIds = Model.Tags.Select(x=>x.Id) })">Більше новин...</a>
             }
         </div>
     </div>
 </div>
 
-<!-- Bootstrap JS and dependencies -->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <div class="d-flex justify-content-start">
-    @if (Model.AuthorId != null && User?.FindFirst(ClaimTypes.NameIdentifier)?.Value == Model.AuthorId)
+    @if (User.IsInRole(Const.AdminRole))
     {
         // Кнопка Редагувати
         <a asp-action="Edit" asp-controller="News" asp-route-id="@Model.Id" class="btn btn-primary me-2">Редагувати</a>

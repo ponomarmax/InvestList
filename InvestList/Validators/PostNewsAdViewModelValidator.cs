@@ -1,9 +1,9 @@
 using Common;
 using FluentValidation;
+using InvestList.Models.News;
 using SixLabors.ImageSharp;
-using WebApplication1.Models.News;
 
-namespace WebApplication1.Validators
+namespace InvestList.Validators
 {
     public class PostNewsAdViewModelValidator: AbstractValidator<PostNewsViewModel>
     {

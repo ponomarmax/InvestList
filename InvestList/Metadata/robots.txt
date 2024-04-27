@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /news/create
+Disallow: /news/edit
+Disallow: /invest/create
+Disallow: /invest/edit

@@ -1,84 +1,85 @@
-﻿    @using Common;
-    @model WebApplication1.Models.News.PostNewsViewModel;
+﻿@model InvestList.Models.News.PostNewsViewModel;
 
-    @{
-        ViewData["Title"] = "Edit";
-        Layout = "~/Views/Shared/_Layout.cshtml";
-    }
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
-    <hr />
-    <div class="container">
-        @if (!ViewData.ModelState.IsValid)
-        {
-            <div class="alert alert-danger">
-                <strong>Виправте наступні помилки:</strong>
-                <ul>
-                    @foreach (var modelError in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-                    {
-                        <li>@modelError.ErrorMessage</li>
-                    }
-                </ul>
-            </div>
-        }
-        <form method="post" asp-action="Edit" asp-route-id='@ViewData["Id"]' enctype="multipart/form-data">
-            @Html.AntiForgeryToken()
-            <input asp-for="AuthorId" type="hidden" value='@ViewData["UserId"]'/>
-            <div class="row mb-4">
-                <div class="form-group col-12">
-                    <label asp-for="Title">Назва</label>
-                    <input asp-for="Title" class="form-control" placeholder="Вкажіть короткий опис, не більше 200 символів"/>
-                    <span asp-validation-for="Title" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="row mb-4">
-                <div class="form-group col-12">
-                    <label asp-for="Description">Дайте детальний опис новини</label>
-                    <textarea asp-for="Description" class="form-control"></textarea>
-                    <span asp-validation-for="Description" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="row mb-4">
-                <div class="form-group col-6">
-                <label>Завантажте фото:</label>
-                <input id="imageFileInput" type="file" class="form-control mb-2" placeholder="Виберіть файл" />
-                <button id="removePhotoButton" type="button" class="btn btn-outline-danger mb-2" style="display: none;">Видалити фото</button>
-                <img id="uploadedImage" src="#" alt="Investment Image" class="img-fluid resized-image mb-2" style="display: none;" />
-                <input asp-for="ImageBase64" type="hidden" value="@Model.ImageBase64" />
-            </div>
-            </div>
-
-            <div class="row mb-4">
-                <span asp-validation-for="Tags" class="text-danger"></span>
-                @{
-                    var options = ViewData["Tags"] as Dictionary<Guid, string>;
-                    if (options != null)
-                    {
-                        <label asp-for="Tags">Теги</label>
-
-                        <select asp-for="Tags" class="form-control">
-                            @foreach (var (k, v) in options)
-                            {
-                                @if (Model.Tags.Contains(k.ToString())) {
-                                    <option selected value="@k">@v</option>
-                                    }
-                                else {
-                                    <option value="@k">@v</option>
-                                }
-                            }
-                        </select>
-                    }
+<hr/>
+<div class="container">
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            <strong>Виправте наступні помилки:</strong>
+            <ul>
+                @foreach (var modelError in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <li>@modelError.ErrorMessage</li>
                 }
-            </div>
-
-            <button type="submit" class="btn btn-primary">Опублікувати</button>
-            <a asp-action="Index" class="btn btn-secondary">Повернутись до списку</a>
-        </form>
-    </div>
-
-    @section Scripts {
-        @{
-            await Html.RenderPartialAsync("_ValidationScriptsPartial");
-        }
-        <script src="~/js/handleImageUpload.js"></script>
+            </ul>
+        </div>
     }
+    <form method="post" asp-action="Edit" asp-route-id='@ViewData["Id"]' enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <input asp-for="AuthorId" type="hidden" value='@ViewData["UserId"]'/>
+        <div class="row mb-4">
+            <div class="form-group col-12">
+                <label asp-for="Title">Назва</label>
+                <input asp-for="Title" class="form-control" placeholder="Вкажіть короткий опис, не більше 200 символів"/>
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="form-group col-12">
+                <label asp-for="Description">Дайте детальний опис новини</label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="form-group col-6">
+                <label>Завантажте фото:</label>
+                <input id="imageFileInput" type="file" class="form-control mb-2" placeholder="Виберіть файл"/>
+                <button id="removePhotoButton" type="button" class="btn btn-outline-danger mb-2" style="display: none;">Видалити фото</button>
+                <img id="uploadedImage" src="#" alt="Investment Image" class="img-fluid resized-image mb-2" style="display: none;"/>
+                <input asp-for="ImageBase64" type="hidden" value="@Model.ImageBase64"/>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <span asp-validation-for="Tags" class="text-danger"></span>
+            @{
+                var options = ViewData["Tags"] as Dictionary<Guid, string>;
+                if (options != null)
+                {
+                    <label asp-for="Tags">Теги</label>
+
+                    <select asp-for="Tags" class="form-control">
+                        @foreach (var (k, v) in options)
+                        {
+                            @if (Model.Tags.Contains(k.ToString()))
+                            {
+                                <option selected value="@k">@v</option>
+                            }
+                            else
+                            {
+                                <option value="@k">@v</option>
+                            }
+                        }
+                    </select>
+                }
+            }
+        </div>
+
+        <button type="submit" class="btn btn-primary">Опублікувати</button>
+        <a asp-action="Index" class="btn btn-secondary">Повернутись до списку</a>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/js/handleImageUpload.js"></script>
+}

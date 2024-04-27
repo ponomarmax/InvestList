@@ -1,11 +1,11 @@
 ﻿using DataAccess.Models;
+using InvestList.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
-using WebApplication1.Models;
 
-namespace WebApplication1.Controllers
+namespace InvestList.Controllers
 {
     public class RegisterController: Controller
     {

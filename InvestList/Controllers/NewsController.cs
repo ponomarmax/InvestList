@@ -2,13 +2,13 @@
 using Common;
 using DataAccess.Interfaces;
 using DataAccess.Models;
+using InvestList.Filters;
+using InvestList.Models;
+using InvestList.Models.News;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WebApplication1.Filters;
-using WebApplication1.Models;
-using WebApplication1.Models.News;
 
-namespace WebApplication1.Controllers
+namespace InvestList.Controllers
 {
     [Authorize(Roles = $"{Const.AdminRole}")]
     public class NewsController: Controller
@@ -24,16 +24,30 @@ namespace WebApplication1.Controllers
         }
 
         [AllowAnonymous]
-        public async Task<ActionResult> Index(int page = 1)
+        public async Task<ActionResult> Index(int page = 1, FilterNewsRequestModel requestModel = null)
         {
-            var resultDb = await _repository.GetPage(page, ItemsPerPage);
+            if (page < 1)
+            {
+                return NotFound();
+            }
+            
+            var tagIds = requestModel?.TagIds?.Where(x => Guid.TryParse(x, out _)).Select(Guid.Parse).ToList();
+            var resultDb = await _repository.GetPage(page, ItemsPerPage,
+                tagIds);
+            if (!resultDb.Any())
+            {
+                return NotFound();
+            }
             var resultView = _mapper.Map<IEnumerable<GetNewsViewModel>>(resultDb);
+            if (page != 1)
+            {
+                ViewData["DisplayNoIndexTag"] = true;
+            }
 
-
-            var totalItems = (await _repository.Count())!;
+            var totalItems = (await _repository.Count(tagIds))!;
             var totalPages = (int)Math.Ceiling((double)totalItems / ItemsPerPage);
 
-
+            ViewData["CustomTitle"] = "Останні новини зі світу інвестицій";
             var viewModel = new ListNewsViewModel
             {
                 Entities = resultView,
@@ -42,7 +56,8 @@ namespace WebApplication1.Controllers
                     CurrentPage = page,
                     TotalPages = totalPages,
                     PageSize = ItemsPerPage
-                }
+                },
+                FilterModel = requestModel
             };
 
             return View(viewModel);
@@ -56,6 +71,7 @@ namespace WebApplication1.Controllers
             var result = _mapper.Map<GetNewsViewModel>(db);
             var similarNewsViewModels = _mapper.Map<IEnumerable<GetNewsViewModel>>(similarNews);
             result.SimilarNews = similarNewsViewModels;
+            ViewData["CustomTitle"] = result.Title;
             return View(result);
         }
 
@@ -66,7 +82,7 @@ namespace WebApplication1.Controllers
             return View("Create");
         }
 
-        
+
         [HttpPost]
         [EmailConfirmedAuthorize]
         [ValidateAntiForgeryToken]
@@ -80,7 +96,7 @@ namespace WebApplication1.Controllers
 
             var news = _mapper.Map<News>(model);
             await _repository.Create(news);
-            
+
             return RedirectToAction("Details", new { id = news.Id });
         }
 
@@ -109,7 +125,7 @@ namespace WebApplication1.Controllers
             var inv = _mapper.Map<News>(model);
             inv.Id = id;
             await _repository.Edit(inv);
-            
+
             return RedirectToAction("Details", new { id = inv.Id });
         }
 

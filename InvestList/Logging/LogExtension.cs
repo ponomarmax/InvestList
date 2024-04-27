@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.HttpLogging;
 using Serilog;
 using Serilog.Events;
 
-namespace WebApplication1.Logging
+namespace InvestList.Logging
 {
     public static class LogExtension
     {

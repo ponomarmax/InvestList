@@ -1,5 +1,5 @@
 ﻿@using Common;
-@model WebApplication1.Models.Invest.ListInvestsViewModel
+@model InvestList.Models.Invest.ListInvestsViewModel
 
 @{
     ViewData["Title"] = "Головна";
@@ -117,7 +117,7 @@
     }
 
 </div>
-@await Html.PartialAsync("_Pagination", (Model.PaginationInfo, Model.FilterModel))
+@await Html.PartialAsync("_InvestPagination", (Model.PaginationInfo, Model.FilterModel))
 
 @section Scripts{
     <script>

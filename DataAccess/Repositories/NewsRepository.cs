@@ -74,25 +74,17 @@ namespace DataAccess.Repositories
             return newsEnumerable;
         }
 
-        public async Task<IEnumerable<News>> GetSimilarNews(Guid id)
+        public async Task<IEnumerable<News>> GetSimilarNews(List<Guid> tagIds)
         {
-            var primaryNews = _dbContext.News.Where(x => x.Id == id).Include(x => x.Tags).FirstOrDefault();
-            var tagIds = primaryNews.Tags.Select(x => x.TagId);
             return await _dbContext.News
-                .Where(x => x.Id != id &&
-                            x.Tags.Any(
+                .Where(x => x.Tags.Any(
                                 t => tagIds.Any(pt => pt == t.TagId))
                 ).OrderByDescending(x => x.CreatedAt)
                 .Take(10)
                 .Include(x => x.Tags).ThenInclude(x => x.Tag)
                 .ToListAsync();
-            // .OrderByDescending(x => x.CreatedAt)
-            // .Skip((page - 1) * itemsPerPage)
-            // .Take(itemsPerPage)
-            // .Include(x => x.Author)
-            // .Include(x => x.Tags)
-            // .ThenInclude(x => x.Tag)
-            // .ToListAsync();
         }
+        
+       
     }
 }

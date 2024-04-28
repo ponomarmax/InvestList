@@ -1,6 +1,6 @@
 ﻿using Common;
 
-namespace InvestList.Models
+namespace InvestList.Models.Invest
 {
     public class FilterRequestModel
     {
@@ -13,6 +13,8 @@ namespace InvestList.Models
         public decimal? MinAnnualInvestmentReturn { get; set; }
         
         public decimal? MaxAnnualInvestmentReturn { get; set; }
+        
+        public List<string> TagIds { get; set; }
 
         public int CurrentPage { get; set; } = 1;
     }

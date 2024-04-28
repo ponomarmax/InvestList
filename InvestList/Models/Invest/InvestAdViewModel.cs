@@ -1,5 +1,6 @@
 ﻿using DataAccess.Models;
 using InvestList.Models.Comment;
+using InvestList.Models.News;
 
 namespace InvestList.Models.Invest
 {
@@ -31,7 +32,7 @@ namespace InvestList.Models.Invest
 
         public decimal TotalInvestment { get; set; }
 
-        public ICollection<TagView> Tags { get; set; }
+        public IEnumerable<TagView> Tags { get; set; }
 
         // public virtual ICollection<InvestFieldView> InvestFields { get; set; }
 
@@ -39,5 +40,7 @@ namespace InvestList.Models.Invest
         public bool Published { get; set; }
         
         public List<CommentView> Comments { get; set; }
+        public IEnumerable<GetAllAdsView> SimilarInvests { get; set; }
+        public IEnumerable<GetNewsViewModel> SimilarNews { get; set; }
     }
 }

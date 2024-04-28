@@ -1,6 +1,6 @@
 ﻿using DataAccess.Models;
 
-namespace WebApplication1.Models.Invest
+namespace InvestList.Models.Invest
 {
     public class GetAllAdsView
     {
@@ -16,7 +16,8 @@ namespace WebApplication1.Models.Invest
 
         public decimal AnnualInvestmentReturn { get; set; }
 
-        public string[] InvestFields { get; set; }
+        public ICollection<TagView> Tags { get; set; }
+        // public string[] InvestFields { get; set; }
 
         public DateTime CreatedAt { get; set; }
 

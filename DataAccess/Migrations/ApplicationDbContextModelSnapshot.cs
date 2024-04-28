@@ -22,6 +22,35 @@ namespace DataAccess.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("DataAccess.Models.Comment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("InvestAdId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InvestAdId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
+                });
+
             modelBuilder.Entity("DataAccess.Models.InvestAd", b =>
                 {
                     b.Property<Guid>("Id")
@@ -199,6 +228,21 @@ namespace DataAccess.Migrations
                             Id = new Guid("072aa2c8-7641-4e36-af85-41d0cef7db4d"),
                             Title = "Спорт"
                         });
+                });
+
+            modelBuilder.Entity("DataAccess.Models.InvestTags", b =>
+                {
+                    b.Property<Guid>("InvestId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TagId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("InvestId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("InvestTags");
                 });
 
             modelBuilder.Entity("DataAccess.Models.MinimalInvestEntrance", b =>
@@ -523,6 +567,25 @@ namespace DataAccess.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("DataAccess.Models.Comment", b =>
+                {
+                    b.HasOne("DataAccess.Models.InvestAd", "InvestAd")
+                        .WithMany("Comments")
+                        .HasForeignKey("InvestAdId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("DataAccess.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("InvestAd");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("DataAccess.Models.InvestAd", b =>
                 {
                     b.HasOne("DataAccess.Models.User", "Author")
@@ -562,6 +625,25 @@ namespace DataAccess.Migrations
                     b.Navigation("InvestAdExtraInfo");
 
                     b.Navigation("InvestField");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.InvestTags", b =>
+                {
+                    b.HasOne("DataAccess.Models.InvestAd", "Invest")
+                        .WithMany("Tags")
+                        .HasForeignKey("InvestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DataAccess.Models.Tag", "Tag")
+                        .WithMany()
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Invest");
+
+                    b.Navigation("Tag");
                 });
 
             modelBuilder.Entity("DataAccess.Models.MinimalInvestEntrance", b =>
@@ -654,7 +736,11 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.Models.InvestAd", b =>
                 {
+                    b.Navigation("Comments");
+
                     b.Navigation("History");
+
+                    b.Navigation("Tags");
                 });
 
             modelBuilder.Entity("DataAccess.Models.InvestAdExtraInfo", b =>

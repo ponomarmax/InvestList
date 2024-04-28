@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
 using DataAccess.Models;
-using WebApplication1.Models.News;
+using InvestList.Models;
+using InvestList.Models.News;
 
-namespace WebApplication1.AutomapperProfiles
+namespace InvestList.AutomapperProfiles
 {
     public class NewsMappingProfile: Profile
     {

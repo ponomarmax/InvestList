@@ -1,4 +1,4 @@
-﻿namespace WebApplication1
+﻿namespace InvestList
 {
     public static class ConfigExtension
     {

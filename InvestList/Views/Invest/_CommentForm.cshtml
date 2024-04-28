@@ -1,0 +1,12 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model InvestList.Models.Comment.PostCommentRequest
+
+<form asp-action="Publish" asp-controller="Comment" method="post">
+    <input type="hidden" asp-for="InvestAdId" value="@Model.InvestAdId"/>
+    <input type="hidden" asp-for="UserId" value="@Model.UserId"/>
+    <div class="form-group mb-1">
+        <label asp-for="Text">Коментар:</label>
+        <textarea class="form-control" asp-for="Text" rows="3"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Відправити</button>
+</form>

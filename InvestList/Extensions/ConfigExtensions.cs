@@ -1,4 +1,4 @@
-﻿namespace WebApplication1.Extensions
+﻿namespace InvestList.Extensions
 {
     public static class ConfigExtensions
     {

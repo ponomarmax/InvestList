@@ -18,6 +18,7 @@ namespace DataAccess
         public DbSet<Tag> Tags { get; set; }
 
         public DbSet<News> News { get; set; }
+        public DbSet<Comment> Comments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,15 +39,24 @@ namespace DataAccess
 
             modelBuilder.Entity<NewsToTags>()
                 .HasKey(x => new { x.NewsId, x.TagId });
+            
+            modelBuilder.Entity<InvestTags>()
+                .HasKey(x => new { x.InvestId, x.TagId });
 
             modelBuilder.Entity<NewsToTags>()
                 .HasOne(x => x.News)
                 .WithMany(x => x.Tags)
                 .HasForeignKey(x => x.NewsId);
-
-            //modelBuilder.Entity<NewsToTags>()
-            //    .HasOne(x => x.Tag)
-            //    .HasForeignKey(x => x.InvestFieldId);
+            
+            modelBuilder.Entity<InvestTags>()
+                .HasOne(x => x.Invest)
+                .WithMany(x => x.Tags)
+                .HasForeignKey(x => x.InvestId);
+            
+            modelBuilder.Entity<Comment>()
+                .HasOne(x => x.InvestAd)
+                .WithMany(x => x.Comments)
+                .HasForeignKey(x => x.InvestAdId).OnDelete(DeleteBehavior.NoAction);
 
             Seed(modelBuilder);
         }

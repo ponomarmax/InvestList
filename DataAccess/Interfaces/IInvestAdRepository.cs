@@ -9,8 +9,6 @@ namespace DataAccess.Interfaces
         Task Edit(InvestAd investAd, InvestAdExtraInfo investAdExtraInfo);
         Task<(int count, IEnumerable<InvestAd> list)> Filter(decimal? minUsd, decimal? maxUSd, decimal? minAnnualInvestmentReturn, decimal? maxAnnualInvestmentReturn, int page, int offset);
         Task<InvestAd?> Get(Guid id);
-        Task<IEnumerable<InvestAd>> GetAllShorted(int page = 1, int offset = 0);
-        Task<IEnumerable<InvestField>> GetFields();
         Task<IEnumerable<InvestAdExtraInfo>> Search(string searchTerm, int currentPage, int itemsPerPage);
         Task<bool> IsOwnerOfPost(string userId, string invId);
     }

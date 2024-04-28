@@ -14,22 +14,12 @@ namespace DataAccess.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<InvestAd>> GetAllShorted(int page = 1, int offset = 10)
-        {
-            return await _dbContext.InvestAds
-                .Where(x => x.Published)
-                .OrderByDescending(x => x.CreatedAt)
-                .Skip((page - 1) * offset)
-                .Take(offset)
-                .Include(x => x.Author)
-                .Include(x => x.History.OrderByDescending(y => y.CreatedAt).Take(1))
-                    .ThenInclude(x => x.InvestFields)
-                 .Include(x => x.History.OrderByDescending(y => y.CreatedAt).Take(1))
-                    .ThenInclude(x => x.AcceptedCurrencies)
-                .ToListAsync();
-        }
-
-        public async Task<(int count, IEnumerable<InvestAd> list)> Filter(decimal? minUsd, decimal? maxUSd, decimal? minAnnualInvestmentReturn, decimal? maxAnnualInvestmentReturn, int page, int offset)
+        public async Task<(int count, IEnumerable<InvestAd> list)> Filter(decimal? minUsd,
+            decimal? maxUSd,
+            decimal? minAnnualInvestmentReturn,
+            decimal? maxAnnualInvestmentReturn,
+            int page,
+            int offset)
         {
             var query = _dbContext.InvestAds
                 .Where(x => x.Published && x.History.Any()); // Ensure there is at least one item in the History list
@@ -65,22 +55,31 @@ namespace DataAccess.Repositories
                     x.History.OrderByDescending(y => y.CreatedAt)
                         .First()
                         .AcceptedCurrencies.Any(c =>
-                            ((hasUsdFilter && c.Currency == Currency.USD) || (hasUahFilter && c.Currency == Currency.UAH)) &&
+                            ((hasUsdFilter && c.Currency == Currency.USD) ||
+                             (hasUahFilter && c.Currency == Currency.UAH)) &&
                             (
-                                (hasUsdFilter && (minUsd == null || c.Currency == Currency.USD && c.MinValue >= minUsd.Value) && (maxUSd == null || c.Currency == Currency.USD && c.MinValue <= maxUSd.Value)) ||
-                                (hasUahFilter && (uahMin == null || c.Currency == Currency.UAH && c.MinValue >= uahMin.Value) && (uahMax == null || c.Currency == Currency.UAH && c.MinValue <= uahMax.Value))
+                                (hasUsdFilter &&
+                                 (minUsd == null || c.Currency == Currency.USD && c.MinValue >= minUsd.Value) &&
+                                 (maxUSd == null || c.Currency == Currency.USD && c.MinValue <= maxUSd.Value)) ||
+                                (hasUahFilter &&
+                                 (uahMin == null || c.Currency == Currency.UAH && c.MinValue >= uahMin.Value) &&
+                                 (uahMax == null || c.Currency == Currency.UAH && c.MinValue <= uahMax.Value))
                             )
                         )
                 );
 
             if (minAnnualInvestmentReturn.HasValue)
             {
-                query = query.Where(x => x.History.OrderByDescending(y => y.CreatedAt).First().AnnualInvestmentReturn >= minAnnualInvestmentReturn.Value);
+                query = query.Where(x =>
+                    x.History.OrderByDescending(y => y.CreatedAt).First().AnnualInvestmentReturn >=
+                    minAnnualInvestmentReturn.Value);
             }
 
             if (maxAnnualInvestmentReturn.HasValue)
             {
-                query = query.Where(x => x.History.OrderByDescending(y => y.CreatedAt).First().AnnualInvestmentReturn <= maxAnnualInvestmentReturn.Value);
+                query = query.Where(x =>
+                    x.History.OrderByDescending(y => y.CreatedAt).First().AnnualInvestmentReturn <=
+                    maxAnnualInvestmentReturn.Value);
             }
 
             var count = await query.CountAsync();
@@ -88,16 +87,18 @@ namespace DataAccess.Repositories
             if (count > 0)
             {
                 return (count, await query
-                .OrderByDescending(x => x.CreatedAt)
-                .Skip((page - 1) * offset)
-                .Take(offset)
-                .Include(x => x.Author)
-                .Include(x => x.History.OrderByDescending(y => y.CreatedAt).Take(1))
+                    .OrderByDescending(x => x.CreatedAt)
+                    .Skip((page - 1) * offset)
+                    .Take(offset)
+                    .Include(x => x.Author)
+                    .Include(x=>x.Tags).ThenInclude(x=>x.Tag)
+                    .Include(x => x.History.OrderByDescending(y => y.CreatedAt).Take(1))
                     .ThenInclude(x => x.InvestFields)
-                 .Include(x => x.History.OrderByDescending(y => y.CreatedAt).Take(1))
+                    .Include(x => x.History.OrderByDescending(y => y.CreatedAt).Take(1))
                     .ThenInclude(x => x.AcceptedCurrencies)
-                .ToListAsync());
+                    .ToListAsync());
             }
+
             return (0, Array.Empty<InvestAd>());
         }
 
@@ -113,24 +114,26 @@ namespace DataAccess.Repositories
                 .CountAsync();
         }
 
-        public async Task<InvestAd?> Get(Guid id) => await _dbContext.InvestAds
+        public async Task<InvestAd?> Get(Guid id)
+        {
+            var invest = _dbContext.InvestAds
                 .Include(x => x.Author)
-                .Include(x => x.History.OrderByDescending(y => y.CreatedAt).Take(1))
-                    .ThenInclude(x => x.AcceptedCurrencies)
-                .Include(x => x.History.OrderByDescending(y => y.CreatedAt).Take(1))
-                    .ThenInclude(x => x.InvestFields).ThenInclude(x => x.InvestField)
-                .FirstOrDefaultAsync(x => x.Id == id);
+                .Include(x=>x.Tags).ThenInclude(x=>x.Tag)
+                .Include(x => x.Comments).ThenInclude(x => x.User)
+                .Where(x => x.Id == id);
+            var lastRecord = _dbContext.InvestAdExtraInfo
+                .Include(x => x.InvestFields)
+                .Where(x => x.InvestAdId == id)
+                .OrderByDescending(x => x.CreatedAt).Take(1).Include(x => x.AcceptedCurrencies);
+            var invTask = await invest.FirstOrDefaultAsync().ConfigureAwait(false);
+            if (invTask == null) return null;
+            var invHTask = await lastRecord.FirstOrDefaultAsync().ConfigureAwait(false);
+            invTask.History = new List<InvestAdExtraInfo>() { invHTask };
+            return invTask;
+        }
 
         private async Task<InvestAd?> GetRaw(Guid id) => await _dbContext.InvestAds
-
-                .FirstOrDefaultAsync(x => x.Id == id);
-
-        public async Task<bool> Contains(InvestAd ad) => await _dbContext.InvestAds.ContainsAsync(ad);
-
-        public async Task<IEnumerable<InvestField>> GetFields()
-        {
-            return await _dbContext.InvestFields.ToArrayAsync();
-        }
+            .FirstOrDefaultAsync(x => x.Id == id);
 
         public async Task Create(InvestAd investAd, InvestAdExtraInfo investAdExtraInfo)
         {
@@ -146,6 +149,7 @@ namespace DataAccess.Repositories
             if (inv != null)
             {
                 inv.Published = investAd.Published;
+                inv.Tags = investAd.Tags;
                 investAdExtraInfo.InvestAdId = investAd.Id;
                 await _dbContext.InvestAdExtraInfo.AddAsync(investAdExtraInfo);
                 await _dbContext.SaveChangesAsync();
@@ -166,9 +170,9 @@ namespace DataAccess.Repositories
 
             // Apply search criteria to the grouped query
             var filteredQuery = groupedQuery
-     .Where(e0 =>
-         (e0.Title.Contains(searchTerm)) ||
-         (e0.Description != null && e0.Description.Contains(searchTerm)));
+                .Where(e0 =>
+                    (e0.Title.Contains(searchTerm)) ||
+                    (e0.Description != null && e0.Description.Contains(searchTerm)));
 
 
             // Apply pagination

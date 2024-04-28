@@ -2,34 +2,55 @@
 using Common;
 using DataAccess.Interfaces;
 using DataAccess.Models;
+using DataAccess.Repositories;
+using InvestList.Filters;
+using InvestList.Models;
+using InvestList.Models.Invest;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using WebApplication1.Filters;
-using WebApplication1.Models;
-using WebApplication1.Models.Invest;
 
-namespace WebApplication1.Controllers
+namespace InvestList.Controllers
 {
     [Authorize(Roles = $"{Const.BusinessRole},{Const.AdminRole}")]
     public class InvestController: Controller
     {
         private readonly IInvestAdRepository _investAdRepository;
+        private readonly ITagRepository _tagRepository;
         private readonly IMapper _mapper;
-        private readonly Dictionary<Guid, string> _investFields;
         private const int ItemsPerPage = 24; // Set the desired items per page
 
-        public InvestController(IInvestAdRepository investAdRepository, IMapper mapper)
+        public InvestController(IInvestAdRepository investAdRepository, IMapper mapper, ITagRepository tagRepository)
         {
             _investAdRepository = investAdRepository;
             _mapper = mapper;
-            _investFields = _investAdRepository.GetFields().GetAwaiter().GetResult().ToDictionary(x => x.Id, y => y.Title);
+            _tagRepository = tagRepository;
         }
 
         [AllowAnonymous]
         public async Task<ActionResult> Index(int page = 1, FilterRequestModel filterModel = null)
         {
-                var range = filterModel == null ? (null, null) : getUsdRange(filterModel.Currency, filterModel.MinInvestment, filterModel.MaxInvestment);
-            var (count, resultDb) = await _investAdRepository.Filter(range.minUsd, range.maxUSd, filterModel?.MinAnnualInvestmentReturn, filterModel?.MaxAnnualInvestmentReturn, page, ItemsPerPage);
+            ViewData["CustomTitle"] = "Бізнес шукає інвесторів";
+
+            if (page < 1)
+            {
+                return NotFound();
+            }
+
+            var range = filterModel == null
+                ? (null, null)
+                : getUsdRange(filterModel.Currency, filterModel.MinInvestment, filterModel.MaxInvestment);
+            var (count, resultDb) = await _investAdRepository.Filter(range.minUsd, range.maxUSd,
+                filterModel?.MinAnnualInvestmentReturn, filterModel?.MaxAnnualInvestmentReturn, page, ItemsPerPage);
+            if (!resultDb.Any())
+            {
+                return NotFound();
+            }
+
+            if (page != 1)
+            {
+                ViewData["DisplayNoIndexTag"] = true;
+            }
+
             var resultView = _mapper.Map<IEnumerable<GetAllAdsView>>(resultDb);
 
             var totalPages = (int)Math.Ceiling((double)count / ItemsPerPage);
@@ -81,7 +102,8 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult> Filter(FilterRequestModel model)
         {
             var range = getUsdRange(model.Currency, model.MinInvestment, model.MaxInvestment);
-            var (count, resultDb) = await _investAdRepository.Filter(range.minUsd, range.maxUSd, model.MinAnnualInvestmentReturn, model.MaxAnnualInvestmentReturn, model.CurrentPage, ItemsPerPage);
+            var (count, resultDb) = await _investAdRepository.Filter(range.minUsd, range.maxUSd,
+                model.MinAnnualInvestmentReturn, model.MaxAnnualInvestmentReturn, model.CurrentPage, ItemsPerPage);
             var resultView = _mapper.Map<IEnumerable<GetAllAdsView>>(resultDb);
 
             var totalPages = (int)Math.Ceiling((double)count / ItemsPerPage);
@@ -112,10 +134,10 @@ namespace WebApplication1.Controllers
         {
             if (User != null && User.Identity != null && User.Identity.IsAuthenticated)
             {
-                PrepopulateCreate();
+                await PrepopulateCreate();
                 return View("Create");
-
             }
+
             return RedirectToAction("Index", "Login");
         }
 
@@ -127,17 +149,15 @@ namespace WebApplication1.Controllers
         {
             if (!ModelState.IsValid)
             {
-                PrepopulateCreate();
+                await PrepopulateCreate();
                 return View("Create", model);
             }
 
             var inv = _mapper.Map<InvestAd>(model);
             var invMeta = _mapper.Map<InvestAdExtraInfo>(model);
-            //invMeta.ImageData = await ConvertImageToByteArray(model.Image);
             await _investAdRepository.Create(inv, invMeta);
 
 
-            //return View("Success");
             return RedirectToAction("Details", new { id = inv.Id });
         }
 
@@ -146,6 +166,7 @@ namespace WebApplication1.Controllers
         {
             var db = await _investAdRepository.Get(id);
             var result = _mapper.Map<InvestAdViewModel>(db);
+            ViewData["CustomTitle"] = result.Title;
             return View(result);
         }
 
@@ -156,7 +177,7 @@ namespace WebApplication1.Controllers
             var db = await _investAdRepository.Get(id);
             var result = _mapper.Map<PostInvestAdViewModel>(db);
             ViewData["Id"] = id;
-            PrepopulateCreate();
+            await PrepopulateCreate();
             return View(result);
         }
 
@@ -171,7 +192,7 @@ namespace WebApplication1.Controllers
             if (!ModelState.IsValid)
             {
                 ViewData["Id"] = id;
-                PrepopulateCreate();
+                await PrepopulateCreate();
                 return View("Edit", model);
             }
 
@@ -180,16 +201,15 @@ namespace WebApplication1.Controllers
             inv.Id = id;
             await _investAdRepository.Edit(inv, invMeta);
 
-
-            //return View("Success");
             return RedirectToAction("Details", new { id = inv.Id });
         }
 
-        private void PrepopulateCreate()
+        private async Task PrepopulateCreate()
         {
             var userId = Utils.GetUserId(User);
-            ViewData["InvestFieldsOptions"] = _investFields;
             ViewData["UserId"] = userId;
+            var dictionary = await _tagRepository.GetTags();
+            ViewData["Tags"] = dictionary;
         }
     }
 }

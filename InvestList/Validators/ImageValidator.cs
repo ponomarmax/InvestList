@@ -1,11 +1,20 @@
 ﻿using SixLabors.ImageSharp;
 
-namespace WebApplication1.Validators
+namespace InvestList.Validators
 {
     public class ImageValidator
     {
-        public static bool IsBase64StringAnImage(string base64String)
+        public static bool BeAValidBase64String(string? base64String)
         {
+            // Check if the string is a valid base64 string
+            if (string.IsNullOrWhiteSpace(base64String))
+                return false;
+
+            // A simple regex check for a valid base64 string
+            var regex = new System.Text.RegularExpressions.Regex(@"^[a-zA-Z0-9+/]*={0,2}$");
+            if (!regex.IsMatch(base64String))
+                return false;
+
             try
             {
                 byte[] bytes = Convert.FromBase64String(base64String);
@@ -14,7 +23,7 @@ namespace WebApplication1.Validators
                 {
                     using (Image image = Image.Load(ms))
                     {
-                        // You can perform additional image validation or processing here
+                        // Additional image validation or processing can be performed here
                     }
                 }
 

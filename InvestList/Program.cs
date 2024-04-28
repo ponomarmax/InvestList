@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
-using WebApplication1;
-using WebApplication1.Configs;
-using WebApplication1.Extensions;
-using WebApplication1.Logging;
-using WebApplication1.Validators;
+using InvestList;
+using InvestList.Configs;
+using InvestList.Extensions;
+using InvestList.Logging;
+using InvestList.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.LoadAppSettingAndEnvValues();
@@ -35,13 +35,23 @@ try
     builder.Services.AddAutoMapper(typeof(Program));
 
     builder.Services.Load<EmailConfig>(builder.Configuration, "Email");
-    builder.Services.AddTransient<IEmailSender, WebApplication1.Services.EmailSender>();
+    builder.Services.AddTransient<IEmailSender, InvestList.Services.EmailSender>();
     builder.Services.AddTransient<IInvestAdRepository, InvestAdRepository>();
     builder.Services.AddScoped<IUserRepository, UserRepository>();
     builder.Services.AddScoped<INewsRepository, NewsRepository>();
+    builder.Services.AddScoped<ITagRepository, TagRepository>();
+    builder.Services.AddScoped<ICommentRepository, CommentRepository>();
     Log.Logger.Information("App is starting");
 
     var app = builder.Build();
+    app.UseMiddleware<WwwRedirectMiddleware>();
+    app.Use(async (context, next) =>
+    {
+        context.Response.Headers.Add("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline' https://code.jquery.com https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com; " +
+                                                                "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com; img-src 'self' data: https://www.google-analytics.com; frame-src 'self'; object-src 'none'; connect-src 'self' https://www.google-analytics.com;");
+        await next();
+    });
+
     if (app.Environment.IsDevelopment())
     {
         app.UseMigrationsEndPoint();

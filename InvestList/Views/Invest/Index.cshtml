@@ -1,5 +1,5 @@
 ﻿@using Common;
-@model WebApplication1.Models.Invest.ListInvestsViewModel
+@model InvestList.Models.Invest.ListInvestsViewModel
 
 @{
     ViewData["Title"] = "Головна";
@@ -80,12 +80,12 @@
                             </div>
                             <div class="card-body">
 
-                                @if (ad.InvestFields != null && ad.InvestFields.Any())
+                                @if (ad.Tags != null && ad.Tags.Any())
                                 {
                                     <div class="tags-container">
-                                        @foreach (var field in ad.InvestFields)
+                                        @foreach (var field in ad.Tags)
                                         {
-                                            <span class="tag">@field</span>
+                                            <span class="tag">@field.Name</span>
                                         }
                                     </div>
                                 }
@@ -117,7 +117,7 @@
     }
 
 </div>
-@await Html.PartialAsync("_Pagination", (Model.PaginationInfo, Model.FilterModel))
+@await Html.PartialAsync("_InvestPagination", (Model.PaginationInfo, Model.FilterModel))
 
 @section Scripts{
     <script>

@@ -1,10 +1,11 @@
-﻿using WebApplication1.Models.News;
+﻿using InvestList.Models.News;
 
-namespace WebApplication1.Models
+namespace InvestList.Models
 {
     public class ListNewsViewModel
     {
         public IEnumerable<GetNewsViewModel> Entities { get; set; }
         public PaginationInfo PaginationInfo { get; set; }
+        public FilterNewsRequestModel FilterModel { get; set; }
     }
 }

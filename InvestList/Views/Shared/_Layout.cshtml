@@ -14,13 +14,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="icon" type="image/svg+xml" href="/ico/favicon.svg">
     <title>@(ViewData["CustomTitle"] ?? ViewData["Title"])</title>
+    @if (ViewData["CustomDescription"] != null)
+    {
+        <meta name="description" content="@ViewData["CustomDescription"]">
+    }
 
     @if (Context.Request.QueryString.HasValue && Context.Request.QueryString.Value.Contains("page"))
     {
-        <link rel="canonical" href="@Context.Request.Scheme://@Context.Request.Host@Context.Request.Path">
+        <meta name="robots" content="noindex,follow">
+        @* <link rel="canonical" href="@Context.Request.Scheme://@Context.Request.Host@Context.Request.Path"> *@
         @if (ViewData["DisplayNoIndexTag"] as bool? == true)
         {
-            <meta name="robots" content="noindex,follow">
+            
         }
     }
 

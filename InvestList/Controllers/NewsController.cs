@@ -18,6 +18,9 @@ namespace InvestList.Controllers
         private readonly INewsRepository _repository;
         private readonly IMapper _mapper;
         private const int ItemsPerPage = 24; // Set the desired items per page
+        private const int titleForIndex = 3;
+        private const int titleForDescription = 5;
+        private const int minDescriptionCharCount = 300;
 
         public NewsController(INewsRepository repository, IMapper mapper, ITagRepository tagRepository)
         {
@@ -51,15 +54,8 @@ namespace InvestList.Controllers
             var totalItems = (await _repository.Count(tagIds))!;
             var totalPages = (int)Math.Ceiling((double)totalItems / ItemsPerPage);
 
-            if (requestModel?.TagIds!=null && requestModel?.TagIds?.Count != 0)
-            {
-                var tags = resultView.SelectMany(x => x.Tags.Where(t=> requestModel.TagIds.Contains(t.Id.ToString())).Select(t => t.Name)).Distinct();
-                ViewData["CustomTitle"] = $"Інвестиційні новини в категоріях {string.Join(' ', tags)}";
-            }
-            else
-            {
-                ViewData["CustomTitle"] = "Останні новини зі світу інвестицій";
-            }
+            SetTitles(resultView);
+            SetDescription(resultView);
 
             var viewModel = new ListNewsViewModel
             {
@@ -84,7 +80,7 @@ namespace InvestList.Controllers
             var result = _mapper.Map<GetNewsViewModel>(db);
             var similarNewsViewModels = _mapper.Map<IEnumerable<GetNewsViewModel>>(similarNews);
             result.SimilarNews = similarNewsViewModels;
-            ViewData["CustomTitle"] = result.Title;
+            SetTitle(result);
             return View(result);
         }
 
@@ -142,13 +138,43 @@ namespace InvestList.Controllers
             return RedirectToAction("Details", new { id = inv.Id });
         }
 
-
         private async Task PrepopulateCreate()
         {
             var userId = Utils.GetUserId(User);
             ViewData["UserId"] = userId;
             var dictionary = await _tagRepository.GetTags();
             ViewData["Tags"] = dictionary;
+        }
+
+        private void SetTitle(GetNewsViewModel entity)
+        {
+            ViewData["CustomTitle"] = entity.Title;
+            ViewData["CustomDescription"] =
+                entity.Description?.Substring(0, Math.Min(minDescriptionCharCount, entity.Description.Length)) ??
+                entity.Title;
+        }
+
+        private void SetTitles(IEnumerable<GetNewsViewModel>? entities)
+        {
+            var finalTitle = "Останні новини зі світу інвестицій";
+            if (entities != null && entities.Any())
+            {
+                finalTitle = $"{finalTitle}: {string.Join(' ', entities.Take(titleForIndex).Select(x => x.Title))}";
+            }
+
+            ViewData["CustomTitle"] = finalTitle;
+        }
+
+        private void SetDescription(IEnumerable<GetNewsViewModel>? entities)
+        {
+            var finalTitle = "Інвестиційні сенсації";
+            if (entities != null && entities.Any())
+            {
+                finalTitle =
+                    $"{finalTitle}: {string.Join(' ', entities.Skip(titleForIndex).Take(titleForDescription).Select(x => x.Title))}";
+            }
+
+            ViewData["CustomDescription"] = finalTitle;
         }
     }
 }

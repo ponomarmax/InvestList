@@ -14,13 +14,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="icon" type="image/svg+xml" href="/ico/favicon.svg">
     <title>@(ViewData["CustomTitle"] ?? ViewData["Title"])</title>
+    @if (ViewData["CustomDescription"] != null)
+    {
+        <meta name="description" content="@ViewData["CustomDescription"]">
+    }
 
     @if (Context.Request.QueryString.HasValue && Context.Request.QueryString.Value.Contains("page"))
     {
-        <link rel="canonical" href="@Context.Request.Scheme://@Context.Request.Host@Context.Request.Path">
+        <meta name="robots" content="noindex,follow">
+        @* <link rel="canonical" href="@Context.Request.Scheme://@Context.Request.Host@Context.Request.Path"> *@
         @if (ViewData["DisplayNoIndexTag"] as bool? == true)
         {
-            <meta name="robots" content="noindex,follow">
+            
         }
     }
 
@@ -32,7 +37,7 @@
 <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
     <div class="col-md-3 mb-2 mb-md-0">
         <a class="navbar-brand" asp-area="" asp-controller="Invest" asp-action="Index">
-            <img src="/ico/logo1.svg" alt="" height="40"/>
+            <img src="/ico/logo1.svg" alt="logo" height="40"/>
             <span class="fs-4">Invest Radar</span>
         </a>
     </div>
@@ -68,17 +73,17 @@
                     <a asp-action="Index" asp-controller="Invest" class="dropdown-item">Всі заявки</a>
                 </li>
                 <li>
-                    <a asp-action="Create" asp-controller="Invest" class="dropdown-item">Створити заявку</a>
+                    <a asp-action="Create" asp-controller="Invest" class="dropdown-item" rel="nofollow">Створити заявку</a>
                 </li>
             </ul>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" href="https://forms.gle/srpVQNdRnvtQBF886"><i class="bi bi-google"></i> Хочу інвестувати</a>
+            <a class="nav-link" href="https://forms.gle/srpVQNdRnvtQBF886" rel="nofollow"><i class="bi bi-google"></i> Хочу інвестувати</a>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" href="https://forms.gle/DTgQQGUEixvhyLAA7"><i class="bi bi-google"></i> Жертвам інвестування</a>
+            <a class="nav-link" href="https://forms.gle/DTgQQGUEixvhyLAA7" rel="nofollow"><i class="bi bi-google"></i> Жертвам інвестування</a>
         </li>
         @if (User.IsInRole(Const.AdminRole))
         {
@@ -99,13 +104,13 @@
 <footer class="border-top bg-light text-dark py-3 my-4">
     <ul class="nav justify-content-center border-bottom pb-3 mb-3">
         <li class="nav-item">
-            <a href="https://t.me/invesstradar" class="nav-link px-2 text-muted"><i class="bi-telegram"></i> Telegram</a>
+            <a href="https://t.me/invesstradar" class="nav-link px-2 text-muted" rel="nofollow"><i class="bi-telegram"></i> Telegram</a>
         </li>
         <li class="nav-item">
-            <a href="https://forms.gle/DTgQQGUEixvhyLAA7" class="nav-link px-2 text-muted"><i class="bi bi-google"></i> Ваш досвід інвестування</a>
+            <a href="https://forms.gle/DTgQQGUEixvhyLAA7" class="nav-link px-2 text-muted" rel="nofollow"><i class="bi bi-google"></i> Ваш досвід інвестування</a>
         </li>
         <li class="nav-item">
-            <a href="https://forms.gle/BpSkLHWuq6y7yRiP9" class="nav-link px-2 text-muted"><i class="bi bi-google"></i> Фідбек по роботі сайту</a>
+            <a href="https://forms.gle/BpSkLHWuq6y7yRiP9" class="nav-link px-2 text-muted" rel="nofollow"><i class="bi bi-google"></i> Фідбек по роботі сайту</a>
         </li>
     </ul>
 </footer>

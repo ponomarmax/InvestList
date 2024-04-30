@@ -19,8 +19,9 @@ namespace InvestList.Controllers
         private const int ItemsPerPage = 24; // Set the desired items per page
         private const int titleForIndex = 3;
         private const int titleForDescription = 5;
-        private const int minDescriptionCharCount = 300;
-
+        private const int maxTitleSize = 65;
+        private const int maxDescriptionSize = 160;
+        
         [AllowAnonymous]
         public async Task<ActionResult> Index(int page = 1, FilterNewsRequestModel requestModel = null)
         {
@@ -47,7 +48,7 @@ namespace InvestList.Controllers
             var totalPages = (int)Math.Ceiling((double)totalItems / ItemsPerPage);
 
             SetTitles(resultView);
-            SetDescription(resultView);
+            SetIndexPageDescription(resultView);
 
             var viewModel = new ListNewsViewModel
             {
@@ -143,30 +144,37 @@ namespace InvestList.Controllers
 
         private void SetTitle(GetNewsViewModel entity)
         {
-            ViewData["CustomTitle"] = entity.Title;
-            ViewData["CustomDescription"] =
-                entity.Description?.Substring(0, Math.Min(minDescriptionCharCount, entity.Description.Length)) ??
-                entity.Title;
+            ViewData["CustomTitle"] = maxTitleSize < entity.Title.Length
+                ? entity.Title.Substring(0, maxTitleSize)
+                : entity.Title;
+            ViewData["CustomDescription"] = maxDescriptionSize < entity.Description?.Length?
+                entity.Description?.Substring(0, maxDescriptionSize) :
+                entity.Description;
         }
 
         private void SetTitles(IEnumerable<GetNewsViewModel>? entities)
         {
-            var finalTitle = "Останні новини зі світу інвестицій";
+            var finalTitle = "Інвестиційні оголошення";
+
             if (entities != null && entities.Any())
             {
-                finalTitle = $"{finalTitle}: {string.Join(' ', entities.Take(titleForIndex).Select(x => x.Title))}";
+                finalTitle = string.Join(' ', entities.Take(titleForIndex).Select(x => x.Title));
+                if (maxTitleSize < finalTitle.Length)
+                    finalTitle = finalTitle.Substring(0, maxTitleSize);
             }
 
             ViewData["CustomTitle"] = finalTitle;
         }
 
-        private void SetDescription(IEnumerable<GetNewsViewModel>? entities)
+        private void SetIndexPageDescription(IEnumerable<GetNewsViewModel>? entities)
         {
-            var finalTitle = "Інвестиційні сенсації";
+            var finalTitle = "Бізнес шукає інвесторів в багатьох оголошеннях";
             if (entities != null && entities.Any())
             {
-                finalTitle =
-                    $"{finalTitle}: {string.Join(' ', entities.Skip(titleForIndex).Take(titleForDescription).Select(x => x.Title))}";
+                finalTitle = string.Join(' ',
+                    entities.Skip(titleForIndex).Take(titleForDescription).Select(x => x.Title));
+                if (maxDescriptionSize < finalTitle.Length)
+                    finalTitle = finalTitle.Substring(0, maxDescriptionSize);
             }
 
             ViewData["CustomDescription"] = finalTitle;

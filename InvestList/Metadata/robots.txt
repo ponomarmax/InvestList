@@ -3,3 +3,5 @@ Disallow: /news/create
 Disallow: /news/edit
 Disallow: /invest/create
 Disallow: /invest/edit
+Disallow: /login
+Disallow: /register

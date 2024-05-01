@@ -170,8 +170,10 @@ namespace InvestList.Controllers
         public async Task<ActionResult> Details(Guid id)
         {
             var db = await investAdRepository.Get(id);
+            if (db == null)
+                return NotFound();
             var result = mapper.Map<InvestAdViewModel>(db);
-            var tagIds = db.Tags.Select(x => x.TagId).ToList();
+            var tagIds = db.Tags?.Select(x => x.TagId).ToList();
             result.SimilarNews = mapper.Map<IEnumerable<GetNewsViewModel>>(await newsRepository.GetSimilarNews(tagIds));
             result.SimilarInvests =
                 mapper.Map<IEnumerable<GetAllAdsView>>(await investAdRepository.GetSimilarInvest(tagIds));

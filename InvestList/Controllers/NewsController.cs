@@ -69,6 +69,8 @@ namespace InvestList.Controllers
         public async Task<ActionResult> Details(Guid id)
         {
             var db = await repository.Get(id);
+            if (db == null)
+                return NotFound();
             var tagIds = db.Tags.Select(x=>x.TagId).ToList();
             var similarNews = await repository.GetSimilarNews(tagIds);
             var result = mapper.Map<GetNewsViewModel>(db);

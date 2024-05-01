@@ -76,15 +76,15 @@ namespace DataAccess.Repositories
 
         public async Task<IEnumerable<News>> GetSimilarNews(List<Guid> tagIds)
         {
+            if (tagIds == null || tagIds.Count == 0)
+                return Array.Empty<News>();
             return await _dbContext.News
                 .Where(x => x.Tags.Any(
-                                t => tagIds.Any(pt => pt == t.TagId))
+                    t => tagIds.Any(pt => pt == t.TagId))
                 ).OrderByDescending(x => x.CreatedAt)
                 .Take(10)
                 .Include(x => x.Tags).ThenInclude(x => x.Tag)
                 .ToListAsync();
         }
-        
-       
     }
 }

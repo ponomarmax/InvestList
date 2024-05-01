@@ -5,3 +5,4 @@ Disallow: /invest/create
 Disallow: /invest/edit
 Disallow: /login
 Disallow: /register
+Disallow: /identity/*

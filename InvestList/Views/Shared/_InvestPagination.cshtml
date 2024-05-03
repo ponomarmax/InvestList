@@ -1,21 +1,26 @@
-﻿@model (PaginationInfo PaginationInfo, FilterRequestModel FilterModel)
+﻿@model (PaginationInfo PaginationInfo, InvestList.Models.Invest.FilterRequestModel FilterModel)
 @if (Model.PaginationInfo.TotalPages > 1)
 {
     <div class="container mt-3">
         <nav>
             <ul class="pagination justify-content-center">
                 <!-- Previous Button -->
-                <li class="page-item @(Model.PaginationInfo.CurrentPage == 1 ? "disabled" : "")">
-                    <a class="page-link" href="@GetPageUrl(Model.PaginationInfo.CurrentPage - 1)" tabindex="-1" aria-disabled="@(Model.PaginationInfo.CurrentPage == 1 ? "true" : "false")">Попередня</a>
-                </li>
-
+                 @if (Model.PaginationInfo.CurrentPage > 1)
+                {
+                    <li class="page-item @(Model.PaginationInfo.CurrentPage == 1 ? "disabled" : "")">
+                        <a class="page-link" href="@GetPageUrl(Model.PaginationInfo.CurrentPage - 1)" tabindex="-1" aria-disabled="@(Model.PaginationInfo.CurrentPage == 1 ? "true" : "false")">Попередня</a>
+                    </li>
+                }
                 <!-- Current Page -->
                 <li class="page-item"><span class="page-link">@Model.PaginationInfo.CurrentPage / @Model.PaginationInfo.TotalPages</span></li>
 
                 <!-- Next Button -->
-                <li class="page-item @(Model.PaginationInfo.CurrentPage == Model.PaginationInfo.TotalPages ? "disabled" : "")">
-                    <a class="page-link" href="@GetPageUrl(Model.PaginationInfo.CurrentPage + 1)" tabindex="-1" aria-disabled="@(Model.PaginationInfo.CurrentPage == Model.PaginationInfo.TotalPages ? "true" : "false")">Наступна</a>
-                </li>
+                @if (Model.PaginationInfo.CurrentPage < Model.PaginationInfo.TotalPages)
+                {
+                    <li class="page-item @(Model.PaginationInfo.CurrentPage == Model.PaginationInfo.TotalPages ? "disabled" : "")">
+                        <a class="page-link" href="@GetPageUrl(Model.PaginationInfo.CurrentPage + 1)" tabindex="-1" aria-disabled="@(Model.PaginationInfo.CurrentPage == Model.PaginationInfo.TotalPages ? "true" : "false")">Наступна</a>
+                    </li>
+                }
             </ul>
         </nav>
     </div>

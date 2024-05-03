@@ -25,6 +25,7 @@ namespace DataAccess.Repositories
                 inv.Description = news.Description;
                 inv.ImageBase64 = news.ImageBase64;
                 inv.Tags = news.Tags;
+                inv.Links = news.Links;
                 await _dbContext.SaveChangesAsync();
             }
             else
@@ -41,6 +42,11 @@ namespace DataAccess.Repositories
 
         public async Task Create(News news)
         {
+            
+            foreach (var link in news.Links)
+            {
+                link.CreatedAt = DateTimeOffset.UtcNow;
+            }
             await _dbContext.News.AddAsync(news);
             await _dbContext.SaveChangesAsync();
         }
@@ -49,7 +55,8 @@ namespace DataAccess.Repositories
         {
             return await _dbContext.News.Include(x => x.Author)
                 .Include(x => x.Tags)
-                .ThenInclude(x => x.Tag).FirstOrDefaultAsync(x => x.Id == id);
+                .ThenInclude(x => x.Tag)
+                .Include(x => x.Links).FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<IEnumerable<News>> GetPage(int page, int itemsPerPage, List<Guid>? tagIds)

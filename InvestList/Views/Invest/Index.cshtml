@@ -5,64 +5,64 @@
     ViewData["Title"] = "Головна";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@* Temporally hidden *@
+@* <div class="px-3 py-2 border-top mb-3 border-bottom mb-3"> *@
+@*     <div class="container d-flex flex-wrap justify-content-center"> *@
+@*         @*         <form class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto" role="search"> *@
+@*         <partial name="_Search" /> *@
+@*         </form> *@ 
+@* *@
+@*         <div class="text-end"> *@
+@* *@
+@*             <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#filterFormDiv" aria-expanded="false" aria-controls="filterForm"> *@
+@*                 <i class="bi bi-filter-square"></i> Показати фільтри *@
+@*             </button> *@
+@*         </div> *@
+@*     </div> *@
+@* </div> *@
 
-<div class="px-3 py-2 border-top mb-3 border-bottom mb-3">
-    <div class="container d-flex flex-wrap justify-content-center">
-        @*         <form class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto" role="search">
-        <partial name="_Search" />
-        </form> *@
-
-        <div class="text-end">
-
-            <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#filterFormDiv" aria-expanded="false" aria-controls="filterForm">
-                <i class="bi bi-filter-square"></i> Показати фільтри
-            </button>
-        </div>
-    </div>
-</div>
-
-<div class="collapse" id="filterFormDiv">
-    <form method="get" action="@Url.Action("Index")" class="form" id="filterForm">
-        <input type="hidden" name="currentPage" id="page" value="@Model.PaginationInfo?.CurrentPage" />
-        <div class="row gx-3">
-            <!-- Currency Filter Column -->
-            <div class="col-md-6">
-                <div class="mb-3">
-                    @{
-                        var selectedCurrency = Model.FilterModel?.Currency;
-                    }
-                    <label>Мінімальний поріг входу</label>
-                    <select class="form-select" name="currency" id="currency">
-                        <option value="UAH" selected="@(Currency.UAH == selectedCurrency)">UAH</option>
-                        <option value="USD" selected="@(Currency.USD == selectedCurrency)">USD</option>
-                    </select>
-
-                </div>
-                <div class="mb-3">
-                    <input type="number" class="form-control" name="minInvestment" id="minInvestment" step="0.01" placeholder="Min сума" value="@Model.FilterModel?.MinInvestment" />
-                </div>
-                <div class="mb-3">
-                    <input type="number" class="form-control" name="maxInvestment" id="maxInvestment" step="0.01" placeholder="Max сума" value="@Model.FilterModel?.MaxInvestment" />
-                </div>
-            </div>
-
-            <!-- Annual Investment Return Filter Column -->
-            <div class="col-md-6">
-                <label for="minAnnualInvestmentReturn" class="form-label mb-0">Річний прибуток (%)</label>
-                <div class="mb-3">
-                    <input type="number" class="form-control" name="minAnnualInvestmentReturn" id="minAnnualInvestmentReturn" step="0.01" placeholder="min" value="@Model.FilterModel?.MinAnnualInvestmentReturn" />
-                </div>
-                <div class="mb-3">
-                    <input type="number" class="form-control" name="maxAnnualInvestmentReturn" id="maxAnnualInvestmentReturn" step="0.01" placeholder="max" value="@Model.FilterModel?.MaxAnnualInvestmentReturn" />
-                </div>
-                 <!-- Button -->
-                <div class="col-12 mb-3">
-                    <button type="submit" class="btn btn-primary me-2" id="filterButton">Фільтрувати</button>
-                </div>
-            </div>
-        </div>
-    </form>
-</div>
+@* <div class="collapse" id="filterFormDiv"> *@
+@*     <form method="get" action="@Url.Action("Index")" class="form" id="filterForm"> *@
+@*         <input type="hidden" name="currentPage" id="page" value="@Model.PaginationInfo?.CurrentPage" /> *@
+@*         <div class="row gx-3"> *@
+@*             <!-- Currency Filter Column --> *@
+@*             <div class="col-md-6"> *@
+@*                 <div class="mb-3"> *@
+@*                     @{ *@
+@*                         var selectedCurrency = Model.FilterModel?.Currency; *@
+@*                     } *@
+@*                     <label>Мінімальний поріг входу</label> *@
+@*                     <select class="form-select" name="currency" id="currency"> *@
+@*                         <option value="UAH" selected="@(Currency.UAH == selectedCurrency)">UAH</option> *@
+@*                         <option value="USD" selected="@(Currency.USD == selectedCurrency)">USD</option> *@
+@*                     </select> *@
+@* *@
+@*                 </div> *@
+@*                 <div class="mb-3"> *@
+@*                     <input type="number" class="form-control" name="minInvestment" id="minInvestment" step="0.01" placeholder="Min сума" value="@Model.FilterModel?.MinInvestment" /> *@
+@*                 </div> *@
+@*                 <div class="mb-3"> *@
+@*                     <input type="number" class="form-control" name="maxInvestment" id="maxInvestment" step="0.01" placeholder="Max сума" value="@Model.FilterModel?.MaxInvestment" /> *@
+@*                 </div> *@
+@*             </div> *@
+@* *@
+@*             <!-- Annual Investment Return Filter Column --> *@
+@*             <div class="col-md-6"> *@
+@*                 <label for="minAnnualInvestmentReturn" class="form-label mb-0">Річний прибуток (%)</label> *@
+@*                 <div class="mb-3"> *@
+@*                     <input type="number" class="form-control" name="minAnnualInvestmentReturn" id="minAnnualInvestmentReturn" step="0.01" placeholder="min" value="@Model.FilterModel?.MinAnnualInvestmentReturn" /> *@
+@*                 </div> *@
+@*                 <div class="mb-3"> *@
+@*                     <input type="number" class="form-control" name="maxAnnualInvestmentReturn" id="maxAnnualInvestmentReturn" step="0.01" placeholder="max" value="@Model.FilterModel?.MaxAnnualInvestmentReturn" /> *@
+@*                 </div> *@
+@*                  <!-- Button --> *@
+@*                 <div class="col-12 mb-3"> *@
+@*                     <button type="submit" class="btn btn-primary me-2" id="filterButton">Фільтрувати</button> *@
+@*                 </div> *@
+@*             </div> *@
+@*         </div> *@
+@*     </form> *@
+@* </div> *@
 
 
 <div class="container">
@@ -119,27 +119,27 @@
 </div>
 @await Html.PartialAsync("_InvestPagination", (Model.PaginationInfo, Model.FilterModel))
 
-@section Scripts{
-    <script>
-        document.getElementById( 'filterButton' ).addEventListener( 'click', function () {
-            // Handle the click event here
-            arrangeAndSubmit();
-        } );
-
-        function arrangeAndSubmit() {
-            // Remove disabled inputs before submitting the form
-            var form = document.getElementById( 'filterForm' );
-
-            // Remove empty parameters
-            Array.from( form.elements ).forEach( function ( element ) {
-                if ( element.type !== 'submit' && element.value.trim() === "" ) {
-                    element.disabled = true;
-                }
-            } );
-
-            // Submit the form
-            form.submit();
-        }
-    </script>
-}
+@* @section Scripts{ *@
+@*     <script> *@
+@*         document.getElementById( 'filterButton' ).addEventListener( 'click', function () { *@
+@*             // Handle the click event here *@
+@*             arrangeAndSubmit(); *@
+@*         } ); *@
+@* *@
+@*         function arrangeAndSubmit() { *@
+@*             // Remove disabled inputs before submitting the form *@
+@*             var form = document.getElementById( 'filterForm' ); *@
+@* *@
+@*             // Remove empty parameters *@
+@*             Array.from( form.elements ).forEach( function ( element ) { *@
+@*                 if ( element.type !== 'submit' && element.value.trim() === "" ) { *@
+@*                     element.disabled = true; *@
+@*                 } *@
+@*             } ); *@
+@* *@
+@*             // Submit the form *@
+@*             form.submit(); *@
+@*         } *@
+@*     </script> *@
+@* } *@
 

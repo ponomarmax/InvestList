@@ -38,7 +38,7 @@ namespace InvestList.Controllers
 
             var range = filterModel == null
                 ? (null, null)
-                : getUsdRange(filterModel.Currency, filterModel.MinInvestment, filterModel.MaxInvestment);
+                : getUsdRange(filterModel.Currency?? Currency.UAH, filterModel.MinInvestment, filterModel.MaxInvestment);
             var tagIds = filterModel?.TagIds?.Where(x => Guid.TryParse(x, out _)).Select(Guid.Parse).ToList();
             var (count, resultDb) = await investAdRepository.Filter(range.minUsd, range.maxUSd,
                 filterModel?.MinAnnualInvestmentReturn, filterModel?.MaxAnnualInvestmentReturn, page, ItemsPerPage,

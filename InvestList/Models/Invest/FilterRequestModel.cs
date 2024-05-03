@@ -4,7 +4,7 @@ namespace InvestList.Models.Invest
 {
     public class FilterRequestModel
     {
-        public Currency Currency{ get; set; }
+        public Currency? Currency{ get; set; }
         
         public decimal? MinInvestment { get; set; }
         

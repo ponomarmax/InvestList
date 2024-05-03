@@ -14,6 +14,10 @@ namespace InvestList.AutomapperProfiles
                 .ForMember(x => x.CreatedAt, y => y.MapFrom(z => DateTimeOffset.UtcNow))
                 .ForMember(x => x.Tags, y => y.MapFrom(z => z.Tags.Select(x => new NewsToTags() { TagId = Guid.Parse(x) })))
                 ;
+            
+            CreateMap<PostLinkView, Link>();
+            CreateMap<Link, LinkView>();
+            CreateMap<Link, PostLinkView>();
 
             CreateMap<News, PostNewsViewModel>()
                 .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => src.AuthorId))

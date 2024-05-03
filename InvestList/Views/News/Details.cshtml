@@ -29,6 +29,19 @@
                     <pre>@Model.Description</pre>
                 </div>
             </div>
+            <div id="inputsContainer">
+                <p class="card-text mb-2"> Посилання на статті</p>
+                <ul class="list-group">
+                    @foreach (var link in Model.Links)
+                    {
+                        <li class="list-group-item">
+                            <a href="@link.Hyperlink" rel="@((link.Follow ? "follow" : "nofollow"))">
+                                <strong>@link.AnchorText</strong>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
         </div>
         <div class="col-4">
            @await Html.PartialAsync("_SimilarNews", (Model.SimilarNews, Model.Tags))

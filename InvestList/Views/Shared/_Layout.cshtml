@@ -14,6 +14,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="icon" type="image/svg+xml" href="/ico/favicon.svg">
     <title>@(ViewData["CustomTitle"] ?? ViewData["Title"])</title>
+     @if (!string.IsNullOrEmpty(ViewData["CustomDescription"] as string))
+    {
+        <meta name="description" content="@ViewData["CustomDescription"]">
+    }
 
     @if (Context.Request.QueryString.HasValue && Context.Request.QueryString.Value.Contains("page"))
     {

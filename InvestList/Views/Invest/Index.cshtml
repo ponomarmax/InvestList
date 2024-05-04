@@ -64,7 +64,9 @@
 @*     </form> *@
 @* </div> *@
 
-
+<div class="d-flex  justify-content-center  mb-4">
+    <h1>Інвест радар для інвесторів та підприємців</h1>
+</div>
 <div class="container">
     @if (Model.Entities != null && Model.Entities.Any())
     {
@@ -81,7 +83,7 @@
                                 <img src="data:image;base64,@ad.ImageData" alt="Placeholder" class="img-fluid rounded" style="width: 100px; height: 100px;">
                                 <div>
                                     <i class="bi bi-percent"></i> @ad.AnnualInvestmentReturn.ToString("0.")
-                                </div> 
+                                </div>
                                 <div>
                                     <i class="bi bi-calendar-range"></i> @InvestmentHelper.FormatInvestmentDuration(ad.InvestDurationYears, ad.InvestDurationMonths)
                                 </div>
@@ -101,7 +103,7 @@
                             </div>
                             <div class="col">
                                 <!-- Використання my-auto для вертикального центрування тексту відносно картинки -->
-                                <p class="card-text text-black mb-0">@ad.Description.Substring(0, Math.Min(ad.Description.Length, 300))</p>
+                                <p class="card-text text-black mb-0">@ad.Description?.Substring(0, Math.Min(ad.Description.Length, 300))</p>
                                 @* <hr> *@
                                 @* <small class="text-muted">@ad.CreatedAt.ToString("dd-MM-yyyy")</small> *@
                             </div>

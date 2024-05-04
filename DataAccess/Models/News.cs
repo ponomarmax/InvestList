@@ -16,6 +16,10 @@ namespace DataAccess.Models
         public string Title { get; set; }
 
         public string? Description { get; set; }
+        
+        public string TitleSeo { get; set; }
+
+        public string DescriptionSeo { get; set; }
 
         public DateTimeOffset CreatedAt { get; set; }
 

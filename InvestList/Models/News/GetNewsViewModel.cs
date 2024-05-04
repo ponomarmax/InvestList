@@ -16,6 +16,10 @@ namespace InvestList.Models.News
         public string Title { get; set; }
        
         public string? Description { get; set; }
+        
+        public string? TitleSeo { get; set; }
+
+        public string? DescriptionSeo { get; set; }
 
         public IEnumerable<TagView> Tags { get; set; }
         public IEnumerable<LinkView> Links { get; set; }

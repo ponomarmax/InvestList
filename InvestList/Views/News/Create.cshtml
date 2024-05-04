@@ -32,11 +32,27 @@
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
         </div>
+
+        <div class="row mb-4">
+            <div class="form-group col-12">
+                <label asp-for="TitleSeo">Ключові СЛОВА заголовку для SEO</label>
+                <input asp-for="TitleSeo" class="form-control" placeholder="Кількість СИМВОЛІВ 35-65"/>
+                <span asp-validation-for="TitleSeo" class="text-danger"></span>
+            </div>
+        </div>
+
         <div class="row mb-4">
             <div class="form-group col-12">
                 <label asp-for="Description">Дайте детальний опис новини</label>
                 <textarea asp-for="Description" class="form-control"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="form-group col-12">
+                <label asp-for="DescriptionSeo">Ключові СЛОВА опису для SEO</label>
+                <input asp-for="DescriptionSeo" class="form-control" placeholder="Кількість СИМВОЛІВ 70-160"/>
+                <span asp-validation-for="DescriptionSeo" class="text-danger"></span>
             </div>
         </div>
         <div class="row mb-4">
@@ -48,7 +64,7 @@
                 <input asp-for="ImageBase64" type="hidden"/>
             </div>
         </div>
-        
+
         <div class="row mb-4">
             <span asp-validation-for="Tags" class="text-danger"></span>
             @{

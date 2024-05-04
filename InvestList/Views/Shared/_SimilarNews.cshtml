@@ -6,7 +6,7 @@
     foreach (var similarInvest in Model.similarInvests)
     {
         <div class="row">
-            <a class="card-link" href="@Url.Action("Details", "Invest", new { id = similarInvest.Id })">
+            <a class="card-link" href="@Url.Action("Details", "News", new { id = similarInvest.Id })">
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">@similarInvest.Title</div>

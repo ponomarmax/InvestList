@@ -10,7 +10,7 @@
 @*     <div class="container d-flex flex-wrap justify-content-center"> *@
 @*         @*         <form class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto" role="search"> *@
 @*         <partial name="_Search" /> *@
-@*         </form> *@ 
+@*         </form> *@
 @* *@
 @*         <div class="text-end"> *@
 @* *@
@@ -71,43 +71,102 @@
         <div class="row">
             @foreach (var ad in Model.Entities)
             {
-                <div class="col-6 col-lg-3 mb-3">
-                    <a class="card-link" href="@Url.Action("Details", new { id = ad.Id })">
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="card-title">@ad.Title</div>
-
-                            </div>
-                            <div class="card-body">
-
-                                @if (ad.Tags != null && ad.Tags.Any())
-                                {
-                                    <div class="tags-container">
-                                        @foreach (var field in ad.Tags)
-                                        {
-                                            <span class="tag">@field.Name</span>
-                                        }
-                                    </div>
-                                }
-
-
-                                <div> <i class="bi bi-percent"></i> @ad.AnnualInvestmentReturn.ToString("0.")</div>
-                                <div><i class="bi bi-calendar-range"></i> @InvestmentHelper.FormatInvestmentDuration(ad.InvestDurationYears, ad.InvestDurationMonths)</div>
+                <div class="card custom-light-green col-md-6">
+                    <div class="card-body">
+                        <h4 class="card-title mb-3">
+                            <a class="card-link" href="@Url.Action("Details", new { id = ad.Id })">@ad.Title</a>
+                        </h4>
+                        <div class="row">
+                            <div class="col-auto">
+                                <img src="data:image;base64,@ad.ImageData" alt="Placeholder" class="img-fluid rounded" style="width: 100px; height: 100px;">
+                                <div>
+                                    <i class="bi bi-percent"></i> @ad.AnnualInvestmentReturn.ToString("0.")
+                                </div> 
+                                <div>
+                                    <i class="bi bi-calendar-range"></i> @InvestmentHelper.FormatInvestmentDuration(ad.InvestDurationYears, ad.InvestDurationMonths)
+                                </div>
                                 @if (ad.AcceptedCurrencies != null && ad.AcceptedCurrencies.Any())
                                 {
-
                                     @foreach (var currency in ad.AcceptedCurrencies)
                                     {
-                                        <div> <i class="bi bi-check-circle"></i> @currency.MinValue.ToString("0.") @currency.Currency</div>
+                                        <div>
+                                            <i class="bi bi-check-circle"></i> @currency.MinValue.ToString("0.") @currency.Currency
+                                        </div>
                                     }
-
-
                                 }
-                                <div class="text-muted"><i class="bi bi-clock-history"></i> @ad.CreatedAt.ToString("dd.MM.yyyy")</div>
+                                <div class="text-muted">
+                                    <i class="bi bi-clock-history"></i> @ad.CreatedAt.ToString("dd.MM.yyyy")
+                                </div>
+
+                            </div>
+                            <div class="col">
+                                <!-- Використання my-auto для вертикального центрування тексту відносно картинки -->
+                                <p class="card-text text-black mb-0">@ad.Description.Substring(0, Math.Min(ad.Description.Length, 300))</p>
+                                @* <hr> *@
+                                @* <small class="text-muted">@ad.CreatedAt.ToString("dd-MM-yyyy")</small> *@
                             </div>
                         </div>
-                    </a>
+                    </div>
                 </div>
+
+                @* <div class="col-md-6"> *@
+                @*     <div class="card"> *@
+                @*         <div class="card-body"> *@
+                @*             <h5 class="card-title">@ad.Title</h5> *@
+                @*             <div class="row"> *@
+                @*                 <div class="col-auto"> *@
+                @*                     <img src="data:image;base64,@ad.ImageData" alt="news logo" class="img-fluid rounded" style="width: 100px; height: 100px;"/> *@
+                @*                 </div> *@
+                @*                 <div class="col"> *@
+                @*                     <p class="card-text text-muted">@ad.Title</p> *@
+                @*                 </div> *@
+                @*             </div> *@
+                @*             <hr> *@
+                @*             <div class="text-center"> *@
+                @*                 <small class="text-muted">@ad.CreatedAt</small> *@
+                @*                 @if (ad.Tags != null && ad.Tags.Any()) *@
+                @*                 { *@
+                @*                     <div class="tags-container"> *@
+                @*                         @foreach (var field in ad.Tags) *@
+                @*                         { *@
+                @*                             <span class="tag">@field.Name</span> *@
+                @*                         } *@
+                @*                     </div> *@
+                @*                 } *@
+                @*             </div> *@
+                @*         </div> *@
+                @*     </div> *@
+                @* </div> *@
+
+                @* <div class="col-6 col-lg-3 mb-3"> *@
+                @*     <a class="card-link" href="@Url.Action("Details", new { id = ad.Id })"> *@
+                @*         <div class="card"> *@
+                @*             <div class="card-header"> *@
+                @*                 <div class="card-title"></div> *@
+                @* *@
+                @*             </div> *@
+                @*             <div class="card-body"> *@
+                @* *@
+                @*                  *@
+                @* *@
+                @* *@
+                @*                 <div> <i class="bi bi-percent"></i> @ad.AnnualInvestmentReturn.ToString("0.")</div> *@
+                @*                 <div><i class="bi bi-calendar-range"></i> @InvestmentHelper.FormatInvestmentDuration(ad.InvestDurationYears, ad.InvestDurationMonths)</div> *@
+                @*                 @if (ad.AcceptedCurrencies != null && ad.AcceptedCurrencies.Any()) *@
+                @*                 { *@
+                @* *@
+                @*                     @foreach (var currency in ad.AcceptedCurrencies) *@
+                @*                     { *@
+                @*                         <div> <i class="bi bi-check-circle"></i> @currency.MinValue.ToString("0.") @currency.Currency</div> *@
+                @*                     } *@
+                @* *@
+                @* *@
+                @*                 } *@
+                @*                 <div class="text-muted"><i class="bi bi-clock-history"></i> @ad.CreatedAt.ToString("dd.MM.yyyy")</div> *@
+                @*             </div> *@
+                @*         </div> *@
+                @*     </a> *@
+                @* </div> *@
             }
         </div>
     }
@@ -142,4 +201,3 @@
 @*         } *@
 @*     </script> *@
 @* } *@
-

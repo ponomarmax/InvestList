@@ -26,6 +26,11 @@ namespace DataAccess.Repositories
                 inv.ImageBase64 = news.ImageBase64;
                 inv.Tags = news.Tags;
                 inv.Links = news.Links;
+                foreach (var link in news.Links)
+                {
+                    link.CreatedAt = DateTimeOffset.UtcNow;
+                }
+
                 await _dbContext.SaveChangesAsync();
             }
             else
@@ -42,11 +47,11 @@ namespace DataAccess.Repositories
 
         public async Task Create(News news)
         {
-            
             foreach (var link in news.Links)
             {
                 link.CreatedAt = DateTimeOffset.UtcNow;
             }
+
             await _dbContext.News.AddAsync(news);
             await _dbContext.SaveChangesAsync();
         }

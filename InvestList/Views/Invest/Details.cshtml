@@ -21,103 +21,98 @@
 
     <a asp-action="Index" class="btn btn-secondary">Повернутись до списку</a>
 </div>
-<div class="card border-success mb-3">
-    <h1 class="card-header">@Model.Title</h1>
+<div class="row">
+    <div class="col-8">
+        <div class="card border-success mb-3">
+            <h1 class="card-header">@Model.Title</h1>
 
     <div class="d-flex border align-content-start flex-wrap">
-        <div class="p-2 flex-fill">Загальний обсяг інвестицій (у $): @Model.TotalInvestment</div>
+        <div class="p-2 flex-fill">Загальний обсяг інвестицій: $@Model.TotalInvestment</div>
         <div class="p-2 flex-fill">Період інвестування: @InvestmentHelper.FormatInvestmentDuration(Model.InvestDurationYears, Model.InvestDurationMonths)</div>
-        <div class="p-2 flex-fill">Річна дохідність (у %): @Model.AnnualInvestmentReturn</div>
+        <div class="p-2 flex-fill">Річна дохідність: @Model.AnnualInvestmentReturn%</div>
     </div>
 
-    <div class="d-flex border align-content-start flex-wrap">
-        <div class="d-flex card-text p-2 flex-fill">
-            <span style="padding-right: 10px;">Мінімальний поріг входу </span>
-            @if (Model.AcceptedCurrencies != null && Model.AcceptedCurrencies.Any())
-            {
-                @foreach (var currency in Model.AcceptedCurrencies)
+            <div class="d-flex border align-content-start flex-wrap">
+                <div class="d-flex card-text p-2 flex-fill">
+                    <span style="padding-right: 10px;">Мінімальний поріг входу </span>
+                    @if (Model.AcceptedCurrencies != null && Model.AcceptedCurrencies.Any())
+                    {
+                        @foreach (var currency in Model.AcceptedCurrencies)
+                        {
+                            <span > @currency.MinValue @currency.Currency </span>
+                        }
+                    }
+                    else
+                    {
+                        <span>Немає валют</span>
+                    }
+                </div>
+
+                @if (Model.Tags != null && Model.Tags.Any())
                 {
-                    <span > @currency.MinValue @currency.Currency </span>
-                }
-            }
-            else
-            {
-                <span>Немає валют</span>
-            }
-        </div>
+                    <div class="flex-fill mb-2">
+                        @foreach (var field in Model.Tags)
+                        {
+                            <span id="tag" class="badge bg-primary">@field.Name</span>
+                        }
 
-        @if (Model.Tags != null && Model.Tags.Any())
-        {
-            <div class="flex-fill mb-2">
-                @foreach (var field in Model.Tags)
-                {
-                    <span id="tag" class="badge bg-primary">@field.Name</span>
-                }
-
-            </div>
-        }
-    </div>
-
-    <p class="p-2 card-text">
-        <small class="text-body-secondary">@Model.CreatedAt.ToString("dd-MM-yyyy")</small>
-    </p>
-    <div class="d-flex flex-wrap justify-content-center">
-        <pre class="card-body md:order-2 order-1" style="width: 50%">
-            @Model.Description
-        </pre>
-        @if (!string.IsNullOrEmpty(Model.ImageBase64))
-        {
-            <div class="md:order-1 order-md-2">
-                <img src="data:image;base64,@Model.ImageBase64" alt="Investment Image"/>
-            </div>
-        }
-    </div>
-
-
-    @* *@
-
-
-
-</div>
-
-@if (!SignInManager.IsSignedIn(User))
-{
-    <div class="row row-cols-lg-auto g-3 align-items-center">
-        <div class="col-12">
-            <a href="@Url.Action("Index", "Login")" class="btn btn-outline-primary me-2">Увійти</a>
-        </div>
-        <div class="col-12">
-            <label class="form-check-label" for="inlineFormCheck">
-                Для написання відгуку, будь ласка, увійдіть у свій обліковий запис
-            </label>
-        </div>
-    </div>
-}
-else
-{
-    await Html.RenderPartialAsync("_CommentForm", new PostCommentRequest { InvestAdId = Model.Id, UserId = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier)) });
-}
-@if (Model.Comments?.Count > 0)
-{
-    <div class="card-body p-4">
-
-        @foreach (var comment in Model.Comments.OrderByDescending(x => x.CreatedAt))
-        {
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div class="d-flex flex-row justify-content-between mb-0">
-                            <div class="text-muted">@comment.Author</div>
-                            <div class="text-muted" >@comment.CreatedAt.ToString("yy-MMM-dd HH:mm")</div>
                     </div>
-                    <p class="card-text">@comment.Text</p>
+                }
+            </div>
+
+            <p class="p-2 card-text">
+                <small class="text-body-secondary">@Model.CreatedAt.ToString("dd-MM-yyyy")</small>
+            </p>
+            <div class="d-flex flex-wrap justify-content-center">
+                <pre class="card-body md:order-2 order-1" style="width: 50%">
+                    @Model.Description
+                </pre>
+                @if (!string.IsNullOrEmpty(Model.ImageBase64))
+                {
+                    <div class="md:order-1 order-md-2">
+                        <img src="data:image;base64,@Model.ImageBase64" alt="Investment Image"/>
+                    </div>
+                }
+            </div>
+        </div>
+        @if (!SignInManager.IsSignedIn(User))
+        {
+            <div class="row row-cols-lg-auto g-3 align-items-center">
+                <div class="col-12">
+                    <a href="@Url.Action("Index", "Login")" class="btn btn-outline-primary me-2">Увійти</a>
+                </div>
+                <div class="col-12">
+                    <label class="form-check-label" for="inlineFormCheck">
+                        Для написання відгуку, будь ласка, увійдіть у свій обліковий запис
+                    </label>
                 </div>
             </div>
         }
+        else
+        {
+            await Html.RenderPartialAsync("_CommentForm", new PostCommentRequest { InvestAdId = Model.Id, UserId = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier)) });
+        }
+        @if (Model.Comments?.Count > 0)
+        {
+            <div class="card-body p-4">
+
+                @foreach (var comment in Model.Comments.OrderByDescending(x => x.CreatedAt))
+                {
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="d-flex flex-row justify-content-between mb-0">
+                                <div class="text-muted">@comment.Author</div>
+                                <div class="text-muted">@comment.CreatedAt.ToString("yy-MMM-dd HH:mm")</div>
+                            </div>
+                            <p class="card-text">@comment.Text</p>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
     </div>
-}
-
-
-<!-- Bootstrap JS and dependencies -->
-@* <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script> *@
-@* <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script> *@
-@* <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> *@
+    <div class="col-4">
+        @await Html.PartialAsync("_SimilarNews", (Model.SimilarNews, Model.Tags))
+        @await Html.PartialAsync("_SimilarInvest", (Model.SimilarInvests, Model.Tags))
+    </div>
+</div>

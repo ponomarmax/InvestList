@@ -25,6 +25,12 @@ namespace DataAccess.Repositories
                 inv.Description = news.Description;
                 inv.ImageBase64 = news.ImageBase64;
                 inv.Tags = news.Tags;
+                inv.Links = news.Links;
+                foreach (var link in news.Links)
+                {
+                    link.CreatedAt = DateTimeOffset.UtcNow;
+                }
+
                 await _dbContext.SaveChangesAsync();
             }
             else
@@ -41,6 +47,11 @@ namespace DataAccess.Repositories
 
         public async Task Create(News news)
         {
+            foreach (var link in news.Links)
+            {
+                link.CreatedAt = DateTimeOffset.UtcNow;
+            }
+
             await _dbContext.News.AddAsync(news);
             await _dbContext.SaveChangesAsync();
         }
@@ -49,7 +60,8 @@ namespace DataAccess.Repositories
         {
             return await _dbContext.News.Include(x => x.Author)
                 .Include(x => x.Tags)
-                .ThenInclude(x => x.Tag).FirstOrDefaultAsync(x => x.Id == id);
+                .ThenInclude(x => x.Tag)
+                .Include(x => x.Links).FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<IEnumerable<News>> GetPage(int page, int itemsPerPage, List<Guid>? tagIds)
@@ -74,25 +86,17 @@ namespace DataAccess.Repositories
             return newsEnumerable;
         }
 
-        public async Task<IEnumerable<News>> GetSimilarNews(Guid id)
+        public async Task<IEnumerable<News>> GetSimilarNews(List<Guid> tagIds)
         {
-            var primaryNews = _dbContext.News.Where(x => x.Id == id).Include(x => x.Tags).FirstOrDefault();
-            var tagIds = primaryNews.Tags.Select(x => x.TagId);
+            if (tagIds == null || tagIds.Count == 0)
+                return Array.Empty<News>();
             return await _dbContext.News
-                .Where(x => x.Id != id &&
-                            x.Tags.Any(
-                                t => tagIds.Any(pt => pt == t.TagId))
+                .Where(x => x.Tags.Any(
+                    t => tagIds.Any(pt => pt == t.TagId))
                 ).OrderByDescending(x => x.CreatedAt)
                 .Take(10)
                 .Include(x => x.Tags).ThenInclude(x => x.Tag)
                 .ToListAsync();
-            // .OrderByDescending(x => x.CreatedAt)
-            // .Skip((page - 1) * itemsPerPage)
-            // .Take(itemsPerPage)
-            // .Include(x => x.Author)
-            // .Include(x => x.Tags)
-            // .ThenInclude(x => x.Tag)
-            // .ToListAsync();
         }
     }
 }

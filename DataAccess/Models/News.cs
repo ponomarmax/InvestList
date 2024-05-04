@@ -20,6 +20,7 @@ namespace DataAccess.Models
         public DateTimeOffset CreatedAt { get; set; }
 
         public ICollection<NewsToTags> Tags { get; set; }
+        public ICollection<Link> Links { get; set; }
 
         public string? ImageBase64 { get; set; }
     }

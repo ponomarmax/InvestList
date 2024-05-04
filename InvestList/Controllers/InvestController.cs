@@ -6,19 +6,25 @@ using DataAccess.Repositories;
 using InvestList.Filters;
 using InvestList.Models;
 using InvestList.Models.Invest;
+using InvestList.Models.News;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 
 namespace InvestList.Controllers
 {
     [Authorize(Roles = $"{Const.BusinessRole},{Const.AdminRole}")]
-    public class InvestController(IInvestAdRepository investAdRepository, IMapper mapper, ITagRepository tagRepository)
+    public class InvestController(
+        IInvestAdRepository investAdRepository,
+        IMapper mapper,
+        ITagRepository tagRepository,
+        INewsRepository newsRepository)
         : Controller
     {
         private const int ItemsPerPage = 24; // Set the desired items per page
         private const int titleForIndex = 3;
         private const int titleForDescription = 5;
-        private const int minDescriptionCharCount = 300;
+        private const int maxTitleSize = 65;
+        private const int maxDescriptionSize = 160;
 
         [AllowAnonymous]
         public async Task<ActionResult> Index(int page = 1, FilterRequestModel filterModel = null)
@@ -32,9 +38,11 @@ namespace InvestList.Controllers
 
             var range = filterModel == null
                 ? (null, null)
-                : getUsdRange(filterModel.Currency, filterModel.MinInvestment, filterModel.MaxInvestment);
+                : getUsdRange(filterModel.Currency?? Currency.UAH, filterModel.MinInvestment, filterModel.MaxInvestment);
+            var tagIds = filterModel?.TagIds?.Where(x => Guid.TryParse(x, out _)).Select(Guid.Parse).ToList();
             var (count, resultDb) = await investAdRepository.Filter(range.minUsd, range.maxUSd,
-                filterModel?.MinAnnualInvestmentReturn, filterModel?.MaxAnnualInvestmentReturn, page, ItemsPerPage);
+                filterModel?.MinAnnualInvestmentReturn, filterModel?.MaxAnnualInvestmentReturn, page, ItemsPerPage,
+                tagIds);
             if (!resultDb.Any())
             {
                 return NotFound();
@@ -47,9 +55,10 @@ namespace InvestList.Controllers
 
             var resultView = mapper.Map<IEnumerable<GetAllAdsView>>(resultDb);
 
+
             var totalPages = (int)Math.Ceiling((double)count / ItemsPerPage);
             SetTitles(resultView);
-            SetDescription(resultView);
+            SetIndexPageDescription(resultView);
             var viewModel = new ListInvestsViewModel
             {
                 Entities = resultView,
@@ -161,7 +170,14 @@ namespace InvestList.Controllers
         public async Task<ActionResult> Details(Guid id)
         {
             var db = await investAdRepository.Get(id);
+            if (db == null)
+                return NotFound();
             var result = mapper.Map<InvestAdViewModel>(db);
+            var tagIds = db.Tags?.Select(x => x.TagId).ToList();
+            result.SimilarNews = mapper.Map<IEnumerable<GetNewsViewModel>>(await newsRepository.GetSimilarNews(tagIds));
+            result.SimilarInvests =
+                mapper.Map<IEnumerable<GetAllAdsView>>(await investAdRepository.GetSimilarInvest(tagIds));
+
             SetTitle(result);
             return View(result);
         }
@@ -210,28 +226,37 @@ namespace InvestList.Controllers
 
         private void SetTitle(InvestAdViewModel entity)
         {
-            ViewData["CustomTitle"] = entity.Title;
-            ViewData["CustomDescription"] = entity.Description?.Substring(0, Math.Min(minDescriptionCharCount, entity.Description.Length))??entity.Title;
+            ViewData["CustomTitle"] = maxTitleSize < entity.Title.Length
+                ? entity.Title.Substring(0, maxTitleSize)
+                : entity.Title;
+            ViewData["CustomDescription"] = maxDescriptionSize < entity.Description?.Length?
+                entity.Description?.Substring(0, maxDescriptionSize) :
+                entity.Description;
         }
 
         private void SetTitles(IEnumerable<GetAllAdsView>? entities)
         {
             var finalTitle = "Інвестиційні оголошення";
+
             if (entities != null && entities.Any())
             {
-                finalTitle = $"{finalTitle}: {string.Join(' ', entities.Take(titleForIndex).Select(x => x.Title))}";
+                finalTitle = string.Join(' ', entities.Take(titleForIndex).Select(x => x.Title));
+                if (maxTitleSize < finalTitle.Length)
+                    finalTitle = finalTitle.Substring(0, maxTitleSize);
             }
 
             ViewData["CustomTitle"] = finalTitle;
         }
 
-        private void SetDescription(IEnumerable<GetAllAdsView>? entities)
+        private void SetIndexPageDescription(IEnumerable<GetAllAdsView>? entities)
         {
             var finalTitle = "Бізнес шукає інвесторів в багатьох оголошеннях";
             if (entities != null && entities.Any())
             {
-                finalTitle =
-                    $"{finalTitle}: {string.Join(' ', entities.Skip(titleForIndex).Take(titleForDescription).Select(x => x.Title))}";
+                finalTitle = string.Join(' ',
+                    entities.Skip(titleForIndex).Take(titleForDescription).Select(x => x.Title));
+                if (maxDescriptionSize < finalTitle.Length)
+                    finalTitle = finalTitle.Substring(0, maxDescriptionSize);
             }
 
             ViewData["CustomDescription"] = finalTitle;

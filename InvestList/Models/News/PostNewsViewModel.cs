@@ -1,4 +1,6 @@
-﻿namespace InvestList.Models.News
+﻿using DataAccess.Models;
+
+namespace InvestList.Models.News
 {
     public class PostNewsViewModel
     {
@@ -9,6 +11,8 @@
         public string? Description { get; set; }
 
         public ICollection<string>? Tags { get; set; }
+
+        public IEnumerable<PostLinkView> Links { get; set; }
 
         public string? ImageBase64 { get; set; }
     }

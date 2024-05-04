@@ -1,4 +1,5 @@
 ﻿using DataAccess.Models;
+using InvestList.Models.Invest;
 
 namespace InvestList.Models.News
 {
@@ -16,10 +17,10 @@ namespace InvestList.Models.News
        
         public string? Description { get; set; }
 
-        public ICollection<TagView> Tags { get; set; }
-        
-        public IEnumerable<GetNewsViewModel> SimilarNews { get; set; }
-
+        public IEnumerable<TagView> Tags { get; set; }
+        public IEnumerable<LinkView> Links { get; set; }
         public string? ImageBase64 { get; set; }
+        public IEnumerable<GetAllAdsView> SimilarInvests { get; set; }
+        public IEnumerable<GetNewsViewModel> SimilarNews { get; set; }
     }
 }

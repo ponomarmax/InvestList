@@ -11,7 +11,7 @@
 <div class="container">
     <div class="row mb-4">
         <div class="col-8">
-            <h2>@Model.Title</h2>
+            <h1>@Model.Title</h1>
             @if (Model?.Tags?.Any() == true)
             {
                 <div class="card-text">
@@ -23,42 +23,29 @@
                     </div>
                 </div>
             }
-            <img src="data:image;base64,@Model.ImageBase64" alt="Investment Image" class="img-fluid resized-image"/>
+            <img src="data:image;base64,@Model.ImageBase64" alt="Investment Image" class="img-fluid resized-image"/><br><br>
             <div class="row mb-4">
                 <div class="well col-12">
                     <pre>@Model.Description</pre>
                 </div>
             </div>
+            <div id="inputsContainer">
+                <p class="card-text mb-2"> Посилання на статті</p>
+                <ul class="list-group">
+                    @foreach (var link in Model.Links)
+                    {
+                        <li class="list-group-item">
+                            <a href="@link.Hyperlink" rel="@((link.Follow ? "follow" : "nofollow"))">
+                                <strong>@link.AnchorText</strong>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
         </div>
         <div class="col-4">
-            @if (Model.SimilarNews?.Any() == true)
-            {
-                <p>Схожі новини</p>
-                foreach (var similarNew in Model.SimilarNews)
-                {
-                    <div class="row">
-                        <a class="card-link" href="@Url.Action("Details", new { id = similarNew.Id })">
-                            <div class="card">
-                                <div class="card-header">
-                                    <div class="card-title">@similarNew.Title</div>
-                                </div>
-                                <div class="card-body">
-                                    @if (similarNew.Tags != null && similarNew.Tags.Any())
-                                    {
-                                        <div class="tags mb-3">
-                                            @foreach (var field in similarNew.Tags)
-                                            {
-                                                <span class="badge bg-primary"># @field.Name</span>
-                                            }
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                }
-                <a href="@Url.Action("Index", new { tagIds = Model.Tags.Select(x=>x.Id) })">Більше новин...</a>
-            }
+           @await Html.PartialAsync("_SimilarNews", (Model.SimilarNews, Model.Tags))
+           @await Html.PartialAsync("_SimilarInvest", (Model.SimilarInvests, Model.Tags))
         </div>
     </div>
 </div>

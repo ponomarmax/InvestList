@@ -7,9 +7,10 @@ namespace DataAccess.Interfaces
         Task<int> Count();
         Task Create(InvestAd investAd, InvestAdExtraInfo investAdExtraInfo);
         Task Edit(InvestAd investAd, InvestAdExtraInfo investAdExtraInfo);
-        Task<(int count, IEnumerable<InvestAd> list)> Filter(decimal? minUsd, decimal? maxUSd, decimal? minAnnualInvestmentReturn, decimal? maxAnnualInvestmentReturn, int page, int offset);
+        Task<(int count, IEnumerable<InvestAd> list)> Filter(decimal? minUsd, decimal? maxUSd, decimal? minAnnualInvestmentReturn, decimal? maxAnnualInvestmentReturn, int page, int offset, List<Guid>? tagIds);
         Task<InvestAd?> Get(Guid id);
         Task<IEnumerable<InvestAdExtraInfo>> Search(string searchTerm, int currentPage, int itemsPerPage);
         Task<bool> IsOwnerOfPost(string userId, string invId);
+        Task<IEnumerable<InvestAd>> GetSimilarInvest(List<Guid> tagIds);
     }
 }

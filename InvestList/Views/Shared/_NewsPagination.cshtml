@@ -30,7 +30,7 @@
 
     string GetPageUrl(int page)
     {
-        var url = Url.Action("Index", new { page });
+        var url = page == 1 ? Url.Action("Index") : Url.Action("Index", new { page });
 
         if (Model.FilterModel?.TagIds?.Count > 0)
         {
@@ -39,5 +39,4 @@
 
         return url;
     }
-
 }

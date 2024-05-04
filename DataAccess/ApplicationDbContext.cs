@@ -5,15 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess
 {
-    public class ApplicationDbContext: IdentityDbContext<User>
+    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options): IdentityDbContext<User>(options)
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options) { }
-
         public DbSet<InvestAd> InvestAds { get; set; }
         public DbSet<InvestAdExtraInfo> InvestAdExtraInfo { get; set; }
 
         public DbSet<InvestField> InvestFields { get; set; }
+        public DbSet<Link> Links { get; set; }
 
         public DbSet<Tag> Tags { get; set; }
 

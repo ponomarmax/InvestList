@@ -7,7 +7,16 @@
 }
 
 <!-- Header - Profile Section -->
+<div class="d-flex justify-content-start">
+    @if (User.IsInRole(Const.AdminRole))
+    {
+        // Кнопка Редагувати
+        <a asp-action="Edit" asp-controller="News" asp-route-id="@Model.Id" class="btn btn-primary me-2">Редагувати</a>
+    }
 
+    <!-- Кнопка Назад -->
+    <a asp-action="Index" class="btn btn-secondary">Повернутись до списку</a>
+</div>
 <div class="container">
     <div class="row mb-4">
         <div class="col-8">
@@ -29,34 +38,30 @@
                     <pre>@Model.Description</pre>
                 </div>
             </div>
-            <div id="inputsContainer">
-                <p class="card-text mb-2"> Посилання на статті</p>
-                <ul class="list-group">
-                    @foreach (var link in Model.Links)
-                    {
-                        <li class="list-group-item">
-                            <a href="@link.Hyperlink" rel="@((link.Follow ? "follow" : "nofollow"))">
-                                <strong>@link.AnchorText</strong>
-                            </a>
-                        </li>
-                    }
-                </ul>
-            </div>
+            @if (Model.Links != null && Model.Links.Any())
+            {
+                <div id="inputsContainer">
+                    <p class="card-text mb-2"> Посилання на статті</p>
+                    <ul class="list-group">
+                        @foreach (var link in Model.Links)
+                        {
+                            <li class="list-group-item">
+                                <a href="@link.Hyperlink" rel="@((link.Follow ? "follow" : "nofollow"))">
+                                    <strong>@link.AnchorText</strong>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            @await Html.PartialAsync("_DisplayComments", (new Guid?(), (Guid?)Model.Id, Model.Comments))
+
         </div>
+
         <div class="col-4">
-           @await Html.PartialAsync("_SimilarNews", (Model.SimilarNews, Model.Tags))
-           @await Html.PartialAsync("_SimilarInvest", (Model.SimilarInvests, Model.Tags))
+            @await Html.PartialAsync("_SimilarNews", (Model.SimilarNews, Model.Tags))
+            @await Html.PartialAsync("_SimilarInvest", (Model.SimilarInvests, Model.Tags))
         </div>
     </div>
-</div>
-
-<div class="d-flex justify-content-start">
-    @if (User.IsInRole(Const.AdminRole))
-    {
-        // Кнопка Редагувати
-        <a asp-action="Edit" asp-controller="News" asp-route-id="@Model.Id" class="btn btn-primary me-2">Редагувати</a>
-    }
-
-    <!-- Кнопка Назад -->
-    <a asp-action="Index" class="btn btn-secondary">Повернутись до списку</a>
 </div>

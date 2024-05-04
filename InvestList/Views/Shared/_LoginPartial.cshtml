@@ -5,7 +5,7 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-    <div class="col-md-3 dropdown text-end">
+    <div class="dropdown text-end">
         <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="bi bi-person"></i>
         </a>
@@ -18,7 +18,7 @@
 }
 else
 {
-    <div class="col-md-3 text-end">
+    <div class="d-flex flex-wrap">
         <a href="@Url.Action("Index", "Login")" class="btn btn-outline-primary me-2" rel="nofollow">Увійти</a>
         <a href="@Url.Action("Index", "Register")" class="btn btn-primary" rel="nofollow">Зареєструватися</a>
     </div>

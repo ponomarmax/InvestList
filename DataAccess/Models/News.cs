@@ -25,6 +25,7 @@ namespace DataAccess.Models
 
         public ICollection<NewsToTags> Tags { get; set; }
         public ICollection<Link> Links { get; set; }
+        public ICollection<Comment> Comments { get; set; }
 
         public string? ImageBase64 { get; set; }
     }

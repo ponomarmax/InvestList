@@ -2,8 +2,9 @@
 @model InvestList.Models.Comment.PostCommentRequest
 
 <form asp-action="Publish" asp-controller="Comment" method="post">
+    @Html.AntiForgeryToken()
     <input type="hidden" asp-for="InvestAdId" value="@Model.InvestAdId"/>
-    <input type="hidden" asp-for="UserId" value="@Model.UserId"/>
+    <input type="hidden" asp-for="NewsId" value="@Model.NewsId"/>
     <div class="form-group mb-1">
         <label asp-for="Text">Коментар:</label>
         <textarea class="form-control" asp-for="Text" rows="3"></textarea>

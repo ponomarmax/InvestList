@@ -31,7 +31,10 @@ namespace DataAccess.Migrations
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<Guid>("InvestAdId")
+                    b.Property<Guid?>("InvestAdId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("NewsId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Text")
@@ -45,6 +48,8 @@ namespace DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("InvestAdId");
+
+                    b.HasIndex("NewsId");
 
                     b.HasIndex("UserId");
 
@@ -610,8 +615,11 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.Models.InvestAd", "InvestAd")
                         .WithMany("Comments")
                         .HasForeignKey("InvestAdId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("DataAccess.Models.News", "News")
+                        .WithMany("Comments")
+                        .HasForeignKey("NewsId");
 
                     b.HasOne("DataAccess.Models.User", "User")
                         .WithMany()
@@ -620,6 +628,8 @@ namespace DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("InvestAd");
+
+                    b.Navigation("News");
 
                     b.Navigation("User");
                 });
@@ -806,6 +816,8 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.Models.News", b =>
                 {
+                    b.Navigation("Comments");
+
                     b.Navigation("Links");
 
                     b.Navigation("Tags");

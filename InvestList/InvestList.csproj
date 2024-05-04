@@ -53,10 +53,10 @@
 	  <Content Update="wwwroot\ico\favicon.svg">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Content>
-	  <Content Update="wwwroot\ico\logo1.svg">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
 	  <Content Remove="Views\Invest\Search.cshtml" />
+	  <Content Update="wwwroot\ico\logo1.svg">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
 	</ItemGroup>
 
 	<ItemGroup>

@@ -14,7 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="icon" type="image/svg+xml" href="/ico/favicon.svg">
     <title>@(ViewData["CustomTitle"] ?? ViewData["Title"])</title>
-     @if (!string.IsNullOrEmpty(ViewData["CustomDescription"] as string))
+    @if (!string.IsNullOrEmpty(ViewData["CustomDescription"] as string))
     {
         <meta name="description" content="@ViewData["CustomDescription"]">
     }
@@ -33,13 +33,15 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
 </head>
 <body>
-<header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-    <div class="col-md-3 mb-2 mb-md-0">
-        <a class="navbar-brand" asp-area="" asp-controller="Invest" asp-action="Index">
-            <img src="/ico/logo1.svg" alt="invest radar logo" height="40" width="40"/>
-            <span class="fs-4">Invest Radar</span>
-        </a>
-    </div>
+<header class="d-flex justify-content-center flex-wrap">
+    <a class="navbar-brand px-5" asp-area="" asp-controller="Invest" asp-action="Index">
+        <img src="/ico/logo1.svg" alt="invest radar logo" height="40" width="40"/>
+        <span>Invest Radar для інвесторів та підприємців</span>
+    </a>
+
+    <partial name="_LoginPartial"/>
+</header>
+<div class="my-2">
     <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
         @if (User.IsInRole(Const.AdminRole))
         {
@@ -65,7 +67,7 @@
         }
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Шукаю інвестиції
+                Інвестиційні пропозиції
             </a>
             <ul class="dropdown-menu">
                 <li>
@@ -91,9 +93,7 @@
             </li>
         }
     </ul>
-
-    <partial name="_LoginPartial"/>
-</header>
+</div>
 <div class="container">
     <main role="main" class="pb-3">
         @RenderBody()

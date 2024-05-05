@@ -10,7 +10,7 @@
             <i class="bi bi-person"></i>
         </a>
         <ul class="dropdown-menu text-small" style="">
-            <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">@User.Identity?.Name!</a></li>
+            <li><a class="dropdown-item" asp-area="Identity" asp-page="/Manage/Index">@User.Identity?.Name!</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Invest", new { area = "" })">Вийти</a></li>
         </ul>
@@ -19,8 +19,8 @@
 else
 {
     <div class="d-flex flex-wrap">
-        <a href="@Url.Action("Index", "Login")" class="btn btn-outline-primary me-2" rel="nofollow">Увійти</a>
-        <a href="@Url.Action("Index", "Register")" class="btn btn-primary" rel="nofollow">Зареєструватися</a>
+        <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-primary me-2" rel="nofollow">Увійти</a>
+        <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-primary" rel="nofollow">Зареєструватися</a>
     </div>
 }
 

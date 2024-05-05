@@ -65,4 +65,9 @@
 	  </None>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Manage\Index.cshtml" />
+	  <_ContentIncludedByDefault Remove="Views\Login\Index.cshtml" />
+	</ItemGroup>
+
 </Project>

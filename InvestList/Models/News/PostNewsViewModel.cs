@@ -9,10 +9,14 @@ namespace InvestList.Models.News
         public string? Title { get; set; }
 
         public string? Description { get; set; }
+        
+        public string? TitleSeo { get; set; }
+
+        public string? DescriptionSeo { get; set; }
 
         public ICollection<string>? Tags { get; set; }
 
-        public IEnumerable<PostLinkView> Links { get; set; }
+        public IEnumerable<PostLinkView>? Links { get; set; }
 
         public string? ImageBase64 { get; set; }
     }

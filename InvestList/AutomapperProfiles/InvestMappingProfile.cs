@@ -18,6 +18,7 @@ namespace InvestList.AutomapperProfiles
         {
             CreateMap<InvestAd, GetAllAdsView>()
                 .ForMember(x => x.Title, y => y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.Title)))
+                .ForMember(x => x.Description, y => y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.Description)))
                 .ForMember(x => x.AcceptedCurrencies, y => y.MapFrom(src => GetLastHistoryItemProperty(src, x => x.AcceptedCurrencies)))
                 .ForMember(x => x.Tags,
                     y => y.MapFrom(z => z.Tags.Select(x => new TagView() { Id = x.TagId, Name = x.Tag.Name })))

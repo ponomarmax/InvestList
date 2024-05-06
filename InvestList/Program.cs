@@ -26,12 +26,12 @@ try
         options.UseSqlServer(connectionString));
     builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-    builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
-        .AddRoles<IdentityRole>()
+    builder.Services.AddIdentity<User,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
         .AddEntityFrameworkStores<ApplicationDbContext>();
     builder.Services.AddControllersWithViews()
         .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<PostInvestAdViewModelValidator>())
         .AddRazorRuntimeCompilation();
+    builder.Services.AddRazorPages();
     builder.Services.AddAutoMapper(typeof(Program));
 
     builder.Services.Load<EmailConfig>(builder.Configuration, "Email");
@@ -41,6 +41,14 @@ try
     builder.Services.AddScoped<INewsRepository, NewsRepository>();
     builder.Services.AddScoped<ITagRepository, TagRepository>();
     builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+    builder.Services.AddAuthentication()
+        .AddGoogle(options =>
+        {
+            var googleAuthNSection =
+                builder.Configuration.GetSection("Authentication:Google");
+            options.ClientId = googleAuthNSection["ClientId"];
+            options.ClientSecret = googleAuthNSection["ClientSecret"];
+        });
     Log.Logger.Information("App is starting");
 
     var app = builder.Build();

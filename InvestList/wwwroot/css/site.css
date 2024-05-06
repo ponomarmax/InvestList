@@ -306,3 +306,10 @@ li {
     margin-left: 10px;
     font-size: 14px;
 }
+
+.custom-light-green {
+    background-color: #ecf9ec; /* Дуже світлий зелений */
+}
+.custom-light-blue{
+    background-color: #D8E5FC; /* Дуже світлий зелений */
+}

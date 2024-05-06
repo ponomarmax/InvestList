@@ -1,4 +1,5 @@
 ﻿using DataAccess.Models;
+using InvestList.Models.Comment;
 using InvestList.Models.Invest;
 
 namespace InvestList.Models.News
@@ -16,9 +17,14 @@ namespace InvestList.Models.News
         public string Title { get; set; }
        
         public string? Description { get; set; }
+        
+        public string? TitleSeo { get; set; }
+
+        public string? DescriptionSeo { get; set; }
 
         public IEnumerable<TagView> Tags { get; set; }
         public IEnumerable<LinkView> Links { get; set; }
+        public IEnumerable<CommentView> Comments { get; set; }
         public string? ImageBase64 { get; set; }
         public IEnumerable<GetAllAdsView> SimilarInvests { get; set; }
         public IEnumerable<GetNewsViewModel> SimilarNews { get; set; }

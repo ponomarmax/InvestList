@@ -4,6 +4,7 @@ using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240504114945_add-seo-description")]
+    partial class addseodescription
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,10 +34,7 @@ namespace DataAccess.Migrations
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<Guid?>("InvestAdId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("NewsId")
+                    b.Property<Guid>("InvestAdId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Text")
@@ -48,8 +48,6 @@ namespace DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("InvestAdId");
-
-                    b.HasIndex("NewsId");
 
                     b.HasIndex("UserId");
 
@@ -615,11 +613,8 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.Models.InvestAd", "InvestAd")
                         .WithMany("Comments")
                         .HasForeignKey("InvestAdId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("DataAccess.Models.News", "News")
-                        .WithMany("Comments")
-                        .HasForeignKey("NewsId");
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("DataAccess.Models.User", "User")
                         .WithMany()
@@ -628,8 +623,6 @@ namespace DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("InvestAd");
-
-                    b.Navigation("News");
 
                     b.Navigation("User");
                 });
@@ -816,8 +809,6 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.Models.News", b =>
                 {
-                    b.Navigation("Comments");
-
                     b.Navigation("Links");
 
                     b.Navigation("Tags");

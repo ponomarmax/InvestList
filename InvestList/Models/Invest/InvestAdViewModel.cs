@@ -39,7 +39,7 @@ namespace InvestList.Models.Invest
         public string? ImageBase64 { get; set; }
         public bool Published { get; set; }
         
-        public List<CommentView> Comments { get; set; }
+        public IEnumerable<CommentView> Comments { get; set; }
         public IEnumerable<GetAllAdsView> SimilarInvests { get; set; }
         public IEnumerable<GetNewsViewModel> SimilarNews { get; set; }
     }

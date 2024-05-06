@@ -41,6 +41,14 @@ try
     builder.Services.AddScoped<INewsRepository, NewsRepository>();
     builder.Services.AddScoped<ITagRepository, TagRepository>();
     builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+    builder.Services.AddAuthentication()
+        .AddGoogle(options =>
+        {
+            var googleAuthNSection =
+                builder.Configuration.GetSection("Authentication:Google");
+            options.ClientId = googleAuthNSection["ClientId"];
+            options.ClientSecret = googleAuthNSection["ClientSecret"];
+        });
     Log.Logger.Information("App is starting");
 
     var app = builder.Build();

@@ -32,10 +32,28 @@
                     </label>
                 </div>
                 <button class="w-100 btn btn-lg btn-primary" type="submit">Увійти</button>
-                <p class="mt-5 mb-3 text-muted text-center">&copy; 2024</p>
+
             </form>
         </div>
     </div>
+
+    @{
+        if ((Model.ExternalLogins?.Count ?? 0) != 0)
+        {
+            <div class="d-flex flex-column align-items-center">
+                <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                    <div>
+                        <p>
+                            @foreach (var provider in Model.ExternalLogins!)
+                            {
+                                <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                            }
+                        </p>
+                    </div>
+                </form>
+            </div>
+        }
+    }
 
     <div class="d-flex flex-column align-items-center">
         <p>

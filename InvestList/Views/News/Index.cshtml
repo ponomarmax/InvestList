@@ -11,29 +11,26 @@
         <div class="row">
             @foreach (var ad in Model.Entities)
             {
-                <div class="col-6 col-lg-3 mb-3">
-                    <a class="card-link" href="@Url.Action("Details", new { id = ad.Id })">
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="card-title">@ad.Title</div>
-                            </div>
-                            <div class="card-body">
-                                @if (ad.Tags != null && ad.Tags.Any())
-                                {
-                                    <div class="tags mb-3">
-                                        @foreach (var field in ad.Tags)
-                                        {
-                                            <span class="badge bg-primary"># @field.Name</span>
-                                        }
-                                    </div>
-                                }
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title mb-3">
+                                <a class="card-link" href="@Url.Action("Details", new { id = ad.Id })">@ad.Title</a>
+                            </h4>
+                            <div class="row">
+                                <div class="col-auto">
+                                    <img src="data:image;base64,@ad.ImageBase64" alt="Placeholder" class="img-fluid rounded" style="width: 100px; height: 100px;">
 
-                                <div>
-                                    <i class="bi bi-calendar-range"></i>@ad.CreatedAt.ToString(" dd.MM.yyyy")
+                                    <div class="text-muted">
+                                        <i class="bi bi-clock-history"></i> @ad.CreatedAt.ToString("dd.MM.yyyy")
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <p class="card-text text-black mb-0">@ad.Description?.Substring(0, Math.Min(ad.Description.Length, 300))</p>
                                 </div>
                             </div>
                         </div>
-                    </a>
+                    </div>
                 </div>
             }
         </div>

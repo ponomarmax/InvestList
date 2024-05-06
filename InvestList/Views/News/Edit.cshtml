@@ -71,6 +71,28 @@
                 }
             }
         </div>
+        <div id="inputsContainer">
+            @foreach (var link in Model.Links)
+            {
+                <div class="row mb-3">
+                    <div class="col">
+                        <input type="text" class="form-control" name="Links[@Model.Links.ToList().IndexOf(link)].AnchorText" value="@link.AnchorText" placeholder="Anchor Text"/>
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="Links[@Model.Links.ToList().IndexOf(link)].Hyperlink" value="@link.Hyperlink" placeholder="Hyperlink"/>
+                    </div>
+                    <div class="col">
+                        <input type="hidden" name="Links[@Model.Links.ToList().IndexOf(link)].NewsId" value="@ViewData["Id"]"/>
+                        <input type="checkbox" class="form-check-input" name="Links[@Model.Links.ToList().IndexOf(link)].Follow" value="true" @(link.Follow.HasValue && link.Follow.Value ? "checked" : "")/>
+                        <label class="form-check-label">Follow</label>
+                    </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-danger removeBtn">Remove</button>
+                    </div>
+                </div>
+            }
+        </div>
+        <button type="button" class="btn btn-primary" id="addInputsBtn">Add More Inputs</button>
 
         <button type="submit" class="btn btn-primary">Опублікувати</button>
         <a asp-action="Index" class="btn btn-secondary">Повернутись до списку</a>
@@ -78,8 +100,7 @@
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+
     <script src="~/js/handleImageUpload.js"></script>
+    <script src="~/js/add-links.js"></script>
 }

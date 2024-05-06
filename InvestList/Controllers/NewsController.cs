@@ -78,7 +78,7 @@ namespace InvestList.Controllers
             var similarAds = mapper.Map<IEnumerable<GetAllAdsView>>(await investAdRepository.GetSimilarInvest(tagIds));
             result.SimilarNews = similarNewsViewModels;
             result.SimilarInvests = similarAds;
-            SetTitle(result);
+            SetTitleAndDescription(result);
             return View(result);
         }
 
@@ -144,14 +144,29 @@ namespace InvestList.Controllers
             ViewData["Tags"] = dictionary;
         }
 
-        private void SetTitle(GetNewsViewModel entity)
+        private void SetTitleAndDescription(GetNewsViewModel entity)
         {
-            ViewData["CustomTitle"] = maxTitleSize < entity.Title.Length
-                ? entity.Title.Substring(0, maxTitleSize)
-                : entity.Title;
-            ViewData["CustomDescription"] = maxDescriptionSize < entity.Description?.Length?
-                entity.Description?.Substring(0, maxDescriptionSize) :
-                entity.Description;
+            if (string.IsNullOrEmpty(entity.TitleSeo))
+            {
+                ViewData["CustomTitle"] = maxTitleSize < entity.Title.Length
+                    ? entity.Title.Substring(0, maxTitleSize)
+                    : entity.Title;
+            }
+            else
+            {
+                ViewData["CustomTitle"] = entity.TitleSeo;
+            }
+            
+            if (string.IsNullOrEmpty(entity.DescriptionSeo))
+            {
+                ViewData["CustomDescription"] = maxDescriptionSize < entity.Description?.Length?
+                    entity.Description?.Substring(0, maxDescriptionSize) :
+                    entity.Description;
+            }
+            else
+            {
+                ViewData["CustomDescription"] = entity.DescriptionSeo;
+            }
         }
 
         private void SetTitles(IEnumerable<GetNewsViewModel>? entities)

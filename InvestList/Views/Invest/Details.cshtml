@@ -75,41 +75,8 @@
                 }
             </div>
         </div>
-        @if (!SignInManager.IsSignedIn(User))
-        {
-            <div class="row row-cols-lg-auto g-3 align-items-center">
-                <div class="col-12">
-                    <a href="@Url.Action("Index", "Login")" class="btn btn-outline-primary me-2">Увійти</a>
-                </div>
-                <div class="col-12">
-                    <label class="form-check-label" for="inlineFormCheck">
-                        Для написання відгуку, будь ласка, увійдіть у свій обліковий запис
-                    </label>
-                </div>
-            </div>
-        }
-        else
-        {
-            await Html.RenderPartialAsync("_CommentForm", new PostCommentRequest { InvestAdId = Model.Id, UserId = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier)) });
-        }
-        @if (Model.Comments?.Count > 0)
-        {
-            <div class="card-body p-4">
+        @await Html.PartialAsync("_DisplayComments", ( (Guid?)Model.Id, new Guid?(), Model.Comments))
 
-                @foreach (var comment in Model.Comments.OrderByDescending(x => x.CreatedAt))
-                {
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <div class="d-flex flex-row justify-content-between mb-0">
-                                <div class="text-muted">@comment.Author</div>
-                                <div class="text-muted">@comment.CreatedAt.ToString("yy-MMM-dd HH:mm")</div>
-                            </div>
-                            <p class="card-text">@comment.Text</p>
-                        </div>
-                    </div>
-                }
-            </div>
-        }
     </div>
     <div class="col-4">
         @await Html.PartialAsync("_SimilarNews", (Model.SimilarNews, Model.Tags))

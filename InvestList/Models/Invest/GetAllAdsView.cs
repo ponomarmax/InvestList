@@ -7,6 +7,7 @@ namespace InvestList.Models.Invest
         public Guid Id { get; set; }
 
         public string Title { get; set; }
+        public string Description { get; set; }
 
         public ICollection<MinimalInvestEntrance> AcceptedCurrencies { get; set; }
 

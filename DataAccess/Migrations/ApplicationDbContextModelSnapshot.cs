@@ -17,10 +17,10 @@ namespace DataAccess.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.23")
+                .HasAnnotation("ProductVersion", "8.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("DataAccess.Models.Comment", b =>
                 {
@@ -31,7 +31,10 @@ namespace DataAccess.Migrations
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<Guid>("InvestAdId")
+                    b.Property<Guid?>("InvestAdId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("NewsId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Text")
@@ -45,6 +48,8 @@ namespace DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("InvestAdId");
+
+                    b.HasIndex("NewsId");
 
                     b.HasIndex("UserId");
 
@@ -245,6 +250,36 @@ namespace DataAccess.Migrations
                     b.ToTable("InvestTags");
                 });
 
+            modelBuilder.Entity("DataAccess.Models.Link", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AnchorText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("Follow")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Hyperlink")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("NewsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NewsId");
+
+                    b.ToTable("Links");
+                });
+
             modelBuilder.Entity("DataAccess.Models.MinimalInvestEntrance", b =>
                 {
                     b.Property<Guid>("Id")
@@ -283,10 +318,18 @@ namespace DataAccess.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("DescriptionSeo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ImageBase64")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TitleSeo")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -463,7 +506,7 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -488,7 +531,7 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -572,8 +615,11 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.Models.InvestAd", "InvestAd")
                         .WithMany("Comments")
                         .HasForeignKey("InvestAdId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("DataAccess.Models.News", "News")
+                        .WithMany("Comments")
+                        .HasForeignKey("NewsId");
 
                     b.HasOne("DataAccess.Models.User", "User")
                         .WithMany()
@@ -582,6 +628,8 @@ namespace DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("InvestAd");
+
+                    b.Navigation("News");
 
                     b.Navigation("User");
                 });
@@ -644,6 +692,17 @@ namespace DataAccess.Migrations
                     b.Navigation("Invest");
 
                     b.Navigation("Tag");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.Link", b =>
+                {
+                    b.HasOne("DataAccess.Models.News", "News")
+                        .WithMany("Links")
+                        .HasForeignKey("NewsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("News");
                 });
 
             modelBuilder.Entity("DataAccess.Models.MinimalInvestEntrance", b =>
@@ -757,6 +816,10 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.Models.News", b =>
                 {
+                    b.Navigation("Comments");
+
+                    b.Navigation("Links");
+
                     b.Navigation("Tags");
                 });
 #pragma warning restore 612, 618

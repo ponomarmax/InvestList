@@ -1,4 +1,8 @@
-﻿html {
+﻿* {
+    font-family: "Work Sans";
+}
+
+html {
     font-size: 14px;
 }
 
@@ -312,4 +316,11 @@ li {
 }
 .custom-light-blue{
     background-color: #D8E5FC; /* Дуже світлий зелений */
+}
+
+@font-face {
+    font-family: 'Work Sans';
+    src: url('../fonts/worksans/Worksans.woff2') format('woff2');
+    font-weight: bold;
+    font-style: normal;
 }

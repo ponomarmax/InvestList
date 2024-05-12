@@ -1,6 +1,6 @@
-﻿* {
+﻿/* * {
     font-family: "Work Sans";
-}
+} */
 
 html {
     font-size: 14px;
@@ -16,6 +16,9 @@ html {
     .col-4 {
         width: 100%;
         margin-top: 10px;
+    }
+    .col-8 {
+        width: 100%;
     }
 }
 
@@ -36,6 +39,16 @@ pre {
 
 li {
     list-style-type: none;
+}
+
+.messenger {
+    text-align: end;
+    margin: 5px;
+}
+
+.message {
+    height: 50px;
+    width: 50px;
 }
 
 .card-img-top {

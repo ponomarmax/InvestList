@@ -1,6 +1,6 @@
-﻿/* * {
+﻿* {
     font-family: "Work Sans";
-} */
+}
 
 html {
     font-size: 14px;
@@ -41,7 +41,7 @@ li {
     list-style-type: none;
 }
 
-.messenger {
+.share {
     text-align: end;
     margin: 5px;
 }

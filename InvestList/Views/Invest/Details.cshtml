@@ -76,9 +76,8 @@
             </div>
 
             <span class="share">
-                <a class="twitter" onclick="shareOnTwitter()" alt=""><img class="message" src="/ico/twitter.webp" alt=""></a>
-                <a class="telegram" onclick="shareOnTelegram()" alt=""><img class="message" src="/ico/telegram.png" alt=""></a>
-                <a class="facebook" onclick="shareOnFacebook()" alt=""><img class="message" src="/ico/facebook.png" alt=""></a>
+                <a class="telegram"href="" id="tg_share" alt=""><img class="message" src="/ico/telegram.png" alt=""></a>
+                @* <a class="facebook" href="" id="fb_share" alt=""><img class="message" src="/ico/facebook.png" alt=""></a> *@
             </span>
         </div>
         @await Html.PartialAsync("_DisplayComments", ( (Guid?)Model.Id, new Guid?(), Model.Comments))
@@ -91,24 +90,9 @@
 </div>
 
 <script>
-    function shareOnTelegram() {
+    window.onload = function() {
         var shareUrl = encodeURIComponent(window.location.href);
-        var telegramUrl = 'https://t.me/share/url?url=' + shareUrl;
-
-        window.open(telegramUrl, '_blank');
-    }
-
-    function shareOnTwitter() {
-        var shareUrl = encodeURIComponent(window.location.href);
-        var twitterUrl = 'https://twitter.com/intent/tweet?url=' + shareUrl;
-
-        window.open(twitterUrl, '_blank');
-    }
-
-    function shareOnFacebook() {
-        var shareUrl = encodeURIComponent(window.location.href);
-        var facebookUrl = 'https://www.facebook.com/sharer/sharer.php?u=#url';
-
-        window.open(facebookUrl, '_blank');
-    }
+        fb_share.href ='https://www.facebook.com/share.php?u=' + shareUrl; 
+        tg_share.href ='https://t.me/share/url?url=' + shareUrl; 
+    }  
 </script>

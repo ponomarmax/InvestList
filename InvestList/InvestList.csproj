@@ -48,6 +48,9 @@
 	  <Content Update="appsettings.private.json">
 	    <CopyToPublishDirectory>Never</CopyToPublishDirectory>
 	  </Content>
+	  <Content Update="wwwroot\privacy-policy.html">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
 	 
 	</ItemGroup>
 

@@ -53,7 +53,7 @@
 
 	<ItemGroup>
 	  <None Update="Metadata\robots.txt">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>
 

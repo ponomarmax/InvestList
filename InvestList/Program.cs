@@ -11,6 +11,7 @@ using InvestList;
 using InvestList.Configs;
 using InvestList.Extensions;
 using InvestList.Logging;
+using InvestList.Services;
 using InvestList.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,6 +42,7 @@ try
     builder.Services.AddScoped<INewsRepository, NewsRepository>();
     builder.Services.AddScoped<ITagRepository, TagRepository>();
     builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+    builder.Services.AddScoped<ITagService,TagService>();
     builder.Services.AddAuthentication()
         .AddGoogle(options =>
         {

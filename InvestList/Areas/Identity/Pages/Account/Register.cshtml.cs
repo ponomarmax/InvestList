@@ -100,6 +100,13 @@ namespace InvestList.Areas.Identity.Pages.Account
             ExternalLogins = (await signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
+                var existingUser = await userManager.FindByEmailAsync(Input.Email);
+                if (existingUser != null)
+                {
+                    ModelState.AddModelError(string.Empty, "Емейл вже використовується. Спробуйте інший, або відновіть доступ.");
+                    return Page();
+                }
+                
                 var user = CreateUser();
 
                 await userStore.SetUserNameAsync(user, Input.Username, CancellationToken.None);

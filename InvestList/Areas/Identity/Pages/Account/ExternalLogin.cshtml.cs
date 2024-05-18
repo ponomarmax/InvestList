@@ -147,6 +147,13 @@ namespace InvestList.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
+                var existingUser = await _userManager.FindByEmailAsync(Input.Email);
+                if (existingUser != null)
+                {
+                    ModelState.AddModelError(string.Empty, "Емейл вже використовується. Спробуйте інший, або відновіть доступ.");
+                    return Page();
+                }
+                
                 var user = CreateUser();
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);

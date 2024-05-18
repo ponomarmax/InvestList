@@ -21,7 +21,7 @@ namespace InvestList.Filters
             var userId = Utils.GetUserId(context.HttpContext.User);
             if (userId == null)
             {
-                context.Result = new RedirectToActionResult("Index", "Login", null);
+                context.Result = new RedirectToActionResult("Index", "Login", new {area="Identity"});
                 return;
             }
 

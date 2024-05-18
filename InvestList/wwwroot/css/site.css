@@ -332,13 +332,6 @@ li {
 }
 
 @font-face {
-    font-family: 'Work Sans';
-    src: url('../fonts/worksans/Worksans.woff2') format('woff2');
-    font-weight: bold;
-    font-style: normal;
-}
-
-@font-face {
     font-family: 'e-Ukraine';
     src: url('../fonts/e-Ukraine/e-Ukraine-Regular.woff2') format('woff2');
     font-weight: bold;

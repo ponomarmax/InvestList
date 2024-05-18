@@ -115,7 +115,16 @@ namespace InvestList.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     logger.LogInformation("User created a new account with password.");
-
+                    var roleAssign = await userManager.AddToRoleAsync(user, Const.BusinessRole);
+                    if (roleAssign.Succeeded)
+                    {
+                        logger.LogInformation("Role assigned for the user");
+                    }
+                    else
+                    {
+                        logger.LogError("Role wasn't assigned {@Error}", roleAssign.Errors);
+                    }
+                    
                     var userId = await userManager.GetUserIdAsync(user);
                     var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));

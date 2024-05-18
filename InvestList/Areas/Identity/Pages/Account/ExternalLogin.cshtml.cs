@@ -162,6 +162,16 @@ namespace InvestList.Areas.Identity.Pages.Account
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
+                    var roleAssign = await _userManager.AddToRoleAsync(user, Const.BusinessRole);
+                    if (roleAssign.Succeeded)
+                    {
+                        _logger.LogInformation("Role assigned for the user");
+                    }
+                    else
+                    {
+                        _logger.LogError("Role wasn't assigned {@Error}", roleAssign.Errors);
+                    }
+                    
                     result = await _userManager.AddLoginAsync(user, info);
                     if (result.Succeeded)
                     {

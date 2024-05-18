@@ -26,11 +26,11 @@
         <div class="card border-success mb-3">
             <h1 class="card-header">@Model.Title</h1>
 
-    <div class="d-flex border align-content-start flex-wrap">
-        <div class="p-2 flex-fill">Загальний обсяг інвестицій: $@Model.TotalInvestment</div>
-        <div class="p-2 flex-fill">Період інвестування: @InvestmentHelper.FormatInvestmentDuration(Model.InvestDurationYears, Model.InvestDurationMonths)</div>
-        <div class="p-2 flex-fill">Річна дохідність: @Model.AnnualInvestmentReturn%</div>
-    </div>
+        <div class="d-flex border align-content-start flex-wrap">
+            <div class="p-2 flex-fill">Загальний обсяг інвестицій: $@Model.TotalInvestment</div>
+            <div class="p-2 flex-fill">Період інвестування: @InvestmentHelper.FormatInvestmentDuration(Model.InvestDurationYears, Model.InvestDurationMonths)</div>
+            <div class="p-2 flex-fill">Річна дохідність: @Model.AnnualInvestmentReturn%</div>
+        </div>
 
             <div class="d-flex border align-content-start flex-wrap">
                 <div class="d-flex card-text p-2 flex-fill">
@@ -63,7 +63,7 @@
             <p class="p-2 card-text">
                 <small class="text-body-secondary">@Model.CreatedAt.ToString("dd-MM-yyyy")</small>
             </p>
-            <div class="d-flex flex-wrap justify-content-center">
+            <div class="d-flex p-1 flex-wrap justify-content-center">
                 <pre class="card-body md:order-2 order-1" style="width: 50%">
                     @Model.Description
                 </pre>
@@ -74,6 +74,11 @@
                     </div>
                 }
             </div>
+
+            <span class="share">
+                <a class="telegram"href="" id="tg_share" alt=""><img class="message" src="/ico/telegram.png" alt=""></a>
+                @* <a class="facebook" href="" id="fb_share" alt=""><img class="message" src="/ico/facebook.png" alt=""></a> *@
+            </span>
         </div>
         @await Html.PartialAsync("_DisplayComments", ( (Guid?)Model.Id, new Guid?(), Model.Comments))
 
@@ -83,3 +88,11 @@
         @await Html.PartialAsync("_SimilarInvest", (Model.SimilarInvests, Model.Tags))
     </div>
 </div>
+
+<script>
+    window.onload = function() {
+        var shareUrl = encodeURIComponent(window.location.href);
+        fb_share.href ='https://www.facebook.com/share.php?u=' + shareUrl; 
+        tg_share.href ='https://t.me/share/url?url=' + shareUrl; 
+    }  
+</script>

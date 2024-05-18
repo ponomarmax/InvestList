@@ -1,4 +1,8 @@
-﻿html {
+﻿* {
+    font-family: "e-Ukraine";
+}
+
+html {
     font-size: 14px;
 }
 
@@ -13,6 +17,9 @@
         width: 100%;
         margin-top: 10px;
     }
+    .col-8 {
+        width: 100%;
+    }
 }
 
 html {
@@ -26,12 +33,22 @@ header {
 
 pre {
     white-space: pre-line;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'e-Ukraine';
     font-size: 16px;
 }
 
 li {
     list-style-type: none;
+}
+
+.share {
+    text-align: end;
+    margin: 5px;
+}
+
+.message {
+    height: 50px;
+    width: 50px;
 }
 
 .card-img-top {
@@ -312,4 +329,11 @@ li {
 }
 .custom-light-blue{
     background-color: #D8E5FC; /* Дуже світлий зелений */
+}
+
+@font-face {
+    font-family: 'e-Ukraine';
+    src: url('../fonts/e-Ukraine/e-Ukraine-Regular.woff2') format('woff2');
+    font-weight: bold;
+    font-style: normal;
 }

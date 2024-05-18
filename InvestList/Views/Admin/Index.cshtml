@@ -1,9 +1,9 @@
-@model List<string>
+@model IEnumerable<TagView>
 
 <ul>
     @foreach (var tag in Model)
     {
-        <li>@tag</li>
+        <li>@tag.Name</li>
     }
 </ul>
 
@@ -13,4 +13,23 @@
         <textarea id="tagName" name="tagName" class="form-control"  rows="3"></textarea>
     </div>
     <button type="submit" class="btn btn-primary">Відправити</button>
+</form>
+
+<form asp-action="SubmitCustomHeader" asp-controller="Admin" method="post">
+    <label>Виберіть список тегів для відображення у хедері</label>
+    <div class="form-group col-6">
+        @{
+            if (Model?.Count() > 1)
+            {
+                <label>Теги</label>
+                <select name="tagIds" class="form-control" multiple>
+                    @foreach (var tag in Model)
+                    {
+                        <option value="@tag.Id">@tag.Name</option>
+                    }
+                </select>
+            }
+        }
+    </div>
+    <button type="submit">Опублікувати новий хедер</button>
 </form>

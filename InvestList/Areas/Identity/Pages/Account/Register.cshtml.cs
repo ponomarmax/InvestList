@@ -100,6 +100,13 @@ namespace InvestList.Areas.Identity.Pages.Account
             ExternalLogins = (await signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
+                var existingUser = await userManager.FindByEmailAsync(Input.Email);
+                if (existingUser != null)
+                {
+                    ModelState.AddModelError(string.Empty, "Емейл вже використовується. Спробуйте інший, або відновіть доступ.");
+                    return Page();
+                }
+                
                 var user = CreateUser();
 
                 await userStore.SetUserNameAsync(user, Input.Username, CancellationToken.None);
@@ -108,7 +115,16 @@ namespace InvestList.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     logger.LogInformation("User created a new account with password.");
-
+                    var roleAssign = await userManager.AddToRoleAsync(user, Const.BusinessRole);
+                    if (roleAssign.Succeeded)
+                    {
+                        logger.LogInformation("Role assigned for the user");
+                    }
+                    else
+                    {
+                        logger.LogError("Role wasn't assigned {@Error}", roleAssign.Errors);
+                    }
+                    
                     var userId = await userManager.GetUserIdAsync(user);
                     var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));

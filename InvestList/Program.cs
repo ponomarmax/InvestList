@@ -28,10 +28,15 @@ try
     builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
     builder.Services.AddIdentity<User,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
-        .AddEntityFrameworkStores<ApplicationDbContext>();
-    builder.Services.AddControllersWithViews()
-        .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<PostInvestAdViewModelValidator>())
-        .AddRazorRuntimeCompilation();
+        .AddEntityFrameworkStores<ApplicationDbContext>()
+        .AddDefaultTokenProviders();
+    builder.Services
+        .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<PostInvestAdViewModelValidator>());
+    // builder.Services.AddIdentity<User,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+    //     .AddEntityFrameworkStores<ApplicationDbContext>();
+    // builder.Services.AddControllersWithViews()
+    //     .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<PostInvestAdViewModelValidator>())
+    //     .AddRazorRuntimeCompilation();
     builder.Services.AddRazorPages();
     builder.Services.AddAutoMapper(typeof(Program));
 
@@ -51,6 +56,11 @@ try
             options.ClientId = googleAuthNSection["ClientId"];
             options.ClientSecret = googleAuthNSection["ClientSecret"];
         });
+    builder.Services.ConfigureApplicationCookie(options =>
+    {
+        options.LoginPath = "/Identity/Account/Login";
+    });
+    
     Log.Logger.Information("App is starting");
 
     var app = builder.Build();
@@ -60,7 +70,7 @@ try
         context.Response.Headers.Add("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline' https://code.jquery.com https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com; " +
                                                                 "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com; img-src 'self' data: https://www.google-analytics.com; frame-src 'self'; object-src 'none'; connect-src 'self' https://www.google-analytics.com;");
         await next();
-    });
+    }); 
 
     if (app.Environment.IsDevelopment())
     {

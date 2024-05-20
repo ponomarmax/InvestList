@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess
 {
@@ -61,6 +62,20 @@ namespace DataAccess
                 .HasIndex(e => e.Slug);
             modelBuilder.Entity<News>()
                 .HasIndex(e => e.Slug);
+            
+            var postTypeConverter = new ValueConverter<PostType, string>(
+                v => v.ToString(),
+                v => (PostType)Enum.Parse(typeof(PostType), v));
+            modelBuilder.Entity<Post>()
+                .Property(p => p.PostType)
+                .HasConversion(postTypeConverter);
+            modelBuilder.Entity<PostTags>()
+                .HasKey(x => new { x.PostId, x.TagId });
+            modelBuilder.Entity<PostTags>()
+                .HasOne(x => x.Post)
+                .WithMany(x => x.Tags)
+                .HasForeignKey(x => x.PostId)
+                .HasForeignKey(x=>x.TagId);
             
             Seed(modelBuilder);
         }

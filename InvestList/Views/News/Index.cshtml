@@ -24,6 +24,15 @@
                                     <div class="text-muted">
                                         <i class="bi bi-clock-history"></i> @ad.CreatedAt.ToString("dd.MM.yyyy")
                                     </div>
+                                    @if (ad.Tags != null && ad.Tags.Any()) 
+                                    { 
+                                        <div class="tags-container"> 
+                                        @foreach (var field in ad.Tags) 
+                                        { 
+                                            <span class="tag">@field.Name</span> 
+                                        } 
+                                    </div> 
+                                    }
                                 </div>
                                 <div class="col">
                                     <p class="card-text text-black mb-0">@ad.Description?.Substring(0, Math.Min(ad.Description.Length, 300))</p>

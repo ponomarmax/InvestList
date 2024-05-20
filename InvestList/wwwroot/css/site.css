@@ -41,6 +41,10 @@ li {
     list-style-type: none;
 }
 
+.col-md-4 {
+    font-size: 0.8em;
+}
+
 .share {
     text-align: end;
     margin: 5px;

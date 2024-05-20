@@ -10,5 +10,6 @@ namespace DataAccess.Interfaces
         Task<IEnumerable<News>> GetPage(int page, int itemsPerPage, List<Guid>? tagIds);
         Task<int> Count(List<Guid>? tagIds = null); 
         Task<IEnumerable<News>> GetSimilarNews(List<Guid> tagIds);
+        Task<News?> Get(string slug);
     }
 }

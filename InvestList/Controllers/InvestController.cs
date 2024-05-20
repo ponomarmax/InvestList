@@ -109,9 +109,10 @@ namespace InvestList.Controllers
         }
 
         [AllowAnonymous]
-        public async Task<ActionResult> Details(Guid id)
+        [Route("invest/{slug}")]
+        public async Task<ActionResult> Get(string slug)
         {
-            var db = await investAdRepository.Get(id);
+            var db = await investAdRepository.Get(slug);
             if (db == null)
                 return NotFound();
             var result = mapper.Map<InvestAdViewModel>(db);
@@ -121,7 +122,16 @@ namespace InvestList.Controllers
                 mapper.Map<IEnumerable<GetAllAdsView>>(await investAdRepository.GetSimilarInvest(tagIds));
 
             SetTitle(result);
-            return View(result);
+            return View("Details", result);
+        }
+
+        [AllowAnonymous]
+        public async Task<ActionResult> Details(Guid id)
+        {
+            var db = await investAdRepository.Get(id);
+            if (db == null)
+                return NotFound();
+            return RedirectToActionPermanent("Get", new { slug = db.Slug });
         }
 
         // GET: InvestController/Edit/5

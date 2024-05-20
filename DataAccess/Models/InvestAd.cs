@@ -7,6 +7,7 @@ namespace DataAccess.Models
     {
         [Key]
         public Guid Id { get; set; }
+        public string Slug { get; set; }
         
         public bool Published { get; set; }
 

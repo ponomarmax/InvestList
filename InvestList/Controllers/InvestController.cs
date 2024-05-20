@@ -38,7 +38,8 @@ namespace InvestList.Controllers
 
             var range = filterModel == null
                 ? (null, null)
-                : getUsdRange(filterModel.Currency?? Currency.UAH, filterModel.MinInvestment, filterModel.MaxInvestment);
+                : getUsdRange(filterModel.Currency ?? Currency.UAH, filterModel.MinInvestment,
+                    filterModel.MaxInvestment);
             var tagIds = filterModel?.TagIds?.Where(x => Guid.TryParse(x, out _)).Select(Guid.Parse).ToList();
             var (count, resultDb) = await investAdRepository.Filter(range.minUsd, range.maxUSd,
                 filterModel?.MinAnnualInvestmentReturn, filterModel?.MaxAnnualInvestmentReturn, page, ItemsPerPage,
@@ -74,59 +75,6 @@ namespace InvestList.Controllers
             return View("Index", viewModel);
         }
 
-
-        // [HttpGet]
-        // [AllowAnonymous]
-        // public async Task<IActionResult> Search(SearchRequestViewModel model)
-        // {
-        //     var resultDb = await investAdRepository.Search(model.SearchTerm, model.CurrentPage, ItemsPerPage);
-        //     var resultView = mapper.Map<IEnumerable<SearchResultViewModel>>(resultDb);
-        //
-        //
-        //     var totalItems = (await investAdRepository.Count())!;
-        //     var totalPages = (int)Math.Ceiling((double)totalItems / ItemsPerPage);
-        //
-        //
-        //     var viewModel = new ListSearchResultViewModel
-        //     {
-        //         Entities = resultView,
-        //         SearchTerm = model.SearchTerm,
-        //         PaginationInfo = new PaginationInfo
-        //         {
-        //             CurrentPage = model.CurrentPage,
-        //             TotalPages = totalPages,
-        //             PageSize = ItemsPerPage
-        //         }
-        //     };
-        //
-        //     return View("Search", viewModel);
-        // }
-
-        // [HttpGet]
-        // [AllowAnonymous]
-        // public async Task<IActionResult> Filter(FilterRequestModel model)
-        // {
-        //     var range = getUsdRange(model.Currency, model.MinInvestment, model.MaxInvestment);
-        //     var (count, resultDb) = await investAdRepository.Filter(range.minUsd, range.maxUSd,
-        //         model.MinAnnualInvestmentReturn, model.MaxAnnualInvestmentReturn, model.CurrentPage, ItemsPerPage);
-        //     var resultView = mapper.Map<IEnumerable<GetAllAdsView>>(resultDb);
-        //
-        //     var totalPages = (int)Math.Ceiling((double)count / ItemsPerPage);
-        //
-        //     var viewModel = new ListInvestsViewModel
-        //     {
-        //         Entities = resultView,
-        //         PaginationInfo = new PaginationInfo
-        //         {
-        //             CurrentPage = model.CurrentPage,
-        //             TotalPages = totalPages,
-        //             PageSize = ItemsPerPage
-        //         }
-        //     };
-        //
-        //     return View("Index", viewModel);
-        // }
-
         private (decimal? minUsd, decimal? maxUSd) getUsdRange(Currency currency, decimal? min, decimal? max)
         {
             if (currency == Currency.USD)
@@ -137,13 +85,8 @@ namespace InvestList.Controllers
         [EmailConfirmedAuthorize]
         public async Task<ActionResult> Create()
         {
-            if (User != null && User.Identity != null && User.Identity.IsAuthenticated)
-            {
-                await PrepopulateCreate();
-                return View("Create");
-            }
-
-            return RedirectToAction("Index", "Login");
+            await PrepopulateCreate();
+            return View("Create");
         }
 
 
@@ -161,7 +104,6 @@ namespace InvestList.Controllers
             var inv = mapper.Map<InvestAd>(model);
             var invMeta = mapper.Map<InvestAdExtraInfo>(model);
             await investAdRepository.Create(inv, invMeta);
-
 
             return RedirectToAction("Details", new { id = inv.Id });
         }
@@ -229,9 +171,9 @@ namespace InvestList.Controllers
             ViewData["CustomTitle"] = maxTitleSize < entity.Title.Length
                 ? entity.Title.Substring(0, maxTitleSize)
                 : entity.Title;
-            ViewData["CustomDescription"] = maxDescriptionSize < entity.Description?.Length?
-                entity.Description?.Substring(0, maxDescriptionSize) :
-                entity.Description;
+            ViewData["CustomDescription"] = maxDescriptionSize < entity.Description?.Length
+                ? entity.Description?.Substring(0, maxDescriptionSize)
+                : entity.Description;
         }
 
         private void SetTitles(IEnumerable<GetAllAdsView>? entities)

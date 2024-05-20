@@ -57,6 +57,11 @@ namespace DataAccess
                 .WithMany(x => x.Comments)
                 .HasForeignKey(x => x.InvestAdId).OnDelete(DeleteBehavior.NoAction);
 
+            modelBuilder.Entity<InvestAd>()
+                .HasIndex(e => e.Slug);
+            modelBuilder.Entity<News>()
+                .HasIndex(e => e.Slug);
+            
             Seed(modelBuilder);
         }
 

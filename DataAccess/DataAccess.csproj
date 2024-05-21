@@ -21,5 +21,10 @@
     <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\Core\Core.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Migrations\20240521091538_move_invest_to_post.Designer.cs">
+      <DependentUpon>20240521091538_move_invest_to_post.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
 
 </Project>

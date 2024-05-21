@@ -1,5 +1,6 @@
 using DataAccess;
 using DataAccess.Interfaces;
+using DataAccess.Migrations;
 using DataAccess.Models;
 using DataAccess.Repositories;
 using FluentValidation.AspNetCore;
@@ -13,6 +14,9 @@ using InvestList.Extensions;
 using InvestList.Logging;
 using InvestList.Services;
 using InvestList.Validators;
+
+// var t = new move_invest_to_post();
+// t.CustomMigration();
 
 var builder = WebApplication.CreateBuilder(args);
 builder.LoadAppSettingAndEnvValues();

@@ -18,7 +18,10 @@ namespace DataAccess
 
         public DbSet<News> News { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<Post> Posts { get; set; }
+        public DbSet<InvestPost> InvestPosts { get; set; }
         public DbSet<CustomHeader> CustomHeaders { get; set; }
+        public DbSet<PostComment> PostComments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -57,6 +60,14 @@ namespace DataAccess
                 .HasOne(x => x.InvestAd)
                 .WithMany(x => x.Comments)
                 .HasForeignKey(x => x.InvestAdId).OnDelete(DeleteBehavior.NoAction);
+            
+            modelBuilder.Entity<Post>()
+                .HasOne(p => p.CreatedBy)
+                .WithMany() // No navigation property
+                .HasForeignKey(p => p.CreatedById)
+                .OnDelete(DeleteBehavior.NoAction);
+            // modelBuilder.Entity<Post>()
+            //     .HasOne(x => x.CreatedBy).OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<InvestAd>()
                 .HasIndex(e => e.Slug);
@@ -73,9 +84,7 @@ namespace DataAccess
                 .HasKey(x => new { x.PostId, x.TagId });
             modelBuilder.Entity<PostTags>()
                 .HasOne(x => x.Post)
-                .WithMany(x => x.Tags)
-                .HasForeignKey(x => x.PostId)
-                .HasForeignKey(x=>x.TagId);
+                .WithMany(x => x.Tags);
             
             Seed(modelBuilder);
         }

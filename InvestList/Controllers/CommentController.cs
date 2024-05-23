@@ -17,11 +17,16 @@ namespace InvestList.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Publish(PostCommentRequest request)
         {
+            
             request.UserId = Guid.Parse(Utils.GetUserId(User));
-            var db = mapper.Map<Comment>(request);
-            await commentRepository.PublishAsync(db);
             if (request.InvestAdId.HasValue)
-                return RedirectToAction("Details", "Invest", new { id = request.InvestAdId });
+            {
+                var db = mapper.Map<PostComment>(request);
+                await commentRepository.PublishAsync(db);
+                return RedirectToPagePermanent("/Invest/Get", new { area="Main", id = request.InvestAdId });
+            }
+            var db1 = mapper.Map<Comment>(request);
+            await commentRepository.PublishAsync(db1);
             return RedirectToAction("Details", "News", new { id = request.NewsId });
         }
     }

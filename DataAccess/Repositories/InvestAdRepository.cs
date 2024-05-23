@@ -126,6 +126,23 @@ namespace DataAccess.Repositories
             invTask.History = new List<InvestAdExtraInfo>() { invHTask };
             return invTask;
         }
+        
+        public async Task<InvestAd?> Get(string slug)
+        {
+            var invest = await dbContext.InvestAds
+                .Include(x => x.Author)
+                .Include(x => x.Tags).ThenInclude(x => x.Tag)
+                .Include(x => x.Comments).ThenInclude(x => x.User)
+                .Where(x => x.Slug == slug.ToLower()).FirstOrDefaultAsync();
+            if (invest == null) return null;
+            var lastRecord = await dbContext.InvestAdExtraInfo
+                .Include(x => x.InvestFields)
+                .Where(x => x.InvestAdId == invest.Id)
+                .OrderByDescending(x => x.CreatedAt).Take(1).Include(x => x.AcceptedCurrencies)
+                .FirstOrDefaultAsync();
+            invest.History = new List<InvestAdExtraInfo>() { lastRecord };
+            return invest;
+        }
 
         private async Task<InvestAd?> GetRaw(Guid id) => await dbContext.InvestAds
             .FirstOrDefaultAsync(x => x.Id == id);

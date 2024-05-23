@@ -1,7 +1,9 @@
-﻿using DataAccess.Models;
+﻿using Common;
+using DataAccess.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess
 {
@@ -17,7 +19,10 @@ namespace DataAccess
 
         public DbSet<News> News { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<Post> Posts { get; set; }
+        public DbSet<InvestPost> InvestPosts { get; set; }
         public DbSet<CustomHeader> CustomHeaders { get; set; }
+        public DbSet<PostComment> PostComments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -56,7 +61,38 @@ namespace DataAccess
                 .HasOne(x => x.InvestAd)
                 .WithMany(x => x.Comments)
                 .HasForeignKey(x => x.InvestAdId).OnDelete(DeleteBehavior.NoAction);
+            
+            modelBuilder.Entity<Post>()
+                .HasOne(p => p.CreatedBy)
+                .WithMany() // No navigation property
+                .HasForeignKey(p => p.CreatedById)
+                .OnDelete(DeleteBehavior.NoAction);
+            // modelBuilder.Entity<Post>()
+            //     .HasOne(x => x.CreatedBy).OnDelete(DeleteBehavior.NoAction);
 
+            modelBuilder.Entity<InvestAd>()
+                .HasIndex(e => e.Slug);
+            modelBuilder.Entity<News>()
+                .HasIndex(e => e.Slug);
+            
+            var postTypeConverter = new ValueConverter<PostType, string>(
+                v => v.ToString(),
+                v => (PostType)Enum.Parse(typeof(PostType), v));
+            var currencyConverter = new ValueConverter<Currency, string>(
+                v => v.ToString(),
+                v => (Currency)Enum.Parse(typeof(Currency), v));
+            modelBuilder.Entity<Post>()
+                .Property(p => p.PostType)
+                .HasConversion(postTypeConverter);
+            modelBuilder.Entity<MinInvestValue>()
+                .Property(p => p.Currency)
+                .HasConversion(currencyConverter);
+            modelBuilder.Entity<PostTags>()
+                .HasKey(x => new { x.PostId, x.TagId });
+            modelBuilder.Entity<PostTags>()
+                .HasOne(x => x.Post)
+                .WithMany(x => x.Tags);
+            
             Seed(modelBuilder);
         }
 

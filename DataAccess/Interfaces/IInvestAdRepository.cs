@@ -12,5 +12,6 @@ namespace DataAccess.Interfaces
         Task<IEnumerable<InvestAdExtraInfo>> Search(string searchTerm, int currentPage, int itemsPerPage);
         Task<bool> IsOwnerOfPost(string userId, string invId);
         Task<IEnumerable<InvestAd>> GetSimilarInvest(List<Guid> tagIds);
+        Task<InvestAd?> Get(string slug);
     }
 }

@@ -1,10 +1,38 @@
-﻿using Common;
-using static System.Net.Mime.MediaTypeNames;
+﻿using System.Security.Claims;
+using Common;
+using DataAccess.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace InvestList
 {
     public static class InvestmentHelper
     {
+        public static Dictionary<string, string> GetPaginationData(int pageIndex = 1, IEnumerable<Guid> tagIds = null)
+        {
+            var param = new Dictionary
+                <string, string>();
+            if (pageIndex > 1)
+                param.Add("pageIndex", $"{pageIndex}");
+            if ((tagIds != null && tagIds.Any()))
+                param.Add("tagIds", string.Join(",", tagIds));
+            return param;
+        }
+
+        public static async Task<bool> CanEditInvestPost(this UserManager<User> userManager, User user, InvestPost db)
+        {
+            if (user == null) return false;
+            return await userManager.IsInRoleAsync(user, Const.AdminRole) || db.Post.CreatedById == user.Id;
+        }
+
+        public static async Task<bool> CanEditInvestPost(this UserManager<User> userManager,
+            ClaimsPrincipal? user,
+            InvestPost db)
+        {
+            if (user == null) return false;
+            var userDb = await userManager.GetUserAsync(user);
+            return await userManager.CanEditInvestPost(userDb, db);
+        }
+
         public static string FormatInvestmentDuration(int years, int months)
         {
             var result = "";
@@ -31,8 +59,8 @@ namespace InvestList
             else if (currency == Currency.USD)
             {
                 return "$";
-
             }
+
             return null;
             // Add more conditions for other currencies if needed
         }

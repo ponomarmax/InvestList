@@ -1,0 +1,28 @@
+@model (string pageFolder, IEnumerable<InvestList.Models.V2.PostView> similarNews, IEnumerable<InvestList.Models.TagView> tags)
+
+@if (Model.similarNews != null && Model.similarNews.Any())
+{
+    foreach (var similarPost in Model.similarNews)
+    {
+        <div class="row">
+            <a class="card-link" asp-area="Main" asp-page=@($"/{Model.pageFolder}/Get") asp-route-id="@similarPost.Slug">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">@similarPost.Title</div>
+                    </div>
+                    <div class="card-body">
+                        @if (similarPost.Tags != null && similarPost.Tags.Any())
+                        {
+                            <div class="tags mb-3">
+                                @foreach (var field in similarPost.Tags)
+                                {
+                                    <span class="badge bg-primary"># @field.Name</span>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            </a>
+        </div>
+    }
+}

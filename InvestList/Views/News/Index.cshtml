@@ -50,4 +50,7 @@
     }
 
 </div>
-@await Html.PartialAsync("_NewsPagination", (Model.PaginationInfo, Model.FilterModel))
+ @if (Model.Entities != null && Model.Entities.Any())
+ {
+     @await Html.PartialAsync("_NewsPagination", (Model.PaginationInfo, Model.FilterModel))
+ }

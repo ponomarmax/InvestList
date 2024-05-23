@@ -74,7 +74,9 @@
                     <div class="card custom-light-green">
                         <div class="card-body">
                             <h4 class="card-title mb-3">
-                                <a class="card-link" href="@Url.Action("Details", new { id = ad.Id })">@ad.Title</a>
+                            <a class="card-link" asp-area="Main" asp-page="/Invest/Get" asp-route-id="@ad.Id">@ad.Title</a>
+
+                                @* <a class="card-link" href="@Url.Action("", new { id = ad.Id })">@ad.Title</a> *@
                             </h4>
                             @if (ad.Tags != null && ad.Tags.Any()) 
                             { 

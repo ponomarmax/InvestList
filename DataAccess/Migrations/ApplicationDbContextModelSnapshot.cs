@@ -72,6 +72,26 @@ namespace DataAccess.Migrations
                     b.ToTable("CustomHeaders");
                 });
 
+            modelBuilder.Entity("DataAccess.Models.Image", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ImageBase64")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("Image");
+                });
+
             modelBuilder.Entity("DataAccess.Models.InvestAd", b =>
                 {
                     b.Property<Guid>("Id")
@@ -88,12 +108,18 @@ namespace DataAccess.Migrations
                     b.Property<bool>("Published")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTimeOffset>("UpdateAt")
                         .HasColumnType("datetimeoffset");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AuthorId");
+
+                    b.HasIndex("Slug");
 
                     b.ToTable("InvestAds");
                 });
@@ -251,6 +277,34 @@ namespace DataAccess.Migrations
                         });
                 });
 
+            modelBuilder.Entity("DataAccess.Models.InvestPost", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("AnnualInvestmentReturn")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("InvestDurationMonths")
+                        .HasColumnType("int");
+
+                    b.Property<int>("InvestDurationYears")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("TotalInvestment")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("InvestPosts");
+                });
+
             modelBuilder.Entity("DataAccess.Models.InvestTags", b =>
                 {
                     b.Property<Guid>("InvestId")
@@ -289,11 +343,39 @@ namespace DataAccess.Migrations
                     b.Property<Guid>("NewsId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("PostId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NewsId");
 
+                    b.HasIndex("PostId");
+
                     b.ToTable("Links");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.MinInvestValue", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("InvestPostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("MinValue")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InvestPostId");
+
+                    b.ToTable("MinInvestValue");
                 });
 
             modelBuilder.Entity("DataAccess.Models.MinimalInvestEntrance", b =>
@@ -341,6 +423,10 @@ namespace DataAccess.Migrations
                     b.Property<string>("ImageBase64")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -352,6 +438,8 @@ namespace DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AuthorId");
+
+                    b.HasIndex("Slug");
 
                     b.ToTable("News");
                 });
@@ -369,6 +457,97 @@ namespace DataAccess.Migrations
                     b.HasIndex("TagId");
 
                     b.ToTable("NewsToTags");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.Post", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedById")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DescriptionSeo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PostType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TitleSeo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.ToTable("Posts");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.PostComment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PostComments");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.PostTags", b =>
+                {
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TagId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("PostId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("PostTags");
                 });
 
             modelBuilder.Entity("DataAccess.Models.Tag", b =>
@@ -657,6 +836,17 @@ namespace DataAccess.Migrations
                     b.Navigation("Tag");
                 });
 
+            modelBuilder.Entity("DataAccess.Models.Image", b =>
+                {
+                    b.HasOne("DataAccess.Models.Post", "Post")
+                        .WithMany("Images")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+                });
+
             modelBuilder.Entity("DataAccess.Models.InvestAd", b =>
                 {
                     b.HasOne("DataAccess.Models.User", "Author")
@@ -698,6 +888,17 @@ namespace DataAccess.Migrations
                     b.Navigation("InvestField");
                 });
 
+            modelBuilder.Entity("DataAccess.Models.InvestPost", b =>
+                {
+                    b.HasOne("DataAccess.Models.Post", "Post")
+                        .WithMany()
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+                });
+
             modelBuilder.Entity("DataAccess.Models.InvestTags", b =>
                 {
                     b.HasOne("DataAccess.Models.InvestAd", "Invest")
@@ -725,7 +926,18 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("DataAccess.Models.Post", null)
+                        .WithMany("Links")
+                        .HasForeignKey("PostId");
+
                     b.Navigation("News");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.MinInvestValue", b =>
+                {
+                    b.HasOne("DataAccess.Models.InvestPost", null)
+                        .WithMany("MinInvestValues")
+                        .HasForeignKey("InvestPostId");
                 });
 
             modelBuilder.Entity("DataAccess.Models.MinimalInvestEntrance", b =>
@@ -761,6 +973,55 @@ namespace DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("News");
+
+                    b.Navigation("Tag");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.Post", b =>
+                {
+                    b.HasOne("DataAccess.Models.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("CreatedBy");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.PostComment", b =>
+                {
+                    b.HasOne("DataAccess.Models.Post", "Post")
+                        .WithMany("Comments")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DataAccess.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.PostTags", b =>
+                {
+                    b.HasOne("DataAccess.Models.Post", "Post")
+                        .WithMany("Tags")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DataAccess.Models.Tag", "Tag")
+                        .WithMany()
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
 
                     b.Navigation("Tag");
                 });
@@ -837,9 +1098,25 @@ namespace DataAccess.Migrations
                     b.Navigation("InvestAdExtraInfos");
                 });
 
+            modelBuilder.Entity("DataAccess.Models.InvestPost", b =>
+                {
+                    b.Navigation("MinInvestValues");
+                });
+
             modelBuilder.Entity("DataAccess.Models.News", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("Links");
+
+                    b.Navigation("Tags");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.Post", b =>
+                {
+                    b.Navigation("Comments");
+
+                    b.Navigation("Images");
 
                     b.Navigation("Links");
 

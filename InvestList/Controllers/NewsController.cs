@@ -35,6 +35,10 @@ namespace InvestList.Controllers
                 tagIds);
             if (!resultDb.Any())
             {
+                if (tagIds != null && tagIds.Any())
+                {
+                    return View(new ListNewsViewModel() { Entities = null, FilterModel = requestModel });
+                }
                 return NotFound();
             }
 

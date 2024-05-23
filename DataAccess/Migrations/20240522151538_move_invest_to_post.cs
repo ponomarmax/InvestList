@@ -41,7 +41,7 @@ namespace DataAccess.Migrations
                 foreach (var investAd in context.InvestAds.Include(x=>x.Tags).Include(x=>x.Comments)
                              .AsNoTracking())
                 {
-                    var history = context.InvestAdExtraInfo.Where(x => x.InvestAdId == investAd.Id)
+                    var history = context.InvestAdExtraInfo.Include(x=>x.AcceptedCurrencies).Where(x => x.InvestAdId == investAd.Id)
                         .OrderBy(x => x.CreatedAt).Last();
                     var slugCandidate = SlugGenerator.Get(history.Title);
 
@@ -76,7 +76,7 @@ namespace DataAccess.Migrations
 
                     var investPost = new InvestPost()
                     {
-                        AcceptedCurrencies = history.AcceptedCurrencies,
+                        MinInvestValues = history.AcceptedCurrencies.Select(x=> new MinInvestValue(){Currency = x.Currency, MinValue = x.MinValue}).ToList(),
                         AnnualInvestmentReturn = history.AnnualInvestmentReturn,
                         InvestDurationMonths = history.InvestDurationMonths,
                         InvestDurationYears = history.InvestDurationYears,

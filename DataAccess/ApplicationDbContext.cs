@@ -1,4 +1,5 @@
-﻿using DataAccess.Models;
+﻿using Common;
+using DataAccess.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -77,9 +78,15 @@ namespace DataAccess
             var postTypeConverter = new ValueConverter<PostType, string>(
                 v => v.ToString(),
                 v => (PostType)Enum.Parse(typeof(PostType), v));
+            var currencyConverter = new ValueConverter<Currency, string>(
+                v => v.ToString(),
+                v => (Currency)Enum.Parse(typeof(Currency), v));
             modelBuilder.Entity<Post>()
                 .Property(p => p.PostType)
                 .HasConversion(postTypeConverter);
+            modelBuilder.Entity<MinInvestValue>()
+                .Property(p => p.Currency)
+                .HasConversion(currencyConverter);
             modelBuilder.Entity<PostTags>()
                 .HasKey(x => new { x.PostId, x.TagId });
             modelBuilder.Entity<PostTags>()

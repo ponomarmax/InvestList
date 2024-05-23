@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240521091538_move_invest_to_post")]
-    partial class move_invest_to_post
+    [Migration("20240522145046_add-min-values-table")]
+    partial class addminvaluestable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -358,6 +358,29 @@ namespace DataAccess.Migrations
                     b.ToTable("Links");
                 });
 
+            modelBuilder.Entity("DataAccess.Models.MinInvestValue", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("InvestPostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("MinValue")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InvestPostId");
+
+                    b.ToTable("MinInvestValue");
+                });
+
             modelBuilder.Entity("DataAccess.Models.MinimalInvestEntrance", b =>
                 {
                     b.Property<Guid>("Id")
@@ -370,17 +393,12 @@ namespace DataAccess.Migrations
                     b.Property<Guid?>("InvestAdExtraInfoId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("InvestPostId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<decimal>("MinValue")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("InvestAdExtraInfoId");
-
-                    b.HasIndex("InvestPostId");
 
                     b.ToTable("MinimalInvestEntrance");
                 });
@@ -918,15 +936,18 @@ namespace DataAccess.Migrations
                     b.Navigation("News");
                 });
 
+            modelBuilder.Entity("DataAccess.Models.MinInvestValue", b =>
+                {
+                    b.HasOne("DataAccess.Models.InvestPost", null)
+                        .WithMany("MinInvestValues")
+                        .HasForeignKey("InvestPostId");
+                });
+
             modelBuilder.Entity("DataAccess.Models.MinimalInvestEntrance", b =>
                 {
                     b.HasOne("DataAccess.Models.InvestAdExtraInfo", null)
                         .WithMany("AcceptedCurrencies")
                         .HasForeignKey("InvestAdExtraInfoId");
-
-                    b.HasOne("DataAccess.Models.InvestPost", null)
-                        .WithMany("AcceptedCurrencies")
-                        .HasForeignKey("InvestPostId");
                 });
 
             modelBuilder.Entity("DataAccess.Models.News", b =>
@@ -1082,7 +1103,7 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.Models.InvestPost", b =>
                 {
-                    b.Navigation("AcceptedCurrencies");
+                    b.Navigation("MinInvestValues");
                 });
 
             modelBuilder.Entity("DataAccess.Models.News", b =>

@@ -1,0 +1,92 @@
+using AutoMapper;
+using Common;
+using DataAccess.Models;
+using InvestList.Models;
+using InvestList.Models.Comment;
+using InvestList.Models.V2;
+
+namespace InvestList.AutomapperProfiles.V2
+{
+    public class InvestProfile: Profile
+    {
+        public InvestProfile()
+        {
+            // DB->GET
+            CreateMap<InvestPost, InvestView>()
+                .ForMember(x => x.Id, s => s.MapFrom(x => x.Post.Id))
+                .ForMember(x => x.CreatedById, s => s.MapFrom(x => x.Post.CreatedById))
+                .ForMember(x => x.ImageBase64,
+                    s => s.MapFrom(x =>
+                        x.Post.Images.FirstOrDefault() == null ? null : x.Post.Images.FirstOrDefault().ImageBase64))
+                .ForMember(x => x.CreatedAt, s => s.MapFrom(x => x.Post.CreatedAt))
+                .ForMember(x => x.UpdateAt, s => s.MapFrom(x => x.Post.UpdatedAt))
+                .ForMember(x => x.Slug, s => s.MapFrom(x => x.Post.Slug))
+                .ForMember(x => x.Title, s => s.MapFrom(x => x.Post.Title))
+                .ForMember(x => x.Description, s => s.MapFrom(x => x.Post.Description))
+                .ForMember(x => x.Tags, s => s.MapFrom(x => x.Post.Tags))
+                .ForMember(x => x.Comments, s => s.MapFrom(x => x.Post.Comments));
+
+            CreateMap<PostTags, TagView>()
+                .ForMember(x => x.Id, s => s.MapFrom(x => x.TagId))
+                .ForMember(x => x.Name, s => s.MapFrom(x => x.Tag.Name));
+
+            CreateMap<PostComment, CommentView>()
+                .ForMember(x => x.AuthorId, s => s.MapFrom(x => x.UserId));
+
+            CreateMap<PostCommentRequest, PostComment>()
+                .ForMember(x => x.PostId, s => s.MapFrom(x => x.InvestAdId))
+                .ForMember(x => x.Text, s => s.MapFrom(x => x.Text))
+                .ForMember(x => x.UserId, s => s.MapFrom(x => x.UserId));
+            
+            //DB->PUT
+            CreateMap<MinInvestValue, CurrencyView>();
+            CreateMap<CurrencyView, MinInvestValue>();
+            CreateMap<InvestPost, PutInvestModel>()
+                .ForMember(x => x.ImageBase64,
+                    s => s.MapFrom(x =>
+                        x.Post.Images.FirstOrDefault() == null ? null : x.Post.Images.FirstOrDefault().ImageBase64))
+                .ForMember(x => x.Title, s => s.MapFrom(x => x.Post.Title))
+                .ForMember(x => x.IsActive, s => s.MapFrom(x => x.Post.IsActive))
+                .ForMember(x => x.MinInvestValues, s => s.MapFrom(x => x.MinInvestValues))
+                .ForMember(x => x.Description, s => s.MapFrom(x => x.Post.Description))
+                .ForMember(x => x.TagIds, s => s.MapFrom(x => x.Post.Tags));
+
+            //PUT -> DB
+            CreateMap<PutInvestModel, InvestPost>();
+            CreateMap<PutInvestModel, Post>()
+                .ForMember(x => x.Tags,
+                    s => s.MapFrom(x =>
+                        x.TagIds == null ? null : x.TagIds.Select(t => new PostTags() { TagId = Guid.Parse(t) })))
+                .ForMember(x => x.Images,
+                    s => s.MapFrom(x =>
+                        x.ImageBase64 == null ? null : new List<Image> { new Image { ImageBase64 = x.ImageBase64 } }))
+                ;
+
+
+            // DB-> DB
+
+            CreateMap<Post, Post>()
+                .ForMember(x => x.Id, s => s.Ignore())
+                .ForMember(x => x.Id, s => s.Ignore())
+                .ForMember(x => x.CreatedBy, s => s.Ignore())
+                .ForMember(x => x.CreatedById, s => s.Ignore())
+                .ForMember(x => x.CreatedAt, s => s.Ignore())
+                .ForMember(x => x.UpdatedAt, s => s.MapFrom(x => DateTime.UtcNow))
+                .ForMember(x => x.Comments, s => s.Ignore())
+                .ForMember(x => x.Slug, s => s.Ignore());
+
+            CreateMap<InvestPost, InvestPost>()
+                .ForMember(x => x.Id, s => s.Ignore())
+                .ForMember(x => x.PostId, s => s.Ignore());
+
+
+            CreateMap<NewsToTags, TagView>()
+                .ForMember(x => x.Id, s => s.MapFrom(x => x.TagId))
+                .ForMember(x => x.Name, s => s.MapFrom(x => x.Tag.Name));
+            CreateMap<Post, PostView>();
+            CreateMap<News, PostView>()
+                .ForMember(x => x.CreatedAt, s => s.MapFrom(x => x.CreatedAt.DateTime))
+                ;
+        }
+    }
+}

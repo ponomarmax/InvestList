@@ -60,7 +60,7 @@ li {
     object-fit: cover;
 }
 
-.annualInvestment, .duration, .currency, .text-muted {
+.annualInvestment, .duration, .currency, .creation-data {
     display: inline-block;
     padding: 6px 12px;
     margin-right: 5px;
@@ -73,19 +73,23 @@ li {
 
 .annualInvestment {
     margin-top: 5px;
-    background-color: #48D7FD;
+    color: #183F80;
+    background-color: #D1E4FD;
 }
 
 .duration {
-    background-color: #1A8802;
+    color: #692326;
+    background-color: #F3D8DA;
 }
 
 .currency {
-    background-color: #0d6efd;
+    color: #806520;
+    background-color: #FDF3D1;
 }
 
-.text-muted {
-    background-color: #6c757d;
+.creation-data {
+    color: #25535E;
+    background-color: #D6EBF0;
 }
 
 .tag_index {

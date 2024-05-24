@@ -65,6 +65,16 @@ namespace DataAccess.Repositories
                 .Include(x=>x.Comments)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
+        
+        public async Task<News?> Get(string slug)
+        {
+            return await _dbContext.News.Include(x => x.Author)
+                .Include(x => x.Tags)
+                .ThenInclude(x => x.Tag)
+                .Include(x => x.Links)
+                .Include(x=>x.Comments)
+                .FirstOrDefaultAsync(x => x.Slug == slug.ToLower());
+        }
 
         public async Task<IEnumerable<News>> GetPage(int page, int itemsPerPage, List<Guid>? tagIds)
         {

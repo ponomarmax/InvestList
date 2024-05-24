@@ -17,16 +17,25 @@
                             <h4 class="card-title mb-3">
                                 <a class="card-link" href="@Url.Action("Details", new { id = ad.Id })">@ad.Title</a>
                             </h4>
+                            @if (ad.Tags != null && ad.Tags.Any()) 
+                            { 
+                                <div class="tags-container"> 
+                                @foreach (var field in ad.Tags) 
+                                { 
+                                    <span class="tag">@field.Name</span> 
+                                } 
+                                </div> 
+                            }
+                            <hr>
                             <div class="row">
                                 <div class="col-auto">
                                     <img src="data:image;base64,@ad.ImageBase64" alt="Placeholder" class="img-fluid rounded" style="width: 100px; height: 100px;">
-
-                                    <div class="text-muted">
-                                        <i class="bi bi-clock-history"></i> @ad.CreatedAt.ToString("dd.MM.yyyy")
-                                    </div>
                                 </div>
                                 <div class="col">
                                     <p class="card-text text-black mb-0">@ad.Description?.Substring(0, Math.Min(ad.Description.Length, 300))</p>
+                                    <div class="creation-data">
+                                        <i class="bi bi-clock-history"></i> @ad.CreatedAt.ToString("dd.MM.yyyy")
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -41,4 +50,7 @@
     }
 
 </div>
-@await Html.PartialAsync("_NewsPagination", (Model.PaginationInfo, Model.FilterModel))
+ @if (Model.Entities != null && Model.Entities.Any())
+ {
+     @await Html.PartialAsync("_NewsPagination", (Model.PaginationInfo, Model.FilterModel))
+ }

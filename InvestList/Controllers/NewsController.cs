@@ -35,6 +35,10 @@ namespace InvestList.Controllers
                 tagIds);
             if (!resultDb.Any())
             {
+                if (tagIds != null && tagIds.Any())
+                {
+                    return View(new ListNewsViewModel() { Entities = null, FilterModel = requestModel });
+                }
                 return NotFound();
             }
 
@@ -66,9 +70,10 @@ namespace InvestList.Controllers
         }
 
         [AllowAnonymous]
-        public async Task<ActionResult> Details(Guid id)
+        [Route("news/{slug}")]
+        public async Task<ActionResult> Get(string slug)
         {
-            var db = await repository.Get(id);
+            var db = await repository.Get(slug);
             if (db == null)
                 return NotFound();
             var tagIds = db.Tags.Select(x=>x.TagId).ToList();
@@ -79,7 +84,16 @@ namespace InvestList.Controllers
             result.SimilarNews = similarNewsViewModels;
             result.SimilarInvests = similarAds;
             SetTitleAndDescription(result);
-            return View(result);
+            return View("Details", result);
+        }
+        
+        [AllowAnonymous]
+        public async Task<ActionResult> Details(Guid id)
+        {
+            var db = await repository.Get(id);
+            if (db == null)
+                return NotFound();
+            return RedirectToActionPermanent("Get", new { slug = db.Slug });
         }
 
         [EmailConfirmedAuthorize]

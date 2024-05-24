@@ -1,6 +1,6 @@
 @model (IEnumerable<InvestList.Models.Invest.GetAllAdsView> similarInvests, IEnumerable<TagView> tags)
 
-@if (Model.similarInvests.Any())
+@if (Model.similarInvests != null && Model.similarInvests.Any())
 {
     <p>Схожі оголошення</p>
     foreach (var similarInvest in Model.similarInvests)

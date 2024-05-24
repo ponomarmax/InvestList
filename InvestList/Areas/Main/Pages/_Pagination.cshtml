@@ -1,0 +1,40 @@
+﻿@using InvestList
+@model (InvestList.Models.PaginationInfo PaginationInfo, IEnumerable<Guid> tagIds)
+@if (Model.PaginationInfo.TotalPages > 1)
+{
+    <div class="container mt-3">
+        <nav>
+            <ul class="pagination justify-content-center">
+                <!-- Previous Button -->
+                @if (Model.PaginationInfo.CurrentPage > 1)
+                {
+                    <li class="page-item @(Model.PaginationInfo.CurrentPage == 1 ? "disabled" : "")">
+                        <a class="page-link"
+                           asp-area="Main"
+                           asp-page="/Invest/List"
+                           asp-all-route-data="@(InvestmentHelper.GetPaginationData(Model.PaginationInfo.CurrentPage - 1, Model.tagIds))">
+                            Попередня
+                        </a>
+                    </li>
+                }
+                <!-- Current Page -->
+                <li class="page-item">
+                    <span class="page-link">@Model.PaginationInfo.CurrentPage / @Model.PaginationInfo.TotalPages</span>
+                </li>
+
+                <!-- Next Button -->
+                @if (Model.PaginationInfo.CurrentPage < Model.PaginationInfo.TotalPages)
+                {
+                    <li class="page-item @(Model.PaginationInfo.CurrentPage == Model.PaginationInfo.TotalPages ? "disabled" : "")">
+                        <a class="page-link"
+                           asp-area="Main"
+                           asp-page="/Invest/List"
+                           asp-all-route-data="@(InvestmentHelper.GetPaginationData(Model.PaginationInfo.CurrentPage + 1, Model.tagIds))">
+                            Наступна
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+}

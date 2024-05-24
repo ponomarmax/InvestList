@@ -41,6 +41,10 @@ li {
     list-style-type: none;
 }
 
+.col-md-4 {
+    font-size: 0.8em;
+}
+
 .share {
     text-align: end;
     margin: 5px;
@@ -54,6 +58,45 @@ li {
 .card-img-top {
     max-height: 300px;
     object-fit: cover;
+}
+
+.annualInvestment, .duration, .currency, .text-muted {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-right: 5px;
+    margin-bottom: 4px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 5px;
+    text-transform: uppercase;
+}
+
+.annualInvestment {
+    margin-top: 5px;
+    background-color: #48D7FD;
+}
+
+.duration {
+    background-color: #1A8802;
+}
+
+.currency {
+    background-color: #0d6efd;
+}
+
+.text-muted {
+    background-color: #6c757d;
+}
+
+.tag_index {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-right: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 5px;
+    text-transform: uppercase;
+    background-color: #D3D3D3;
 }
 
 .tag {
@@ -311,6 +354,7 @@ li {
 
 .card-link {
     text-decoration: none;
+    color: #333333;
 }
 
 .bigger-checkbox {

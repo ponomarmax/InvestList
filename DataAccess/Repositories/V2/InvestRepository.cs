@@ -12,42 +12,40 @@ namespace DataAccess.Repositories.V2
         Task Create(InvestPost invest);
         Task<bool> Exists(string slug);
 
-        Task<(int count, IEnumerable<InvestPost> list)> Filter(
-            int page,
+        Task<(int count, IEnumerable<InvestPost> list)> Filter(int page,
             int offset,
             IEnumerable<Guid>? tagIds);
     }
 
     public class InvestRepository(ApplicationDbContext dbContext, IMapper mapper): IInvestRepository
     {
-        public async Task<(int count, IEnumerable<InvestPost> list)> Filter(
-            int page,
+        public async Task<(int count, IEnumerable<InvestPost> list)> Filter(int page,
             int offset,
             IEnumerable<Guid>? tagIds)
         {
             var query = dbContext.InvestPosts
-                .Where(x => x.Post.IsActive && x.Post.PostType==PostType.InvestAd); 
+                .Where(x => x.Post.IsActive && x.Post.PostType == PostType.InvestAd).AsNoTracking();
             if (tagIds?.Count() > 0)
                 query = query.Where(x => x.Post.Tags.Any(t => tagIds.Contains(t.TagId)));
-        
+
             var count = await query.CountAsync();
-        
+
             if (count > 0)
             {
                 return (count, await query
                     .OrderByDescending(x => x.Post.CreatedAt)
                     .Skip((page - 1) * offset)
                     .Take(offset)
-                    .Include(x=>x.Post.Images)
+                    .Include(x => x.Post.Images)
                     .Include(x => x.Post.CreatedBy)
                     .Include(x => x.Post.Tags).ThenInclude(x => x.Tag)
                     .Include(x => x.MinInvestValues)
                     .ToListAsync());
             }
-        
+
             return (0, Array.Empty<InvestPost>());
         }
-        
+
         public async Task<InvestPost?> Get(string slug)
         {
             var post = await dbContext.Posts
@@ -55,10 +53,10 @@ namespace DataAccess.Repositories.V2
                 .Include(x => x.CreatedBy)
                 .Include(x => x.Tags).ThenInclude(x => x.Tag)
                 .Include(x => x.Comments).ThenInclude(x => x.User)
-                .Where(x => x.Slug == slug.ToLower()).FirstOrDefaultAsync();
+                .Where(x => x.Slug == slug.ToLower() && x.PostType == PostType.InvestAd).AsNoTracking().FirstOrDefaultAsync();
             if (post == null) return null;
             var relatedInfo = await dbContext.InvestPosts
-                .Include(x => x.MinInvestValues)
+                .Include(x => x.MinInvestValues).AsNoTracking()
                 .FirstOrDefaultAsync(x => x.PostId == post.Id);
             relatedInfo.Post = post;
             return relatedInfo;
@@ -76,11 +74,11 @@ namespace DataAccess.Repositories.V2
                 .Include(x => x.Images)
                 .Include(x => x.CreatedBy)
                 .Include(x => x.Tags).ThenInclude(x => x.Tag)
-                .Include(x => x.Comments).ThenInclude(x => x.User)
-                .FirstOrDefaultAsync(x => x.Id == id);
+                .Include(x => x.Comments).ThenInclude(x => x.User).AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == id && x.PostType == PostType.InvestAd);
             if (post == null) return null;
             var relatedInfo = await dbContext.InvestPosts
-                .Include(x => x.MinInvestValues)
+                .Include(x => x.MinInvestValues).AsNoTracking()
                 .FirstOrDefaultAsync(x => x.PostId == post.Id);
             relatedInfo.Post = post;
             return relatedInfo;

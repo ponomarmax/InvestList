@@ -33,6 +33,7 @@ namespace DataAccess.Repositories.V2
             if (count > 0)
             {
                 return (count, await query
+                    .AsSplitQuery()
                     .OrderByDescending(x => x.CreatedAt)
                     .Skip((page - 1) * offset)
                     .Take(offset)
@@ -53,12 +54,13 @@ namespace DataAccess.Repositories.V2
                 .Include(x => x.Images)
                 .Include(x => x.CreatedBy)
                 .Include(x => x.Tags).ThenInclude(x => x.Tag)
-                .Include(x => x.Comments).ThenInclude(x => x.User);
+                .Include(x => x.Comments).ThenInclude(x => x.User)
+                .Include(x=>x.Links);
 
             if (Guid.TryParse(id, out var idGuid))
-                return await post.Where(x => x.Id == idGuid).FirstOrDefaultAsync();
+                return await post.FirstOrDefaultAsync(x => x.Id == idGuid && x.PostType == PostType.News);
 
-            return await post.Where(x => x.Slug == id).FirstOrDefaultAsync();
+            return await post.FirstOrDefaultAsync(x => x.Slug == id && x.PostType == PostType.News);
         }
 
 

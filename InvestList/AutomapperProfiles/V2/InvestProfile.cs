@@ -3,6 +3,7 @@ using Common;
 using DataAccess.Models;
 using InvestList.Models;
 using InvestList.Models.Comment;
+using InvestList.Models.News;
 using InvestList.Models.V2;
 
 namespace InvestList.AutomapperProfiles.V2
@@ -85,7 +86,7 @@ namespace InvestList.AutomapperProfiles.V2
 
             CreateMap<Post, Post>()
                 .ForMember(x => x.Id, s => s.Ignore())
-                .ForMember(x => x.Id, s => s.Ignore())
+                .ForMember(x => x.PostType, s => s.Ignore())
                 .ForMember(x => x.CreatedBy, s => s.Ignore())
                 .ForMember(x => x.CreatedById, s => s.Ignore())
                 .ForMember(x => x.CreatedAt, s => s.Ignore())
@@ -107,6 +108,10 @@ namespace InvestList.AutomapperProfiles.V2
                         x.Images.FirstOrDefault() == null ? null : x.Images.FirstOrDefault().ImageBase64));
             CreateMap<News, PostView>()
                 .ForMember(x => x.CreatedAt, s => s.MapFrom(x => x.CreatedAt.DateTime));
+            
+            CreateMap<PostLinkView, PostLink>();
+            CreateMap<PostLink, LinkView>();
+            CreateMap<PostLink, PostLinkView>();
         }
     }
 }

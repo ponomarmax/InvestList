@@ -9,7 +9,6 @@ namespace DataAccess.Repositories.V2
         Task<InvestPost?> Get(string slug);
         Task<InvestPost?> Get(Guid id);
         Task Put(Guid id, InvestPost invest);
-        Task<IEnumerable<Post>> GetSimilarInvests(Guid id, List<Guid> tagIds);
         Task Create(InvestPost invest);
         Task<bool> Exists(string slug);
 
@@ -27,7 +26,7 @@ namespace DataAccess.Repositories.V2
             IEnumerable<Guid>? tagIds)
         {
             var query = dbContext.InvestPosts
-                .Where(x => x.Post.IsActive); 
+                .Where(x => x.Post.IsActive && x.Post.PostType==PostType.InvestAd); 
             if (tagIds?.Count() > 0)
                 query = query.Where(x => x.Post.Tags.Any(t => tagIds.Contains(t.TagId)));
         
@@ -105,17 +104,6 @@ namespace DataAccess.Repositories.V2
         {
             dbContext.InvestPosts.Add(invest);
             await dbContext.SaveChangesAsync();
-        }
-
-        public async Task<IEnumerable<Post>> GetSimilarInvests(Guid id, List<Guid> tagIds)
-        {
-            return await dbContext.Posts
-                .Where(x => x.Id != id && x.Tags.Any(
-                    t => tagIds.Any(pt => pt == t.TagId))
-                ).OrderByDescending(x => x.CreatedAt)
-                .Take(100)
-                .Include(x => x.Tags).ThenInclude(x => x.Tag)
-                .ToListAsync();
         }
     }
 }

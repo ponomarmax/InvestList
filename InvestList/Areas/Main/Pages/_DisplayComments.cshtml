@@ -1,8 +1,7 @@
-@using Microsoft.AspNetCore.Identity
 @using InvestList.Models.Comment
 @using System.Security.Claims
 @using DataAccess.Models
-@model (Guid? investId, Guid? newsId, IEnumerable<CommentView> comments)
+@model (Guid postId, PostType postType, IEnumerable<CommentView> comments)
 @inject SignInManager<User> SignInManager
 
 
@@ -21,7 +20,7 @@
 }
 else
 {
-    await Html.RenderPartialAsync("_CommentForm", new PostCommentRequest { InvestAdId = Model.investId, NewsId = Model.newsId, UserId = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier)) });
+    await Html.RenderPartialAsync("_CommentForm", new PostCommentRequest { PostId = Model.postId, PostType = Model.postType, UserId = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier)) });
 }
 @if (Model.comments?.Count() > 0)
 {

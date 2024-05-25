@@ -14,6 +14,7 @@ namespace InvestList.AutomapperProfiles.V2
             // DB->GET
             CreateMap<InvestPost, InvestView>()
                 .ForMember(x => x.Id, s => s.MapFrom(x => x.Post.Id))
+                .ForMember(x => x.PostType, s => s.MapFrom(x => x.Post.PostType))
                 .ForMember(x => x.CreatedById, s => s.MapFrom(x => x.Post.CreatedById))
                 .ForMember(x => x.ImageBase64,
                     s => s.MapFrom(x =>
@@ -34,10 +35,10 @@ namespace InvestList.AutomapperProfiles.V2
                 .ForMember(x => x.AuthorId, s => s.MapFrom(x => x.UserId));
 
             CreateMap<PostCommentRequest, PostComment>()
-                .ForMember(x => x.PostId, s => s.MapFrom(x => x.InvestAdId))
+                .ForMember(x => x.PostId, s => s.MapFrom(x => x.PostId))
                 .ForMember(x => x.Text, s => s.MapFrom(x => x.Text))
                 .ForMember(x => x.UserId, s => s.MapFrom(x => x.UserId));
-            
+
             //DB->PUT
             CreateMap<MinInvestValue, CurrencyView>();
             CreateMap<CurrencyView, MinInvestValue>();
@@ -54,6 +55,23 @@ namespace InvestList.AutomapperProfiles.V2
             //PUT -> DB
             CreateMap<PutInvestModel, InvestPost>();
             CreateMap<PutInvestModel, Post>()
+                .ForMember(x => x.Tags,
+                    s => s.MapFrom(x =>
+                        x.TagIds == null ? null : x.TagIds.Select(t => new PostTags() { TagId = Guid.Parse(t) })))
+                .ForMember(x => x.Images,
+                    s => s.MapFrom(x =>
+                        x.ImageBase64 == null ? null : new List<Image> { new Image { ImageBase64 = x.ImageBase64 } }))
+                ;
+            CreateMap<Post, PutPostModel>()
+                .ForMember(x => x.ImageBase64,
+                    s => s.MapFrom(x =>
+                        x.Images.FirstOrDefault() == null ? null : x.Images.FirstOrDefault().ImageBase64))
+                .ForMember(x => x.Title, s => s.MapFrom(x => x.Title))
+                .ForMember(x => x.IsActive, s => s.MapFrom(x => x.IsActive))
+                .ForMember(x => x.Description, s => s.MapFrom(x => x.Description))
+                .ForMember(x => x.TagIds, s => s.MapFrom(x => x.Tags));
+
+            CreateMap<PutPostModel, Post>()
                 .ForMember(x => x.Tags,
                     s => s.MapFrom(x =>
                         x.TagIds == null ? null : x.TagIds.Select(t => new PostTags() { TagId = Guid.Parse(t) })))
@@ -83,10 +101,12 @@ namespace InvestList.AutomapperProfiles.V2
             CreateMap<NewsToTags, TagView>()
                 .ForMember(x => x.Id, s => s.MapFrom(x => x.TagId))
                 .ForMember(x => x.Name, s => s.MapFrom(x => x.Tag.Name));
-            CreateMap<Post, PostView>();
+            CreateMap<Post, PostView>()
+                .ForMember(x => x.ImageBase64,
+                    s => s.MapFrom(x =>
+                        x.Images.FirstOrDefault() == null ? null : x.Images.FirstOrDefault().ImageBase64));
             CreateMap<News, PostView>()
-                .ForMember(x => x.CreatedAt, s => s.MapFrom(x => x.CreatedAt.DateTime))
-                ;
+                .ForMember(x => x.CreatedAt, s => s.MapFrom(x => x.CreatedAt.DateTime));
         }
     }
 }

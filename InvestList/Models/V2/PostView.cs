@@ -1,4 +1,5 @@
 using DataAccess.Models;
+using InvestList.Models.Comment;
 
 namespace InvestList.Models.V2
 {
@@ -20,9 +21,15 @@ namespace InvestList.Models.V2
         public string? Description { get; set; }
 
         public string? DescriptionSeo { get; set; }
+        public string? ImageBase64 { get; set; }
 
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public IEnumerable<TagView> Tags { get; set; }
+        
+        public IEnumerable<CommentView> Comments { get; set; }
+
+        public IEnumerable<PostView> SimilarInvests { get; set; }
+        public IEnumerable<PostView> SimilarNews { get; set; }
     }
 }

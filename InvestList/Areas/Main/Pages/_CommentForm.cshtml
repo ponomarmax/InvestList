@@ -3,8 +3,8 @@
 
 <form asp-action="Publish" asp-controller="Comment" method="post">
     @Html.AntiForgeryToken()
-    @* <input type="hidden" asp-for="InvestAdId" value="@Model.InvestAdId"/> *@
-    @* <input type="hidden" asp-for="NewsId" value="@Model.NewsId"/> *@
+    <input type="hidden" asp-for="PostId" value="@Model.PostId"/>
+    <input type="hidden" asp-for="PostType" value="@Model.PostType"/>
     <div class="form-group mb-1">
         <label asp-for="Text">Коментар:</label>
         <textarea class="form-control" asp-for="Text" rows="3"></textarea>

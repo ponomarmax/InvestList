@@ -15,11 +15,5 @@ namespace InvestList.Models.V2
         public int InvestDurationMonths { get; set; }
 
         public decimal TotalInvestment { get; set; }
-
-        public string? ImageBase64 { get; set; }
-        
-        public IEnumerable<CommentView> Comments { get; set; }
-        public IEnumerable<PostView> SimilarInvests { get; set; }
-        public IEnumerable<PostView> SimilarNews { get; set; }
     }
 }

@@ -1,7 +1,7 @@
-@page "/invest"
+@page "/news"
 @using InvestList
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-@model InvestList.Areas.Main.Pages.Invest.List
+@model InvestList.Areas.Main.Pages.News.List
 
 <div class="container">
     @if (Model.Entities != null && Model.Entities.Any())
@@ -13,7 +13,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title mb-3">
-                                <a class="card-link" asp-area="Main" asp-page="/Invest/Get" asp-route-id="@ad.Slug">@ad.Title</a>
+                                <a class="card-link" asp-area="Main" asp-page="/News/Get" asp-route-id="@ad.Slug">@ad.Title</a>
                             </h4>
 
                             @if (ad.Tags != null && ad.Tags.Any()) 
@@ -37,17 +37,6 @@
 
                                 <div class="col">
                                     <p class="card-text text-black mb-0">@ad.Description?.Substring(0, Math.Min(ad.Description.Length, 150))</p>
-                                    <div class="annualInvestment">@ad.AnnualInvestmentReturn.ToString("0.")<i class="bi bi-percent"></i></div>
-                                    <div class="duration">@InvestmentHelper.FormatInvestmentDuration(ad.InvestDurationYears, ad.InvestDurationMonths)</div>
-                                    @if (ad.MinInvestValues != null && ad.MinInvestValues.Any())
-                                    {
-                                        @foreach (var currency in ad.MinInvestValues)
-                                        {
-                                            <div class="currency">
-                                                @currency.MinValue @currency.Currency
-                                            </div>
-                                        }
-                                    }
                                     <div class="creation-data">@ad.CreatedAt.ToString("dd.MM.yyyy")</div>
                                 </div>
                             </div>

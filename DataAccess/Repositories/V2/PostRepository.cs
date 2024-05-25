@@ -33,6 +33,7 @@ namespace DataAccess.Repositories.V2
             if (count > 0)
             {
                 return (count, await query
+                    .AsSplitQuery()
                     .OrderByDescending(x => x.CreatedAt)
                     .Skip((page - 1) * offset)
                     .Take(offset)

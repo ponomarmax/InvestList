@@ -9,8 +9,8 @@
         <div class="row">
             @foreach (var ad in Model.Entities)
             {
-                <div class="col-md-6">
-                    <div class="card custom-light-green">
+                <div class="col-12 col-lg-6 mb-4">
+                    <div class="card">
                         <div class="card-body">
                             <h4 class="card-title mb-3">
                                 <a class="card-link" asp-area="Main" asp-page="/News/Get" asp-route-id="@ad.Slug">@ad.Title</a>

@@ -2,12 +2,8 @@
 
 namespace InvestList.Models.V2
 {
-    public class PutInvestModel
+    public class PutInvestModel:PutPostModel
     {
-        public string? Title { get; set; }
-
-        public string? Description { get; set; }
-
         public decimal AnnualInvestmentReturn { get; set; }
 
         public IEnumerable<CurrencyView>? MinInvestValues { get; set; }
@@ -17,12 +13,6 @@ namespace InvestList.Models.V2
         public int? InvestDurationMonths { get; set; }
 
         public decimal? TotalInvestment { get; set; }
-
-        public IEnumerable<string>? TagIds { get; set; }
-
-        public string? ImageBase64 { get; set; }
-
-        public bool IsActive { get; set; }
     }
 
     public class CurrencyView

@@ -42,60 +42,60 @@ namespace InvestList.Controllers
             return RedirectToPagePermanent("/News/Get", new { area="Main", id = db.Slug });
         }
 
-        [EmailConfirmedAuthorize]
-        [HttpGet]
-        public async Task<ActionResult> Create()
-        {
-            await PrepopulateCreate();
-            return View("Create");
-        }
-
-
-        [HttpPost]
-        [EmailConfirmedAuthorize]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(PostNewsViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                await PrepopulateCreate();
-                return View("Create", model);
-            }
-
-            var news = mapper.Map<News>(model);
-            await repository.Create(news);
-
-            return RedirectToAction("Details", new { id = news.Id });
-        }
-
-        public async Task<ActionResult> Edit(Guid id)
-        {
-            var db = await repository.Get(id);
-            var result = mapper.Map<PostNewsViewModel>(db);
-            ViewData["Id"] = id;
-            await PrepopulateCreate();
-            return View(result);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [FromForm] PostNewsViewModel model)
-        {
-            var db = await repository.Get(id);
-            if (db == null) return null;
-            if (!ModelState.IsValid)
-            {
-                ViewData["Id"] = id;
-                await PrepopulateCreate();
-                return View("Edit", model);
-            }
-
-            var inv = mapper.Map<News>(model);
-            inv.Id = id;
-            await repository.Edit(inv);
-
-            return RedirectToAction("Details", new { id = inv.Id });
-        }
+        // [EmailConfirmedAuthorize]
+        // [HttpGet]
+        // public async Task<ActionResult> Create()
+        // {
+        //     await PrepopulateCreate();
+        //     return View("Create");
+        // }
+        //
+        //
+        // [HttpPost]
+        // [EmailConfirmedAuthorize]
+        // [ValidateAntiForgeryToken]
+        // public async Task<IActionResult> Create(PostNewsViewModel model)
+        // {
+        //     if (!ModelState.IsValid)
+        //     {
+        //         await PrepopulateCreate();
+        //         return View("Create", model);
+        //     }
+        //
+        //     var news = mapper.Map<News>(model);
+        //     await repository.Create(news);
+        //
+        //     return RedirectToAction("Details", new { id = news.Id });
+        // }
+        //
+        // public async Task<ActionResult> Edit(Guid id)
+        // {
+        //     var db = await repository.Get(id);
+        //     var result = mapper.Map<PostNewsViewModel>(db);
+        //     ViewData["Id"] = id;
+        //     await PrepopulateCreate();
+        //     return View(result);
+        // }
+        //
+        // [HttpPost]
+        // [ValidateAntiForgeryToken]
+        // public async Task<IActionResult> Edit(Guid id, [FromForm] PostNewsViewModel model)
+        // {
+        //     var db = await repository.Get(id);
+        //     if (db == null) return null;
+        //     if (!ModelState.IsValid)
+        //     {
+        //         ViewData["Id"] = id;
+        //         await PrepopulateCreate();
+        //         return View("Edit", model);
+        //     }
+        //
+        //     var inv = mapper.Map<News>(model);
+        //     inv.Id = id;
+        //     await repository.Edit(inv);
+        //
+        //     return RedirectToAction("Details", new { id = inv.Id });
+        // }
 
         private async Task PrepopulateCreate()
         {

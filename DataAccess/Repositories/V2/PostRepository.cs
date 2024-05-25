@@ -12,6 +12,9 @@ namespace DataAccess.Repositories.V2
 
         Task<Post?> Get(string id);
         Task<IEnumerable<Post>> GetSimilarPosts(Guid id, List<Guid> tagIds);
+        Task Put(Guid id, Post post);
+        Task Create(Post post);
+        Task<bool> Exists(string slug);
     }
 
     public class PostRepository(ApplicationDbContext dbContext, IMapper mapper): IPostRepository
@@ -68,6 +71,31 @@ namespace DataAccess.Repositories.V2
                 .Take(100)
                 .Include(x => x.Tags).ThenInclude(x => x.Tag)
                 .ToListAsync();
+        }
+        
+        public async Task Put(Guid id, Post post)
+        {
+            var postOrigin = await Get(id.ToString());
+            if (postOrigin != null)
+            {
+                mapper.Map(post, postOrigin);
+                await dbContext.SaveChangesAsync();
+            }
+            else
+            {
+                throw new ArgumentException("Attempt to modify unexisting object");
+            }
+        }
+
+        public async Task Create(Post post)
+        {
+            dbContext.Posts.Add(post);
+            await dbContext.SaveChangesAsync();
+        }
+        
+        public async Task<bool> Exists(string slug)
+        {
+            return await dbContext.Posts.CountAsync(x => x.Slug == slug.ToLower()) > 0;
         }
     }
 }

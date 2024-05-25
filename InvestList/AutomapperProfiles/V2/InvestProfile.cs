@@ -62,6 +62,23 @@ namespace InvestList.AutomapperProfiles.V2
                     s => s.MapFrom(x =>
                         x.ImageBase64 == null ? null : new List<Image> { new Image { ImageBase64 = x.ImageBase64 } }))
                 ;
+            CreateMap<Post, PutPostModel>()
+                .ForMember(x => x.ImageBase64,
+                    s => s.MapFrom(x =>
+                        x.Images.FirstOrDefault() == null ? null : x.Images.FirstOrDefault().ImageBase64))
+                .ForMember(x => x.Title, s => s.MapFrom(x => x.Title))
+                .ForMember(x => x.IsActive, s => s.MapFrom(x => x.IsActive))
+                .ForMember(x => x.Description, s => s.MapFrom(x => x.Description))
+                .ForMember(x => x.TagIds, s => s.MapFrom(x => x.Tags));
+
+            CreateMap<PutPostModel, Post>()
+                .ForMember(x => x.Tags,
+                    s => s.MapFrom(x =>
+                        x.TagIds == null ? null : x.TagIds.Select(t => new PostTags() { TagId = Guid.Parse(t) })))
+                .ForMember(x => x.Images,
+                    s => s.MapFrom(x =>
+                        x.ImageBase64 == null ? null : new List<Image> { new Image { ImageBase64 = x.ImageBase64 } }))
+                ;
 
 
             // DB-> DB

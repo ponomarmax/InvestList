@@ -48,7 +48,7 @@
         @if (User.IsInRole(Const.AdminRole))
         {
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-current="page" asp-controller="News" asp-action="Index">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-current="page">
                     НОВИНИ
                 </a>
                 <ul class="dropdown-menu">
@@ -56,7 +56,7 @@
                         <a asp-area="Main" asp-page="/News/List" class="dropdown-item">Переглянути новини</a>
                     </li>
                     <li>
-                        <a asp-action="Create" asp-controller="News" class="dropdown-item">Створити новину</a>
+                        <a asp-area="Main" asp-page="/News/Create" class="dropdown-item">Створити новину</a>
                     </li>
                 </ul>
             </li>
@@ -64,7 +64,7 @@
         else
         {
             <li class="nav-item">
-                <a asp-controller="News" asp-action="Index" class="nav-link">НОВИНИ</a>
+                <a asp-area="Main" asp-page="/News/List" class="dropdown-item">Переглянути новини</a>
             </li>
         }
         <li class="nav-item dropdown">
@@ -73,7 +73,7 @@
             </a>
             <ul class="dropdown-menu">
                 <li>
-                    <a asp-action="Index" asp-controller="Invest" class="dropdown-item">Всі заявки</a>
+                    <a asp-area="Main" asp-page="/Invest/List" class="dropdown-item">Всі заявки</a>
                 </li>
                 <li>
                     <a asp-area="Main" asp-page="/Invest/Create" class="dropdown-item">Створити заявку</a>
@@ -106,7 +106,12 @@
                 @foreach (var tag in header)
                 {
                     <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Index", "News", new { tagIds = new[] { tag.Id } })">#@tag.Name</a>
+                        <a class="nav-link"
+                                       asp-area="Main"
+                                       asp-page="/News/List"
+                                       asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: new[] { tag.Id }))">
+                                        #@tag.Name
+                                    </a>
                     </li>
                 }
             </ul>

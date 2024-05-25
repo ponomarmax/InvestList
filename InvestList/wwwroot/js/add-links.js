@@ -4,14 +4,13 @@
         const newInputs = `
             <div class="row mb-3">
                 <div class="col">
-                    <input type="text" class="form-control" name="Links[${newIndex}].AnchorText" placeholder="Anchor Text" />
+                    <input type="text" class="form-control" name="Post.Links[${newIndex}].AnchorText" placeholder="Anchor Text" />
+                </div>
+                <div class="col"> 
+                    <input type="text" class="form-control" name="Post.Links[${newIndex}].Hyperlink" placeholder="Hyperlink" />
                 </div>
                 <div class="col">
-                    <input type="text" class="form-control" name="Links[${newIndex}].Hyperlink" placeholder="Hyperlink" />
-                </div>
-                <div class="col">
-                    <input type="hidden" name="Links[${newIndex}].NewsId" value="@ViewData["Id"]" />
-                    <input type="checkbox" class="form-check-input" name="Links[${newIndex}].Follow" value="true" />
+                    <input type="checkbox" class="form-check-input" name="Post.Links[${newIndex}].Follow" value="true" />
                     <label class="form-check-label">Follow</label>
                 </div>
                 <div class="col">

@@ -17,7 +17,6 @@ namespace InvestList.Areas.Main.Pages.Invest
 
         public async Task<IActionResult> OnGetAsync(int pageIndex = 1, IEnumerable<string> tagIds = null)
         {
-
             if (pageIndex < 1)
             {
                 return NotFound();
@@ -26,7 +25,7 @@ namespace InvestList.Areas.Main.Pages.Invest
             var guidTagIds = tagIds?.Where(x => Guid.TryParse(x, out _)).Select(Guid.Parse);
 
             var (count, resultDb) = await repository.Filter(pageIndex, ItemsPerPage, guidTagIds);
-            if (!resultDb.Any()) return NotFound();
+            if (!resultDb.Any() && pageIndex != 1) return NotFound();
 
             var resultView = mapper.Map<IEnumerable<InvestView>>(resultDb);
 

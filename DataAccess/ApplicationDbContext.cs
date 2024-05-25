@@ -14,6 +14,7 @@ namespace DataAccess
 
         public DbSet<InvestField> InvestFields { get; set; }
         public DbSet<Link> Links { get; set; }
+        public DbSet<PostLink> PostLinks { get; set; }
 
         public DbSet<Tag> Tags { get; set; }
 

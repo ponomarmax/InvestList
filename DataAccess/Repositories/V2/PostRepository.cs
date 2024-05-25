@@ -53,7 +53,8 @@ namespace DataAccess.Repositories.V2
                 .Include(x => x.Images)
                 .Include(x => x.CreatedBy)
                 .Include(x => x.Tags).ThenInclude(x => x.Tag)
-                .Include(x => x.Comments).ThenInclude(x => x.User);
+                .Include(x => x.Comments).ThenInclude(x => x.User)
+                .Include(x=>x.Links);
 
             if (Guid.TryParse(id, out var idGuid))
                 return await post.FirstOrDefaultAsync(x => x.Id == idGuid && x.PostType == PostType.News);

@@ -26,7 +26,7 @@
     <form method="post" enctype="multipart/form-data">
         @Html.AntiForgeryToken()
         <div class="form-group d-flex mb-3 align-items-center">
-            <input type="checkbox" class="bigger-checkbox" asp-for="Post.IsActive"/>
+            <input type="checkbox" class="bigger-checkbox" asp-for="Post.IsActive" checked="checked"/>
             <label asp-for="@Model.Post.IsActive">Оголошення буде відображене після публікації</label>
         </div>
         <div class="row mb-4">

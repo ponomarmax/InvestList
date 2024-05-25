@@ -29,71 +29,17 @@ namespace InvestList.Controllers
             {
                 return NotFound();
             }
-
-            var tagIds = requestModel?.TagIds?.Where(x => Guid.TryParse(x, out _)).Select(Guid.Parse).ToList();
-            var resultDb = await repository.GetPage(page, ItemsPerPage,
-                tagIds);
-            if (!resultDb.Any())
-            {
-                if (tagIds != null && tagIds.Any())
-                {
-                    return View(new ListNewsViewModel() { Entities = null, FilterModel = requestModel });
-                }
-                return NotFound();
-            }
-
-            var resultView = mapper.Map<IEnumerable<GetNewsViewModel>>(resultDb);
-            if (page != 1)
-            {
-                ViewData["DisplayNoIndexTag"] = true;
-            }
-
-            var totalItems = (await repository.Count(tagIds))!;
-            var totalPages = (int)Math.Ceiling((double)totalItems / ItemsPerPage);
-
-            SetTitles(resultView);
-            SetIndexPageDescription(resultView);
-
-            var viewModel = new ListNewsViewModel
-            {
-                Entities = resultView,
-                PaginationInfo = new PaginationInfo
-                {
-                    CurrentPage = page,
-                    TotalPages = totalPages,
-                    PageSize = ItemsPerPage
-                },
-                FilterModel = requestModel
-            };
-
-            return View(viewModel);
-        }
-
-        [AllowAnonymous]
-        [Route("news/{slug}")]
-        public async Task<ActionResult> Get(string slug)
-        {
-            var db = await repository.Get(slug);
-            if (db == null)
-                return NotFound();
-            var tagIds = db.Tags.Select(x=>x.TagId).ToList();
-            var similarNews = await repository.GetSimilarNews(tagIds);
-            var result = mapper.Map<GetNewsViewModel>(db);
-            var similarNewsViewModels = mapper.Map<IEnumerable<GetNewsViewModel>>(similarNews);
-            var similarAds = mapper.Map<IEnumerable<GetAllAdsView>>(await investAdRepository.GetSimilarInvest(tagIds));
-            result.SimilarNews = similarNewsViewModels;
-            result.SimilarInvests = similarAds;
-            SetTitleAndDescription(result);
-            return View("Details", result);
-        }
         
+            return RedirectToPagePermanent("/Areas/Main/Pages/News/List", new { pageIndex = page, tagIds = requestModel?.TagIds });
+        }
+
         [AllowAnonymous]
         public async Task<ActionResult> Details(Guid id)
         {
             var db = await repository.Get(id);
             if (db == null)
                 return NotFound();
-            return RedirectToActionPermanent("Get", new { slug = db.Slug });
+            return RedirectToPagePermanent("/News/Get", new { area="Main", id = db.Slug });
         }
 
         [EmailConfirmedAuthorize]

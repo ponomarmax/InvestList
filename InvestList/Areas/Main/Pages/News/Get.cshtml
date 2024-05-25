@@ -1,7 +1,7 @@
-@page "/invest/{id}"
+@page "/news/{id}"
 @using InvestList
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-@model InvestList.Areas.Main.Pages.Invest.Get
+@model InvestList.Areas.Main.Pages.News.Get
 
 <div class="container mb-4">
     @if (Model.CanUserEdit)
@@ -17,27 +17,6 @@
             <h1 class="card-header">@Model.Post.Title</h1>
 
             <div class="d-flex border align-content-start flex-wrap">
-                <div class="p-2 flex-fill">Загальний обсяг інвестицій: $@Model.Post.TotalInvestment</div>
-                <div class="p-2 flex-fill">Період інвестування: @InvestmentHelper.FormatInvestmentDuration(Model.Post.InvestDurationYears, Model.Post.InvestDurationMonths)</div>
-                <div class="p-2 flex-fill">Річна дохідність: @Model.Post.AnnualInvestmentReturn%</div>
-            </div>
-
-            <div class="d-flex border align-content-start flex-wrap">
-                <div class="d-flex card-text p-2 flex-fill">
-                    <span style="padding-right: 10px;">Мінімальний поріг входу </span>
-                    @if (Model.Post.MinInvestValues != null && Model.Post.MinInvestValues.Any())
-                    {
-                        @foreach (var currency in Model.Post.MinInvestValues)
-                        {
-                            <span > @currency.MinValue @currency.Currency </span>
-                        }
-                    }
-                    else
-                    {
-                        <span>Немає валют</span>
-                    }
-                </div>
-
                 @if (Model.Post.Tags != null && Model.Post.Tags.Any())
                 {
                     <div class="flex-fill mb-2">
@@ -60,7 +39,7 @@
                 @if (!string.IsNullOrEmpty(Model.Post.ImageBase64))
                 {
                     <div class="md:order-1 order-md-2">
-                        <img src="data:image;base64,@Model.Post.ImageBase64" alt="Investment Image"/>
+                        <img src="data:image;base64,@Model.Post.ImageBase64" alt="News Image"/>
                     </div>
                 }
             </div>
@@ -69,13 +48,24 @@
                 <a class="telegram"href="" id="tg_share" alt="">
                     <img class="message" src="/ico/telegram.png" alt="">
                 </a>
-                @* <a class="facebook" href="" id="fb_share" alt=""><img class="message" src="/ico/facebook.png" alt=""></a> *@
             </span>
         </div>
         @await Html.PartialAsync("_DisplayComments", (Model.Post.Id, Model.Post.PostType, Model.Post.Comments))
 
     </div>
     <div class="col-4">
+        @if (Model.Post.SimilarNews != null && Model.Post.SimilarNews.Any())
+        {
+            <p>Схожі новини</p>
+            @await Html.PartialAsync("_SimilarContent", ("Invest", Model.Post.SimilarNews, Model.Post.Tags))
+            <a class="btn-primary"
+               asp-area="Main"
+               asp-page="/News/List"
+               asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.Post.Tags.Select(x => x.Id)))">
+                Більше новини...
+            </a>
+        }
+        <hr/>
         @if (Model.Post.SimilarInvests != null && Model.Post.SimilarInvests.Any())
         {
             <p>Схожі оголошення</p>
@@ -87,18 +77,6 @@
                 Більше оголошень...
             </a>
         }
-        <hr/>
-        @if (Model.Post.SimilarNews != null && Model.Post.SimilarNews.Any())
-                {
-                    <p>Схожі новини</p>
-                    @await Html.PartialAsync("_SimilarContent", ("Invest", Model.Post.SimilarNews, Model.Post.Tags))
-                    <a class="btn-primary"
-                       asp-area="Main"
-                       asp-page="/News/List"
-                       asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.Post.Tags.Select(x => x.Id)))">
-                        Більше новини...
-                    </a>
-                }
     </div>
 </div>
 

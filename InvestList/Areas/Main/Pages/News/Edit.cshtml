@@ -1,0 +1,153 @@
+@* @page "/invest/edit/{id:guid}" *@
+@* @using Common *@
+@* @using Microsoft.AspNetCore.Mvc.TagHelpers *@
+@* @model InvestList.Areas.Main.Pages.Invest.Edit *@
+@* *@
+@* @{ *@
+@*     ViewData["Title"] = "Редагувати оголошення"; *@
+@* } *@
+@* *@
+@* <hr/> *@
+@* <div class="container"> *@
+@*     @if (!ViewData.ModelState.IsValid) *@
+@*     { *@
+@*         <div class="alert alert-danger"> *@
+@*             <strong>Виправте наступні помилки:</strong> *@
+@*             <ul> *@
+@*                 @foreach (var modelError in ViewData.ModelState.Values.SelectMany(v => v.Errors)) *@
+@*                 { *@
+@*                     <li>@modelError.ErrorMessage</li> *@
+@*                 } *@
+@*             </ul> *@
+@*         </div> *@
+@*     } *@
+@*     <form method="post" asp-route-id="@Model.Id" enctype="multipart/form-data"> *@
+@*         @Html.AntiForgeryToken() *@
+@*         <div class="form-group d-flex mb-3 align-items-center"> *@
+@*             <input type="checkbox" class="bigger-checkbox" checked="@Model.Post.IsActive" asp-for="Post.IsActive"/> *@
+@*             <label asp-for="@Model.Post.IsActive">Оголошення буде відображене після публікації</label> *@
+@*         </div> *@
+@*         <div class="row mb-4"> *@
+@*             <div class="form-group col-6"> *@
+@*                 <div class="mb-4"> *@
+@*                     <p asp-for="Title">Надайте короткий опис, що буде відображатись на головній сторінці.</p> *@
+@*                     <input asp-for="Post.Title" class="form-control" placeholder="Вкажіть не менше 10 символів, не більше 200 символів"/> *@
+@*                     <span asp-validation-for="Post.Title" class="text-danger"></span> *@
+@*                 </div> *@
+@*                 <div class="mb-4"> *@
+@*                     <label asp-for="Post.AnnualInvestmentReturn">Річна дохідність у %</label> *@
+@*                     <input asp-for="Post.AnnualInvestmentReturn" class="form-control" type="decimal" value="@((Model?.Post.AnnualInvestmentReturn > 0) ? (decimal)Model?.Post.AnnualInvestmentReturn : null)"/> *@
+@*                     <span asp-validation-for="Post.AnnualInvestmentReturn" class="text-danger"></span> *@
+@*                 </div> *@
+@*                 <div class="mb-4"> *@
+@*                     <label asp-for="Post.TotalInvestment">Загальний обсяг інвестицій (у $):</label> *@
+@*                     <input type="decimal" asp-for="Post.TotalInvestment" class="form-control" value="@((Model?.Post.TotalInvestment > 0) ? (decimal)Model?.Post.TotalInvestment : null)"/> *@
+@*                     <span asp-validation-for="Post.TotalInvestment" class="text-danger"></span> *@
+@*                 </div> *@
+@*                 <div class="mb-4"> *@
+@*                     <span asp-validation-for="Post.MinInvestValues" class="text-danger"></span> *@
+@*                     <label asp-for="Post.MinInvestValues">Введіть мінімальний поріг входу для тих валют, в яких приймаєте інвестиції</label> *@
+@*                     <div class="input-group"> *@
+@*                         <span class="input-group-addon"> *@
+@*                             <i class="glyphicon glyphicon-user"></i> *@
+@*                         </span> *@
+@*                         @{ *@
+@*                             var supportedCurrencies = (Currency[])Enum.GetValues(typeof(Currency)); *@
+@*                             for (int i = 0; i < supportedCurrencies.Length; i++) *@
+@*                             { *@
+@*                                 var temp = supportedCurrencies[i]; *@
+@*                                 var existingCurrency = Model.Post.MinInvestValues.FirstOrDefault(x => x.Currency == temp); *@
+@*                                 <input readonly="readonly" name="Post.MinInvestValues[@i].Currency" value="@temp"/> *@
+@*                                 if (existingCurrency == null) *@
+@*                                 { *@
+@*                                     <input type="decimal" name="Post.MinInvestValues[@i].MinValue" class="form-control"/> *@
+@*                                 } *@
+@*                                 else *@
+@*                                 { *@
+@*                                     <input type="decimal" name="Post.MinInvestValues[@i].MinValue" class="form-control" value="@existingCurrency.MinValue"/> *@
+@*                                 } *@
+@*                             } *@
+@*                         } *@
+@*                     </div> *@
+@* *@
+@*                 </div> *@
+@*             </div> *@
+@* *@
+@*             <div class="form-group col-6"> *@
+@*                 <label>Завантажте фото:</label> *@
+@*                 <input id="imageFileInput" type="file" class="form-control mb-2" placeholder="Виберіть файл"/> *@
+@*                 <button id="removePhotoButton" type="button" class="btn btn-outline-danger mb-2" style="display: none;">Видалити фото</button> *@
+@*                 <img id="uploadedImage" src="#" alt="Investment Image" class="img-fluid resized-image mb-2" style="display: none;"/> *@
+@*                 <input asp-for="Post.ImageBase64" id="ImageBase64" type="hidden" value="@Model.Post.ImageBase64"/> *@
+@*             </div> *@
+@*         </div> *@
+@*         <div class="row mb-4"> *@
+@*             <div class="form-group"> *@
+@*                 <p>Дайте детальний опис вашого бізнесу. Радимо відповісти на наступні питання в описі:</p> *@
+@*                 <div class="row"> *@
+@*                     <div class="col-6"> *@
+@*                         <ul> *@
+@*                             <li>Опишіть чим займається ваш бізнес</li> *@
+@*                             <li>Як будуть витрачені кошти інвесторів</li> *@
+@*                             <li>Як будуть виплачуватись відсотки інвесторам</li> *@
+@*                         </ul> *@
+@*                     </div> *@
+@*                     <div class="col-6"> *@
+@*                         <ul> *@
+@*                             <li>Як буде повертатись тіло інвестиції</li> *@
+@*                             <li>Яким договором будуть регулюватись відносини з інвестором</li> *@
+@*                         </ul> *@
+@*                     </div> *@
+@*                 </div> *@
+@* *@
+@*                 <label asp-for="Post.Description">Опис</label> *@
+@*                 <textarea rows="10" asp-for="Post.Description" class="form-control"></textarea> *@
+@*             </div> *@
+@*         </div> *@
+@* *@
+@*         <div class="row mb-4"> *@
+@*             <div class="form-group col-6"> *@
+@*                 <label>На який термін залучаються інвестиції (вкажіть кількість років та місяців):</label> *@
+@*                 <span asp-validation-for="Post.InvestDurationYears" class="text-danger"></span> *@
+@*                 <div class="input-group"> *@
+@*                     <span class="input-group-addon"> *@
+@*                         <i class="glyphicon glyphicon-user"></i> *@
+@*                     </span> *@
+@*                     <input placeholder="Кількість років" asp-for="Post.InvestDurationYears" type="number" class="form-control" value="@((Model?.Post.InvestDurationYears > 0) ? Model?.Post.InvestDurationYears : null)"/> *@
+@*                 </div> *@
+@*                 <span asp-validation-for="Post.InvestDurationMonths" class="text-danger"></span> *@
+@*                 <div class="input-group"> *@
+@*                     <span class="input-group-addon"> *@
+@*                         <i class="glyphicon glyphicon-user"></i> *@
+@*                     </span> *@
+@*                     <input placeholder="Кількість місяців" type="number" asp-for="Post.InvestDurationMonths" class="form-control" value="@((Model?.Post.InvestDurationMonths > 0) ? Model?.Post.InvestDurationMonths : null)"/> *@
+@*                 </div> *@
+@*             </div> *@
+@*             <div class="form-group col-6"> *@
+@*                 <span asp-validation-for="AvailableTags" class="text-danger"></span> *@
+@* *@
+@*                 @{ *@
+@*                     if (Model.AvailableTags != null) *@
+@*                     { *@
+@*                         <label asp-for="AvailableTags">Теги</label> *@
+@*                         <select rows="20" name="Post.TagIds" asp-items="Model.AvailableTags" multiple="multiple" class="listbox"></select> *@
+@*                     } *@
+@*                 } *@
+@* *@
+@*             </div> *@
+@*         </div> *@
+@* *@
+@*         <button type="submit" class="btn btn-primary">Внести зміни</button> *@
+@*         <a asp-action="Index" class="btn btn-secondary">Повернутись до списку</a> *@
+@* *@
+@*     </form> *@
+@* *@
+@* *@
+@* </div> *@
+@* *@
+@* @section Scripts { *@
+@*     @{ *@
+@*         await Html.RenderPartialAsync("_ValidationScriptsPartial"); *@
+@*     } *@
+@*     <script src="~/js/handleImageUpload.js"></script> *@
+@* } *@

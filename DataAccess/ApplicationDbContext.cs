@@ -43,7 +43,7 @@ namespace DataAccess
 
             modelBuilder.Entity<NewsToTags>()
                 .HasKey(x => new { x.NewsId, x.TagId });
-            
+
             modelBuilder.Entity<InvestTags>()
                 .HasKey(x => new { x.InvestId, x.TagId });
 
@@ -51,17 +51,17 @@ namespace DataAccess
                 .HasOne(x => x.News)
                 .WithMany(x => x.Tags)
                 .HasForeignKey(x => x.NewsId);
-            
+
             modelBuilder.Entity<InvestTags>()
                 .HasOne(x => x.Invest)
                 .WithMany(x => x.Tags)
                 .HasForeignKey(x => x.InvestId);
-            
+
             modelBuilder.Entity<Comment>()
                 .HasOne(x => x.InvestAd)
                 .WithMany(x => x.Comments)
                 .HasForeignKey(x => x.InvestAdId).OnDelete(DeleteBehavior.NoAction);
-            
+
             modelBuilder.Entity<Post>()
                 .HasOne(p => p.CreatedBy)
                 .WithMany() // No navigation property
@@ -72,11 +72,13 @@ namespace DataAccess
 
             modelBuilder.Entity<Post>()
                 .HasIndex(e => e.Slug);
+            modelBuilder.Entity<Post>()
+                .HasIndex(e => new { e.PostType, e.IsActive });
             modelBuilder.Entity<InvestAd>()
                 .HasIndex(e => e.Slug);
             modelBuilder.Entity<News>()
                 .HasIndex(e => e.Slug);
-            
+
             var postTypeConverter = new ValueConverter<PostType, string>(
                 v => v.ToString(),
                 v => (PostType)Enum.Parse(typeof(PostType), v));
@@ -94,7 +96,7 @@ namespace DataAccess
             modelBuilder.Entity<PostTags>()
                 .HasOne(x => x.Post)
                 .WithMany(x => x.Tags);
-            
+
             Seed(modelBuilder);
         }
 

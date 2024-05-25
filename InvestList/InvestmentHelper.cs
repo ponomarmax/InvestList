@@ -21,7 +21,13 @@ namespace InvestList
         public static async Task<bool> CanEditInvestPost(this UserManager<User> userManager, User user, InvestPost db)
         {
             if (user == null) return false;
-            return await userManager.IsInRoleAsync(user, Const.AdminRole) || db.Post.CreatedById == user.Id;
+            return await userManager.CanEditPost(user) || db.Post.CreatedById == user.Id;
+        }
+        
+        public static async Task<bool> CanEditPost(this UserManager<User> userManager, User user)
+        {
+            if (user == null) return false;
+            return await userManager.IsInRoleAsync(user, Const.AdminRole);
         }
 
         public static async Task<bool> CanEditInvestPost(this UserManager<User> userManager,
@@ -31,6 +37,14 @@ namespace InvestList
             if (user == null) return false;
             var userDb = await userManager.GetUserAsync(user);
             return await userManager.CanEditInvestPost(userDb, db);
+        }
+        
+        public static async Task<bool> CanEditPost(this UserManager<User> userManager,
+            ClaimsPrincipal? user)
+        {
+            if (user == null) return false;
+            var userDb = await userManager.GetUserAsync(user);
+            return await userManager.CanEditPost(userDb);
         }
 
         public static string FormatInvestmentDuration(int years, int months)

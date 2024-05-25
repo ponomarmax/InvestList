@@ -1,5 +1,4 @@
 using AutoMapper;
-using DataAccess.Interfaces;
 using DataAccess.Models;
 using DataAccess.Repositories.V2;
 using InvestList.Models.V2;
@@ -7,42 +6,41 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace InvestList.Areas.Main.Pages.Invest;
+namespace InvestList.Areas.Main.Pages.News;
 
-public class Get(IInvestRepository repository, IPostRepository postRepository, IMapper mapper, UserManager<User> userManager): PageModel
+public class Get(IPostRepository repository, IMapper mapper, UserManager<User> userManager): PageModel
 {
     public bool CanUserEdit { get; set; }
-    public InvestView Post { get; set; }
+    public PostView Post { get; set; }
 
     public async Task<IActionResult> OnGetAsync(string id)
     {
-        if (Guid.TryParse(id, out var idGuid))
+        if (Guid.TryParse(id, out _))
         {
-            var dbModel = await repository.Get(idGuid);
+            var dbModel = await repository.Get(id);
             if (dbModel == null)
             {
                 return NotFound();
             }
 
-            return RedirectToPagePermanent("./Get", new { id = dbModel.Post.Slug });
+            return RedirectToPagePermanent("./Get", new { id = dbModel.Slug });
         }
 
         if (string.IsNullOrEmpty(id)) return NotFound();
 
-        var investPost = await repository.Get(id);
-        if (investPost == null) return NotFound();
+        var post = await repository.Get(id);
+        if (post == null) return NotFound();
 
-        CanUserEdit = await userManager.CanEditInvestPost(User, investPost);
+        CanUserEdit = await userManager.CanEditPost(User);
         
-        Post = mapper.Map<InvestView>(investPost);
+        Post = mapper.Map<PostView>(post);
 
         var tagIds = Post.Tags.Select(x => x.Id).ToList();
 
-        var similarContent = (await postRepository.GetSimilarPosts(investPost.Id, tagIds)).ToList();
+        var similarContent = (await repository.GetSimilarPosts(post.Id, tagIds)).ToList();
         
         Post.SimilarNews = mapper.Map<IEnumerable<PostView>>(similarContent.Where(x=>x.PostType==PostType.News));
         Post.SimilarInvests = mapper.Map<IEnumerable<PostView>>(similarContent.Where(x=>x.PostType==PostType.InvestAd));
-        ViewData.SetupPostViewSeoDetails(Post);
         ViewData.SetupPostViewSeoDetails(Post);
 
         return Page();

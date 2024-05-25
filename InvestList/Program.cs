@@ -52,6 +52,7 @@ try
     builder.Services.AddScoped<IInvestRepository, InvestRepository>();
     builder.Services.AddScoped<IUserRepository, UserRepository>();
     builder.Services.AddScoped<INewsRepository, NewsRepository>();
+    builder.Services.AddScoped<IPostRepository, PostRepository>();
     builder.Services.AddScoped<ITagRepository, TagRepository>();
     builder.Services.AddScoped<ICommentRepository, CommentRepository>();
     builder.Services.AddScoped<ITagService, TagService>();

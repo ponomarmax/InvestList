@@ -55,7 +55,7 @@
         @if (Model.Post.SimilarNews != null && Model.Post.SimilarNews.Any())
         {
             <p>Схожі новини</p>
-            @await Html.PartialAsync("_SimilarContent", ("Invest", Model.Post.SimilarNews, Model.Post.Tags))
+            @await Html.PartialAsync("_SimilarContent", ("News", Model.Post.SimilarNews, Model.Post.Tags))
             <a class="btn-primary"
                asp-area="Main"
                asp-page="/News/List"

@@ -70,6 +70,8 @@ namespace DataAccess
             // modelBuilder.Entity<Post>()
             //     .HasOne(x => x.CreatedBy).OnDelete(DeleteBehavior.NoAction);
 
+            modelBuilder.Entity<Post>()
+                .HasIndex(e => e.Slug);
             modelBuilder.Entity<InvestAd>()
                 .HasIndex(e => e.Slug);
             modelBuilder.Entity<News>()

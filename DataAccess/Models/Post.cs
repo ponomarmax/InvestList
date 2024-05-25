@@ -1,8 +1,9 @@
 namespace DataAccess.Models
 {
     public enum PostType{
-        InvestAd = 0,
-        News = 1,
+        Undefined = 0,
+        InvestAd = 1,
+        News = 2,
     }
     
     public class Post

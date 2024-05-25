@@ -22,7 +22,7 @@
             </ul>
         </div>
     }
-    <form asp-action="Create" enctype="multipart/form-data">
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
         @Html.AntiForgeryToken()
         <input asp-for="AuthorId" type="hidden" value="@ViewData["UserId"]"/>
         <div class="row mb-4">
@@ -88,8 +88,8 @@
 
 
         <button type="submit" class="btn btn-primary">Опублікувати</button>
-        <a asp-action="Index" class="btn btn-secondary">Повернутись до списку</a>
     </form>
+    <a asp-action="Index" class="btn btn-secondary">Повернутись до списку</a>
 </div>
 
 @section Scripts {

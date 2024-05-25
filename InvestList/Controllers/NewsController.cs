@@ -97,6 +97,7 @@ namespace InvestList.Controllers
         }
 
         [EmailConfirmedAuthorize]
+        [HttpGet]
         public async Task<ActionResult> Create()
         {
             await PrepopulateCreate();

@@ -74,6 +74,8 @@ namespace DataAccess
                 .HasIndex(e => e.Slug);
             modelBuilder.Entity<Post>()
                 .HasIndex(e => new { e.PostType, e.IsActive });
+            modelBuilder.Entity<Post>()
+                .HasIndex(e => e.CreatedAt);
             modelBuilder.Entity<InvestAd>()
                 .HasIndex(e => e.Slug);
             modelBuilder.Entity<News>()

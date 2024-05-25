@@ -56,9 +56,9 @@ namespace DataAccess.Repositories.V2
                 .Include(x => x.Comments).ThenInclude(x => x.User);
 
             if (Guid.TryParse(id, out var idGuid))
-                return await post.Where(x => x.Id == idGuid).FirstOrDefaultAsync();
+                return await post.FirstOrDefaultAsync(x => x.Id == idGuid && x.PostType == PostType.News);
 
-            return await post.Where(x => x.Slug == id).FirstOrDefaultAsync();
+            return await post.FirstOrDefaultAsync(x => x.Slug == id && x.PostType == PostType.News);
         }
 
 

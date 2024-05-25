@@ -9,17 +9,15 @@ namespace DataAccess.Repositories
         Task<Dictionary<Guid, string>> GetTags();
         Task SubmitCustomHeader(List<Guid> tagIds);
         Task<IEnumerable<Tag>> GetTagsV2();
+        Task<IEnumerable<CustomHeader>> GetCustomHeader();
     }
 
-    public class TagRepository: ITagRepository
+    public class TagRepository(ApplicationDbContext dbContext): ITagRepository
     {
-        private readonly ApplicationDbContext _dbContext;
 
-        public TagRepository(ApplicationDbContext dbContext)
-        {
-            _dbContext = dbContext;
-        }
-
+        private static Tag[] _tags = [];
+        private static CustomHeader[] _customeHeader = [];
+        
         public async Task Add(string tagName)
         {
             if (string.IsNullOrWhiteSpace(tagName))
@@ -27,37 +25,57 @@ namespace DataAccess.Repositories
                 throw new NullReferenceException("Empty tag");
             }
 
-            _dbContext.Add(new Tag { Name = tagName });
-            await _dbContext.SaveChangesAsync();
+            dbContext.Add(new Tag { Name = tagName });
+            await dbContext.SaveChangesAsync();
+            _tags =  await dbContext.Tags.ToArrayAsync();
         }
 
         
         public async Task<Dictionary<Guid, string>> GetTags()
         {
-            return (await _dbContext.Tags.ToListAsync()).ToDictionary(x => x.Id, x => x.Name);
+            if (_tags == null || _tags.Length == 0)
+            {
+                _tags = await dbContext.Tags.ToArrayAsync();
+            }
+            return _tags.ToDictionary(x => x.Id, x => x.Name);
         }
         
         public async Task<IEnumerable<Tag>> GetTagsV2()
         {
-            return await _dbContext.Tags.ToListAsync();
+            if (_tags == null || _tags.Length == 0)
+            {
+                _tags = await dbContext.Tags.ToArrayAsync();
+            }
+            return _tags;
         }
 
         public async Task SubmitCustomHeader(List<Guid> tagIds)
         {
-            await _dbContext.Database.BeginTransactionAsync();
+            await dbContext.Database.BeginTransactionAsync();
             try
             {
-                var t = _dbContext.CustomHeaders.ToList();
-                _dbContext.CustomHeaders.RemoveRange(t);
-                _dbContext.CustomHeaders.AddRange(tagIds.Select(x => new CustomHeader { TagId = x }));
-                await _dbContext.SaveChangesAsync();
-                await _dbContext.Database.CommitTransactionAsync();
+                var t = dbContext.CustomHeaders.ToList();
+                dbContext.CustomHeaders.RemoveRange(t);
+                dbContext.CustomHeaders.AddRange(tagIds.Select(x => new CustomHeader { TagId = x }));
+                await dbContext.SaveChangesAsync();
+                await dbContext.Database.CommitTransactionAsync();
             }
             catch (Exception e)
             {
-                await _dbContext.Database.RollbackTransactionAsync();
+                await dbContext.Database.RollbackTransactionAsync();
                 throw;
             }
+
+            _customeHeader = await dbContext.CustomHeaders.Include(x => x.Tag).ToArrayAsync();
+        }
+        
+        public async Task<IEnumerable<CustomHeader>> GetCustomHeader()
+        {
+            if (_customeHeader == null || _customeHeader.Length == 0)
+            {
+                _customeHeader = await dbContext.CustomHeaders.Include(x => x.Tag).ToArrayAsync();
+            }
+            return _customeHeader;
         }
     }
 }

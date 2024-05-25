@@ -56,7 +56,6 @@ try
     builder.Services.AddScoped<IPostRepository, PostRepository>();
     builder.Services.AddScoped<ITagRepository, TagRepository>();
     builder.Services.AddScoped<ICommentRepository, CommentRepository>();
-    builder.Services.AddScoped<ITagService, TagService>();
     builder.Services.AddScoped<IInvestService, InvestService>();
     builder.Services.AddAuthentication()
         .AddGoogle(options =>

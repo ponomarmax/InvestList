@@ -1,5 +1,6 @@
 ﻿@using InvestList.Services
-@inject ITagService tagService
+@using DataAccess.Repositories
+@inject ITagRepository tagService
 <!DOCTYPE html>
 <html lang="uk">
 <head>
@@ -109,8 +110,8 @@
                         <a class="nav-link"
                                        asp-area="Main"
                                        asp-page="/News/List"
-                                       asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: new[] { tag.Id }))">
-                                        #@tag.Name
+                                       asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: new[] { tag.TagId }))">
+                                        #@tag.Tag.Name
                                     </a>
                     </li>
                 }

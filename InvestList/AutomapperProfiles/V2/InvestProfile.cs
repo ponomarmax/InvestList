@@ -5,6 +5,7 @@ using InvestList.Models;
 using InvestList.Models.Comment;
 using InvestList.Models.News;
 using InvestList.Models.V2;
+using InvestList.Services;
 
 namespace InvestList.AutomapperProfiles.V2
 {
@@ -20,6 +21,8 @@ namespace InvestList.AutomapperProfiles.V2
                 .ForMember(x => x.ImageBase64,
                     s => s.MapFrom(x =>
                         x.Post.Images.FirstOrDefault() == null ? null : x.Post.Images.FirstOrDefault().ImageBase64))
+                .ForMember(x=>x.Image,s=>s.MapFrom(x=>
+                    x.Post.Images.FirstOrDefault() == null ? null : ImageService.GetImagePath(x.Post.Images.FirstOrDefault().Id, x.Post)))
                 .ForMember(x => x.CreatedAt, s => s.MapFrom(x => x.Post.CreatedAt))
                 .ForMember(x => x.UpdateAt, s => s.MapFrom(x => x.Post.UpdatedAt))
                 .ForMember(x => x.Slug, s => s.MapFrom(x => x.Post.Slug))
@@ -105,7 +108,10 @@ namespace InvestList.AutomapperProfiles.V2
             CreateMap<Post, PostView>()
                 .ForMember(x => x.ImageBase64,
                     s => s.MapFrom(x =>
-                        x.Images.FirstOrDefault() == null ? null : x.Images.FirstOrDefault().ImageBase64));
+                        x.Images.FirstOrDefault() == null ? null : x.Images.FirstOrDefault().ImageBase64))
+                .ForMember(x=>x.Image,s=>s.MapFrom(x=>
+                    x.Images.FirstOrDefault() == null ? null : ImageService.GetImagePath(x.Images.FirstOrDefault().Id, x)));
+            
             CreateMap<News, PostView>()
                 .ForMember(x => x.CreatedAt, s => s.MapFrom(x => x.CreatedAt.DateTime));
             

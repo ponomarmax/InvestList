@@ -16,28 +16,31 @@
                                 <a class="card-link" asp-area="Main" asp-page="/Invest/Get" asp-route-id="@ad.Slug">@ad.Title</a>
                             </h4>
 
-                            @if (ad.Tags != null && ad.Tags.Any()) 
-                            { 
-                                <div class="tags-container"> 
-                                    @foreach (var field in ad.Tags) 
-                                    { 
-                                        <span class="tag_index">@field.Name</span> 
-                                    } 
-                                </div> 
+                            @if (ad.Tags != null && ad.Tags.Any())
+                            {
+                                <div class="tags-container">
+                                    @foreach (var field in ad.Tags)
+                                    {
+                                        <span class="tag_index">@field.Name</span>
+                                    }
+                                </div>
                             }
                             <hr>
 
                             <div class="row">
-                                @if (!string.IsNullOrEmpty(ad.ImageBase64))
+                                @if (ad.Image != null)
                                 {
                                     <div class="col-auto">
-                                        <img src="data:image;base64,@ad.ImageBase64" class="img-fluid rounded" style="width: 100px; height: 100px;">
+                                        @* <img src="data:image;base64,@ad.ImageBase64" class="img-fluid rounded" style="width: 100px; height: 100px;"> *@
+                                        <img src="@ad.Image.FilePath" alt="@ad.Image.AltText" class="img-fluid rounded" style="width: 100px; height: 100px;">
                                     </div>
                                 }
 
                                 <div class="col">
                                     <p class="card-text text-black mb-0">@ad.Description?.Substring(0, Math.Min(ad.Description.Length, 150))</p>
-                                    <div class="annualInvestment">@ad.AnnualInvestmentReturn.ToString("0.")<i class="bi bi-percent"></i></div>
+                                    <div class="annualInvestment">
+                                        @ad.AnnualInvestmentReturn.ToString("0.")<i class="bi bi-percent"></i>
+                                    </div>
                                     <div class="duration">@InvestmentHelper.FormatInvestmentDuration(ad.InvestDurationYears, ad.InvestDurationMonths)</div>
                                     @if (ad.MinInvestValues != null && ad.MinInvestValues.Any())
                                     {
@@ -63,7 +66,7 @@
     }
 
 </div>
- @if (Model.Entities != null && Model.Entities.Any())
- {
-     @await Html.PartialAsync("_Pagination", (Model.PaginationInfo, Model.TagIds))
- }
+@if (Model.Entities != null && Model.Entities.Any())
+{
+    @await Html.PartialAsync("_Pagination", (Model.PaginationInfo, Model.TagIds))
+}

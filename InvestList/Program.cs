@@ -1,3 +1,4 @@
+using System.Reflection;
 using DataAccess;
 using DataAccess.Interfaces;
 using DataAccess.Models;
@@ -15,6 +16,7 @@ using InvestList.Filters;
 using InvestList.Logging;
 using InvestList.Services;
 using InvestList.Validators;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.LoadAppSettingAndEnvValues();
@@ -39,10 +41,11 @@ try
     //     .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<PostInvestAdViewModelValidator>())
     //     .AddRazorRuntimeCompilation();
     builder.Services.AddRazorPages().AddRazorPagesOptions(options =>
-            {
-                // Set the default page for Razor Pages in an area
-                options.Conventions.AddAreaPageRoute("Main", "/Invest/List", "");
-            });;
+    {
+        // Set the default page for Razor Pages in an area
+        options.Conventions.AddAreaPageRoute("Main", "/Invest/List", "");
+    });
+    ;
 
     builder.Services.AddAutoMapper(typeof(Program));
 
@@ -57,6 +60,7 @@ try
     builder.Services.AddScoped<ITagRepository, TagRepository>();
     builder.Services.AddScoped<ICommentRepository, CommentRepository>();
     builder.Services.AddScoped<IInvestService, InvestService>();
+    builder.Services.AddScoped<ImageService>();
     builder.Services.AddAuthentication()
         .AddGoogle(options =>
         {
@@ -70,6 +74,11 @@ try
     Log.Logger.Information("App is starting");
 
     var app = builder.Build();
+    // using (var scope = app.Services.CreateScope()) {
+    //     var i = scope.ServiceProvider.GetRequiredService<ImageService>();
+    //     await i.LoadOnFileSystem();
+    //     Log.Logger.Information("Images are load");
+    // }
     app.UseMiddleware<WwwRedirectMiddleware>();
     app.Use(async (context, next) =>
     {
@@ -91,20 +100,25 @@ try
     }
 
     app.UseHttpsRedirection();
-    app.UseStaticFiles();
+
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(
+            Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "wwwroot"))
+    });
 
     app.UseRouting();
 
     app.UseAuthentication();
     app.UseAuthorization();
 
-    app.UseEndpoints(endpoints =>
-    {
-        endpoints.MapControllerRoute(
-            name: "default",
-            pattern: "{controller=Home}/{action=Index}/{id?}");
-        endpoints.MapRazorPages();
-    });
+    // app.UseEndpoints(endpoints =>
+    // {
+    //     endpoints.MapControllerRoute(
+    //         name: "default",
+    //         pattern: "{controller=Home}/{action=Index}/{id?}");
+    //     endpoints.MapRazorPages();
+    // });
 
     app.MapRazorPages();
 

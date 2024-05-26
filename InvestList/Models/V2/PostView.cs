@@ -24,6 +24,8 @@ namespace InvestList.Models.V2
         public string? DescriptionSeo { get; set; }
         public string? ImageBase64 { get; set; }
 
+        public ImageView Image { get; set; }
+
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public IEnumerable<TagView> Tags { get; set; }

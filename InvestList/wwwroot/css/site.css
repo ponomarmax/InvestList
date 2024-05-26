@@ -12,7 +12,7 @@ html {
     }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 992px) { 
     .col-4 {
         width: 100%;
         margin-top: 10px;
@@ -60,6 +60,10 @@ li {
     object-fit: cover;
 }
 
+.curr {width: 50px;}
+.dur {width: 30%;}
+.tagg {margin-top: 20px;}
+
 .annualInvestment, .duration, .currency, .text-muted {
     display: inline-block;
     padding: 6px 12px;
@@ -76,23 +80,15 @@ li {
     background-color: #48D7FD;
 }
 
-.duration {
-    background-color: #1A8802;
-}
-
-.currency {
-    background-color: #0d6efd;
-}
-
-.text-muted {
-    background-color: #6c757d;
-}
+.duration {background-color: #1A8802;}
+.currency {background-color: #0d6efd;}
+.text-muted {background-color: #6c757d;}
 
 .tag_index {
     display: inline-block;
     padding: 6px 12px;
     margin-right: 5px;
-    font-size: 12px;
+    font-size: 15px;
     font-weight: 600;
     border-radius: 5px;
     text-transform: uppercase;
@@ -104,7 +100,7 @@ li {
     padding: 6px 12px;
     margin-right: 5px;
     margin-bottom: 15px;
-    font-size: 12px;
+    font-size: 15px;
     font-weight: 600;
     border-radius: 15px;
     text-transform: uppercase;

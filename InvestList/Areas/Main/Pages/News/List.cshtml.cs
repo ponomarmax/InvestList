@@ -5,13 +5,13 @@ using InvestList.Models.V2;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace InvestList.Areas.Main.Pages.Invest
+namespace InvestList.Areas.Main.Pages.News
 {
-    public class List(IInvestRepository repository, IMapper mapper): PageModel
+    public class List(IPostRepository repository, IMapper mapper): PageModel
     {
         private const int ItemsPerPage = 50;
 
-        public IEnumerable<InvestView> Entities { get; set; }
+        public IEnumerable<PostView> Entities { get; set; }
         public IEnumerable<Guid> TagIds { get; set; }
         public PaginationInfo PaginationInfo { get; set; }
 
@@ -27,7 +27,7 @@ namespace InvestList.Areas.Main.Pages.Invest
             var (count, resultDb) = await repository.Filter(pageIndex, ItemsPerPage, guidTagIds);
             if (!resultDb.Any() && pageIndex != 1) return NotFound();
 
-            var resultView = mapper.Map<IEnumerable<InvestView>>(resultDb);
+            var resultView = mapper.Map<IEnumerable<PostView>>(resultDb);
 
             var totalPages = (int)Math.Ceiling((double)count / ItemsPerPage);
             ViewData.SetupListPostViewSeoDetails(resultView);

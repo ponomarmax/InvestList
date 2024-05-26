@@ -6,24 +6,21 @@ using InvestList.Models.V2;
 
 namespace InvestList.Services
 {
-    public interface IInvestService
+    public interface IPostService
     {
-        Task<string> Put(string? idString, string userId, PutInvestModel putInvestModel);
+        Task<string> Put(string? idString, string userId, PutPostModel putInvestModel);
     }
 
-    public class InvestService(IMapper mapper, IInvestRepository repository): IInvestService
+    public class PostService(IMapper mapper, IPostRepository repository): IPostService
     {
-        public async Task<string> Put(string? idString, string userId, PutInvestModel putInvestModel)
+        public async Task<string> Put(string? idString, string userId, PutPostModel putInvestModel)
         {
-            putInvestModel.MinInvestValues = putInvestModel.MinInvestValues.Where(x => x.MinValue.HasValue);
-            var invest = mapper.Map<InvestPost>(putInvestModel);
             var post = mapper.Map<Post>(putInvestModel);
-            invest.Post = post;
             if (Guid.TryParse(idString, out var id))
             {
                 post.Id = id;
                 post.UpdatedAt = DateTime.UtcNow;
-                await repository.Put(id, invest);
+                await repository.Put(id, post);
             }
             else
             {
@@ -32,8 +29,8 @@ namespace InvestList.Services
                 post.CreatedById = userId;
                 post.UpdatedAt = post.CreatedAt;
                 post.Slug = await CreateSlug(post.Title);
-                post.PostType = PostType.InvestAd;
-                await repository.Create(invest);
+                post.PostType = PostType.News;
+                await repository.Create(post);
             }
 
             return idString ?? post.Slug;

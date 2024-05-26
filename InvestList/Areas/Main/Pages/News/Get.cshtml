@@ -1,0 +1,86 @@
+@page "/news/{id}"
+@using InvestList
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model InvestList.Areas.Main.Pages.News.Get
+
+<div class="container mb-4">
+    @if (Model.CanUserEdit)
+    {
+        <a asp-page="./Edit" asp-route-id="@Model.Post.Id" class="btn btn-primary me-2">Редагувати</a>
+    }
+
+    <a asp-page="./List" class="btn btn-secondary">Повернутись до списку</a>
+</div>
+<div class="row">
+    <div class="col-8">
+                <h1>@Model.Post.Title</h1>
+                @if (Model?.Post.Tags?.Any() == true)
+                {
+                    <div class="card-text">
+                        <div class="tags mb-3">
+                            @foreach (var field in Model.Post.Tags)
+                            {
+                                <span class="badge bg-primary"># @field.Name</span>
+                            }
+                        </div>
+                    </div>
+                }
+                <img src="data:image;base64,@Model.Post.ImageBase64" alt="Investment Image" class="img-fluid resized-image"/><br><br>
+                <div class="row mb-4">
+                    <div class="well col-12">
+                        <pre>@Model.Post.Description</pre>
+                    </div>
+                </div>
+                @if (Model.Post.Links != null && Model.Post.Links.Any())
+                {
+                    <div id="inputsContainer">
+                        <p class="card-text mb-2"> Посилання на статті</p>
+                        <ul class="list-group">
+                            @foreach (var link in Model.Post.Links)
+                            {
+                                <li class="list-group-item">
+                                    <a href="@link.Hyperlink" rel="@((link.Follow ? "follow" : "nofollow"))">
+                                        <strong>@link.AnchorText</strong>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                }
+    
+                @await Html.PartialAsync("_DisplayComments", (Model.Post.Id, Model.Post.PostType, Model.Post.Comments))
+    
+            </div>
+    <div class="col-4">
+        @if (Model.Post.SimilarNews != null && Model.Post.SimilarNews.Any())
+        {
+            <p>Схожі новини</p>
+            @await Html.PartialAsync("_SimilarContent", ("News", Model.Post.SimilarNews, Model.Post.Tags))
+            <a class="btn-primary"
+               asp-area="Main"
+               asp-page="/News/List"
+               asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.Post.Tags.Select(x => x.Id)))">
+                Більше новини...
+            </a>
+        }
+        <hr/>
+        @if (Model.Post.SimilarInvests != null && Model.Post.SimilarInvests.Any())
+        {
+            <p>Схожі оголошення</p>
+            @await Html.PartialAsync("_SimilarContent", ("Invest", Model.Post.SimilarInvests, Model.Post.Tags))
+            <a class="btn-primary"
+               asp-area="Main"
+               asp-page="/Invest/List"
+               asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.Post.Tags.Select(x => x.Id)))">
+                Більше оголошень...
+            </a>
+        }
+    </div>
+</div>
+
+<script>
+    window.onload = function() {
+        var shareUrl = encodeURIComponent(window.location.href);
+        tg_share.href ='https://t.me/share/url?url=' + shareUrl;
+    }
+</script>

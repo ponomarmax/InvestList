@@ -1,5 +1,6 @@
 ﻿@using InvestList.Services
-@inject ITagService tagService
+@using DataAccess.Repositories
+@inject ITagRepository tagService
 <!DOCTYPE html>
 <html lang="uk">
 <head>
@@ -48,15 +49,15 @@
         @if (User.IsInRole(Const.AdminRole))
         {
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-current="page" asp-controller="News" asp-action="Index">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-current="page">
                     НОВИНИ
                 </a>
                 <ul class="dropdown-menu">
                     <li>
-                        <a asp-action="Index" asp-controller="News" class="dropdown-item">Переглянути новини</a>
+                        <a asp-area="Main" asp-page="/News/List" class="dropdown-item">Переглянути новини</a>
                     </li>
                     <li>
-                        <a asp-action="Create" asp-controller="News" class="dropdown-item">Створити новину</a>
+                        <a asp-area="Main" asp-page="/News/Create" class="dropdown-item">Створити новину</a>
                     </li>
                 </ul>
             </li>
@@ -64,7 +65,7 @@
         else
         {
             <li class="nav-item">
-                <a asp-controller="News" asp-action="Index" class="nav-link">НОВИНИ</a>
+                <a class="nav-link" asp-area="Main" asp-page="/News/List">Переглянути новини</a>
             </li>
         }
         <li class="nav-item dropdown">
@@ -73,7 +74,7 @@
             </a>
             <ul class="dropdown-menu">
                 <li>
-                    <a asp-action="Index" asp-controller="Invest" class="dropdown-item">Всі заявки</a>
+                    <a asp-area="Main" asp-page="/Invest/List" class="dropdown-item">Всі заявки</a>
                 </li>
                 <li>
                     <a asp-area="Main" asp-page="/Invest/Create" class="dropdown-item">Створити заявку</a>
@@ -106,7 +107,12 @@
                 @foreach (var tag in header)
                 {
                     <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Index", "News", new { tagIds = new[] { tag.Id } })">#@tag.Name</a>
+                        <a class="nav-link"
+                                       asp-area="Main"
+                                       asp-page="/News/List"
+                                       asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: new[] { tag.TagId }))">
+                                        #@tag.Tag.Name
+                                    </a>
                     </li>
                 }
             </ul>
@@ -123,16 +129,16 @@
 <footer class="border-top bg-light text-dark py-3">
     <ul class="nav justify-content-center border-bottom pb-3 mb-3">
         <li class="nav-item">
-            <a href="https://t.me/invesstradar" class="nav-link px-2 text-muted"><i class="bi-telegram"></i> Telegram</a>
+            <a href="https://t.me/invesstradar" class="nav-link px-2 creation-data"><i class="bi-telegram"></i> Telegram</a>
         </li>
         <li class="nav-item">
-            <a href="https://forms.gle/DTgQQGUEixvhyLAA7" class="nav-link px-2 text-muted"><i class="bi bi-google"></i> Ваш досвід інвестування</a>
+            <a href="https://forms.gle/DTgQQGUEixvhyLAA7" class="nav-link px-2 creation-data"><i class="bi bi-google"></i> Ваш досвід інвестування</a>
         </li>
         <li class="nav-item">
-            <a href="https://forms.gle/BpSkLHWuq6y7yRiP9" class="nav-link px-2 text-muted"><i class="bi bi-google"></i> Фідбек по роботі сайту</a>
+            <a href="https://forms.gle/BpSkLHWuq6y7yRiP9" class="nav-link px-2 creation-data"><i class="bi bi-google"></i> Фідбек по роботі сайту</a>
         </li>
         <li class="nav-item">
-            <a href="/privacy-policy.html" class="nav-link px-2 text-muted">Політика конфіденційності</a>
+            <a href="/privacy-policy.html" class="nav-link px-2 creation-data">Політика конфіденційності</a>
         </li>
     </ul>
 </footer>

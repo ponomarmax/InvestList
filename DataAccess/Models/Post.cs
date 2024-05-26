@@ -1,8 +1,9 @@
 namespace DataAccess.Models
 {
     public enum PostType{
-        InvestAd = 0,
-        News = 1,
+        Undefined = 0,
+        InvestAd = 1,
+        News = 2,
     }
     
     public class Post
@@ -28,7 +29,7 @@ namespace DataAccess.Models
         public DateTime UpdatedAt { get; set; }
 
         public IEnumerable<PostTags>? Tags { get; set; }
-        public IEnumerable<Link>? Links { get; set; }
+        public IEnumerable<PostLink>? Links { get; set; }
         public IEnumerable<PostComment>? Comments { get; set; }
         public  IEnumerable<Image>? Images { get; set; }
     }

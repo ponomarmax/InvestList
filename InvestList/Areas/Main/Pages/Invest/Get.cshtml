@@ -72,7 +72,7 @@
                 @* <a class="facebook" href="" id="fb_share" alt=""><img class="message" src="/ico/facebook.png" alt=""></a> *@
             </span>
         </div>
-        @await Html.PartialAsync("_DisplayComments", ((Guid?)Model.Post.Id, new Guid?(), Model.Post.Comments))
+        @await Html.PartialAsync("_DisplayComments", (Model.Post.Id, Model.Post.PostType, Model.Post.Comments))
 
     </div>
     <div class="col-4">
@@ -88,11 +88,16 @@
             </a>
         }
         @if (Model.Post.SimilarNews != null && Model.Post.SimilarNews.Any())
-        {
-            <p>Схожі новини</p>
-            @await Html.PartialAsync("_SimilarContent", ("News", Model.Post.SimilarNews, Model.Post.Tags))
-            <a href="@Url.Action("Index", "News", new { tagIds = Model.Post.Tags.Select(x => x.Id) })">Більше новин...</a>
-        }
+                {
+                    <p>Схожі новини</p>
+                    @await Html.PartialAsync("_SimilarContent", ("News", Model.Post.SimilarNews, Model.Post.Tags))
+                    <a class="btn-primary"
+                       asp-area="Main"
+                       asp-page="/News/List"
+                       asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.Post.Tags.Select(x => x.Id)))">
+                        Більше новини...
+                    </a>
+                }
     </div>
 </div>
 

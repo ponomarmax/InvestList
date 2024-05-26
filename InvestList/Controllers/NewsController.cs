@@ -29,126 +29,73 @@ namespace InvestList.Controllers
             {
                 return NotFound();
             }
-
-            var tagIds = requestModel?.TagIds?.Where(x => Guid.TryParse(x, out _)).Select(Guid.Parse).ToList();
-            var resultDb = await repository.GetPage(page, ItemsPerPage,
-                tagIds);
-            if (!resultDb.Any())
-            {
-                if (tagIds != null && tagIds.Any())
-                {
-                    return View(new ListNewsViewModel() { Entities = null, FilterModel = requestModel });
-                }
-                return NotFound();
-            }
-
-            var resultView = mapper.Map<IEnumerable<GetNewsViewModel>>(resultDb);
-            if (page != 1)
-            {
-                ViewData["DisplayNoIndexTag"] = true;
-            }
-
-            var totalItems = (await repository.Count(tagIds))!;
-            var totalPages = (int)Math.Ceiling((double)totalItems / ItemsPerPage);
-
-            SetTitles(resultView);
-            SetIndexPageDescription(resultView);
-
-            var viewModel = new ListNewsViewModel
-            {
-                Entities = resultView,
-                PaginationInfo = new PaginationInfo
-                {
-                    CurrentPage = page,
-                    TotalPages = totalPages,
-                    PageSize = ItemsPerPage
-                },
-                FilterModel = requestModel
-            };
-
-            return View(viewModel);
-        }
-
-        [AllowAnonymous]
-        [Route("news/{slug}")]
-        public async Task<ActionResult> Get(string slug)
-        {
-            var db = await repository.Get(slug);
-            if (db == null)
-                return NotFound();
-            var tagIds = db.Tags.Select(x=>x.TagId).ToList();
-            var similarNews = await repository.GetSimilarNews(tagIds);
-            var result = mapper.Map<GetNewsViewModel>(db);
-            var similarNewsViewModels = mapper.Map<IEnumerable<GetNewsViewModel>>(similarNews);
-            var similarAds = mapper.Map<IEnumerable<GetAllAdsView>>(await investAdRepository.GetSimilarInvest(tagIds));
-            result.SimilarNews = similarNewsViewModels;
-            result.SimilarInvests = similarAds;
-            SetTitleAndDescription(result);
-            return View("Details", result);
-        }
         
+            return RedirectToPagePermanent("/Areas/Main/Pages/News/List", new { pageIndex = page, tagIds = requestModel?.TagIds });
+        }
+
         [AllowAnonymous]
         public async Task<ActionResult> Details(Guid id)
         {
             var db = await repository.Get(id);
             if (db == null)
                 return NotFound();
-            return RedirectToActionPermanent("Get", new { slug = db.Slug });
+            return RedirectToPagePermanent("/News/Get", new { area="Main", id = db.Slug });
         }
 
-        [EmailConfirmedAuthorize]
-        public async Task<ActionResult> Create()
-        {
-            await PrepopulateCreate();
-            return View("Create");
-        }
-
-
-        [HttpPost]
-        [EmailConfirmedAuthorize]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(PostNewsViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                await PrepopulateCreate();
-                return View("Create", model);
-            }
-
-            var news = mapper.Map<News>(model);
-            await repository.Create(news);
-
-            return RedirectToAction("Details", new { id = news.Id });
-        }
-
-        public async Task<ActionResult> Edit(Guid id)
-        {
-            var db = await repository.Get(id);
-            var result = mapper.Map<PostNewsViewModel>(db);
-            ViewData["Id"] = id;
-            await PrepopulateCreate();
-            return View(result);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [FromForm] PostNewsViewModel model)
-        {
-            var db = await repository.Get(id);
-            if (db == null) return null;
-            if (!ModelState.IsValid)
-            {
-                ViewData["Id"] = id;
-                await PrepopulateCreate();
-                return View("Edit", model);
-            }
-
-            var inv = mapper.Map<News>(model);
-            inv.Id = id;
-            await repository.Edit(inv);
-
-            return RedirectToAction("Details", new { id = inv.Id });
-        }
+        // [EmailConfirmedAuthorize]
+        // [HttpGet]
+        // public async Task<ActionResult> Create()
+        // {
+        //     await PrepopulateCreate();
+        //     return View("Create");
+        // }
+        //
+        //
+        // [HttpPost]
+        // [EmailConfirmedAuthorize]
+        // [ValidateAntiForgeryToken]
+        // public async Task<IActionResult> Create(PostNewsViewModel model)
+        // {
+        //     if (!ModelState.IsValid)
+        //     {
+        //         await PrepopulateCreate();
+        //         return View("Create", model);
+        //     }
+        //
+        //     var news = mapper.Map<News>(model);
+        //     await repository.Create(news);
+        //
+        //     return RedirectToAction("Details", new { id = news.Id });
+        // }
+        //
+        // public async Task<ActionResult> Edit(Guid id)
+        // {
+        //     var db = await repository.Get(id);
+        //     var result = mapper.Map<PostNewsViewModel>(db);
+        //     ViewData["Id"] = id;
+        //     await PrepopulateCreate();
+        //     return View(result);
+        // }
+        //
+        // [HttpPost]
+        // [ValidateAntiForgeryToken]
+        // public async Task<IActionResult> Edit(Guid id, [FromForm] PostNewsViewModel model)
+        // {
+        //     var db = await repository.Get(id);
+        //     if (db == null) return null;
+        //     if (!ModelState.IsValid)
+        //     {
+        //         ViewData["Id"] = id;
+        //         await PrepopulateCreate();
+        //         return View("Edit", model);
+        //     }
+        //
+        //     var inv = mapper.Map<News>(model);
+        //     inv.Id = id;
+        //     await repository.Edit(inv);
+        //
+        //     return RedirectToAction("Details", new { id = inv.Id });
+        // }
 
         private async Task PrepopulateCreate()
         {

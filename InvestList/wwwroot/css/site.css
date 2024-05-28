@@ -29,6 +29,7 @@ html {
 
 header {
     padding: 10px;
+    background-color: #EAEAEA;
 }
 
 pre {
@@ -39,6 +40,76 @@ pre {
 
 li {
     list-style-type: none;
+}
+
+.language {
+    margin: 7px 150px 0 150px;
+}
+
+.input-group {
+    width: auto;
+    margin-top: 7px;
+}
+
+.search_but{
+    border-radius: 10px 0 0 10px;
+    border: 2px solid #333333;
+    border-right: 0;
+    background-color: #FFFFFF;
+}
+
+.search {
+    border-radius: 0 10px 10px 0;
+    border: 2px solid #333333;
+    border-left: 0;
+}
+
+.search:focus {
+    outline: none;
+}
+
+.news, .projects, .admin {
+    margin-right: 4px;
+}
+
+.margin_user {
+    margin-left: 6%;
+    margin-top: 10px;
+}
+
+.margin_admin {
+    margin-left: 10%;
+    margin-top: 10px;
+}
+
+.margin_auth {
+    margin-left: 14%;
+    margin-top: 10px;
+}
+
+.logIn, .add_project, .profile, .admin, .projects, .news {
+    height: 40px;
+    padding: 10px;
+    border: 2px solid #333333;
+    border-radius: 25px;
+    background-color: #FFFFFF;
+    font-size: 0.8em;
+    font-family: "e-Ukraine-bold";
+    color: #333333;
+    text-decoration: none;
+}
+
+.reg {
+    height: 40px;
+    padding: 10px;
+    border: 2px solid #333333;
+    border-radius: 25px;
+    background-color: #333333;
+    font-size: 0.8em;
+    font-family: "e-Ukraine-bold";
+    color: #FFFFFF;
+    text-decoration: none;
+    margin-right: 10px;
 }
 
 .col-md-4 {
@@ -70,7 +141,7 @@ li {
     margin-right: 5px;
     margin-bottom: 4px;
     font-size: 15px;
-    font-weight: 600;
+    font-weight: 700;
     border-radius: 5px;
     text-transform: uppercase;
 }
@@ -387,5 +458,11 @@ li {
     font-family: 'e-Ukraine';
     src: url('../fonts/e-Ukraine/e-Ukraine-Regular.woff2') format('woff2');
     font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'e-Ukraine-bold';
+    src: url('../fonts/e-Ukraine/e-Ukraine-Bold.woff2') format('woff2');
+    font-weight: 700;
     font-style: normal;
 }

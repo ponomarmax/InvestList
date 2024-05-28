@@ -42,6 +42,14 @@ li {
     list-style-type: none;
 }
 
+.nav-panel {
+    border-bottom: 2px solid #F2F2F2;
+}
+
+.nav-link {
+    color: #444444;
+}
+
 .language {
     margin: 7px 150px 0 150px;
 }

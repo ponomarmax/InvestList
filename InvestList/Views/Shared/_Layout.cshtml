@@ -99,9 +99,9 @@
 
     @* <partial name="_LoginPartial"/> *@
 </header>
-<div class="my-2">
+@* <div class="my-2">
     <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-        @* @if (User.IsInRole(Const.AdminRole))
+         @if (User.IsInRole(Const.AdminRole))
         {
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-current="page">
@@ -149,25 +149,25 @@
             <li class="nav-item">
                 <a asp-action="Index" asp-controller="Admin" class="nav-link">Додати тег</a>
             </li>
-        }*@
+        }
     </ul>
-</div>
+</div> *@
 
 @{
     var header = await tagService.GetCustomHeader();
     if (header?.Count() > 0)
     {
-        <div class="my-2">
-            <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+        <div class="nav-panel my-2">
+            <ul class="nav nav-tags col-12 col-md-auto mb-2 justify-content-center mb-md-0">
                 @foreach (var tag in header)
                 {
                     <li class="nav-item">
                         <a class="nav-link"
-                                       asp-area="Main"
-                                       asp-page="/News/List"
-                                       asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: new[] { tag.TagId }))">
-                                        #@tag.Tag.Name
-                                    </a>
+                            asp-area="Main"
+                            asp-page="/News/List"
+                            asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: new[] { tag.TagId }))">
+                            @tag.Tag.Name
+                        </a>
                     </li>
                 }
             </ul>

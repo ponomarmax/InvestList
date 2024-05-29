@@ -3,11 +3,9 @@
 #nullable disable
 
 using System.ComponentModel.DataAnnotations;
-using System.Net;
-using System.Net.Mail;
 using System.Text;
 using System.Text.Encodings.Web;
-using DataAccess.Models;
+using Core.Entities;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;

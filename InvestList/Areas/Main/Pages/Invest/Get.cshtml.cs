@@ -1,7 +1,6 @@
 using AutoMapper;
-using DataAccess.Interfaces;
-using DataAccess.Models;
-using DataAccess.Repositories.V2;
+using Core.Entities;
+using Core.Interfaces;
 using InvestList.Models.V2;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -38,7 +37,7 @@ public class Get(IInvestRepository repository, IPostRepository postRepository, I
 
         var tagIds = Post.Tags.Select(x => x.Id).ToList();
 
-        var similarContent = (await postRepository.GetSimilarPosts(investPost.Id, tagIds)).ToList();
+        var similarContent = (await postRepository.GetSimilarPosts(investPost.Post.Id, tagIds)).ToList();
         
         Post.SimilarNews = mapper.Map<IEnumerable<PostView>>(similarContent.Where(x=>x.PostType==PostType.News));
         Post.SimilarInvests = mapper.Map<IEnumerable<PostView>>(similarContent.Where(x=>x.PostType==PostType.InvestAd));

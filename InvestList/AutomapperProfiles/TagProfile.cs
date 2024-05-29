@@ -1,5 +1,5 @@
 using AutoMapper;
-using DataAccess.Models;
+using Core.Entities;
 using InvestList.Models;
 
 namespace InvestList.AutomapperProfiles

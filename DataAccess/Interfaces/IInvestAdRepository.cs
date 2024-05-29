@@ -1,4 +1,4 @@
-﻿using DataAccess.Models;
+﻿using Core.Entities;
 
 namespace DataAccess.Interfaces
 {

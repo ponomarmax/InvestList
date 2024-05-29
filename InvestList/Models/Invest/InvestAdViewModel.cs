@@ -1,4 +1,4 @@
-﻿using DataAccess.Models;
+﻿using Core.Entities;
 using InvestList.Models.Comment;
 using InvestList.Models.News;
 

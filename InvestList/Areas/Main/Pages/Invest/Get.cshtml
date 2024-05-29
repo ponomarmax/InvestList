@@ -57,10 +57,10 @@
                 <pre class="card-body md:order-2 order-1" style="width: 50%">
                     @Model.Post.Description
                 </pre>
-                @if (!string.IsNullOrEmpty(Model.Post.ImageBase64))
+                @if (Model.Post.Image != null)
                 {
                     <div class="md:order-1 order-md-2">
-                        <img src="data:image;base64,@Model.Post.ImageBase64" alt="Investment Image"/>
+                        <img src="@Model.Post.Image.FilePath" alt="@Model.Post.Image.AltText" class="img-fluid rounded">
                     </div>
                 }
             </div>
@@ -88,16 +88,16 @@
             </a>
         }
         @if (Model.Post.SimilarNews != null && Model.Post.SimilarNews.Any())
-                {
-                    <p>Схожі новини</p>
-                    @await Html.PartialAsync("_SimilarContent", ("News", Model.Post.SimilarNews, Model.Post.Tags))
-                    <a class="btn-primary"
-                       asp-area="Main"
-                       asp-page="/News/List"
-                       asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.Post.Tags.Select(x => x.Id)))">
-                        Більше новини...
-                    </a>
-                }
+        {
+            <p>Схожі новини</p>
+            @await Html.PartialAsync("_SimilarContent", ("News", Model.Post.SimilarNews, Model.Post.Tags))
+            <a class="btn-primary"
+               asp-area="Main"
+               asp-page="/News/List"
+               asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.Post.Tags.Select(x => x.Id)))">
+                Більше новини...
+            </a>
+        }
     </div>
 </div>
 

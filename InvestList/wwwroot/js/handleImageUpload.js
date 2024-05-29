@@ -53,9 +53,9 @@ function handleImageChange() {
                 // Resize and convert the image
                 var canvas = document.createElement( 'canvas' );
                 var ctx = canvas.getContext( '2d' );
-                canvas.width = 300;
-                canvas.height = 300;
-                ctx.drawImage( img, 0, 0, 300, 300 );
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage( img, 0, 0);
                 var compressedBase64 = canvas.toDataURL( 'image/jpeg', 0.7 ).split( ',' )[1];
 
                 // Display the image

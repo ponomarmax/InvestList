@@ -1,6 +1,4 @@
-﻿using DataAccess.Models;
-
-namespace InvestList.Models.News
+﻿namespace InvestList.Models.News
 {
     public class PostNewsViewModel
     {

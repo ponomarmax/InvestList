@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using DataAccess.Models;
 using System.Linq.Expressions;
+using Core.Entities;
 using InvestList.Models;
 using InvestList.Models.Comment;
 using InvestList.Models.Invest;

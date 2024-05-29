@@ -1,5 +1,6 @@
 ﻿using Common;
-using DataAccess.Models;
+using Core;
+using Core.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,8 @@ namespace DataAccess
         public DbSet<Post> Posts { get; set; }
         public DbSet<InvestPost> InvestPosts { get; set; }
         public DbSet<CustomHeader> CustomHeaders { get; set; }
+        public DbSet<Image> Image { get; set; }
+        public DbSet<ImageMetadata> ImageMetadata { get; set; }
         public DbSet<PostComment> PostComments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

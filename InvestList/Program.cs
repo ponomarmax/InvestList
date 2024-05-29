@@ -1,7 +1,8 @@
 using System.Reflection;
+using Core.Entities;
+using Core.Interfaces;
 using DataAccess;
 using DataAccess.Interfaces;
-using DataAccess.Models;
 using DataAccess.Repositories;
 using DataAccess.Repositories.V2;
 using FluentValidation.AspNetCore;
@@ -12,7 +13,6 @@ using Serilog;
 using InvestList;
 using InvestList.Configs;
 using InvestList.Extensions;
-using InvestList.Filters;
 using InvestList.Logging;
 using InvestList.Services;
 using InvestList.Validators;
@@ -60,7 +60,7 @@ try
     builder.Services.AddScoped<ITagRepository, TagRepository>();
     builder.Services.AddScoped<ICommentRepository, CommentRepository>();
     builder.Services.AddScoped<IInvestService, InvestService>();
-    builder.Services.AddScoped<ImageService>();
+    builder.Services.AddScoped<IImageService, ImageService>();
     builder.Services.AddAuthentication()
         .AddGoogle(options =>
         {
@@ -75,7 +75,7 @@ try
 
     var app = builder.Build();
     // using (var scope = app.Services.CreateScope()) {
-    //     var i = scope.ServiceProvider.GetRequiredService<ImageService>();
+    //     var i = scope.ServiceProvider.GetRequiredService<IImageService>();
     //     await i.LoadOnFileSystem();
     //     Log.Logger.Information("Images are load");
     // }
@@ -112,13 +112,10 @@ try
     app.UseAuthentication();
     app.UseAuthorization();
 
-    // app.UseEndpoints(endpoints =>
-    // {
-    //     endpoints.MapControllerRoute(
-    //         name: "default",
-    //         pattern: "{controller=Home}/{action=Index}/{id?}");
-    //     endpoints.MapRazorPages();
-    // });
+    app.MapControllerRoute(
+            name: "default",
+            pattern: "{controller=Home}/{action=Index}/{id?}")
+    ;
 
     app.MapRazorPages();
 

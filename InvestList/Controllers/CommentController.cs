@@ -1,7 +1,7 @@
 using AutoMapper;
 using Common;
-using DataAccess.Interfaces;
-using DataAccess.Models;
+using Core.Entities;
+using Core.Interfaces;
 using InvestList.Filters;
 using InvestList.Models.Comment;
 using Microsoft.AspNetCore.Authorization;

@@ -1,5 +1,4 @@
-﻿using DataAccess.Models;
-using InvestList.Models.Comment;
+﻿using InvestList.Models.Comment;
 using InvestList.Models.Invest;
 
 namespace InvestList.Models.News

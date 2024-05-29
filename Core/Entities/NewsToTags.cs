@@ -1,5 +1,6 @@
-﻿namespace DataAccess.Models
+﻿namespace Core.Entities
 {
+    [Obsolete]
     public class NewsToTags
     {
         public Guid NewsId { get; set; }

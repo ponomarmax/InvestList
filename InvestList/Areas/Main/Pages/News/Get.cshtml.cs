@@ -1,6 +1,6 @@
 using AutoMapper;
-using DataAccess.Models;
-using DataAccess.Repositories.V2;
+using Core.Entities;
+using Core.Interfaces;
 using InvestList.Models.V2;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

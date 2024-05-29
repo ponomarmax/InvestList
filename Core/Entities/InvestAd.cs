@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DataAccess.Models
+namespace Core.Entities
 {
+    [Obsolete]
     public class InvestAd
     {
         [Key]

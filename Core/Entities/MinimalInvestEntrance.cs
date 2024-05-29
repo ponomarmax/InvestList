@@ -1,7 +1,6 @@
-﻿using Common;
-
-namespace DataAccess.Models
+﻿namespace Core.Entities
 {
+    [Obsolete]
     public record MinimalInvestEntrance
     {
         public Guid Id { get; set; }

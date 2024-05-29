@@ -1,4 +1,4 @@
-using DataAccess.Models;
+using Core.Entities;
 
 namespace InvestList.Models.Comment
 {

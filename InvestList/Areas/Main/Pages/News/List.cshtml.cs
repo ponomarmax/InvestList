@@ -1,4 +1,5 @@
 using AutoMapper;
+using Core.Interfaces;
 using DataAccess.Repositories.V2;
 using InvestList.Models;
 using InvestList.Models.V2;

@@ -1,6 +1,7 @@
 @using InvestList.Models.Comment
 @using System.Security.Claims
-@using DataAccess.Models
+@using Core.Entities
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model (Guid postId, PostType postType, IEnumerable<CommentView> comments)
 @inject SignInManager<User> SignInManager
 

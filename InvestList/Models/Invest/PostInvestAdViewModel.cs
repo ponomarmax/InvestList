@@ -1,4 +1,5 @@
 ﻿using Common;
+using Core;
 
 namespace InvestList.Models.Invest
 {

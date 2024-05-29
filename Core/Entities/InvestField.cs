@@ -1,5 +1,6 @@
-﻿namespace DataAccess.Models
+﻿namespace Core.Entities
 {
+    [Obsolete]
     public record InvestField
     {
         public Guid Id { get; set; }

@@ -1,6 +1,7 @@
 ﻿using Common;
+using Core;
+using Core.Entities;
 using DataAccess.Interfaces;
-using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Repositories

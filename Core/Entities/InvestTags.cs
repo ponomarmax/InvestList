@@ -1,5 +1,6 @@
-﻿namespace DataAccess.Models
+﻿namespace Core.Entities
 {
+    [Obsolete]
     public class InvestTags
     {
         public Guid InvestId { get; set; }

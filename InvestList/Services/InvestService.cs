@@ -1,7 +1,7 @@
 using AutoMapper;
 using Core;
-using DataAccess.Models;
-using DataAccess.Repositories.V2;
+using Core.Entities;
+using Core.Interfaces;
 using InvestList.Models.V2;
 
 namespace InvestList.Services

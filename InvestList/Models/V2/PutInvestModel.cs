@@ -1,8 +1,9 @@
 ﻿using Common;
+using Core;
 
 namespace InvestList.Models.V2
 {
-    public class PutInvestModel:PutPostModel
+    public class PutInvestModel: PutPostModel
     {
         public decimal AnnualInvestmentReturn { get; set; }
 

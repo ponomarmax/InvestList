@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using DataAccess.Interfaces;
 using Common;
+using Core.Interfaces;
 
 namespace InvestList.Filters
 {

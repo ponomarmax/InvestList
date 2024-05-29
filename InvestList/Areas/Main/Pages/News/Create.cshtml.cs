@@ -1,6 +1,6 @@
 using Common;
-using DataAccess.Models;
-using DataAccess.Repositories;
+using Core.Entities;
+using Core.Interfaces;
 using InvestList.Models.V2;
 using InvestList.Services;
 using Microsoft.AspNetCore.Identity;

@@ -92,6 +92,42 @@ namespace DataAccess.Migrations
                     b.ToTable("Image");
                 });
 
+            modelBuilder.Entity("DataAccess.Models.ImageMetadata", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ImageObjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ImageObjectId");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("ImageMetadata");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.ImageObject", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("Image")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ImageObject");
+                });
+
             modelBuilder.Entity("DataAccess.Models.InvestAd", b =>
                 {
                     b.Property<Guid>("Id")
@@ -878,6 +914,25 @@ namespace DataAccess.Migrations
                     b.Navigation("Post");
                 });
 
+            modelBuilder.Entity("DataAccess.Models.ImageMetadata", b =>
+                {
+                    b.HasOne("DataAccess.Models.ImageObject", "ImageObject")
+                        .WithMany()
+                        .HasForeignKey("ImageObjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DataAccess.Models.Post", "Post")
+                        .WithMany("ImagesV2")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ImageObject");
+
+                    b.Navigation("Post");
+                });
+
             modelBuilder.Entity("DataAccess.Models.InvestAd", b =>
                 {
                     b.HasOne("DataAccess.Models.User", "Author")
@@ -1155,6 +1210,8 @@ namespace DataAccess.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("Images");
+
+                    b.Navigation("ImagesV2");
 
                     b.Navigation("Links");
 

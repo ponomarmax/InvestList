@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
-using Common;
-using DataAccess.Models;
+using Core;
+using Core.Entities;
 using Microsoft.AspNetCore.Identity;
 
 namespace InvestList

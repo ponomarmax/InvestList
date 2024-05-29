@@ -1,5 +1,5 @@
 using AutoMapper;
-using DataAccess.Repositories.V2;
+using Core.Interfaces;
 using InvestList.Models;
 using InvestList.Models.V2;
 using Microsoft.AspNetCore.Mvc;

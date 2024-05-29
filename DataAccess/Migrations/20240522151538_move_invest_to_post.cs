@@ -1,6 +1,6 @@
 ﻿using System;
 using Core;
-using DataAccess.Models;
+using Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;

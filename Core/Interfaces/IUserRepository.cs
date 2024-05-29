@@ -1,6 +1,6 @@
-﻿using DataAccess.Models;
+﻿using Core.Entities;
 
-namespace DataAccess.Interfaces
+namespace Core.Interfaces
 {
     public interface IUserRepository
     {

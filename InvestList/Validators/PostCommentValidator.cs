@@ -1,8 +1,6 @@
 using Common;
 using FluentValidation;
 using InvestList.Models.Comment;
-using InvestList.Models.News;
-using SixLabors.ImageSharp;
 
 namespace InvestList.Validators
 {

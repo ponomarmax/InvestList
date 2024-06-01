@@ -19,7 +19,7 @@
             <div class="d-flex border align-content-start flex-wrap">
                 <div class="p-2 flex-fill">Загальний обсяг інвестицій: $@Model.Post.TotalInvestment</div>
                 <div class="p-2 flex-fill">Період інвестування: @InvestmentHelper.FormatInvestmentDuration(Model.Post.InvestDurationYears, Model.Post.InvestDurationMonths)</div>
-                <div class="p-2 flex-fill">Річна дохідність: @Model.Post.AnnualInvestmentReturn%</div>
+                <div class="p-2 flex-fill">Річна дохідність: @Model.Post.AnnualInvestmentReturn.ToString("0.")%</div>
             </div>
 
             <div class="d-flex border align-content-start flex-wrap">
@@ -57,10 +57,10 @@
                 <pre class="card-body md:order-2 order-1" style="width: 50%">
                     @Model.Post.Description
                 </pre>
-                @if (!string.IsNullOrEmpty(Model.Post.ImageBase64))
+                @if (Model.Post.Image != null)
                 {
                     <div class="md:order-1 order-md-2">
-                        <img src="data:image;base64,@Model.Post.ImageBase64" alt="Investment Image"/>
+                        <img src="@Model.Post.Image.FilePath" alt="@Model.Post.Image.AltText" class="img-fluid rounded">
                     </div>
                 }
             </div>
@@ -87,18 +87,17 @@
                 Більше оголошень...
             </a>
         }
-        <hr/>
         @if (Model.Post.SimilarNews != null && Model.Post.SimilarNews.Any())
-                {
-                    <p>Схожі новини</p>
-                    @await Html.PartialAsync("_SimilarContent", ("Invest", Model.Post.SimilarNews, Model.Post.Tags))
-                    <a class="btn-primary"
-                       asp-area="Main"
-                       asp-page="/News/List"
-                       asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.Post.Tags.Select(x => x.Id)))">
-                        Більше новини...
-                    </a>
-                }
+        {
+            <p>Схожі новини</p>
+            @await Html.PartialAsync("_SimilarContent", ("News", Model.Post.SimilarNews, Model.Post.Tags))
+            <a class="btn-primary"
+               asp-area="Main"
+               asp-page="/News/List"
+               asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.Post.Tags.Select(x => x.Id)))">
+                Більше новини...
+            </a>
+        }
     </div>
 </div>
 

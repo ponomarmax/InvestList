@@ -1,6 +1,4 @@
-using Common;
-
-namespace DataAccess.Models
+namespace Core.Entities
 {
     public record MinInvestValue
     {

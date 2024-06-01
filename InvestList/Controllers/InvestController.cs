@@ -1,12 +1,7 @@
 ﻿using AutoMapper;
-using Common;
+using Core.Interfaces;
 using DataAccess.Interfaces;
-using DataAccess.Models;
-using DataAccess.Repositories;
-using InvestList.Filters;
-using InvestList.Models;
 using InvestList.Models.Invest;
-using InvestList.Models.News;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 

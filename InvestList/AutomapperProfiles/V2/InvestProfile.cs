@@ -1,10 +1,10 @@
 using AutoMapper;
-using Common;
-using DataAccess.Models;
+using Core.Entities;
 using InvestList.Models;
 using InvestList.Models.Comment;
 using InvestList.Models.News;
 using InvestList.Models.V2;
+using InvestList.Services;
 
 namespace InvestList.AutomapperProfiles.V2
 {
@@ -17,9 +17,13 @@ namespace InvestList.AutomapperProfiles.V2
                 .ForMember(x => x.Id, s => s.MapFrom(x => x.Post.Id))
                 .ForMember(x => x.PostType, s => s.MapFrom(x => x.Post.PostType))
                 .ForMember(x => x.CreatedById, s => s.MapFrom(x => x.Post.CreatedById))
-                .ForMember(x => x.ImageBase64,
-                    s => s.MapFrom(x =>
-                        x.Post.Images.FirstOrDefault() == null ? null : x.Post.Images.FirstOrDefault().ImageBase64))
+                // .ForMember(x => x.ImageBase64,
+                //     s => s.MapFrom(x =>
+                //         x.Post.Images.FirstOrDefault() == null ? null : x.Post.Images.FirstOrDefault().ImageBase64))
+                .ForMember(x => x.Image, s => s.MapFrom(x =>
+                    x.Post.ImagesV2.FirstOrDefault() == null
+                        ? null
+                        : ImageService.GetImageView(x.Post.ImagesV2.FirstOrDefault().Id, x.Post)))
                 .ForMember(x => x.CreatedAt, s => s.MapFrom(x => x.Post.CreatedAt))
                 .ForMember(x => x.UpdateAt, s => s.MapFrom(x => x.Post.UpdatedAt))
                 .ForMember(x => x.Slug, s => s.MapFrom(x => x.Post.Slug))
@@ -46,7 +50,9 @@ namespace InvestList.AutomapperProfiles.V2
             CreateMap<InvestPost, PutInvestModel>()
                 .ForMember(x => x.ImageBase64,
                     s => s.MapFrom(x =>
-                        x.Post.Images.FirstOrDefault() == null ? null : x.Post.Images.FirstOrDefault().ImageBase64))
+                        x.Post.ImagesV2.FirstOrDefault() == null
+                            ? null
+                            : Convert.ToBase64String(x.Post.ImagesV2.FirstOrDefault().ImageObject.Image)))
                 .ForMember(x => x.Title, s => s.MapFrom(x => x.Post.Title))
                 .ForMember(x => x.IsActive, s => s.MapFrom(x => x.Post.IsActive))
                 .ForMember(x => x.MinInvestValues, s => s.MapFrom(x => x.MinInvestValues))
@@ -59,14 +65,27 @@ namespace InvestList.AutomapperProfiles.V2
                 .ForMember(x => x.Tags,
                     s => s.MapFrom(x =>
                         x.TagIds == null ? null : x.TagIds.Select(t => new PostTags() { TagId = Guid.Parse(t) })))
-                .ForMember(x => x.Images,
+                .ForMember(x => x.ImagesV2,
                     s => s.MapFrom(x =>
-                        x.ImageBase64 == null ? null : new List<Image> { new Image { ImageBase64 = x.ImageBase64 } }))
+                        x.ImageBase64 == null
+                            ? null
+                            : new List<ImageMetadata>
+                            {
+                                new ImageMetadata
+                                {
+                                    ImageObject = new ImageObject()
+                                    {
+                                        Image = Convert.FromBase64String(x.ImageBase64)
+                                    }
+                                }
+                            }))
                 ;
             CreateMap<Post, PutPostModel>()
                 .ForMember(x => x.ImageBase64,
                     s => s.MapFrom(x =>
-                        x.Images.FirstOrDefault() == null ? null : x.Images.FirstOrDefault().ImageBase64))
+                        x.ImagesV2.FirstOrDefault() == null
+                            ? null
+                            : Convert.ToBase64String(x.ImagesV2.FirstOrDefault().ImageObject.Image)))
                 .ForMember(x => x.Title, s => s.MapFrom(x => x.Title))
                 .ForMember(x => x.IsActive, s => s.MapFrom(x => x.IsActive))
                 .ForMember(x => x.Description, s => s.MapFrom(x => x.Description))
@@ -76,10 +95,20 @@ namespace InvestList.AutomapperProfiles.V2
                 .ForMember(x => x.Tags,
                     s => s.MapFrom(x =>
                         x.TagIds == null ? null : x.TagIds.Select(t => new PostTags() { TagId = Guid.Parse(t) })))
-                .ForMember(x => x.Images,
+                .ForMember(x => x.ImagesV2,
                     s => s.MapFrom(x =>
-                        x.ImageBase64 == null ? null : new List<Image> { new Image { ImageBase64 = x.ImageBase64 } }))
-                ;
+                        x.ImageBase64 == null
+                            ? null
+                            : new List<ImageMetadata>
+                            {
+                                new ImageMetadata
+                                {
+                                    ImageObject = new ImageObject()
+                                    {
+                                        Image = Convert.FromBase64String(x.ImageBase64)
+                                    }
+                                }
+                            }));
 
 
             // DB-> DB
@@ -103,12 +132,17 @@ namespace InvestList.AutomapperProfiles.V2
                 .ForMember(x => x.Id, s => s.MapFrom(x => x.TagId))
                 .ForMember(x => x.Name, s => s.MapFrom(x => x.Tag.Name));
             CreateMap<Post, PostView>()
-                .ForMember(x => x.ImageBase64,
-                    s => s.MapFrom(x =>
-                        x.Images.FirstOrDefault() == null ? null : x.Images.FirstOrDefault().ImageBase64));
+                // .ForMember(x => x.ImageBase64,
+                //     s => s.MapFrom(x =>
+                //         x.Images.FirstOrDefault() == null ? null : x.Images.FirstOrDefault().ImageBase64))
+                .ForMember(x => x.Image, s => s.MapFrom(x =>
+                    x.ImagesV2.FirstOrDefault() == null
+                        ? null
+                        : ImageService.GetImageView(x.ImagesV2.FirstOrDefault().Id, x)));
+
             CreateMap<News, PostView>()
                 .ForMember(x => x.CreatedAt, s => s.MapFrom(x => x.CreatedAt.DateTime));
-            
+
             CreateMap<PostLinkView, PostLink>();
             CreateMap<PostLink, LinkView>();
             CreateMap<PostLink, PostLinkView>();

@@ -1,6 +1,8 @@
+using System.Reflection;
+using Core.Entities;
+using Core.Interfaces;
 using DataAccess;
 using DataAccess.Interfaces;
-using DataAccess.Models;
 using DataAccess.Repositories;
 using DataAccess.Repositories.V2;
 using FluentValidation.AspNetCore;
@@ -11,10 +13,10 @@ using Serilog;
 using InvestList;
 using InvestList.Configs;
 using InvestList.Extensions;
-using InvestList.Filters;
 using InvestList.Logging;
 using InvestList.Services;
 using InvestList.Validators;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.LoadAppSettingAndEnvValues();
@@ -39,10 +41,11 @@ try
     //     .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<PostInvestAdViewModelValidator>())
     //     .AddRazorRuntimeCompilation();
     builder.Services.AddRazorPages().AddRazorPagesOptions(options =>
-            {
-                // Set the default page for Razor Pages in an area
-                options.Conventions.AddAreaPageRoute("Main", "/Invest/List", "");
-            });;
+    {
+        // Set the default page for Razor Pages in an area
+        options.Conventions.AddAreaPageRoute("Main", "/Invest/List", "");
+    });
+    ;
 
     builder.Services.AddAutoMapper(typeof(Program));
 
@@ -57,6 +60,7 @@ try
     builder.Services.AddScoped<ITagRepository, TagRepository>();
     builder.Services.AddScoped<ICommentRepository, CommentRepository>();
     builder.Services.AddScoped<IInvestService, InvestService>();
+    builder.Services.AddScoped<IImageService, ImageService>();
     builder.Services.AddAuthentication()
         .AddGoogle(options =>
         {
@@ -70,6 +74,13 @@ try
     Log.Logger.Information("App is starting");
 
     var app = builder.Build();
+    using (var scope = app.Services.CreateScope())
+    {
+        var i = scope.ServiceProvider.GetRequiredService<IImageService>();
+        await i.LoadOnFileSystem();
+        Log.Logger.Information("Images are load");
+    }
+
     app.UseMiddleware<WwwRedirectMiddleware>();
     app.Use(async (context, next) =>
     {
@@ -91,20 +102,26 @@ try
     }
 
     app.UseHttpsRedirection();
-    app.UseStaticFiles();
+
+    var defaultRoot = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
+    if (defaultRoot == null)
+        app.UseStaticFiles();
+    else
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = new PhysicalFileProvider(
+                Path.Combine(defaultRoot, "wwwroot"))
+        });
 
     app.UseRouting();
 
     app.UseAuthentication();
     app.UseAuthorization();
 
-    app.UseEndpoints(endpoints =>
-    {
-        endpoints.MapControllerRoute(
+    app.MapControllerRoute(
             name: "default",
-            pattern: "{controller=Home}/{action=Index}/{id?}");
-        endpoints.MapRazorPages();
-    });
+            pattern: "{controller=Home}/{action=Index}/{id?}")
+        ;
 
     app.MapRazorPages();
 

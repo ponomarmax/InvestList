@@ -1,5 +1,6 @@
 @page "/invest/edit/{id:guid}"
 @using Common
+@using Core
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model InvestList.Areas.Main.Pages.Invest.Edit
 
@@ -57,7 +58,7 @@
                             {
                                 var temp = supportedCurrencies[i];
                                 var existingCurrency = Model.Post.MinInvestValues.FirstOrDefault(x => x.Currency == temp);
-                                <input readonly="readonly" name="Post.MinInvestValues[@i].Currency" value="@temp"/>
+                                <input class="curr" readonly="readonly" name="Post.MinInvestValues[@i].Currency" value="@temp"/>
                                 if (existingCurrency == null)
                                 {
                                     <input type="decimal" name="Post.MinInvestValues[@i].MinValue" class="form-control"/>
@@ -106,7 +107,7 @@
         </div>
 
         <div class="row mb-4">
-            <div class="form-group col-6">
+            <div class="form-group col-6 dur">
                 <label>На який термін залучаються інвестиції (вкажіть кількість років та місяців):</label>
                 <span asp-validation-for="Post.InvestDurationYears" class="text-danger"></span>
                 <div class="input-group">
@@ -123,13 +124,13 @@
                     <input placeholder="Кількість місяців" type="number" asp-for="Post.InvestDurationMonths" class="form-control" value="@((Model?.Post.InvestDurationMonths > 0) ? Model?.Post.InvestDurationMonths : null)"/>
                 </div>
             </div>
-            <div class="form-group col-6">
+            <div class="form-group col-6 tagg">
                 <span asp-validation-for="AvailableTags" class="text-danger"></span>
 
                 @{
                     if (Model.AvailableTags != null)
                     {
-                        <label asp-for="AvailableTags">Теги</label>
+                        <label asp-for="AvailableTags">Теги</label><br>
                         <select rows="20" name="Post.TagIds" asp-items="Model.AvailableTags" multiple="multiple" class="listbox"></select>
                     }
                 }

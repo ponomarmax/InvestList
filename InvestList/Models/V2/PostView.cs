@@ -1,4 +1,4 @@
-using DataAccess.Models;
+using Core.Entities;
 using InvestList.Models.Comment;
 using InvestList.Models.News;
 
@@ -22,7 +22,8 @@ namespace InvestList.Models.V2
         public string? Description { get; set; }
 
         public string? DescriptionSeo { get; set; }
-        public string? ImageBase64 { get; set; }
+
+        public ImageView Image { get; set; }
 
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }

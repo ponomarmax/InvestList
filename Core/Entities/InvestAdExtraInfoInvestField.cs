@@ -1,5 +1,6 @@
-﻿namespace DataAccess.Models
+﻿namespace Core.Entities
 {
+    [Obsolete]
     public class InvestAdExtraInfoInvestField
     {
         public Guid InvestAdExtraInfoId { get; set; }

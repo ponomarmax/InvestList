@@ -1,17 +1,9 @@
-using DataAccess.Models;
+using Core.Entities;
+using Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Repositories
 {
-    public interface ITagRepository
-    {
-        Task Add(string tagName);
-        Task<Dictionary<Guid, string>> GetTags();
-        Task SubmitCustomHeader(List<Guid> tagIds);
-        Task<IEnumerable<Tag>> GetTagsV2();
-        Task<IEnumerable<CustomHeader>> GetCustomHeader();
-    }
-
     public class TagRepository(ApplicationDbContext dbContext): ITagRepository
     {
 

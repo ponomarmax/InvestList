@@ -1,4 +1,4 @@
-namespace DataAccess.Models
+namespace Core.Entities
 {
     public class CustomHeader
     {

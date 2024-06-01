@@ -1,11 +1,5 @@
-namespace DataAccess.Models
+namespace Core.Entities
 {
-    public enum PostType{
-        Undefined = 0,
-        InvestAd = 1,
-        News = 2,
-    }
-    
     public class Post
     {
         public Guid Id { get; set; }
@@ -32,22 +26,6 @@ namespace DataAccess.Models
         public IEnumerable<PostLink>? Links { get; set; }
         public IEnumerable<PostComment>? Comments { get; set; }
         public  IEnumerable<Image>? Images { get; set; }
-    }
-    
-    public class PostTags
-    {
-        public Guid PostId { get; set; }
-        public Post Post { get; set; }
-
-        public Guid TagId { get; set; }
-        public Tag Tag { get; set; }
-    }
-    
-    public class Image
-    {
-        public Guid Id { get; set; }
-        public string ImageBase64 { get; set; }
-        public Guid PostId { get; set; }
-        public Post Post { get; set; }
+        public  IEnumerable<ImageMetadata>? ImagesV2 { get; set; }
     }
 }

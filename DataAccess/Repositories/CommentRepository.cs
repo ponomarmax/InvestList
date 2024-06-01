@@ -1,6 +1,5 @@
-using DataAccess.Interfaces;
-using DataAccess.Models;
-using DataAccess.Repositories.V2;
+using Core.Entities;
+using Core.Interfaces;
 
 namespace DataAccess.Repositories
 {
@@ -13,7 +12,8 @@ namespace DataAccess.Repositories
         public async Task PublishAsync(PostComment comment)
         {
             _ = await userRepository.Get(comment.UserId) ?? throw new NullReferenceException("User not found");
-            _ = await repository.Get(comment.PostId.ToString()) ?? throw new NullReferenceException("Ads not found");
+            if (!await repository.Exists(comment.PostId))
+                throw new NullReferenceException("Ads not found");
             comment.CreatedAt = DateTime.UtcNow;
             dbContext.PostComments.Add(comment);
             await dbContext.SaveChangesAsync();

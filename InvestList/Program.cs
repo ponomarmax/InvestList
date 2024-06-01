@@ -74,11 +74,13 @@ try
     Log.Logger.Information("App is starting");
 
     var app = builder.Build();
-    // using (var scope = app.Services.CreateScope()) {
-    //     var i = scope.ServiceProvider.GetRequiredService<IImageService>();
-    //     await i.LoadOnFileSystem();
-    //     Log.Logger.Information("Images are load");
-    // }
+    using (var scope = app.Services.CreateScope())
+    {
+        var i = scope.ServiceProvider.GetRequiredService<IImageService>();
+        await i.LoadOnFileSystem();
+        Log.Logger.Information("Images are load");
+    }
+
     app.UseMiddleware<WwwRedirectMiddleware>();
     app.Use(async (context, next) =>
     {
@@ -101,11 +103,15 @@ try
 
     app.UseHttpsRedirection();
 
-    app.UseStaticFiles(new StaticFileOptions
-    {
-        FileProvider = new PhysicalFileProvider(
-            Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "wwwroot"))
-    });
+    var defaultRoot = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
+    if (defaultRoot == null)
+        app.UseStaticFiles();
+    else
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = new PhysicalFileProvider(
+                Path.Combine(defaultRoot, "wwwroot"))
+        });
 
     app.UseRouting();
 
@@ -115,7 +121,7 @@ try
     app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}")
-    ;
+        ;
 
     app.MapRazorPages();
 

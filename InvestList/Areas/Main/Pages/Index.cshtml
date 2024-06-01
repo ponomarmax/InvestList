@@ -1,0 +1,61 @@
+@page
+@using InvestList
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model InvestList.Areas.Main.Pages.Index
+
+<div class="container">
+    <div class="d-flex justify-content-center">
+        <h1>Останні оголошення від бізнесу</h1>
+    </div>
+    @if (Model.InvestPosts != null && Model.InvestPosts.Any())
+    {
+        <div class="row">
+            @foreach (var ad in Model.InvestPosts)
+            {
+                <div class="col-12 col-lg-6 mb-4">
+                    @await Html.PartialAsync("_InvestCard", ad)
+                </div>
+            }
+        </div>
+        <div class="d-flex justify-content-center">
+            <a class="news"
+               asp-area="Main"
+               asp-page="/Invest/List"
+               asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.TagIds))">
+                Більше оголошень
+            </a>
+        </div>
+    }
+    else
+    {
+        <p>Немає оголошень за даним критерієм</p>
+    }
+    <hr/>
+    <hr/>
+    <div class="d-flex justify-content-center">
+        <h1>Останні новини</h1>
+    </div>
+    @if (Model.NewsPosts != null && Model.NewsPosts.Any())
+    {
+        <div class="row">
+            @foreach (var ad in Model.NewsPosts)
+            {
+                <div class="col-12 col-lg-6 mb-4">
+                    @await Html.PartialAsync("_PostCard", ad)
+                </div>
+            }
+        </div>
+        <div class="d-flex justify-content-center">
+            <a class="news"
+               asp-area="Main"
+               asp-page="/News/List"
+               asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.TagIds))">
+                Більше новини
+            </a>
+        </div>
+    }
+    else
+    {
+        <p>Немає новин за даним критерієм</p>
+    }
+</div>

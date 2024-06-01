@@ -43,7 +43,7 @@ try
     builder.Services.AddRazorPages().AddRazorPagesOptions(options =>
     {
         // Set the default page for Razor Pages in an area
-        options.Conventions.AddAreaPageRoute("Main", "/Invest/List", "");
+        options.Conventions.AddAreaPageRoute("Main", "/Index", "");
     });
     ;
 
@@ -74,12 +74,12 @@ try
     Log.Logger.Information("App is starting");
 
     var app = builder.Build();
-    using (var scope = app.Services.CreateScope())
-    {
-        var i = scope.ServiceProvider.GetRequiredService<IImageService>();
-        await i.LoadOnFileSystem();
-        Log.Logger.Information("Images are load");
-    }
+    // using (var scope = app.Services.CreateScope())
+    // {
+    //     var i = scope.ServiceProvider.GetRequiredService<IImageService>();
+    //     await i.LoadOnFileSystem();
+    //     Log.Logger.Information("Images are load");
+    // }
 
     app.UseMiddleware<WwwRedirectMiddleware>();
     app.Use(async (context, next) =>

@@ -44,10 +44,42 @@ li {
 
 .nav-panel {
     border-bottom: 2px solid #F2F2F2;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+}
+
+.nav-panel::-webkit-scrollbar {
+    height: 4px;
+}
+
+.nav-panel::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.nav-panel::-webkit-scrollbar-thumb {
+    background-color: black;
+    border-radius: 10px;
+    width: 30px;
+}
+
+.nav-tags {
+    display: inline-flex;
+    flex-wrap: nowrap;
 }
 
 .nav-link {
     color: #444444;
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    white-space: nowrap;
+    text-decoration: none;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover, .nav-link:focus, .nav-link.active {
+    color: black;
 }
 
 .language {

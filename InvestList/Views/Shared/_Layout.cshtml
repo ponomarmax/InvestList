@@ -37,67 +37,79 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
 </head>
 <body>
-<header class="d-flex flex-wrap justify-content-between">
-    <a asp-controller="Invest" asp-action="Index">
-        <img src="/ico/logo2.svg"class="mt-1" alt="invest radar logo" height="40" width="40"/>
-    </a>
-    @* <p class="language">УКР|ENG</p> *@
-    @* <div class="input-group mb-3 mt-3">
-        <div class="input-group-prepend">
-            <button class="search_but" type="button">
-                <img src="/ico/search.png" height="16" width="16">
-            </button>
-        </div>
-        <input type="search" class="search" placeholder="Пошук">
-    </div> *@
+<header class="navbar navbar-expand-lg navbar-light navbar-custom shadow-sm">
+    <div class="container-fluid">
+        <a asp-controller="Invest" asp-action="Index" class="logo">
+            <img src="/ico/logo2.svg" class="mt-1" alt="invest radar logo" height="50" width="50"/>
+        </a>
+        <a asp-controller="Invest" asp-action="Index" class="invest_radar">Invest Radar</a>
 
-    @if (!User.Identity.IsAuthenticated) {
-        <div class="margin_auth">
-            <a asp-area="Main" asp-page="/News/List" class="news" rel="nofollow">НОВИНИ</a>
-            <a asp-area="Main" asp-page="/Invest/List" class="projects" rel="nofollow">ПРОЕКТИ</a>
-        </div>
-        <div class="d-flex justify-content-end mt-1">
-            <a asp-area="Identity" asp-page="/Account/Register" class="reg" rel="nofollow">ЗАРЕЄСТРУВАТИСЯ</a>
-            <a asp-area="Identity" asp-page="/Account/Login" class="logIn" rel="nofollow">УВІЙТИ</a>
-        </div>
-    }
-    @if (User.Identity.IsAuthenticated && !User.IsInRole(Const.AdminRole)) {
-        <div class="margin_user">
-            <a asp-area="Main" asp-page="/News/List" class="news" rel="nofollow">НОВИНИ</a>
-            <a asp-area="Main" asp-page="/Invest/List" class="projects" rel="nofollow">ПРОЕКТИ</a>
-            <a asp-area="Main" asp-page="/Invest/Create" class="add_project" rel="nofollow">ДОДАТИ ПРОЕКТ</a>
-        </div>
-        <div class="dropdown text-end d-flex justify-content-end mt-1">
-            <a href="#" class="profile" data-bs-toggle="dropdown" aria-expanded="false">ПРОФІЛЬ</a>
-            <ul class="dropdown-menu text-small" style="">
-                <li><a class="dropdown-item" asp-area="Identity" asp-page="/Manage/Index">@User.Identity?.Name!</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Invest", new { area = "" })">Вийти</a></li>
-            </ul>
-        </div>
-    }
-    @if (User.IsInRole(Const.AdminRole)) {
-        <div class="margin_admin">
-            <a asp-area="Main" asp-page="/News/List" class="news" rel="nofollow">НОВИНИ</a>
-            <a asp-area="Main" asp-page="/Invest/List" class="projects" rel="nofollow">ПРОЕКТИ</a>
-            <a asp-area="Main" asp-page="/Invest/Create" class="add_project" rel="nofollow">ДОДАТИ ПРОЕКТ</a>
-        </div>
-        <div class="dropdown text-end d-flex justify-content-end mt-1">
-            <a href="#" class="admin" data-bs-toggle="dropdown" aria-expanded="false">АДМІН</a>
-            <ul class="dropdown-menu text-small" style="">
-                <li><a class="dropdown-item" asp-area="Main" asp-page="/News/Create">Створити новину</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" asp-action="Index" asp-controller="Admin">Додати тег</a></li>
-            </ul>
-            <a href="#" class="profile" data-bs-toggle="dropdown" aria-expanded="false">ПРОФІЛЬ</a>
-            <ul class="dropdown-menu text-small" style="">
-                <li><a class="dropdown-item" asp-area="Identity" asp-page="/Manage/Index">@User.Identity?.Name!</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Invest", new { area = "" })">Вийти</a></li>
-            </ul>
-        </div>
-    }
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
+        @* <p class="language">УКР|ENG</p> *@
+        @* <div class="input-group mb-3 mt-3">
+            <div class="input-group-prepend">
+                <button class="search_but" type="button">
+                    <img src="/ico/search.png" height="16" width="16">
+                </button>
+            </div>
+            <input type="search" class="search" placeholder="Пошук">
+        </div> *@
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            @if (!User.Identity.IsAuthenticated)
+            {
+                <div class="d-flex justify-content-center align-items-center flex-grow-1 margin_auth">
+                    <a asp-area="Main" asp-page="/News/List" class="news" rel="nofollow">НОВИНИ</a>
+                    <a asp-area="Main" asp-page="/Invest/List" class="projects" rel="nofollow">ПРОЕКТИ</a>
+                </div>
+                <div class="d-flex justify-content-end align-items-center log_reg">
+                    <a asp-area="Identity" asp-page="/Account/Register" class="reg" rel="nofollow">ЗАРЕЄСТРУВАТИСЯ</a>
+                    <a asp-area="Identity" asp-page="/Account/Login" class="logIn" rel="nofollow">УВІЙТИ</a>
+                </div>
+            }
+            @if (User.Identity.IsAuthenticated && !User.IsInRole(Const.AdminRole))
+            {
+                <div class="d-flex justify-content-center align-items-center flex-grow-1 margin_user">
+                    <a asp-area="Main" asp-page="/News/List" class="news" rel="nofollow">НОВИНИ</a>
+                    <a asp-area="Main" asp-page="/Invest/List" class="projects" rel="nofollow">ПРОЕКТИ</a>
+                    <a asp-area="Main" asp-page="/Invest/Create" class="add_project" rel="nofollow">ДОДАТИ ПРОЕКТ</a>
+                </div>
+                <div class="dropdown text-end d-flex justify-content-end mt-1 prof">
+                    <a href="#" class="profile" data-bs-toggle="dropdown" aria-expanded="false">ПРОФІЛЬ</a>
+                    <ul class="dropdown-menu text-small" style="">
+                        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Manage/Index">@User.Identity?.Name!</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Invest", new { area = "" })">Вийти</a></li>
+                    </ul>
+                </div>
+            }
+            @if (User.IsInRole(Const.AdminRole))
+            {
+                <div class="d-flex justify-content-center align-items-center flex-grow-1 margin_admin">
+                    <a asp-area="Main" asp-page="/News/List" class="news" rel="nofollow">НОВИНИ</a>
+                    <a asp-area="Main" asp-page="/Invest/List" class="projects" rel="nofollow">ПРОЕКТИ</a>
+                    <a asp-area="Main" asp-page="/Invest/Create" class="add_project" rel="nofollow">ДОДАТИ ПРОЕКТ</a>
+                </div>
+                <div class="dropdown text-end d-flex justify-content-end mt-1 admin_profile">
+                    <a href="#" class="admin" data-bs-toggle="dropdown" aria-expanded="false">АДМІН</a>
+                    <ul class="dropdown-menu text-small" style="">
+                        <li><a class="dropdown-item" asp-area="Main" asp-page="/News/Create">Створити новину</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" asp-action="Index" asp-controller="Admin">Додати тег</a></li>
+                    </ul>
+                    <a href="#" class="profile" data-bs-toggle="dropdown" aria-expanded="false">ПРОФІЛЬ</a>
+                    <ul class="dropdown-menu text-small" style="">
+                        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Manage/Index">@User.Identity?.Name!</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Invest", new { area = "" })">Вийти</a></li>
+                    </ul>
+                </div>
+            }
+        </div>
+    </div>
     @* <partial name="_LoginPartial"/> *@
 </header>
 @* <div class="my-2">

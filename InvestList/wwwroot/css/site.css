@@ -507,6 +507,12 @@ li {
     background-color: #D8E5FC; /* Дуже світлий зелений */
 }
 
+.number {
+    font-size: 40px;
+    color: #9019ff;
+    text-align: center;
+}
+
 @font-face {
     font-family: 'e-Ukraine';
     src: url('../fonts/e-Ukraine/e-Ukraine-Regular.woff2') format('woff2');

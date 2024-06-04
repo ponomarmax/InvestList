@@ -3,9 +3,21 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model InvestList.Areas.Main.Pages.Index
 
+<div class="d-flex align-items-center">
+    <div>
+        <h1>Бізнес шукає інвестиції</h1>
+        <p>Зареєструйте свій проект для пошуку інвесторів</p><br>
+        <h1>Інвестор шукає прибуток</h1>
+        <p>Знайдіть інвестиційник проект, який забезпечить пачивний прибуток</p>
+    </div>
+    <div>
+        <h1>Проектів для інвестування</h1>
+        <div class="number">328</div>
+    </div>
+</div>
 <div class="container">
     <div class="d-flex justify-content-center">
-        <h1>Останні оголошення від бізнесу</h1>
+        <h2>Останні оголошення від бізнесу</h2>
     </div>
     @if (Model.InvestPosts != null && Model.InvestPosts.Any())
     {
@@ -33,7 +45,7 @@
     <hr/>
     <hr/>
     <div class="d-flex justify-content-center">
-        <h1>Останні новини</h1>
+        <h2>Останні новини</h2>
     </div>
     @if (Model.NewsPosts != null && Model.NewsPosts.Any())
     {

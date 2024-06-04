@@ -20,43 +20,21 @@ html {
     .col-8 {
         width: 100%;
     }
-    .logo {
-        margin-left: 35%;
-        margin-right: 5px;
-    }
     .container-fluid {
         justify-content: start !important;
-        margin-left: 5%;
     }
-    .navbar-toggler {
-        margin-top: 10px;
-    }
-    .margin_admin {
-        margin-top: 10px;
-    }
-    .admin_profile {
+    .admin_profile, .log_reg, .prof {
         justify-content: center !important;
     }
-    .log_reg, .prof {
+    .logo-container {
+        width: 100%;
         justify-content: center !important;
-        margin-top: 5px;
     }
 }
 
 @media (min-width: 992px) {
     .navbar-toggler {
         display: none;
-    }
-    .margin_user {
-        margin-right: 4%;
-        margin-top: 10px;
-    }
-    .margin_admin {
-        margin-left: 2%;
-        margin-top: 6px;
-    }
-    .margin_auth {
-        margin-left: 6%;
     }
 }
 
@@ -189,7 +167,7 @@ li {
     font-family: "e-Ukraine-bold";
     color: #FFFFFF;
     text-decoration: none;
-    margin-right: 10px;
+    margin-right: 5px;
 }
 
 .col-md-4 {

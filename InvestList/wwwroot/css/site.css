@@ -20,6 +20,22 @@ html {
     .col-8 {
         width: 100%;
     }
+    .container-fluid {
+        justify-content: start !important;
+    }
+    .admin_profile, .log_reg, .prof {
+        justify-content: center !important;
+    }
+    .logo-container {
+        width: 100%;
+        justify-content: center !important;
+    }
+}
+
+@media (min-width: 992px) {
+    .navbar-toggler {
+        display: none;
+    }
 }
 
 html {
@@ -42,12 +58,61 @@ li {
     list-style-type: none;
 }
 
+.invest_radar {
+    font-family: 'e-Ukraine-bold';
+    font-size: 20px;
+    margin-top: 10px;
+    text-decoration: none;
+    color: black;
+}
+
+.navbar-toggler {
+    border: none;
+    background-color: transparent;
+}
+
+.navbar-toggler-icon {
+    background-image: url('data:image/svg+xml;charset=utf8,%3Csvg viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath stroke="rgba%2888, 88, 88, 0.7%29" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"/%3E%3C/svg%3E');
+}
+
 .nav-panel {
     border-bottom: 2px solid #F2F2F2;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+}
+
+.nav-panel::-webkit-scrollbar {
+    height: 4px;
+}
+
+.nav-panel::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.nav-panel::-webkit-scrollbar-thumb {
+    background-color: black;
+    border-radius: 10px;
+    width: 30px;
+}
+
+.nav-tags {
+    display: inline-flex;
+    flex-wrap: nowrap;
 }
 
 .nav-link {
     color: #444444;
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    white-space: nowrap;
+    text-decoration: none;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover, .nav-link:focus, .nav-link.active {
+    color: black;
 }
 
 .language {
@@ -80,21 +145,6 @@ li {
     margin-right: 4px;
 }
 
-.margin_user {
-    margin-left: 6%;
-    margin-top: 10px;
-}
-
-.margin_admin {
-    margin-left: 10%;
-    margin-top: 10px;
-}
-
-.margin_auth {
-    margin-left: 14%;
-    margin-top: 10px;
-}
-
 .logIn, .add_project, .profile, .admin, .projects, .news {
     height: 40px;
     padding: 10px;
@@ -117,7 +167,7 @@ li {
     font-family: "e-Ukraine-bold";
     color: #FFFFFF;
     text-decoration: none;
-    margin-right: 10px;
+    margin-right: 5px;
 }
 
 .col-md-4 {
@@ -168,11 +218,6 @@ li {
 .currency {
     color: #806520;
     background-color: #FDF3D1;
-}
-
-.creation-data {
-    color: #25535E;
-    background-color: #D6EBF0;
 }
 
 .tag_index {

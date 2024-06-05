@@ -1,6 +1,4 @@
-﻿@using InvestList.Services
-@using DataAccess.Repositories
-@using Core.Interfaces
+﻿@using Core.Interfaces
 @inject ITagRepository tagService
 <!DOCTYPE html>
 <html lang="uk">
@@ -37,68 +35,83 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
 </head>
 <body>
-<header class="d-flex flex-wrap justify-content-between">
-    <a asp-controller="Invest" asp-action="Index">
-        <img src="/ico/logo2.svg"class="mt-1" alt="invest radar logo" height="40" width="40"/>
-    </a>
-    @* <p class="language">УКР|ENG</p> *@
-    @* <div class="input-group mb-3 mt-3">
-        <div class="input-group-prepend">
-            <button class="search_but" type="button">
-                <img src="/ico/search.png" height="16" width="16">
-            </button>
+<header class="navbar navbar-expand-lg navbar-light navbar-custom shadow-sm">
+    <div class="container-fluid justify-content-start">
+        <div class="logo-container d-flex align-items-center">
+            <a asp-area="Main" asp-page="/Index" class="logo mx-auto me-2 mt-2">
+                <img src="/ico/logo3.svg" class="mt-1" alt="invest radar logo" height="50" width="50"/>
+            </a>
+            <a asp-area="Main" asp-page="/Index" class="invest_radar">Invest Radar</a>
+            <div class="ms-auto">
+                <button class="navbar-toggler mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
         </div>
-        <input type="search" class="search" placeholder="Пошук">
-    </div> *@
 
-    @if (!User.Identity.IsAuthenticated) {
-        <div class="margin_auth">
-            <a asp-area="Main" asp-page="/News/List" class="news" rel="nofollow">НОВИНИ</a>
-            <a asp-area="Main" asp-page="/Invest/List" class="projects" rel="nofollow">ПРОЕКТИ</a>
-        </div>
-        <div class="d-flex justify-content-end mt-1">
-            <a asp-area="Identity" asp-page="/Account/Register" class="reg" rel="nofollow">ЗАРЕЄСТРУВАТИСЯ</a>
-            <a asp-area="Identity" asp-page="/Account/Login" class="logIn" rel="nofollow">УВІЙТИ</a>
-        </div>
-    }
-    @if (User.Identity.IsAuthenticated && !User.IsInRole(Const.AdminRole)) {
-        <div class="margin_user">
-            <a asp-area="Main" asp-page="/News/List" class="news" rel="nofollow">НОВИНИ</a>
-            <a asp-area="Main" asp-page="/Invest/List" class="projects" rel="nofollow">ПРОЕКТИ</a>
-            <a asp-area="Main" asp-page="/Invest/Create" class="add_project" rel="nofollow">ДОДАТИ ПРОЕКТ</a>
-        </div>
-        <div class="dropdown text-end d-flex justify-content-end mt-1">
-            <a href="#" class="profile" data-bs-toggle="dropdown" aria-expanded="false">ПРОФІЛЬ</a>
-            <ul class="dropdown-menu text-small" style="">
-                <li><a class="dropdown-item" asp-area="Identity" asp-page="/Manage/Index">@User.Identity?.Name!</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Invest", new { area = "" })">Вийти</a></li>
-            </ul>
-        </div>
-    }
-    @if (User.IsInRole(Const.AdminRole)) {
-        <div class="margin_admin">
-            <a asp-area="Main" asp-page="/News/List" class="news" rel="nofollow">НОВИНИ</a>
-            <a asp-area="Main" asp-page="/Invest/List" class="projects" rel="nofollow">ПРОЕКТИ</a>
-            <a asp-area="Main" asp-page="/Invest/Create" class="add_project" rel="nofollow">ДОДАТИ ПРОЕКТ</a>
-        </div>
-        <div class="dropdown text-end d-flex justify-content-end mt-1">
-            <a href="#" class="admin" data-bs-toggle="dropdown" aria-expanded="false">АДМІН</a>
-            <ul class="dropdown-menu text-small" style="">
-                <li><a class="dropdown-item" asp-area="Main" asp-page="/News/Create">Створити новину</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" asp-action="Index" asp-controller="Admin">Додати тег</a></li>
-            </ul>
-            <a href="#" class="profile" data-bs-toggle="dropdown" aria-expanded="false">ПРОФІЛЬ</a>
-            <ul class="dropdown-menu text-small" style="">
-                <li><a class="dropdown-item" asp-area="Identity" asp-page="/Manage/Index">@User.Identity?.Name!</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Invest", new { area = "" })">Вийти</a></li>
-            </ul>
-        </div>
-    }
+        @* <p class="language">УКР|ENG</p> *@
+        @* <div class="input-group mb-3 mt-3">
+            <div class="input-group-prepend">
+                <button class="search_but" type="button">
+                    <img src="/ico/search.png" height="16" width="16">
+                </button>
+            </div>
+            <input type="search" class="search" placeholder="Пошук">
+        </div> *@
 
+        <div class="collapse navbar-collapse" id="navbarNav">
+            @if (!User.Identity.IsAuthenticated)
+            {
+                <div class="d-flex justify-content-center align-items-center flex-grow-1 ms-lg-5 mt-lg-2">
+                    <a asp-area="Main" asp-page="/News/List" class="news" rel="follow">НОВИНИ</a>
+                    <a asp-area="Main" asp-page="/Invest/List" class="projects" rel="follow">ПРОЕКТИ</a>
+                </div>
+                <div class="d-flex justify-content-center align-items-center mt-1 log_reg">
+                    <a asp-area="Identity" asp-page="/Account/Register" class="reg" rel="nofollow">ЗАРЕЄСТРУВАТИСЯ</a>
+                    <a asp-area="Identity" asp-page="/Account/Login" class="logIn" rel="nofollow">УВІЙТИ</a>
+                </div>
+            }
+            @if (User.Identity.IsAuthenticated && !User.IsInRole(Const.AdminRole))
+            {
+                <div class="d-flex justify-content-center align-items-center flex-grow-1 ms-md-4 mt-lg-2">
+                    <a asp-area="Main" asp-page="/News/List" class="news" rel="follow">НОВИНИ</a>
+                    <a asp-area="Main" asp-page="/Invest/List" class="projects" rel="follow">ПРОЕКТИ</a>
+                    <a asp-area="Main" asp-page="/Invest/Create" class="add_project" rel="nofollow">ДОДАТИ ПРОЕКТ</a>
+                </div>
+                <div class="dropdown text-end d-flex justify-content-center justify-content-md-end mt-1 prof">
+                    <a href="#" class="profile" data-bs-toggle="dropdown" aria-expanded="false">ПРОФІЛЬ</a>
+                    <ul class="dropdown-menu text-small">
+                        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Manage/Index">@User.Identity?.Name!</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Invest", new { area = "" })">Вийти</a></li>
+                    </ul>
+                </div>
+            }
+            @if (User.IsInRole(Const.AdminRole))
+            {
+                <div class="d-flex justify-content-center align-items-center flex-grow-1 ms-md-2 mt-lg-1">
+                    <a asp-area="Main" asp-page="/News/List" class="news" rel="follow">НОВИНИ</a>
+                    <a asp-area="Main" asp-page="/Invest/List" class="projects" rel="follow">ПРОЕКТИ</a>
+                    <a asp-area="Main" asp-page="/Invest/Create" class="add_project" rel="nofollow">ДОДАТИ ПРОЕКТ</a>
+                </div>
+                <div class="dropdown text-end d-flex justify-content-center justify-content-md-end mt-1 admin_profile">
+                    <a href="#" class="admin" data-bs-toggle="dropdown" aria-expanded="false">АДМІН</a>
+                    <ul class="dropdown-menu text-small">
+                        <li><a class="dropdown-item" asp-area="Main" asp-page="/News/Create">Створити новину</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" asp-action="Index" asp-controller="Admin">Додати тег</a></li>
+                    </ul>
+                    <a href="#" class="profile" data-bs-toggle="dropdown" aria-expanded="false">ПРОФІЛЬ</a>
+                    <ul class="dropdown-menu text-small">
+                        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Manage/Index">@User.Identity?.Name!</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Invest", new { area = "" })">Вийти</a></li>
+                    </ul>
+                </div>
+            }
+        </div>
     @* <partial name="_LoginPartial"/> *@
+    </div>
 </header>
 @* <div class="my-2">
     <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
@@ -165,7 +178,7 @@
                     <li class="nav-item">
                         <a class="nav-link"
                             asp-area="Main"
-                            asp-page="/News/List"
+                            asp-page="/Index"
                             asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: new[] { tag.TagId }))">
                             @tag.Tag.Name
                         </a>
@@ -183,20 +196,35 @@
 </div>
 
 <footer class="border-top bg-light text-dark py-3">
-    <ul class="nav justify-content-center border-bottom pb-3 mb-3">
-        <li class="nav-item">
-            <a href="https://t.me/invesstradar" class="nav-link px-2 creation-data"><i class="bi-telegram"></i> Telegram</a>
-        </li>
-        <li class="nav-item">
-            <a href="https://forms.gle/DTgQQGUEixvhyLAA7" class="nav-link px-2 creation-data"><i class="bi bi-google"></i> Ваш досвід інвестування</a>
-        </li>
-        <li class="nav-item">
-            <a href="https://forms.gle/BpSkLHWuq6y7yRiP9" class="nav-link px-2 creation-data"><i class="bi bi-google"></i> Фідбек по роботі сайту</a>
-        </li>
-        <li class="nav-item">
-            <a href="/privacy-policy.html" class="nav-link px-2 creation-data">Політика конфіденційності</a>
-        </li>
-    </ul>
+    <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
+        <div class="nav">
+            <a asp-controller="Invest" asp-action="Index">
+                <img src="/ico/logo3.svg" class="mt-1" alt="invest radar logo" height="60" width="60"/>
+            </a>
+        </div>
+        <ul class="nav">
+            <li class="nav-item">
+                <a href="https://forms.gle/BpSkLHWuq6y7yRiP9" class="nav-link px-2 creation-data"><i class="bi bi-google"></i> Лишити відгук</a>
+            </li>
+            <li class="nav-item">
+                <a href="https://forms.gle/DTgQQGUEixvhyLAA7" class="nav-link px-2 creation-data"><i class="bi bi-google"></i> Ваш досвід інвестування</a>
+            </li>
+            <li class="nav-item">
+                <a href="/privacy-policy.html" class="nav-link px-2 creation-data">Політика конфіденційності</a>
+            </li>
+        </ul>
+        <div class="nav">
+            <li class="nav-item">
+                <a href="https://t.me/invesstradar" class="nav-link px-2 creation-data"><i class="bi bi-telegram" style="font-size: 20px"></i></a>
+            </li>
+            <li class="nav-item">
+                <a href="https://t.me/invesstradar" class="nav-link px-2 creation-data"><i class="bi bi-instagram" style="font-size: 20px"></i></a>
+            </li>
+            <li class="nav-item">
+                <a href="https://t.me/invesstradar" class="nav-link px-2 creation-data"><i class="bi bi-tiktok" style="font-size: 20px"></i></a>
+            </li>
+        </div>
+    </div>
 </footer>
 @{
     await Html.RenderPartialAsync("_ValidationScriptsPartial");

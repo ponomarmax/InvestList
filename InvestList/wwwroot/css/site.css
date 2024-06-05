@@ -2,10 +2,6 @@
     font-family: "e-Ukraine";
 }
 
-html {
-    font-size: 14px;
-}
-
 @media (min-width: 768px) {
     html {
         font-size: 16px;
@@ -19,9 +15,6 @@ html {
     }
     .col-8 {
         width: 100%;
-    }
-    .container-fluid {
-        justify-content: start !important;
     }
     .admin_profile, .log_reg, .prof {
         justify-content: center !important;
@@ -41,6 +34,7 @@ html {
 html {
     position: relative;
     min-height: 100%;
+    font-size: 14px;
 }
 
 header {

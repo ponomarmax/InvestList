@@ -14,7 +14,7 @@
     </script>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="icon" type="image/svg+xml" href="/ico/favicon.svg">
+    <link rel="icon" type="image/svg+xml" href="/ico/logo3.png">
     <title>@(ViewData["CustomTitle"] ?? ViewData["Title"])</title>
     @if (!string.IsNullOrEmpty(ViewData["CustomDescription"] as string))
     {
@@ -38,8 +38,8 @@
 <header class="navbar navbar-expand-lg navbar-light navbar-custom shadow-sm">
     <div class="container-fluid justify-content-start">
         <div class="logo-container d-flex align-items-center">
-            <a asp-area="Main" asp-page="/Index" class="logo mx-auto me-2 mt-2">
-                <img src="/ico/logo3.svg" class="mt-1" alt="invest radar logo" height="50" width="50"/>
+            <a asp-area="Main" asp-page="/Index" class="mx-auto me-2 mt-1">
+                <img src="/ico/logo3.svg" alt="invest radar logo" height="50" width="50"/>
             </a>
             <a asp-area="Main" asp-page="/Index" class="invest_radar">Invest Radar</a>
             <div class="ms-auto">
@@ -80,8 +80,8 @@
                 </div>
                 <div class="dropdown text-end d-flex justify-content-center justify-content-md-end mt-1 prof">
                     <a href="#" class="profile" data-bs-toggle="dropdown" aria-expanded="false">ПРОФІЛЬ</a>
-                    <ul class="dropdown-menu text-small">
-                        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Manage/Index">@User.Identity?.Name!</a></li>
+                    <ul class="dropdown-menu dropdown-menu-end text-small">
+                        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Manage/Index">@User.Identity?.Name</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Invest", new { area = "" })">Вийти</a></li>
                     </ul>
@@ -96,14 +96,14 @@
                 </div>
                 <div class="dropdown text-end d-flex justify-content-center justify-content-md-end mt-1 admin_profile">
                     <a href="#" class="admin" data-bs-toggle="dropdown" aria-expanded="false">АДМІН</a>
-                    <ul class="dropdown-menu text-small">
+                    <ul class="dropdown-menu dropdown-menu-end text-small">
                         <li><a class="dropdown-item" asp-area="Main" asp-page="/News/Create">Створити новину</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" asp-action="Index" asp-controller="Admin">Додати тег</a></li>
                     </ul>
                     <a href="#" class="profile" data-bs-toggle="dropdown" aria-expanded="false">ПРОФІЛЬ</a>
-                    <ul class="dropdown-menu text-small">
-                        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Manage/Index">@User.Identity?.Name!</a></li>
+                    <ul class="dropdown-menu dropdown-menu-end text-small">
+                        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Manage/Index">@User.Identity?.Name</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Invest", new { area = "" })">Вийти</a></li>
                     </ul>
@@ -172,7 +172,7 @@
     if (header?.Count() > 0)
     {
         <div class="nav-panel my-2">
-            <ul class="nav nav-tags col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+            <ul class="nav nav-tags col-12 col-md-auto mb-2 mb-md-0">
                 @foreach (var tag in header)
                 {
                     <li class="nav-item">
@@ -198,30 +198,31 @@
 <footer class="border-top bg-light text-dark py-3">
     <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
         <div class="nav">
-            <a asp-controller="Invest" asp-action="Index">
-                <img src="/ico/logo3.svg" class="mt-1" alt="invest radar logo" height="60" width="60"/>
+            <a asp-area="Main" asp-page="/Index" class="ms-3 me-2 mt-1">
+                <img src="/ico/logo3.svg" alt="invest radar logo" height="50" width="50"/>
             </a>
+            <a asp-area="Main" asp-page="/Index" class="invest_radar mt-3">Invest Radar</a>
         </div>
         <ul class="nav">
             <li class="nav-item">
-                <a href="https://forms.gle/BpSkLHWuq6y7yRiP9" class="nav-link px-2 creation-data"><i class="bi bi-google"></i> Лишити відгук</a>
+                <a href="https://forms.gle/BpSkLHWuq6y7yRiP9" class="nav-link px-2 creation-data-footer"><i class="bi bi-google"></i> Лишити відгук</a>
             </li>
             <li class="nav-item">
-                <a href="https://forms.gle/DTgQQGUEixvhyLAA7" class="nav-link px-2 creation-data"><i class="bi bi-google"></i> Ваш досвід інвестування</a>
+                <a href="https://forms.gle/DTgQQGUEixvhyLAA7" class="nav-link px-2 creation-data-footer"><i class="bi bi-google"></i> Ваш досвід інвестування</a>
             </li>
             <li class="nav-item">
-                <a href="/privacy-policy.html" class="nav-link px-2 creation-data">Політика конфіденційності</a>
+                <a href="/privacy-policy.html" class="nav-link px-2 creation-data-footer">Політика конфіденційності</a>
             </li>
         </ul>
         <div class="nav">
             <li class="nav-item">
-                <a href="https://t.me/invesstradar" class="nav-link px-2 creation-data"><i class="bi bi-telegram" style="font-size: 20px"></i></a>
+                <a href="https://t.me/invesstradar" class="nav-link px-2 creation-data-footer"><i class="bi bi-telegram" style="font-size: 20px"></i></a>
             </li>
             <li class="nav-item">
-                <a href="https://t.me/invesstradar" class="nav-link px-2 creation-data"><i class="bi bi-instagram" style="font-size: 20px"></i></a>
+                <a href="https://t.me/invesstradar" class="nav-link px-2 creation-data-footer"><i class="bi bi-instagram" style="font-size: 20px"></i></a>
             </li>
             <li class="nav-item">
-                <a href="https://t.me/invesstradar" class="nav-link px-2 creation-data"><i class="bi bi-tiktok" style="font-size: 20px"></i></a>
+                <a href="https://t.me/invesstradar" class="nav-link px-2 creation-data-footer"><i class="bi bi-tiktok" style="font-size: 20px"></i></a>
             </li>
         </div>
     </div>

@@ -55,7 +55,6 @@ li {
 .invest_radar {
     font-family: 'e-Ukraine-bold';
     font-size: 20px;
-    margin-top: 10px;
     text-decoration: none;
     color: black;
 }
@@ -187,7 +186,7 @@ li {
 .dur {width: 30%;}
 .tagg {margin-top: 20px;}
 
-.annualInvestment, .duration, .currency, .creation-data {
+.annualInvestment, .duration, .currency, .creation-data, .creation-data-footer {
     display: inline-block;
     padding: 6px 12px;
     margin-right: 5px;
@@ -212,6 +211,11 @@ li {
 .currency {
     color: #806520;
     background-color: #FDF3D1;
+}
+
+.creation-data {
+    color: #2A562A;
+    background-color: #D9ECDB;
 }
 
 .tag_index {

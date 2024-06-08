@@ -55,8 +55,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Update="Metadata\robots.txt">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <None Include="wwwroot\ads.txt">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="wwwroot\robots.txt">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>
 

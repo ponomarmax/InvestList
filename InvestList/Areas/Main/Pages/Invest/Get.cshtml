@@ -17,7 +17,10 @@
             <h1 class="card-header">@Model.Post.Title</h1>
 
             <div class="d-flex border align-content-start flex-wrap">
-                <div class="p-2 flex-fill">Загальний обсяг інвестицій: $@Model.Post.TotalInvestment</div>
+                @if (Model.Post.TotalInvestment > 0)
+                {
+                    <div class="p-2 flex-fill">Загальний обсяг інвестицій: $@Model.Post.TotalInvestment</div>
+                }
                 <div class="p-2 flex-fill">Період інвестування: @InvestmentHelper.FormatInvestmentDuration(Model.Post.InvestDurationYears, Model.Post.InvestDurationMonths)</div>
                 <div class="p-2 flex-fill">Річна дохідність: @Model.Post.AnnualInvestmentReturn.ToString("0.")%</div>
             </div>

@@ -54,9 +54,9 @@
                 <small class="text-body-secondary">@Model.Post.CreatedAt.ToString("dd-MM-yyyy")</small>
             </p>
             <div class="d-flex p-1 flex-wrap justify-content-center">
-                <pre class="card-body md:order-2 order-1" style="width: 50%">
-                    @Model.Post.Description
-                </pre>
+                <div class="card-body md:order-2 order-1" style="width: 50%;">
+                    @Html.Raw(Model.Post.Description)
+                </div>
                 @if (Model.Post.Image != null)
                 {
                     <div class="md:order-1 order-md-2">

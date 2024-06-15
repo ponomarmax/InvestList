@@ -4,13 +4,7 @@
     ViewData["Title"] = "Скинути пароль";
 }
 
-<div class="mb-3">
-    <button type="button" class="btn btn-primary" onclick="toggleForm('loginForm')">Змінити логін</button>
-    <button type="button" class="btn btn-primary" onclick="toggleForm('passwordForm')">Змінити пароль</button>
-    <button type="button" class="btn btn-danger" onclick="toggleForm('deleteAccountForm')">Видалити акаунт</button>
-</div>
-
-<div id="loginForm" class="form-container" style="display:none;">
+<div id="loginForm" class="form-container">
     <h4>Змінити логін</h4>
     <form method="post">
         <div class="form-group mb-1">
@@ -22,7 +16,7 @@
     </form>
 </div>
 
-<div id="passwordForm" class="form-container" style="display:none;">
+<div id="passwordForm" class="form-container">
     <h4>Змінити пароль</h4>
     <form method="post">
         <div class="form-group mb-1">
@@ -35,7 +29,7 @@
     </form>
 </div>
 
-<div id="deleteAccountForm" class="form-container" style="display:none;">
+<div id="deleteAccountForm" class="form-container">
     <h4>Видалити акаунт</h4>
     <form method="post">
         <div class="form-group mb-1">
@@ -48,10 +42,4 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial"/>
-    <script>
-        function toggleForm(formId) {
-            var form = document.getElementById(formId);
-            form.style.display = form.style.display === 'none' ? 'block' : 'none';
-        }
-    </script>
 }

@@ -1,0 +1,57 @@
+@page
+@model ProfileModel
+@{
+    ViewData["Title"] = "Скинути пароль";
+}
+
+<div class="mb-3">
+    <button type="button" class="btn btn-primary" onclick="toggleForm('loginForm')">Змінити логін</button>
+    <button type="button" class="btn btn-primary" onclick="toggleForm('passwordForm')">Змінити пароль</button>
+    <button type="button" class="btn btn-danger" onclick="toggleForm('deleteAccountForm')">Видалити акаунт</button>
+</div>
+
+<div id="loginForm" class="form-container" style="display:none;">
+    <h4>Змінити логін</h4>
+    <form method="post">
+        <div class="form-group mb-1">
+            <input type="text" class="form-control mb-1" placeholder="Новий логін" required />
+            <input type="password" class="form-control mb-1" placeholder="Пароль" required />
+        </div>
+        <button type="submit" class="btn btn-primary mb-3">Зберегти</button>
+        <button type="button" class="btn btn-secondary mb-3" onclick="toggleForm('loginForm')">Скасувати</button>
+    </form>
+</div>
+
+<div id="passwordForm" class="form-container" style="display:none;">
+    <h4>Змінити пароль</h4>
+    <form method="post">
+        <div class="form-group mb-1">
+            <input type="password" class="form-control mb-1" placeholder="Пароль" required />
+            <input type="password" class="form-control mb-1" placeholder="Новий пароль" required />
+            <input type="password" class="form-control mb-1" placeholder="Підтвердіть пароль" required />
+        </div>
+        <button type="submit" class="btn btn-primary mb-3">Зберегти</button>
+        <button type="button" class="btn btn-secondary mb-3" onclick="toggleForm('passwordForm')">Скасувати</button>
+    </form>
+</div>
+
+<div id="deleteAccountForm" class="form-container" style="display:none;">
+    <h4>Видалити акаунт</h4>
+    <form method="post">
+        <div class="form-group mb-1">
+            <input type="password" class="form-control" placeholder="Пароль" required />
+        </div>
+        <button type="submit" class="btn btn-danger mb-3">Видалити акаунт</button>
+        <button type="button" class="btn btn-secondary mb-3" onclick="toggleForm('deleteAccountForm')">Скасувати</button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial"/>
+    <script>
+        function toggleForm(formId) {
+            var form = document.getElementById(formId);
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+    </script>
+}

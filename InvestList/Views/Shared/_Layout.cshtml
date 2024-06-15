@@ -82,7 +82,7 @@
                 <div class="dropdown text-end d-flex justify-content-center justify-content-md-end mt-1 prof">
                     <a href="#" class="profile" data-bs-toggle="dropdown" aria-expanded="false">ПРОФІЛЬ</a>
                     <ul class="dropdown-menu dropdown-menu-end text-small">
-                        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Manage/Index">@User.Identity?.Name</a></li>
+                        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Profile">@User.Identity?.Name</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Invest", new { area = "" })">Вийти</a></li>
                     </ul>
@@ -104,7 +104,7 @@
                     </ul>
                     <a href="#" class="profile" data-bs-toggle="dropdown" aria-expanded="false">ПРОФІЛЬ</a>
                     <ul class="dropdown-menu dropdown-menu-end text-small">
-                        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Manage/Index">@User.Identity?.Name</a></li>
+                        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Profile">@User.Identity?.Name</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Invest", new { area = "" })">Вийти</a></li>
                     </ul>
@@ -221,8 +221,12 @@
             <li class="nav-item">
                 <a href="https://t.me/invesstradar" class="nav-link px-2 creation-data-footer"><i class="bi bi-instagram" style="font-size: 20px"></i></a>
             </li>
+            @{
+                string tiktokUsername = "invest_radar";
+                string tiktokUrl = $"https://www.tiktok.com/@{tiktokUsername}?_t=8nDLHbmpF14&_r=1";
+            }
             <li class="nav-item">
-                <a href="https://t.me/invesstradar" class="nav-link px-2 creation-data-footer"><i class="bi bi-tiktok" style="font-size: 20px"></i></a>
+                <a href="@tiktokUrl" class="nav-link px-2 creation-data-footer"><i class="bi bi-tiktok" style="font-size: 20px"></i></a>
             </li>
         </div>
     </div>

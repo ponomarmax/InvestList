@@ -20,15 +20,18 @@ namespace InvestList.Areas.Identity.Pages.Account
 
         [BindProperty]
         [Required(ErrorMessage = "Поточний пароль є обов'язковим")]
+        [DataType(DataType.Password)]
         public string CurrentPassword { get; set; }
 
         [BindProperty]
         [Required(ErrorMessage = "Новий пароль є обов'язковим")]
+        [DataType(DataType.Password)]
         public string NewPassword { get; set; }
 
         [BindProperty]
         [Required(ErrorMessage = "Підтвердження паролю є обов'язковим")]
         [Compare("NewPassword", ErrorMessage = "Паролі не співпадають")]
+        [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
 
         [TempData]

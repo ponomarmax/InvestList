@@ -4,55 +4,15 @@
     ViewData["Title"] = "Профіль";
 }
 
-@if (ViewData.ModelState[""]?.Errors?.Count > 0)
-{
-    <div class="alert alert-danger">
-        @ViewData.ModelState[""].Errors[0].ErrorMessage
-    </div>
-}
-
-@if (!string.IsNullOrEmpty(Model.StatusMessage))
-{
-    <div class="alert alert-success">
-        @Model.StatusMessage
-    </div>
-}
-
-<div id="loginForm" class="form-container">
-    <h4>Змінити логін</h4>
-    <form method="post" asp-page-handler="ChangeUsername">
-        <div class="form-group mb-1">
-            <input type="text" asp-for="NewUsername" class="form-control mb-1" placeholder="Новий логін" required />
-            <input type="password" asp-for="Password" class="form-control mb-1" placeholder="Пароль" required />
-        </div>
-        <button type="submit" class="btn btn-primary mb-3">Зберегти</button>
-        <button type="button" class="btn btn-secondary mb-3" onclick="toggleForm('loginForm')">Скасувати</button>
-    </form>
-</div>
-
-<div id="passwordForm" class="form-container">
-    <h4>Змінити пароль</h4>
-    <form method="post">
-        <div class="form-group mb-1">
-            <input type="password" class="form-control mb-1" placeholder="Пароль" required />
-            <input type="password" class="form-control mb-1" placeholder="Новий пароль" required />
-            <input type="password" class="form-control mb-1" placeholder="Підтвердіть пароль" required />
-        </div>
-        <button type="submit" class="btn btn-primary mb-3">Зберегти</button>
-        <button type="button" class="btn btn-secondary mb-3" onclick="toggleForm('passwordForm')">Скасувати</button>
-    </form>
-</div>
-
-<div id="deleteAccountForm" class="form-container">
-    <h4>Видалити акаунт</h4>
-    <form method="post">
-        <div class="form-group mb-1">
-            <input type="password" class="form-control" placeholder="Пароль" required />
-        </div>
-        <button type="submit" class="btn btn-danger mb-3">Видалити акаунт</button>
-        <button type="button" class="btn btn-secondary mb-3" onclick="toggleForm('deleteAccountForm')">Скасувати</button>
-    </form>
-</div>
+<button type="submit" class="btn btn-primary">
+    <a asp-area="Identity" asp-page="/Account/LoginChange" style="color: black;" rel="follow">Змінити логін</a>
+</button>
+<button type="submit" class="btn btn-primary">
+    <a asp-area="Identity" asp-page="/Account/PasswordChange" style="color: black;" rel="follow">Змінити пароль</a>
+</button>
+<button type="submit" class="btn btn-primary">
+    <a asp-area="Identity" asp-page="/Account/DeleteAccount" style="color: black;" rel="follow">Видалити акаунт</a>
+</button>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial"/>

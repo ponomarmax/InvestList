@@ -1,15 +1,29 @@
 @page
 @model ProfileModel
 @{
-    ViewData["Title"] = "Скинути пароль";
+    ViewData["Title"] = "Профіль";
+}
+
+@if (ViewData.ModelState[""]?.Errors?.Count > 0)
+{
+    <div class="alert alert-danger">
+        @ViewData.ModelState[""].Errors[0].ErrorMessage
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(Model.StatusMessage))
+{
+    <div class="alert alert-success">
+        @Model.StatusMessage
+    </div>
 }
 
 <div id="loginForm" class="form-container">
     <h4>Змінити логін</h4>
-    <form method="post">
+    <form method="post" asp-page-handler="ChangeUsername">
         <div class="form-group mb-1">
-            <input type="text" class="form-control mb-1" placeholder="Новий логін" required />
-            <input type="password" class="form-control mb-1" placeholder="Пароль" required />
+            <input type="text" asp-for="NewUsername" class="form-control mb-1" placeholder="Новий логін" required />
+            <input type="password" asp-for="Password" class="form-control mb-1" placeholder="Пароль" required />
         </div>
         <button type="submit" class="btn btn-primary mb-3">Зберегти</button>
         <button type="button" class="btn btn-secondary mb-3" onclick="toggleForm('loginForm')">Скасувати</button>

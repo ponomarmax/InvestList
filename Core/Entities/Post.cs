@@ -5,7 +5,7 @@ namespace Core.Entities
         public Guid Id { get; set; }
         public PostType PostType { get; set; }
 
-        public string CreatedById { get; set; }
+        public string? CreatedById { get; set; }
 
         public User CreatedBy { get; set; }
 

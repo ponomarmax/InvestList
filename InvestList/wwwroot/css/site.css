@@ -52,6 +52,11 @@ li {
     list-style-type: none;
 }
 
+.profile_button {
+    color: #D1E4FD;
+    text-decoration: none;
+}
+
 .confirm {
     background-color: #D9ECDB;
     height: 40px;

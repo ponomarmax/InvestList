@@ -1,5 +1,5 @@
 @page
-@model LoginChangeModel
+@model InvestList.Areas.Identity.Pages.Account.LoginChangeModel
 @{
     ViewData["Title"] = "Змінити логін";
 }
@@ -11,7 +11,13 @@
 
 @if (!string.IsNullOrEmpty(Model.MessageStatus))
 {
-    <div class="alert alert-success">@Model.MessageStatus</div>
+    <div class="alert alert-success">
+        @Model.MessageStatus<br>
+        @if (!string.IsNullOrEmpty(Model.UpdatedUsername))
+        {
+            <div>Новий логін: @Model.UpdatedUsername</div>
+        }
+    </div>
 }
 
 <div id="loginForm" class="form-container">

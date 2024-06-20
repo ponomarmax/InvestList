@@ -28,6 +28,9 @@ namespace InvestList.Areas.Identity.Pages.Account
         [TempData]
         public string MessageStatus { get; set; }
 
+        [TempData]
+        public string UpdatedUsername { get; set; }
+
         public async Task<IActionResult> OnPostChangeUsernameAsync()
         {
             if (!ModelState.IsValid)
@@ -60,6 +63,7 @@ namespace InvestList.Areas.Identity.Pages.Account
 
             await _signInManager.RefreshSignInAsync(user);
             MessageStatus = "Логін успішно змінено";
+            UpdatedUsername = NewUsername;
             return RedirectToPage();
         }
     }

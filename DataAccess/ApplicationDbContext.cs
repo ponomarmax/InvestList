@@ -16,9 +16,7 @@ namespace DataAccess
         public DbSet<InvestField> InvestFields { get; set; }
         public DbSet<Link> Links { get; set; }
         public DbSet<PostLink> PostLinks { get; set; }
-
         public DbSet<Tag> Tags { get; set; }
-
         public DbSet<News> News { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Post> Posts { get; set; }
@@ -27,6 +25,7 @@ namespace DataAccess
         public DbSet<Image> Image { get; set; }
         public DbSet<ImageMetadata> ImageMetadata { get; set; }
         public DbSet<PostComment> PostComments { get; set; }
+        public DbSet<Post> Post { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

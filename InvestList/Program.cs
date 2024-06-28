@@ -69,6 +69,8 @@ try
     builder.Services.AddScoped<ICommentRepository, CommentRepository>();
     builder.Services.AddScoped<IInvestService, InvestService>();
     builder.Services.AddScoped<IImageService, ImageService>();
+    builder.Services.AddTransient<SitemapGenerator>();
+    builder.Services.AddHttpContextAccessor();
     builder.Services.AddAuthentication()
         .AddGoogle(options =>
         {
@@ -88,6 +90,15 @@ try
     //     await i.LoadOnFileSystem();
     //     Log.Logger.Information("Images are load");
     // }
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var sitemapGenerator = scope.ServiceProvider.GetRequiredService<SitemapGenerator>();
+
+        var sitemapXml = sitemapGenerator.GenerateSitemap();
+        var filePath = Path.Combine(app.Environment.ContentRootPath, "wwwroot", "sitemap.xml");
+        File.WriteAllText(filePath, sitemapXml);
+    }
 
     app.UseMiddleware<WwwRedirectMiddleware>();
     app.Use(async (context, next) =>
@@ -97,7 +108,7 @@ try
         // context.Response.Headers.Add("Access-Control-Allow-Headers", "application/json");
         context.Response.Headers.Add("Content-Security-Policy",
             "default-src 'self'; script-src 'self' 'unsafe-inline' https://tpc.googlesyndication.com https://pagead2.googlesyndication.com https://code.jquery.com https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com; img-src 'self' data: https://www.google-analytics.com https://pagead2.googlesyndication.com; frame-src 'self' https://www.google.com https://tpc.googlesyndication.com https://googleads.g.doubleclick.net https://pagead2.googlesyndication.com; object-src 'none'; connect-src 'self' https://www.google-analytics.com https://pagead2.googlesyndication.com;");
-        await next();
+    await next();
     });
     if (app.Environment.IsDevelopment())
     {

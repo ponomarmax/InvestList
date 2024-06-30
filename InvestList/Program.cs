@@ -69,6 +69,7 @@ try
     builder.Services.AddScoped<ICommentRepository, CommentRepository>();
     builder.Services.AddScoped<IInvestService, InvestService>();
     builder.Services.AddScoped<IImageService, ImageService>();
+    builder.Services.AddTransient<ISitemapGenerator, SitemapGenerator>();
     builder.Services.AddAuthentication()
         .AddGoogle(options =>
         {
@@ -88,6 +89,15 @@ try
     //     await i.LoadOnFileSystem();
     //     Log.Logger.Information("Images are load");
     // }
+
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var sitemapGenerator = scope.ServiceProvider.GetRequiredService<ISitemapGenerator>();
+        var sitemapXml = sitemapGenerator.GenerateSitemap();
+        var filePath = Path.Combine(app.Environment.ContentRootPath, "wwwroot", "sitemap.xml");
+        File.WriteAllText(filePath, sitemapXml);
+    }
 
     app.UseMiddleware<WwwRedirectMiddleware>();
     app.Use(async (context, next) =>

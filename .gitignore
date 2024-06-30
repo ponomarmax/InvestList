@@ -400,4 +400,4 @@ FodyWeavers.xsd
 .config/*
 
 appsettings.private.json
-wwwroot/sitemap.xml
+sitemap.xml

@@ -2,6 +2,6 @@ namespace InvestList.Services
 {
     public interface ISitemapGenerator
     {
-        string GenerateSitemap();
+        string GenerateSitemap(string host);
     }
 }

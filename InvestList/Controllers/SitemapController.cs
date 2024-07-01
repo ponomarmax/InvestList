@@ -15,7 +15,8 @@ namespace InvestList.Controllers
         [Route("/sitemap.xml")]
         public IActionResult SitemapXml()
         {
-            var sitemapContent = _sitemapGenerator.GenerateSitemap();
+            var t = $"{Request.Scheme}://{Request.Host.Value}/";
+            var sitemapContent = _sitemapGenerator.GenerateSitemap(t);
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "sitemap.xml");
             System.IO.File.WriteAllText(filePath, sitemapContent);
 

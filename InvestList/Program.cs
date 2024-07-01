@@ -90,14 +90,14 @@ try
     //     Log.Logger.Information("Images are load");
     // }
 
-    using (var scope = app.Services.CreateScope())
-    {
-        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        var sitemapGenerator = scope.ServiceProvider.GetRequiredService<ISitemapGenerator>();
-        var sitemapXml = sitemapGenerator.GenerateSitemap();
-        var filePath = Path.Combine(app.Environment.ContentRootPath, "wwwroot", "sitemap.xml");
-        File.WriteAllText(filePath, sitemapXml);
-    }
+    // using (var scope = app.Services.CreateScope())
+    // {
+    //     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    //     var sitemapGenerator = scope.ServiceProvider.GetRequiredService<ISitemapGenerator>();
+    //     var sitemapXml = sitemapGenerator.GenerateSitemap();
+    //     var filePath = Path.Combine(app.Environment.ContentRootPath, "wwwroot", "sitemap.xml");
+    //     File.WriteAllText(filePath, sitemapXml);
+    // }
 
     app.UseMiddleware<WwwRedirectMiddleware>();
     app.Use(async (context, next) =>

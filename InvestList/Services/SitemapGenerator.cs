@@ -7,21 +7,13 @@ using Microsoft.Extensions.Configuration;
 
 namespace InvestList.Services
 {
-    public class SitemapGenerator : ISitemapGenerator
+    public class SitemapGenerator(ApplicationDbContext context, IWebHostEnvironment env, IConfiguration configuration)
+        : ISitemapGenerator
     {
-        private readonly ApplicationDbContext _context;
-        private readonly IWebHostEnvironment _env;
-        private readonly IConfiguration _configuration;
-
-        public SitemapGenerator(ApplicationDbContext context, IWebHostEnvironment env, IConfiguration configuration)
+        public string GenerateSitemap(string host)
         {
-            _context = context;
-            _env = env;
-            _configuration = configuration;
-        }
-
-        public string GenerateSitemap()
-        {
+            if (host == null)
+                throw new NullReferenceException("host is null");
             var sb = new StringBuilder();
             var settings = new XmlWriterSettings { Indent = true };
 
@@ -30,11 +22,11 @@ namespace InvestList.Services
                 writer.WriteStartDocument();
                 writer.WriteStartElement("urlset", "http://www.sitemaps.org/schemas/sitemap/0.9");
 
-                var posts = _context.Posts
+                var posts = context.Posts
                     .Where(p => p.IsActive)
                     .ToList();
 
-                var baseUrl = _env.IsDevelopment() ? _configuration["BaseUrl:Development"] : _configuration["BaseUrl:Production"];
+                var baseUrl = host;
 
                 foreach (var post in posts)
                 {

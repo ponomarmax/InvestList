@@ -1,3 +1,4 @@
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using InvestList.Services;
 
@@ -18,7 +19,7 @@ namespace InvestList.Controllers
             var t = $"{Request.Scheme}://{Request.Host.Value}/";
             var sitemapContent = _sitemapGenerator.GenerateSitemap(t);
 
-            return Content(sitemapContent, "application/xml");
+            return Content(sitemapContent, "application/xml", Encoding.UTF8);
         }
     }
 }

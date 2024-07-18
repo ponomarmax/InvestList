@@ -14,11 +14,12 @@ namespace InvestList.Services
         {
             if (host == null)
                 throw new NullReferenceException("host is null");
-            var sb = new StringBuilder();
-            var settings = new XmlWriterSettings { Indent = true };
+            var settings = new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 };
 
-            using (var writer = XmlWriter.Create(sb, settings))
+            using var ms = new MemoryStream();
+            using (var writer = XmlWriter.Create(ms, settings))
             {
+
                 writer.WriteStartDocument();
                 writer.WriteStartElement("urlset", "http://www.sitemaps.org/schemas/sitemap/0.9");
 
@@ -40,8 +41,11 @@ namespace InvestList.Services
                 writer.WriteEndElement();
                 writer.WriteEndDocument();
             }
-
-            return sb.ToString();
+            ms.Seek(0, SeekOrigin.Begin);
+            using (var reader = new StreamReader(ms))
+            {
+                return reader.ReadToEnd();
+            }
         }
 
         private void WriteUrl(XmlWriter writer, string url, DateTime lastModified)

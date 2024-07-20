@@ -1,0 +1,21 @@
+@page
+@model ProfileModel
+@{
+    ViewData["Title"] = "Профіль";
+}
+
+<div class="d-flex justify-content-center">
+    <button type="submit" class="btn btn-primary ms-1 mb-1">
+        <a asp-area="Identity" asp-page="/Account/LoginChange" class="profile_button" rel="follow">Змінити логін</a>
+    </button>
+    <button type="submit" class="btn btn-primary ms-1 mb-1">
+        <a asp-area="Identity" asp-page="/Account/PasswordChange" class="profile_button" rel="follow">Змінити пароль</a>
+    </button>
+    <button type="submit" class="btn btn-primary ms-1 mb-1">
+        <a asp-area="Identity" asp-page="/Account/DeleteAccount" class="profile_button" rel="follow">Видалити акаунт</a>
+    </button>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial"/>
+}

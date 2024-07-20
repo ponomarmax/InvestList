@@ -1,19 +1,23 @@
 ﻿@using Core.Interfaces
 @inject ITagRepository tagService
+@inject IWebHostEnvironment env
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7409000941565147"
-         crossorigin="anonymous"></script>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-L7JXWKK250"></script>
-    <script>
+    @if (env.IsProduction())
+    {
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7409000941565147"
+                crossorigin="anonymous"></script>
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-L7JXWKK250"></script>
+        <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
     
       gtag('config', 'G-L7JXWKK250');
     </script>
+    }
     <meta charset="utf-8"/>
     <meta name="google-adsense-account" content="ca-pub-7409000941565147">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -42,7 +46,7 @@
     <div class="container-fluid justify-content-start">
         <div class="logo-container d-flex align-items-center">
             <a asp-area="Main" asp-page="/Index" class="mx-auto me-2 mt-1">
-                <img src="/ico/logo3.svg" alt="invest radar logo" height="50" width="50"/>
+                <img src="/ico/logo3.png" alt="invest radar logo" height="50" width="50"/>
             </a>
             <a asp-area="Main" asp-page="/Index" class="invest_radar">Invest Radar</a>
             <div class="ms-auto">
@@ -68,6 +72,7 @@
                 <div class="d-flex justify-content-center align-items-center flex-grow-1 ms-lg-5 mt-lg-2">
                     <a asp-area="Main" asp-page="/News/List" class="news" rel="follow">НОВИНИ</a>
                     <a asp-area="Main" asp-page="/Invest/List" class="projects" rel="follow">ПРОЕКТИ</a>
+                    <a asp-area="Identity" asp-page="/Account/Register" class="reg" rel="nofollow">ДОДАТИ ПРОЕКТ</a>
                 </div>
                 <div class="d-flex justify-content-center align-items-center mt-1 log_reg">
                     <a asp-area="Identity" asp-page="/Account/Register" class="reg" rel="nofollow">ЗАРЕЄСТРУВАТИСЯ</a>
@@ -84,7 +89,7 @@
                 <div class="dropdown text-end d-flex justify-content-center justify-content-md-end mt-1 prof">
                     <a href="#" class="profile" data-bs-toggle="dropdown" aria-expanded="false">ПРОФІЛЬ</a>
                     <ul class="dropdown-menu dropdown-menu-end text-small">
-                        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Manage/Index">@User.Identity?.Name</a></li>
+                        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Profile">@User.Identity?.Name</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Invest", new { area = "" })">Вийти</a></li>
                     </ul>
@@ -106,7 +111,7 @@
                     </ul>
                     <a href="#" class="profile" data-bs-toggle="dropdown" aria-expanded="false">ПРОФІЛЬ</a>
                     <ul class="dropdown-menu dropdown-menu-end text-small">
-                        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Manage/Index">@User.Identity?.Name</a></li>
+                        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Profile">@User.Identity?.Name</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Invest", new { area = "" })">Вийти</a></li>
                     </ul>
@@ -202,9 +207,8 @@
     <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
         <div class="nav">
             <a asp-area="Main" asp-page="/Index" class="ms-3 me-2 mt-1">
-                <img src="/ico/logo3.svg" alt="invest radar logo" height="50" width="50"/>
+                <img src="/ico/logo3.png" alt="invest radar logo" height="50" width="50"/>
             </a>
-            <a asp-area="Main" asp-page="/Index" class="invest_radar mt-3">Invest Radar</a>
         </div>
         <ul class="nav">
             <li class="nav-item">
@@ -222,25 +226,29 @@
                 <a href="https://t.me/invesstradar" class="nav-link px-2 creation-data-footer"><i class="bi bi-telegram" style="font-size: 20px"></i></a>
             </li>
             <li class="nav-item">
-                <a href="https://t.me/invesstradar" class="nav-link px-2 creation-data-footer"><i class="bi bi-instagram" style="font-size: 20px"></i></a>
+                <a href="https://www.instagram.com/invest_radar_com?igsh=MTJpcXNtemNwdXVlcw%3D%3D&utm_source=qr" class="nav-link px-2 creation-data-footer"><i class="bi bi-instagram" style="font-size: 20px"></i></a>
             </li>
+            @{
+                string tiktokUsername = "invest_radar";
+                string tiktokUrl = $"https://www.tiktok.com/@{tiktokUsername}?_t=8nDLHbmpF14&_r=1";
+            }
             <li class="nav-item">
-                <a href="https://t.me/invesstradar" class="nav-link px-2 creation-data-footer"><i class="bi bi-tiktok" style="font-size: 20px"></i></a>
+                <a href="@tiktokUrl" class="nav-link px-2 creation-data-footer"><i class="bi bi-tiktok" style="font-size: 20px"></i></a>
             </li>
         </div>
     </div>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7409000941565147"
-         crossorigin="anonymous"></script>
-    <!-- footer -->
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-7409000941565147"
-         data-ad-slot="2740189613"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
-    <script>
-         (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
+    @* <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7409000941565147" *@
+    @*      crossorigin="anonymous"></script> *@
+    @* <!-- footer --> *@
+    @* <ins class="adsbygoogle" *@
+    @*      style="display:block" *@
+    @*      data-ad-client="ca-pub-7409000941565147" *@
+    @*      data-ad-slot="2740189613" *@
+    @*      data-ad-format="auto" *@
+    @*      data-full-width-responsive="true"></ins> *@
+    @* <script> *@
+    @*      (adsbygoogle = window.adsbygoogle || []).push({}); *@
+    @* </script> *@
 </footer>
 @{
     await Html.RenderPartialAsync("_ValidationScriptsPartial");

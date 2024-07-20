@@ -1,0 +1,32 @@
+@page
+@model InvestList.Areas.Identity.Pages.Account.LoginChangeModel
+@{
+    ViewData["Title"] = "Змінити логін";
+}
+
+@if (ViewData.ModelState[""]?.Errors?.Count > 0)
+{
+    <div class="alert alert-danger">@ViewData.ModelState[""].Errors[0].ErrorMessage</div>
+}
+
+@if (!string.IsNullOrEmpty(Model.MessageStatus))
+{
+    <div class="alert alert-success">
+        @Model.MessageStatus<br>
+        @if (!string.IsNullOrEmpty(Model.UpdatedUsername))
+        {
+            <div>Новий логін: @Model.UpdatedUsername</div>
+        }
+    </div>
+}
+
+<div id="loginForm" class="form-container">
+    <h4>Змінити логін</h4>
+    <form method="post" asp-page-handler="ChangeUsername">
+        <div class="form-group mb-1">
+            <input type="text" asp-for="NewUsername" class="form-control mb-1" placeholder="Новий логін" required />
+            <input type="password" asp-for="Password" class="form-control mb-1" placeholder="Пароль" required />
+        </div>
+        <button type="submit" class="btn btn-primary mb-3">Зберегти</button>
+    </form>
+</div>

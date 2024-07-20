@@ -17,7 +17,10 @@
             <h1 class="card-header">@Model.Post.Title</h1>
 
             <div class="d-flex border align-content-start flex-wrap">
-                <div class="p-2 flex-fill">Загальний обсяг інвестицій: $@Model.Post.TotalInvestment</div>
+                @if (Model.Post.TotalInvestment > 0)
+                {
+                    <div class="p-2 flex-fill">Загальний обсяг інвестицій: $@Model.Post.TotalInvestment</div>
+                }
                 <div class="p-2 flex-fill">Період інвестування: @InvestmentHelper.FormatInvestmentDuration(Model.Post.InvestDurationYears, Model.Post.InvestDurationMonths)</div>
                 <div class="p-2 flex-fill">Річна дохідність: @Model.Post.AnnualInvestmentReturn.ToString("0.")%</div>
             </div>
@@ -54,9 +57,9 @@
                 <small class="text-body-secondary">@Model.Post.CreatedAt.ToString("dd-MM-yyyy")</small>
             </p>
             <div class="d-flex p-1 flex-wrap justify-content-center">
-                <pre class="card-body md:order-2 order-1" style="width: 50%">
-                    @Model.Post.Description
-                </pre>
+                <div class="card-body md:order-2 order-1" style="width: 50%;">
+                    @Html.Raw(Model.Post.Description)
+                </div>
                 @if (Model.Post.Image != null)
                 {
                     <div class="md:order-1 order-md-2">

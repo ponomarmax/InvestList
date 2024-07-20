@@ -1,0 +1,26 @@
+@page
+@model DeleteAccountModel
+@{
+    ViewData["Title"] = "Видалити акаунт";
+}
+
+@if (Model.TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@Model.TempData["ErrorMessage"]</div>
+}
+
+<div id="deleteAccountForm" class="form-container">
+    <h4>Видалити акаунт</h4>
+    <form method="post">
+        <div class="form-group mb-1">
+            <label asp-for="Password" class="control-label"></label>
+            <input asp-for="Password" class="form-control mb-1" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-danger mb-3">Видалити акаунт</button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial"/>
+}

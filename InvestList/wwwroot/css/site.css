@@ -43,8 +43,8 @@ header {
 }
 
 pre {
+    font-family: "e-Ukraine";
     white-space: pre-line;
-    font-family: 'e-Ukraine';
     font-size: 16px;
 }
 
@@ -52,8 +52,26 @@ li {
     list-style-type: none;
 }
 
+.profile_button {
+    color: #D1E4FD;
+    text-decoration: none;
+}
+
+.confirm {
+    background-color: #D9ECDB;
+    height: 40px;
+    border-radius: 4px;
+    align-items: center;
+    text-align: center;
+}
+
+.confirm .btn-close {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
 .invest_radar {
-    font-family: 'e-Ukraine-bold';
+    font-weight: 700;
     font-size: 20px;
     text-decoration: none;
     color: black;
@@ -145,7 +163,7 @@ li {
     border-radius: 25px;
     background-color: #FFFFFF;
     font-size: 0.8em;
-    font-family: "e-Ukraine-bold";
+    font-weight: 700;
     color: #333333;
     text-decoration: none;
 }
@@ -153,11 +171,11 @@ li {
 .reg {
     height: 40px;
     padding: 10px;
-    border: 2px solid #333333;
+    border: 2px солід #333333;
     border-radius: 25px;
     background-color: #333333;
     font-size: 0.8em;
-    font-family: "e-Ukraine-bold";
+    font-weight: 700;
     color: #FFFFFF;
     text-decoration: none;
     margin-right: 5px;
@@ -192,7 +210,7 @@ li {
     margin-right: 5px;
     margin-bottom: 4px;
     font-size: 15px;
-    font-weight: 700;
+    font-weight: 400;
     border-radius: 5px;
     text-transform: uppercase;
 }
@@ -223,7 +241,7 @@ li {
     padding: 6px 12px;
     margin-right: 5px;
     font-size: 15px;
-    font-weight: 600;
+    font-weight: 400;
     border-radius: 5px;
     text-transform: uppercase;
     background-color: #D3D3D3;
@@ -235,7 +253,7 @@ li {
     margin-right: 5px;
     margin-bottom: 15px;
     font-size: 15px;
-    font-weight: 600;
+    font-weight: 400;
     border-radius: 15px;
     text-transform: uppercase;
 }
@@ -243,7 +261,6 @@ li {
     .tag.tag1 {
         background-color: #D1E4FD;
         color: #183F80;
-        ;
     }
 
     .tag.tag2 {
@@ -494,8 +511,10 @@ li {
 }
 
 #tag {
-    margin-left: 10px;
+    margin-left: 5px;
+    margin-bottom: 5px;
     font-size: 14px;
+    font-weight: 400;
 }
 
 .custom-light-green {
@@ -514,12 +533,13 @@ li {
 @font-face {
     font-family: 'e-Ukraine';
     src: url('../fonts/e-Ukraine/e-Ukraine-Regular.woff2') format('woff2');
-    font-weight: bold;
+    font-weight: 400;
     font-style: normal;
 }
-@font-face {
-    font-family: 'e-Ukraine-bold';
+
+/* @font-face {
+    font-family: 'e-Ukraine';
     src: url('../fonts/e-Ukraine/e-Ukraine-Bold.woff2') format('woff2');
     font-weight: 700;
     font-style: normal;
-}
+} */

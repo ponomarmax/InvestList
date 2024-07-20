@@ -3,24 +3,27 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model InvestList.Areas.Main.Pages.Index
 
-<div class="container">
-    <div class="row align-items-center">
-        <div class="col-lg-6">
-            <div class="mb-3">
-                <h1>Бізнес шукає інвестиції</h1>
-                <p>Зареєструйте свій проект для пошуку інвесторів</p>
-                <h1>Інвестор шукає прибуток</h1>
-                <p>Знайдіть інвестиційний проект, який забезпечить пасивний прибуток</p>
+@if (!Model.HttpContext.Request.QueryString.HasValue)
+{
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class="mb-3">
+                    <h1>Бізнес шукає інвестиції</h1>
+                    <p>Зареєструйте свій проект для пошуку інвесторів</p>
+                    <h1>Інвестор шукає прибуток</h1>
+                    <p>Знайдіть інвестиційний проект, який забезпечить пасивний прибуток</p>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div>
+                    <h1>Проектів для інвестування</h1>
+                    <div class="number">32</div>
+                </div>
             </div>
         </div>
-        <div class="col-lg-6">
-            <div>
-                <h1>Проектів для інвестування</h1>
-                <div class="number">32</div>
-            </div>
-        </div>
-    </div>
-</div><br><br>
+    </div><br><br>
+}
 <div class="container">
     <div class="d-flex justify-content-center">
         <h2>Останні оголошення від бізнесу</h2>

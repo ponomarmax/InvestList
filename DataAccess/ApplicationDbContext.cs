@@ -70,7 +70,7 @@ namespace DataAccess
                 .HasOne(p => p.CreatedBy)
                 .WithMany() // No navigation property
                 .HasForeignKey(p => p.CreatedById)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.SetNull);
             // modelBuilder.Entity<Post>()
             //     .HasOne(x => x.CreatedBy).OnDelete(DeleteBehavior.NoAction);
 

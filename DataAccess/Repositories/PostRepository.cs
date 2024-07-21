@@ -132,5 +132,12 @@ namespace DataAccess.Repositories
         {
             return await dbContext.Posts.AnyAsync(x => x.Id == Guid.Parse(postId) && x.CreatedById == userId);
         }
+
+        public async Task<int> Count(PostType? postType)
+        {
+            if (postType == null)
+                return await dbContext.Posts.CountAsync();
+            return await dbContext.Posts.Where(x => x.PostType == postType).CountAsync();
+        }
     }
 }

@@ -64,7 +64,7 @@ try
     builder.Services.AddScoped<IPostRepository, PostRepository>();
     builder.Services.AddScoped<ITagRepository, TagRepository>();
     builder.Services.AddScoped<ICommentRepository, CommentRepository>();
-    builder.Services.AddScoped<IInvestService, InvestService>();
+    builder.Services.AddSingleton<IInvestService, InvestService>();
     builder.Services.AddScoped<IImageService, ImageService>();
     builder.Services.AddTransient<ISitemapGenerator, SitemapGenerator>();
     builder.Services.AddAuthentication()

@@ -1,4 +1,4 @@
-namespace InvestList.Models.News
+namespace InvestList.Models.V2
 {
     public class LinkView
     {

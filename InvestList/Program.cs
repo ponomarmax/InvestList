@@ -2,9 +2,8 @@ using System.Reflection;
 using Core.Entities;
 using Core.Interfaces;
 using DataAccess;
-using DataAccess.Interfaces;
 using DataAccess.Repositories;
-using DataAccess.Repositories.V2;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -41,8 +40,8 @@ try
     builder.Services.AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddDefaultTokenProviders();
-    builder.Services
-        .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<PostInvestAdViewModelValidator>());
+    builder.Services.AddValidatorsFromAssemblyContaining<Program>()
+        .AddFluentValidationAutoValidation();
     // builder.Services.AddIdentity<User,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
     //     .AddEntityFrameworkStores<ApplicationDbContext>();
     // builder.Services.AddControllersWithViews()
@@ -59,10 +58,8 @@ try
 
     builder.Services.Load<EmailConfig>(builder.Configuration, "Email");
     builder.Services.AddTransient<IEmailSender, InvestList.Services.EmailSender>();
-    builder.Services.AddTransient<IInvestAdRepository, InvestAdRepository>();
     builder.Services.AddScoped<IInvestRepository, InvestRepository>();
     builder.Services.AddScoped<IUserRepository, UserRepository>();
-    builder.Services.AddScoped<INewsRepository, NewsRepository>();
     builder.Services.AddScoped<IPostService, PostService>();
     builder.Services.AddScoped<IPostRepository, PostRepository>();
     builder.Services.AddScoped<ITagRepository, TagRepository>();

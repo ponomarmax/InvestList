@@ -1,6 +1,5 @@
 using Core.Entities;
 using InvestList.Models.Comment;
-using InvestList.Models.News;
 
 namespace InvestList.Models.V2
 {

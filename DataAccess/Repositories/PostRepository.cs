@@ -3,7 +3,7 @@ using Core.Entities;
 using Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataAccess.Repositories.V2
+namespace DataAccess.Repositories
 {
     public class PostRepository(ApplicationDbContext dbContext, IMapper mapper, IImageService imageService)
         : IPostRepository
@@ -122,10 +122,15 @@ namespace DataAccess.Repositories.V2
         {
             return await dbContext.Posts.CountAsync(x => x.Slug == slug.ToLower()) > 0;
         }
-        
+
         public async Task<bool> Exists(Guid id)
         {
             return await dbContext.Posts.CountAsync(x => x.Id == id) > 0;
+        }
+
+        public async Task<bool> IsOwnerOfPost(string userId, string postId)
+        {
+            return await dbContext.Posts.AnyAsync(x => x.Id == Guid.Parse(postId) && x.CreatedById == userId);
         }
     }
 }

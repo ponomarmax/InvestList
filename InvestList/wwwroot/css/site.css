@@ -202,7 +202,11 @@ li {
 
 .curr {width: 50px;}
 .dur {width: 30%;}
-.tagg {margin-top: 20px;}
+.resizable-select {
+    height: 100%;
+    resize: vertical; /* Allows vertical resizing */
+    overflow: auto;  /* Ensures scrollbars appear if content overflows */
+}
 
 .annualInvestment, .duration, .currency, .creation-data, .creation-data-footer {
     display: inline-block;

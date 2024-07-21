@@ -1,6 +1,5 @@
 using AutoMapper;
 using Core.Interfaces;
-using DataAccess.Repositories;
 using InvestList.Filters;
 using InvestList.Models;
 using Microsoft.AspNetCore.Authorization;

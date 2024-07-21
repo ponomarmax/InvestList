@@ -14,5 +14,6 @@ namespace Core.Interfaces
         Task Create(Post post);
         Task<bool> Exists(string slug);
         Task<bool> Exists(Guid id);
+        Task<bool> IsOwnerOfPost(string userId, string postId);
     }
 }

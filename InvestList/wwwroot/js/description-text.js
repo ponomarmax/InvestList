@@ -4,13 +4,13 @@ function toggleBold() {
     document.execCommand('bold');
 }
 
-function addBulletPoints(elementId) {
-    var element = document.getElementById(elementId);
+function addBulletPoints() {
+    var element = document.getElementById('description');
     element.innerHTML += "<li>•</li>";
 }
 
-function addNumberedList(elementId) {
-    var element = document.getElementById(elementId);
+function addNumberedList() {
+    var element = document.getElementById('description');
     lastNumber++;
     element.innerHTML += "<li>" + lastNumber + ".</li>";
 }

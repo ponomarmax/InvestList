@@ -106,13 +106,13 @@
                     <button type="button" class="btn btn-primary" onclick="addBulletPoints()">Булети</button>
                     <button type="button" class="btn btn-primary" onclick="addNumberedList()">Нумерований список</button>
                 </div>
-                <div id="description" style="height: 12em;" contenteditable="true" class="form-control" oninput="syncDescription()">
+                <div id="description" contenteditable="true" class="form-control" oninput="syncDescription()">
                     @if (Model.Post != null && Model.Post.Description != null)
                     {
                         @Html.Raw(Model.Post.Description)
                     }
                 </div>
-                <input type="hidden" id="PostDescription" name="Post.Description" value="@Model.Post.Description" />
+                <input type="hidden" id="PostDescription" name="Post.Description" value="@Model.Post.Description"/>
 
                 @* <label asp-for="Post.Description">Опис</label>
                 <textarea rows="10" asp-for="Post.Description" class="form-control"></textarea> *@
@@ -137,18 +137,18 @@
                     <input placeholder="Кількість місяців" type="number" asp-for="Post.InvestDurationMonths" class="form-control" value="@((Model?.Post.InvestDurationMonths > 0) ? Model?.Post.InvestDurationMonths : null)"/>
                 </div>
             </div>
-            <div class="form-group col-6 tagg">
+            <div class="form-group col-6 d-flex flex-column">
                 <span asp-validation-for="AvailableTags" class="text-danger"></span>
-
                 @{
                     if (Model.AvailableTags != null)
                     {
-                        <label asp-for="AvailableTags">Теги</label><br>
-                        <select rows="20" name="Post.TagIds" asp-items="Model.AvailableTags" multiple="multiple" class="listbox"></select>
+                        <label asp-for="AvailableTags">Теги</label>
+                        <br>
+                        <select rows="40" name="Post.TagIds" asp-items="Model.AvailableTags" multiple="multiple" class="listbox flex-grow-1 resizable-select"></select>
                     }
                 }
-
             </div>
+
         </div>
 
         <button type="submit" class="btn btn-primary">Внести зміни</button>

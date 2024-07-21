@@ -3,7 +3,7 @@ using Core.Entities;
 using Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataAccess.Repositories.V2
+namespace DataAccess.Repositories
 {
     public class InvestRepository(ApplicationDbContext dbContext, IMapper mapper, IImageService imageService): IInvestRepository
     {

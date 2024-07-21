@@ -70,4 +70,8 @@
         <AdditionalFiles Include="Areas\Main\Pages\News\List.cshtml"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Controllers\HomeController.cs" />
+    </ItemGroup>
+
 </Project>

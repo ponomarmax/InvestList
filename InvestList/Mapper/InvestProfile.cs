@@ -2,11 +2,10 @@ using AutoMapper;
 using Core.Entities;
 using InvestList.Models;
 using InvestList.Models.Comment;
-using InvestList.Models.News;
 using InvestList.Models.V2;
 using InvestList.Services;
 
-namespace InvestList.AutomapperProfiles.V2
+namespace InvestList.Mapper
 {
     public class InvestProfile: Profile
     {

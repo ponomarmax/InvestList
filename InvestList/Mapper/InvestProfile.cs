@@ -145,6 +145,7 @@ namespace InvestList.Mapper
             CreateMap<PostLinkView, PostLink>();
             CreateMap<PostLink, LinkView>();
             CreateMap<PostLink, PostLinkView>();
+            CreateMap<Tag, TagView>();
         }
     }
 }

@@ -2,6 +2,7 @@ using System.Reflection;
 using Core.Entities;
 using Core.Interfaces;
 using DataAccess;
+using DataAccess.Migrations;
 using DataAccess.Repositories;
 using FluentValidation;
 using FluentValidation.AspNetCore;

@@ -6,13 +6,13 @@ function toggleBold() {
 
 function addBulletPoints() {
     var element = document.getElementById('description');
-    element.innerHTML += "<li>•</li>";
+    element.innerHTML += "•";
 }
 
 function addNumberedList() {
     var element = document.getElementById('description');
     lastNumber++;
-    element.innerHTML += "<li>" + lastNumber + ".</li>";
+    element.innerHTML += lastNumber + ".";
 }
 
 function syncDescription() {

@@ -1,4 +1,5 @@
-﻿using Core.Entities;
+﻿using System.Text.RegularExpressions;
+using Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
@@ -37,14 +38,25 @@ namespace DataAccess.Migrations
 
                 foreach (var post in context.Posts)
                 {
-                    // Add your logic about cleaning data here
-                    // like post.Description = ... and your logic
+                    post.Description = RemoveHtmlTags(post.Description);
                 }
 
                 context.SaveChanges();
             }
         }
-        
+
+        private string RemoveHtmlTags(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input)) return string.Empty;
+
+            input = Regex.Replace(input, @"</?div.*?>", "\n", RegexOptions.IgnoreCase);
+            input = Regex.Replace(input, @"<br>", "\n", RegexOptions.IgnoreCase);
+            input = Regex.Replace(input, @"<b>", "**", RegexOptions.IgnoreCase);
+            input = Regex.Replace(input, @"</b>", "**", RegexOptions.IgnoreCase);
+            input = Regex.Replace(input, "<.*?>", string.Empty);
+            return input.Trim();
+        }
+
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {

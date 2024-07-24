@@ -70,6 +70,7 @@ namespace InvestList.Areas.Main.Pages.Invest
             input = Regex.Replace(input, @"<br>", "\n", RegexOptions.IgnoreCase);
             input = Regex.Replace(input, @"<b>", "**", RegexOptions.IgnoreCase);
             input = Regex.Replace(input, @"</b>", "**", RegexOptions.IgnoreCase);
+            input = Regex.Replace(input, "<.*?>", string.Empty);
             return input.Trim();
         }
 

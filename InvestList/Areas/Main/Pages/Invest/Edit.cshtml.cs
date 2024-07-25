@@ -92,8 +92,7 @@ namespace InvestList.Areas.Main.Pages.Invest
         {
             if (string.IsNullOrWhiteSpace(input)) return string.Empty;
 
-            input = Regex.Replace(input, @"\*\*", "<b>", RegexOptions.IgnoreCase);
-            input = Regex.Replace(input, @"\*\*", "</b>", RegexOptions.IgnoreCase);
+            input = Regex.Replace(input, @"\*\*(.*?)\*\*", "<b>$1</b>", RegexOptions.Singleline);
             return input.Trim();
         }
     }

@@ -18,9 +18,6 @@ using InvestList.Validators;
 using Microsoft.Extensions.FileProviders;
 using DataAccess.Migrations;
 
-var t = new clenaupdata();
-t.CustomMigration();
-
 var builder = WebApplication.CreateBuilder(args);
 builder.LoadAppSettingAndEnvValues();
 builder.ConfigureLogging();

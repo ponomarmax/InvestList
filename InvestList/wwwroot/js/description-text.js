@@ -1,4 +1,4 @@
-var lastNumber = 0;
+var lastNumber = parseInt(localStorage.getItem('lastNumber')) || 0;
 
 function insertTextAtCursor(text) {
     var sel = window.getSelection();
@@ -27,6 +27,7 @@ function addBulletPoints() {
 function addNumberedList() {
     lastNumber++;
     insertTextAtCursor(lastNumber + ". ");
+    localStorage.setItem('lastNumber', lastNumber);
 }
 
 function syncDescription() {

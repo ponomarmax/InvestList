@@ -1,18 +1,33 @@
-var lastNumber = 0;
+var lastNumber = parseInt(localStorage.getItem('lastNumber')) || 0;
+
+function insertTextAtCursor(text) {
+    var sel = window.getSelection();
+    if (sel.rangeCount) {
+        var range = sel.getRangeAt(0);
+        range.deleteContents();
+
+        var textNode = document.createTextNode(text);
+        range.insertNode(textNode);
+
+        range.setStartAfter(textNode);
+        range.setEndAfter(textNode);
+        sel.removeAllRanges();
+        sel.addRange(range);
+    }
+}
 
 function toggleBold() {
     document.execCommand('bold');
 }
 
 function addBulletPoints() {
-    var element = document.getElementById('description');
-    element.innerHTML += "<li>•</li>";
+    insertTextAtCursor("• ");
 }
 
 function addNumberedList() {
-    var element = document.getElementById('description');
     lastNumber++;
-    element.innerHTML += "<li>" + lastNumber + ".</li>";
+    insertTextAtCursor(lastNumber + ". ");
+    localStorage.setItem('lastNumber', lastNumber);
 }
 
 function syncDescription() {

@@ -16,6 +16,7 @@ using InvestList.Logging;
 using InvestList.Services;
 using InvestList.Validators;
 using Microsoft.Extensions.FileProviders;
+using DataAccess.Migrations;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.LoadAppSettingAndEnvValues();

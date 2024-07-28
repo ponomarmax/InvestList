@@ -100,12 +100,12 @@
                     <button type="button" class="btn btn-primary" onclick="addBulletPoints()">Булети</button>
                     <button type="button" class="btn btn-primary" onclick="addNumberedList()">Нумерований список</button>
                 </div>
-                <div id="description" contenteditable="true" class="form-control" oninput="syncDescription()">
+                <pre id="description" contenteditable="true" class="form-control" oninput="syncDescription()">
                     @if (Model.Post != null && Model.Post.Description != null)
                     {
                         @Html.Raw(Model.Post.Description)
                     }
-                </div>
+                </pre>
                 <input type="hidden" id="PostDescription" name="Post.Description" value="Post.Description" />
                                 
                 @* <label asp-for="Post.Description">Опис</label>

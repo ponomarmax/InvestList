@@ -1,5 +1,6 @@
 @using InvestList
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using System.Text.RegularExpressions;
 @model InvestList.Models.V2.InvestView
 
 <div class="card">
@@ -28,6 +29,10 @@
             }
 
             <div class="col">
+                @{
+                    Model.Description = Regex.Replace(Model.Description, @"\*\*", "", RegexOptions.IgnoreCase);
+                    Model.Description = Regex.Replace(Model.Description, @"\*\*", "", RegexOptions.IgnoreCase);
+                }
                 <p class="card-text text-black mb-0">@Html.Raw(Model.Description?.Substring(0, Math.Min(Model.Description.Length, 150)))</p>
                 <div class="annualInvestment">
                     @Model.AnnualInvestmentReturn.ToString("0.")<i class="bi bi-percent"></i>

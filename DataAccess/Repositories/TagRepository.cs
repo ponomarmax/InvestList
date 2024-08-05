@@ -21,24 +21,14 @@ namespace DataAccess.Repositories
             await dbContext.SaveChangesAsync();
             _tags =  await dbContext.Tags.ToArrayAsync();
         }
-
         
-        public async Task<Dictionary<Guid, string>> GetTags()
+        public async Task<IEnumerable<Tag>> GetTags()
         {
             if (_tags == null || _tags.Length == 0)
             {
                 _tags = await dbContext.Tags.ToArrayAsync();
             }
-            return _tags.ToDictionary(x => x.Id, x => x.Name);
-        }
-        
-        public async Task<IEnumerable<Tag>> GetTagsV2()
-        {
-            if (_tags == null || _tags.Length == 0)
-            {
-                _tags = await dbContext.Tags.ToArrayAsync();
-            }
-            return _tags;
+            return _tags.OrderBy(x=>x.Name);
         }
 
         public async Task SubmitCustomHeader(List<Guid> tagIds)

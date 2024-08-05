@@ -61,7 +61,7 @@ namespace InvestList.Areas.Main.Pages.News
         private async Task PrepareViewData(Guid id, Post db)
         {
             Id = id;
-            var tagsV2 = await tagRepository.GetTagsV2();
+            var tagsV2 = await tagRepository.GetTags();
             Post = mapper.Map<PutPostModel>(db);
             foreach (var tag in tagsV2)
             {

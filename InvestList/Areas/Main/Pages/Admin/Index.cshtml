@@ -1,13 +1,14 @@
-@model IEnumerable<InvestList.Models.TagView>
+@page
+@model InvestList.Areas.Main.Pages.Admin.Index
 
 <ul>
-    @foreach (var tag in Model)
+    @foreach (var tag in Model.AvailableTags)
     {
         <li>@tag.Name</li>
     }
 </ul>
 
-<form asp-action="AddTag" asp-controller="Admin" method="post">
+<form asp-page-handler="AddTag" method="post">
     <div class="form-group mb-1">
         <label>Назва тегу:</label>
         <textarea id="tagName" name="tagName" class="form-control"  rows="3"></textarea>
@@ -15,15 +16,15 @@
     <button type="submit" class="btn btn-primary">Відправити</button>
 </form>
 
-<form asp-action="SubmitCustomHeader" asp-controller="Admin" method="post">
+<form asp-page-handler="SubmitCustomHeader" method="post">
     <label>Виберіть список тегів для відображення у хедері</label>
     <div class="form-group col-6">
         @{
-            if (Model?.Count() > 1)
+            if (Model?.AvailableTags?.Count() > 1)
             {
                 <label>Теги</label>
                 <select name="tagIds" class="form-control" multiple>
-                    @foreach (var tag in Model)
+                    @foreach (var tag in Model.AvailableTags)
                     {
                         <option value="@tag.Id">@tag.Name</option>
                     }

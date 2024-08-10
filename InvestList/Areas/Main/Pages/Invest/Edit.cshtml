@@ -7,6 +7,7 @@
 @{
     ViewData["Title"] = "Редагувати оголошення";
 }
+<link href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css" rel="stylesheet"/>
 
 <hr/>
 <div class="container">
@@ -101,7 +102,16 @@
                     </div>
                 </div>
 
-                <div class="mb-2">
+                <pre id="editor" style="height: 250px;">
+                    @if (Model.Post != null && Model.Post.Description != null)
+                    {
+                        @Html.Raw(Model.Post.Description)
+                    }
+                </pre>
+                <input type="hidden" id="PostDescription" name="Post.Description" value="@Model.Post.Description"/>
+
+
+                @* <div class="mb-2">
                     <button type="button" class="btn btn-primary" onclick="toggleBold()">Жирний</button>
                     <button type="button" class="btn btn-primary" onclick="addBulletPoints()">Булети</button>
                     <button type="button" class="btn btn-primary" onclick="addNumberedList()">Нумерований список</button>
@@ -112,7 +122,7 @@
                         @Html.Raw(Model.Post.Description)
                     }
                 </pre>
-                <input type="hidden" id="PostDescription" name="Post.Description" value="@Model.Post.Description"/>
+                <input type="hidden" id="PostDescription" name="Post.Description" value="@Model.Post.Description"/> *@
 
                 @* <label asp-for="Post.Description">Опис</label>
                 <textarea rows="10" asp-for="Post.Description" class="form-control"></textarea> *@
@@ -163,6 +173,7 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script src="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.js"></script>
     <script src="~/js/handleImageUpload.js"></script>
     <script src="~/js/description-text.js"></script>
 }

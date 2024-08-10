@@ -36,7 +36,7 @@ namespace InvestList.Areas.Main.Pages.Invest
 
             await PrepareViewData(id, db);
 
-            Post.Description = AddHtmlTags(Post.Description);
+            // Post.Description = AddHtmlTags(Post.Description);
             return Page();
         }
 
@@ -57,7 +57,7 @@ namespace InvestList.Areas.Main.Pages.Invest
                 return Page();
             }
 
-            Post.Description = RemoveHtmlTags(Post.Description);
+            // Post.Description = RemoveHtmlTags(Post.Description);
 
             var slug = await service.Put(id.ToString(), Utils.GetUserId(User),  Post);
             return RedirectToPage("./Get", new { id = slug });

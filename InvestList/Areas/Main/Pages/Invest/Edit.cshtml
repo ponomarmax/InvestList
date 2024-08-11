@@ -109,23 +109,6 @@
                     }
                 </pre>
                 <input type="hidden" id="PostDescription" name="Post.Description" value="@Model.Post.Description"/>
-
-
-                @* <div class="mb-2">
-                    <button type="button" class="btn btn-primary" onclick="toggleBold()">Жирний</button>
-                    <button type="button" class="btn btn-primary" onclick="addBulletPoints()">Булети</button>
-                    <button type="button" class="btn btn-primary" onclick="addNumberedList()">Нумерований список</button>
-                </div>
-                <pre id="description" contenteditable="true" class="form-control" oninput="syncDescription()">
-                    @if (Model.Post != null && Model.Post.Description != null)
-                    {
-                        @Html.Raw(Model.Post.Description)
-                    }
-                </pre>
-                <input type="hidden" id="PostDescription" name="Post.Description" value="@Model.Post.Description"/> *@
-
-                @* <label asp-for="Post.Description">Опис</label>
-                <textarea rows="10" asp-for="Post.Description" class="form-control"></textarea> *@
             </div>
         </div>
 

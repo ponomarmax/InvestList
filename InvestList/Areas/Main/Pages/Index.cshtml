@@ -44,7 +44,7 @@
             <a class="news"
                asp-area="Main"
                asp-page="/Invest/List"
-               asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.TagIds))">
+               asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.TagIds, search: Model.Search))">
                 Більше оголошень
             </a>
         </div>
@@ -72,7 +72,7 @@
             <a class="news"
                asp-area="Main"
                asp-page="/News/List"
-               asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.TagIds))">
+               asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.TagIds, search: Model.Search))">
                 Більше новини
             </a>
         </div>

@@ -1,5 +1,5 @@
 ﻿@using InvestList
-@model (InvestList.Models.PaginationInfo PaginationInfo, IEnumerable<Guid> tagIds)
+@model (string modelType, InvestList.Models.PaginationInfo PaginationInfo, IEnumerable<Guid> tagIds)
 @if (Model.PaginationInfo.TotalPages > 1)
 {
     <div class="container mt-3">
@@ -8,11 +8,12 @@
                 <!-- Previous Button -->
                 @if (Model.PaginationInfo.CurrentPage > 1)
                 {
+                    var page= $"/{Model.modelType}/List";
                     <li class="page-item @(Model.PaginationInfo.CurrentPage == 1 ? "disabled" : "")">
                         <a class="page-link"
                            asp-area="Main"
-                           asp-page="/Invest/List"
-                           asp-all-route-data="@(InvestmentHelper.GetPaginationData(Model.PaginationInfo.CurrentPage - 1, Model.tagIds))">
+                           asp-page=@(page)
+                           asp-all-route-data="@(InvestmentHelper.GetPaginationData(Model.PaginationInfo.CurrentPage - 1, Model.tagIds, Model.PaginationInfo.Search))">
                             Попередня
                         </a>
                     </li>
@@ -25,11 +26,12 @@
                 <!-- Next Button -->
                 @if (Model.PaginationInfo.CurrentPage < Model.PaginationInfo.TotalPages)
                 {
+                    var page= $"/{Model.modelType}/List";
                     <li class="page-item @(Model.PaginationInfo.CurrentPage == Model.PaginationInfo.TotalPages ? "disabled" : "")">
                         <a class="page-link"
                            asp-area="Main"
-                           asp-page="/Invest/List"
-                           asp-all-route-data="@(InvestmentHelper.GetPaginationData(Model.PaginationInfo.CurrentPage + 1, Model.tagIds))">
+                           asp-page=@(page)
+                           asp-all-route-data="@(InvestmentHelper.GetPaginationData(Model.PaginationInfo.CurrentPage + 1, Model.tagIds, Model.PaginationInfo.Search))">
                             Наступна
                         </a>
                     </li>

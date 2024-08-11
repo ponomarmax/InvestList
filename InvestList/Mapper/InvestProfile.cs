@@ -125,11 +125,7 @@ namespace InvestList.Mapper
             CreateMap<InvestPost, InvestPost>()
                 .ForMember(x => x.Id, s => s.Ignore())
                 .ForMember(x => x.PostId, s => s.Ignore());
-
-
-            CreateMap<NewsToTags, TagView>()
-                .ForMember(x => x.Id, s => s.MapFrom(x => x.TagId))
-                .ForMember(x => x.Name, s => s.MapFrom(x => x.Tag.Name));
+            
             CreateMap<Post, PostView>()
                 // .ForMember(x => x.ImageBase64,
                 //     s => s.MapFrom(x =>
@@ -138,9 +134,6 @@ namespace InvestList.Mapper
                     x.ImagesV2.FirstOrDefault() == null
                         ? null
                         : ImageService.GetImageView(x.ImagesV2.FirstOrDefault().Id, x)));
-
-            CreateMap<News, PostView>()
-                .ForMember(x => x.CreatedAt, s => s.MapFrom(x => x.CreatedAt.DateTime));
 
             CreateMap<PostLinkView, PostLink>();
             CreateMap<PostLink, LinkView>();

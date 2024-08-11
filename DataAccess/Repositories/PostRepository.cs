@@ -10,13 +10,16 @@ namespace DataAccess.Repositories
     {
         public async Task<(int count, IEnumerable<Post> list)> Filter(int page,
             int offset,
-            IEnumerable<Guid>? tagIds)
+            IEnumerable<Guid>? tagIds,
+            string search = null)
         {
             var query = dbContext.Posts.AsNoTracking()
                 .Where(x => x.IsActive && x.PostType == PostType.News);
             if (tagIds?.Count() > 0)
                 query = query.Where(x => x.Tags.Any(t => tagIds.Contains(t.TagId)));
-
+            if (!string.IsNullOrWhiteSpace(search))
+                query = query.Where(x => x.Title.Contains(search));
+            
             var count = await query.CountAsync();
 
             if (count > 0)

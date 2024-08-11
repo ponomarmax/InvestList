@@ -14,17 +14,20 @@ namespace InvestList.Areas.Main.Pages.Invest
         public IEnumerable<InvestView> Entities { get; set; }
         public IEnumerable<Guid> TagIds { get; set; }
         public PaginationInfo PaginationInfo { get; set; }
+        public string Search { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int pageIndex = 1, IEnumerable<string> tagIds = null)
+        public async Task<IActionResult> OnGetAsync(int pageIndex = 1, IEnumerable<string> tagIds = null,  string search = null)
         {
             if (pageIndex < 1)
             {
                 return NotFound();
             }
+            
+            Search = search;
 
             var guidTagIds = tagIds?.Where(x => Guid.TryParse(x, out _)).Select(Guid.Parse);
 
-            var (count, resultDb) = await repository.Filter(pageIndex, ItemsPerPage, guidTagIds);
+            var (count, resultDb) = await repository.Filter(pageIndex, ItemsPerPage, guidTagIds, search);
             if (!resultDb.Any() && pageIndex != 1) return NotFound();
 
             var resultView = mapper.Map<IEnumerable<InvestView>>(resultDb);
@@ -36,7 +39,8 @@ namespace InvestList.Areas.Main.Pages.Invest
             {
                 CurrentPage = pageIndex,
                 TotalPages = totalPages,
-                PageSize = ItemsPerPage
+                PageSize = ItemsPerPage,
+                Search = search
             };
             TagIds = guidTagIds;
 

@@ -12,6 +12,7 @@ namespace Core.Interfaces
 
         Task<(int count, IEnumerable<InvestPost> list)> Filter(int page,
             int offset,
-            IEnumerable<Guid>? tagIds);
+            IEnumerable<Guid>? tagIds,
+            string search = null);
     }
 }

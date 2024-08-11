@@ -6,7 +6,8 @@ namespace Core.Interfaces
     {
         Task<(int count, IEnumerable<Post> list)> Filter(int page,
             int offset,
-            IEnumerable<Guid>? tagIds);
+            IEnumerable<Guid>? tagIds,
+            string search = null);
 
         Task<Post?> Get(string id);
         Task<IEnumerable<Post>> GetSimilarPosts(Guid id, List<Guid> tagIds);

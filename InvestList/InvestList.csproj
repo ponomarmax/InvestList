@@ -62,16 +62,4 @@
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>
-
-    <ItemGroup>
-        <AdditionalFiles Include="Areas\Main\Pages\News\Create.cshtml"/>
-        <AdditionalFiles Include="Areas\Main\Pages\News\Edit.cshtml"/>
-        <AdditionalFiles Include="Areas\Main\Pages\News\Get.cshtml"/>
-        <AdditionalFiles Include="Areas\Main\Pages\News\List.cshtml"/>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Remove="Controllers\HomeController.cs" />
-    </ItemGroup>
-
 </Project>

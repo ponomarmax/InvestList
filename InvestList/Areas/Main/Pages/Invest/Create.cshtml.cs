@@ -52,7 +52,7 @@ namespace InvestList.Areas.Main.Pages.Invest
         
         private async Task PrepareViewData()
         {
-            var tagsV2 = await tagRepository.GetTagsV2();
+            var tagsV2 = await tagRepository.GetTags();
             foreach (var tag in tagsV2)
             {
                 var item = new SelectListItem(tag.Name, tag.Id.ToString());

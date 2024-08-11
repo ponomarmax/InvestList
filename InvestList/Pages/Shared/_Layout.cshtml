@@ -108,7 +108,7 @@
                     <ul class="dropdown-menu dropdown-menu-end text-small">
                         <li><a class="dropdown-item" asp-area="Main" asp-page="/News/Create">Створити новину</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" asp-action="Index" asp-controller="Admin">Додати тег</a></li>
+                        <li><a class="dropdown-item" asp-area="Main" asp-page="/Admin/Index">Додати тег</a></li>
                     </ul>
                     <a href="#" class="profile" data-bs-toggle="dropdown" aria-expanded="false">ПРОФІЛЬ</a>
                     <ul class="dropdown-menu dropdown-menu-end text-small">
@@ -122,59 +122,6 @@
     @* <partial name="_LoginPartial"/> *@
     </div>
 </header>
-@* <div class="my-2">
-    <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-         @if (User.IsInRole(Const.AdminRole))
-        {
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-current="page">
-                    НОВИНИ
-                </a>
-                <ul class="dropdown-menu">
-                    <li>
-                        <a asp-area="Main" asp-page="/News/List" class="dropdown-item">Переглянути новини</a>
-                    </li>
-                    <li>
-                        <a asp-area="Main" asp-page="/News/Create" class="dropdown-item">Створити новину</a>
-                    </li>
-                </ul>
-            </li>
-        }
-        else
-        {
-            <li class="nav-item">
-                <a class="nav-link" asp-area="Main" asp-page="/News/List">Переглянути новини</a>
-            </li>
-        } *@
-        @* <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Інвестиційні пропозиції
-            </a>
-            <ul class="dropdown-menu">
-                <li>
-                    <a asp-area="Main" asp-page="/Invest/List" class="dropdown-item">Всі заявки</a>
-                </li>
-                <li>
-                    <a asp-area="Main" asp-page="/Invest/Create" class="dropdown-item">Створити заявку</a>
-                </li>
-            </ul>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link" href="https://forms.gle/srpVQNdRnvtQBF886"><i class="bi bi-google"></i> Хочу інвестувати</a>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link" href="https://forms.gle/DTgQQGUEixvhyLAA7"><i class="bi bi-google"></i> Жертвам інвестування</a>
-        </li> 
-        @if (User.IsInRole(Const.AdminRole))
-        {
-            <li class="nav-item">
-                <a asp-action="Index" asp-controller="Admin" class="nav-link">Додати тег</a>
-            </li>
-        }
-    </ul>
-</div> *@
 
 @{
     var header = await tagService.GetCustomHeader();

@@ -46,8 +46,6 @@ namespace InvestList.Areas.Main.Pages.Invest
                 return Page();
             }
 
-            Post.Description = RemoveHtmlTags(Post.Description);
-
             var slug = await service.Put(null, Utils.GetUserId(User), Post);
             return RedirectToPage("./Get", new { id = slug });
         }
@@ -60,27 +58,6 @@ namespace InvestList.Areas.Main.Pages.Invest
                 var item = new SelectListItem(tag.Name, tag.Id.ToString());
                 AvailableTags.Add(item);
             }
-        }
-
-        private string RemoveHtmlTags(string input)
-        {
-            if (string.IsNullOrWhiteSpace(input)) return string.Empty;
-
-            input = Regex.Replace(input, @"</?div.*?>", "\n", RegexOptions.IgnoreCase);
-            input = Regex.Replace(input, @"<br>", "\n", RegexOptions.IgnoreCase);
-            input = Regex.Replace(input, @"<b>", "**", RegexOptions.IgnoreCase);
-            input = Regex.Replace(input, @"</b>", "**", RegexOptions.IgnoreCase);
-            input = Regex.Replace(input, "<.*?>", string.Empty);
-            return input.Trim();
-        }
-
-        public string AddHtmlTags(string input) 
-        {
-            if (string.IsNullOrWhiteSpace(input)) return string.Empty;
-
-            input = Regex.Replace(input, @"\*\*", "<b>", RegexOptions.IgnoreCase);
-            input = Regex.Replace(input, @"\*\*", "</b>", RegexOptions.IgnoreCase);
-            return input.Trim();
         }
     }
 }

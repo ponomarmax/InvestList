@@ -30,8 +30,8 @@
 
             <div class="col">
                 @{
-                    Model.Description = Regex.Replace(Model.Description, @"\*\*", "", RegexOptions.IgnoreCase);
-                    Model.Description = Regex.Replace(Model.Description, @"\*\*", "", RegexOptions.IgnoreCase);
+                    Model.Description = Regex.Replace(Model.Description, "<li>", " ", RegexOptions.IgnoreCase);
+                    Model.Description = Regex.Replace(Model.Description, "<.*?>", " ");
                 }
                 <p class="card-text text-black mb-0">@Html.Raw(Model.Description?.Substring(0, Math.Min(Model.Description.Length, 150)))</p>
                 <div class="annualInvestment">

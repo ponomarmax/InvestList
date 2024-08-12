@@ -59,10 +59,6 @@
             </p>
             <div class="d-flex p-1 flex-wrap justify-content-center">
                 <pre class="card-body md:order-2 order-1" style="width: 50%;">
-                    @{
-                        Model.Post.Description = Regex.Replace(Model.Post.Description, @"\*\*(.*?)\*\*", "<b>$1</b>", RegexOptions.Singleline);
-                    }
-                    
                     @Html.Raw(Model.Post.Description)
                 </pre>
                 @if (Model.Post.Image != null)

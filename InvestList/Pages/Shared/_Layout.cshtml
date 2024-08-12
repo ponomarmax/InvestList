@@ -58,16 +58,18 @@
         </div>
 
         @* <p class="language">УКР|ENG</p> *@
-        @* <div class="input-group mb-3 mt-3">
-            <div class="input-group-prepend">
-                <button class="search_but" type="button">
-                    <img src="/ico/search.png" height="16" width="16">
-                </button>
-            </div>
-            <input type="search" class="search" placeholder="Пошук">
-        </div> *@
 
         <div class="collapse navbar-collapse" id="navbarNav">
+            <form method="get" asp-area="Main" asp-page="/Index">
+                <div class="d-flex justify-content-center align-items-center flex-grow-1 ms-md-2 mt-lg-1 input-group">
+                    <div class="input-group-prepend">
+                        <button class="search_but" type="submit">
+                            <img src="/ico/search.png" height="16" width="16">
+                        </button>
+                    </div>
+                    <input type="search" class="search" name="search" placeholder="Пошук">
+                </div>
+            </form>
             @if (!User.Identity.IsAuthenticated)
             {
                 <div class="d-flex justify-content-center align-items-center flex-grow-1 ms-lg-5 mt-lg-2">
@@ -90,9 +92,15 @@
                 <div class="dropdown text-end d-flex justify-content-center justify-content-md-end mt-1 prof">
                     <a href="#" class="profile" data-bs-toggle="dropdown" aria-expanded="false">ПРОФІЛЬ</a>
                     <ul class="dropdown-menu dropdown-menu-end text-small">
-                        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Profile">@User.Identity?.Name</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Invest", new { area = "" })">Вийти</a></li>
+                        <li>
+                            <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Profile">@User.Identity?.Name</a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Invest", new { area = "" })">Вийти</a>
+                        </li>
                     </ul>
                 </div>
             }
@@ -106,20 +114,32 @@
                 <div class="dropdown text-end d-flex justify-content-center justify-content-md-end mt-1 admin_profile">
                     <a href="#" class="admin" data-bs-toggle="dropdown" aria-expanded="false">АДМІН</a>
                     <ul class="dropdown-menu dropdown-menu-end text-small">
-                        <li><a class="dropdown-item" asp-area="Main" asp-page="/News/Create">Створити новину</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" asp-area="Main" asp-page="/Admin/Index">Додати тег</a></li>
+                        <li>
+                            <a class="dropdown-item" asp-area="Main" asp-page="/News/Create">Створити новину</a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <a class="dropdown-item" asp-area="Main" asp-page="/Admin/Index">Додати тег</a>
+                        </li>
                     </ul>
                     <a href="#" class="profile" data-bs-toggle="dropdown" aria-expanded="false">ПРОФІЛЬ</a>
                     <ul class="dropdown-menu dropdown-menu-end text-small">
-                        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Profile">@User.Identity?.Name</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Invest", new { area = "" })">Вийти</a></li>
+                        <li>
+                            <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Profile">@User.Identity?.Name</a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Invest", new { area = "" })">Вийти</a>
+                        </li>
                     </ul>
                 </div>
             }
         </div>
-    @* <partial name="_LoginPartial"/> *@
+        @* <partial name="_LoginPartial"/> *@
     </div>
 </header>
 
@@ -133,9 +153,9 @@
                 {
                     <li class="nav-item">
                         <a class="nav-link"
-                            asp-area="Main"
-                            asp-page="/Index"
-                            asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: new[] { tag.TagId }))">
+                           asp-area="Main"
+                           asp-page="/Index"
+                           asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: new[] { tag.TagId }))">
                             @tag.Tag.Name
                         </a>
                     </li>
@@ -171,17 +191,23 @@
         </ul>
         <div class="nav">
             <li class="nav-item">
-                <a href="https://t.me/invesstradar" class="nav-link px-2 creation-data-footer"><i class="bi bi-telegram" style="font-size: 20px"></i></a>
+                <a href="https://t.me/invesstradar" class="nav-link px-2 creation-data-footer">
+                    <i class="bi bi-telegram" style="font-size: 20px"></i>
+                </a>
             </li>
             <li class="nav-item">
-                <a href="https://www.instagram.com/invest_radar_com?igsh=MTJpcXNtemNwdXVlcw%3D%3D&utm_source=qr" class="nav-link px-2 creation-data-footer"><i class="bi bi-instagram" style="font-size: 20px"></i></a>
+                <a href="https://www.instagram.com/invest_radar_com?igsh=MTJpcXNtemNwdXVlcw%3D%3D&utm_source=qr" class="nav-link px-2 creation-data-footer">
+                    <i class="bi bi-instagram" style="font-size: 20px"></i>
+                </a>
             </li>
             @{
                 string tiktokUsername = "invest_radar";
                 string tiktokUrl = $"https://www.tiktok.com/@{tiktokUsername}?_t=8nDLHbmpF14&_r=1";
             }
             <li class="nav-item">
-                <a href="@tiktokUrl" class="nav-link px-2 creation-data-footer"><i class="bi bi-tiktok" style="font-size: 20px"></i></a>
+                <a href="@tiktokUrl" class="nav-link px-2 creation-data-footer">
+                    <i class="bi bi-tiktok" style="font-size: 20px"></i>
+                </a>
             </li>
         </div>
     </div>

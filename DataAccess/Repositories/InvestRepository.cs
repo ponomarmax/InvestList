@@ -9,13 +9,17 @@ namespace DataAccess.Repositories
     {
         public async Task<(int count, IEnumerable<InvestPost> list)> Filter(int page,
             int offset,
-            IEnumerable<Guid>? tagIds)
+            IEnumerable<Guid>? tagIds,
+            string search = null)
         {
             var query = dbContext.InvestPosts
                 .Where(x => x.Post.IsActive && x.Post.PostType == PostType.InvestAd).AsNoTracking();
             if (tagIds?.Count() > 0)
                 query = query.Where(x => x.Post.Tags.Any(t => tagIds.Contains(t.TagId)));
 
+            if (!string.IsNullOrWhiteSpace(search))
+                query = query.Where(x => x.Post.Title.Contains(search));
+            
             var count = await query.CountAsync();
 
             if (count > 0)

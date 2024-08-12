@@ -25,7 +25,6 @@ namespace Core.Entities
         public IEnumerable<PostTags>? Tags { get; set; }
         public IEnumerable<PostLink>? Links { get; set; }
         public IEnumerable<PostComment>? Comments { get; set; }
-        public  IEnumerable<Image>? Images { get; set; }
         public  IEnumerable<ImageMetadata>? ImagesV2 { get; set; }
     }
 }

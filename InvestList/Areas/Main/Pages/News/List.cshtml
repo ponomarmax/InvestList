@@ -23,5 +23,5 @@
 </div>
 @if (Model.Entities != null && Model.Entities.Any())
 {
-    @await Html.PartialAsync("_Pagination", (Model.PaginationInfo, Model.TagIds))
+    @await Html.PartialAsync("_Pagination", ("News", Model.PaginationInfo, Model.TagIds))
 }

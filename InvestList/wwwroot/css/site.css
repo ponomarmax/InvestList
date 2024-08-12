@@ -473,6 +473,10 @@ li {
     flex-direction: column; /* Стек елементів вертикально */
 }
 
+.card-body > * {
+    margin: 0;
+}
+
     .card-body .btn {
         margin-top: auto; /* Кнопка на дно картки */
         margin-bottom: 10px; /* Менший відступ під кнопкою */

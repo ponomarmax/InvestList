@@ -19,6 +19,6 @@ const quill = new Quill('#editor', {
 
 quill.root.innerHTML = document.getElementById('PostDescription').value;
 
-document.querySelector('form').onsubmit = function() {
+function copyEditorContent() {
     document.getElementById('PostDescription').value = quill.root.innerHTML;
-};
+}

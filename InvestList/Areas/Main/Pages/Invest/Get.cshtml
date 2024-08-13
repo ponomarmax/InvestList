@@ -14,8 +14,8 @@
 </div>
 <div class="row">
     <div class="col-8">
-        <div class="card border-success mb-3">
-            <h1 class="card-header">@Model.Post.Title</h1>
+        <div class="invest-get-card border-success mb-3">
+            <h1 class="mx-3 mt-2">@Model.Post.Title</h1>
 
             <div class="d-flex border align-content-start flex-wrap">
                 @if (Model.Post.TotalInvestment > 0)
@@ -26,8 +26,8 @@
                 <div class="p-2 flex-fill">Річна дохідність: @Model.Post.AnnualInvestmentReturn.ToString("0.")%</div>
             </div>
 
-            <div class="d-flex border align-content-start flex-wrap">
-                <div class="d-flex card-text p-2 flex-fill">
+            <div class="d-flex border align-content-start flex-column flex-wrap">
+                <div class="d-flex p-2 flex-fill">
                     <span style="padding-right: 10px;">Мінімальний поріг входу </span>
                     @if (Model.Post.MinInvestValues != null && Model.Post.MinInvestValues.Any())
                     {
@@ -54,11 +54,11 @@
                 }
             </div>
 
-            <p class="p-2 card-text">
+            <p class="p-2">
                 <small class="text-body-secondary">@Model.Post.CreatedAt.ToString("dd-MM-yyyy")</small>
             </p>
             <div class="d-flex p-1 flex-wrap justify-content-center">
-                <pre class="card-body md:order-2 order-1" style="width: 50%;">
+                <pre class="invest-get-body md:order-2 order-1">
                     @Html.Raw(Model.Post.Description)
                 </pre>
                 @if (Model.Post.Image != null)

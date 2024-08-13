@@ -5,12 +5,13 @@
     foreach (var similarPost in Model.similarNews)
     {
         <div class="row">
-            <a class="card-link" asp-area="Main" asp-page=@($"/{Model.pageFolder}/Get") asp-route-id="@similarPost.Slug">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">@similarPost.Title</div>
+            <a class="similar-content-link" asp-area="Main" asp-page=@($"/{Model.pageFolder}/Get") asp-route-id="@similarPost.Slug">
+                <div class="similar-content-card">
+                    <div class="similar-content-header mx-3 mt-2">
+                        <div class="similar-content-title">@similarPost.Title</div>
                     </div>
-                    <div class="card-body">
+                    <hr>
+                    <div class="mx-3">
                         @if (similarPost.Tags != null && similarPost.Tags.Any())
                         {
                             <div class="tags mb-3">

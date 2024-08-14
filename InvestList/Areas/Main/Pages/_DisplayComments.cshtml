@@ -25,18 +25,15 @@ else
 }
 @if (Model.comments?.Count() > 0)
 {
-    <div class="card-body p-4">
-
+    <div class="p-4">
         @foreach (var comment in Model.comments.OrderByDescending(x => x.CreatedAt))
         {
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div class="d-flex flex-row justify-content-between mb-0">
-                        <div class="creation-data">@comment.Author</div>
-                        <div class="creation-data">@comment.CreatedAt.ToString("yy-MMM-dd HH:mm")</div>
-                    </div>
-                    <p class="card-text">@comment.Text</p>
+            <div class="display-comments-card mb-4 p-2">
+                <div class="d-flex flex-row justify-content-between mb-0">
+                    <div class="creation-data">@comment.Author</div>
+                    <div class="creation-data">@comment.CreatedAt.ToString("yy-MMM-dd HH:mm")</div>
                 </div>
+                <p class="mb-0">@comment.Text</p>
             </div>
         }
     </div>

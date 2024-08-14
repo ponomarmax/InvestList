@@ -195,11 +195,6 @@ li {
     width: 50px;
 }
 
-.card-img-top {
-    max-height: 300px;
-    object-fit: cover;
-}
-
 .curr {width: 50px;}
 .dur {width: 30%;}
 .resizable-select {
@@ -319,10 +314,6 @@ li {
     margin-top: 10px;
 }
 
-.map-card {
-    width: 300px;
-}
-
 .row-half {
     margin-bottom: 20px;
 }
@@ -427,22 +418,28 @@ li {
     margin-top: 0px;
 }
 
-.card {
+.list-post-card, .similar-content-card, .display-comments-card, .invest-get-card {
     margin-bottom: 30px; /* Відступ між картками */
+    border: 1px solid silver;
+    border-radius: 5px;
 }
 
-.card-header {
+.invest-get-body {
+    display: flex;
+    flex-direction: column; /* Стек елементів вертикально */
+}
+
+.invest-get-body > * {
+    margin: 0;
+}
+
+.similar-content-header {
     font-weight: bold;
 }
 
-.card-title {
+.list-post-title, .similar-content-title {
     font-size: 1.5rem; /* Розмір заголовка картки */
     color: #333333;
-}
-
-.card-subtitle {
-    font-size: 0.85rem; /* Розмір підзаголовка картки */
-    color: #6c757d; /* Колір підзаголовка */
 }
 
 .tag {
@@ -455,59 +452,11 @@ li {
     margin-right: 5px;
 }
 
-.card-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.85rem;
-    color: #6c757d;
-    margin-bottom: 15px;
-}
-
-    .card-info i {
-        margin-right: 5px;
-    }
-
-.card-body {
-    display: flex;
-    flex-direction: column; /* Стек елементів вертикально */
-}
-
-.card-body > * {
-    margin: 0;
-}
-
-    .card-body .btn {
-        margin-top: auto; /* Кнопка на дно картки */
-        margin-bottom: 10px; /* Менший відступ під кнопкою */
-    }
-
-.card-text {
-    display: flex;
-    align-items: center;
-    width: 100%; /* Заповнення ширини картки */
-}
-
-    .card-text i {
-        margin-right: 10px; /* Відступ перед текстом */
-    }
-
-    .card-text .text-right {
-        flex: 1;
-        text-align: right; /* Текст вирівняний праворуч */
-    }
-
 .icon-right {
     margin-left: 10px; /* Відступ після тексту для правої іконки */
 }
 
-.card-info .date {
-    display: flex;
-    align-items: center;
-    font-size: 0.85rem;
-}
-
-.card-link {
+.list-post-link, .similar-content-link {
     text-decoration: none;
     color: #333333;
 }

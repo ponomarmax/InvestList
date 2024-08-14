@@ -426,7 +426,11 @@ li {
 
 .invest-get-body {
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* Стек елементів вертикально */
+}
+
+.invest-get-body > * {
+    margin: 0;
 }
 
 .similar-content-header {

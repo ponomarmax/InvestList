@@ -5,27 +5,37 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Repositories
 {
-    public class PostRepository(ApplicationDbContext dbContext, IMapper mapper, IImageService imageService)
+    public class PostRepository(
+        ApplicationDbContext dbContext,
+        IMapper mapper,
+        IImageService imageService
+        )
         : IPostRepository
     {
         public async Task<(int count, IEnumerable<Post> list)> Filter(int page,
             int offset,
             IEnumerable<Guid>? tagIds,
-            string search = null)
+            string search = null,
+            PostType? type = null)
         {
             var query = dbContext.Posts.AsNoTracking()
-                .Where(x => x.IsActive && x.PostType == PostType.News);
+                .Where(x => x.IsActive);
+
+            if (type != null)
+                query = query.Where(x => x.PostType == type);
+
             if (tagIds?.Count() > 0)
                 query = query.Where(x => x.Tags.Any(t => tagIds.Contains(t.TagId)));
             if (!string.IsNullOrWhiteSpace(search))
                 query = query.Where(x => x.Title.Contains(search));
-            
+
             var count = await query.CountAsync();
 
             if (count > 0)
             {
                 var listAsync = await query
-                    .OrderByDescending(x => x.CreatedAt)
+                    .OrderByDescending(x=>x.Priority)
+                    .ThenByDescending(x=>x.CreatedAt)
                     .Skip((page - 1) * offset)
                     .Take(offset)
                     .Include(x => x.ImagesV2)
@@ -65,15 +75,18 @@ namespace DataAccess.Repositories
             return (0, Array.Empty<Post>());
         }
 
-        public async Task<Post?> Get(string id)
+        public async Task<Post?> Get(string id, PostType? postType = null)
         {
             if (string.IsNullOrEmpty(id)) return null;
 
             var post = Queryable.AsQueryable(dbContext.Posts);
             post = Guid.TryParse(id, out var idGuid)
-                ? post.Where(x => x.Id == idGuid && x.PostType == PostType.News)
-                : post.Where(x => x.Slug == id && x.PostType == PostType.News);
-
+                ? post.Where(x => x.Id == idGuid)
+                : post.Where(x => x.Slug == id);
+            
+            if (postType != null)
+                post = post.Where(x => x.PostType == postType);
+            
             return await post
                 .Include(x => x.ImagesV2).ThenInclude(x => x.ImageObject)
                 .Include(x => x.CreatedBy)
@@ -112,6 +125,21 @@ namespace DataAccess.Repositories
             postOrigin = await Get(id.ToString());
             imageService.RefreshImages(postOrigin, oldImagePaths);
         }
+        
+        public async Task SetPriority(Guid id, int priority)
+        {
+            var postOrigin = await Get(id.ToString());
+            if (postOrigin != null)
+            {
+                postOrigin.Priority = priority;
+                await dbContext.SaveChangesAsync();
+            }
+            else
+            {
+                throw new ArgumentException("Attempt to modify unexisting object");
+            }
+        }
+
 
         public async Task Create(Post post)
         {

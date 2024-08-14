@@ -1,4 +1,5 @@
 using AutoMapper;
+using Core.Entities;
 using Core.Interfaces;
 using InvestList.Models;
 using InvestList.Models.V2;
@@ -27,7 +28,7 @@ namespace InvestList.Areas.Main.Pages.News
 
             var guidTagIds = tagIds?.Where(x => Guid.TryParse(x, out _)).Select(Guid.Parse);
 
-            var (count, resultDb) = await repository.Filter(pageIndex, ItemsPerPage, guidTagIds, search);
+            var (count, resultDb) = await repository.Filter(pageIndex, ItemsPerPage, guidTagIds, search, PostType.News);
             if (!resultDb.Any() && pageIndex != 1) return NotFound();
 
             var resultView = mapper.Map<IEnumerable<PostView>>(resultDb);

@@ -139,6 +139,12 @@ namespace InvestList.Mapper
             CreateMap<PostLink, LinkView>();
             CreateMap<PostLink, PostLinkView>();
             CreateMap<Tag, TagView>();
+            
+            
+            // Admin
+
+            CreateMap<Post, AdminPostView>();
+            CreateMap<PutAdminPost, Post>();
         }
     }
 }

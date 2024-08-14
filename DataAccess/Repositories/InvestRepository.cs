@@ -25,7 +25,8 @@ namespace DataAccess.Repositories
             if (count > 0)
             {
                 return (count, await query
-                    .OrderByDescending(x => x.Post.CreatedAt)
+                    .OrderByDescending(x => x.Post.Priority)
+                    .ThenByDescending(x => x.Post.CreatedAt)
                     .Skip((page - 1) * offset)
                     .Take(offset)
                     .Include(x => x.Post.ImagesV2)

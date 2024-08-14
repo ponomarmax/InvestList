@@ -34,3 +34,29 @@
     </div>
     <button type="submit">Опублікувати новий хедер</button>
 </form>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Type of entity</th>
+        <th>Set a new priority</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var post in Model.Posts)
+    {
+        <tr>
+            <td class="col-4" >@post.Title</td>
+            <td class="col-4">@post.PostType.ToString()</td>
+            <td class="col-4">
+                <form asp-page-handler="UpdatePriority" method="post">
+                    <input type="hidden" asp-for="Post.Id" value="@post.Id" />
+                    <input type="number" asp-for="Post.Priority" class="form-control" value="@post.Priority" />
+                    <button type="submit" class="btn btn-primary">Update Priority</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

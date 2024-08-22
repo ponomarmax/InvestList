@@ -1,6 +1,7 @@
 @page "/invest/{id}"
 @using InvestList
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using System.Text.RegularExpressions;
 @model InvestList.Areas.Main.Pages.Invest.Get
 
 <div class="container mb-4">
@@ -13,8 +14,8 @@
 </div>
 <div class="row">
     <div class="col-8">
-        <div class="card border-success mb-3">
-            <h1 class="card-header">@Model.Post.Title</h1>
+        <div class="invest-get-card border-success mb-3">
+            <h1 class="mx-3 mt-2">@Model.Post.Title</h1>
 
             <div class="d-flex border align-content-start flex-wrap">
                 @if (Model.Post.TotalInvestment > 0)
@@ -25,8 +26,8 @@
                 <div class="p-2 flex-fill">Річна дохідність: @Model.Post.AnnualInvestmentReturn.ToString("0.")%</div>
             </div>
 
-            <div class="d-flex border align-content-start flex-wrap">
-                <div class="d-flex card-text p-2 flex-fill">
+            <div class="d-flex border align-content-start flex-column flex-wrap">
+                <div class="d-flex p-2 flex-fill">
                     <span style="padding-right: 10px;">Мінімальний поріг входу </span>
                     @if (Model.Post.MinInvestValues != null && Model.Post.MinInvestValues.Any())
                     {
@@ -53,13 +54,13 @@
                 }
             </div>
 
-            <p class="p-2 card-text">
+            <p class="p-2">
                 <small class="text-body-secondary">@Model.Post.CreatedAt.ToString("dd-MM-yyyy")</small>
             </p>
             <div class="d-flex p-1 flex-wrap justify-content-center">
-                <div class="card-body md:order-2 order-1" style="width: 50%;">
+                <pre class="invest-get-body md:order-2 order-1">
                     @Html.Raw(Model.Post.Description)
-                </div>
+                </pre>
                 @if (Model.Post.Image != null)
                 {
                     <div class="md:order-1 order-md-2">
@@ -72,7 +73,6 @@
                 <a class="telegram"href="" id="tg_share" alt="">
                     <img class="message" src="/ico/telegram.png" alt="">
                 </a>
-                @* <a class="facebook" href="" id="fb_share" alt=""><img class="message" src="/ico/facebook.png" alt=""></a> *@
             </span>
         </div>
         @await Html.PartialAsync("_DisplayComments", (Model.Post.Id, Model.Post.PostType, Model.Post.Comments))
@@ -104,10 +104,3 @@
     </div>
 </div>
 
-<script>
-    window.onload = function() {
-        var shareUrl = encodeURIComponent(window.location.href);
-        fb_share.href ='https://www.facebook.com/share.php?u=' + shareUrl;
-        tg_share.href ='https://t.me/share/url?url=' + shareUrl;
-    }
-</script>

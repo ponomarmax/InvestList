@@ -4,6 +4,7 @@ using Core.Entities;
 using Core.Interfaces;
 using InvestList.Models.V2;
 using InvestList.Services;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -61,7 +62,7 @@ namespace InvestList.Areas.Main.Pages.Invest
         private async Task PrepareViewData(Guid id, InvestPost db)
         {
             Id = id;
-            var tagsV2 = await tagRepository.GetTagsV2();
+            var tagsV2 = await tagRepository.GetTags();
             Post = mapper.Map<PutInvestModel>(db);
             foreach (var tag in tagsV2)
             {

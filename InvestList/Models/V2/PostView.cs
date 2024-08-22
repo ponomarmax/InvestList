@@ -1,6 +1,5 @@
 using Core.Entities;
 using InvestList.Models.Comment;
-using InvestList.Models.News;
 
 namespace InvestList.Models.V2
 {
@@ -35,5 +34,23 @@ namespace InvestList.Models.V2
 
         public IEnumerable<PostView>? SimilarInvests { get; set; }
         public IEnumerable<PostView>? SimilarNews { get; set; }
+    }
+
+    public class AdminPostView
+    {
+        public Guid Id { get; set; }
+
+        public PostType PostType { get; set; }
+
+        public string Title { get; set; }
+
+        public int Priority { get; set; }
+    }
+    
+    public class PutAdminPost
+    {
+        public Guid Id { get; set; }
+
+        public int Priority { get; set; }
     }
 }

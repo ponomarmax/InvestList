@@ -4,20 +4,13 @@ using InvestList.Services;
 
 namespace InvestList.Controllers
 {
-    public class SitemapController : Controller
+    public class SitemapController(ISitemapGenerator sitemapGenerator): Controller
     {
-        private readonly ISitemapGenerator _sitemapGenerator;
-
-        public SitemapController(ISitemapGenerator sitemapGenerator)
-        {
-            _sitemapGenerator = sitemapGenerator;
-        }
-
         [Route("/sitemap.xml")]
         public IActionResult SitemapXml()
         {
             var t = $"{Request.Scheme}://{Request.Host.Value}/";
-            var sitemapContent = _sitemapGenerator.GenerateSitemap(t);
+            var sitemapContent = sitemapGenerator.GenerateSitemap(t);
 
             return Content(sitemapContent, "application/xml", Encoding.UTF8);
         }

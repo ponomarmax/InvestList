@@ -1,7 +1,9 @@
 @page
 @using InvestList
+@using InvestList.Services
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model InvestList.Areas.Main.Pages.Index
+@inject IInvestService InvestService
 
 @if (!Model.HttpContext.Request.QueryString.HasValue)
 {
@@ -18,7 +20,7 @@
             <div class="col-lg-6">
                 <div>
                     <h1>Проектів для інвестування</h1>
-                    <div class="number">32</div>
+                    <div class="number">@await InvestService.Count()</div>
                 </div>
             </div>
         </div>
@@ -42,7 +44,7 @@
             <a class="news"
                asp-area="Main"
                asp-page="/Invest/List"
-               asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.TagIds))">
+               asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.TagIds, search: Model.Search))">
                 Більше оголошень
             </a>
         </div>
@@ -70,7 +72,7 @@
             <a class="news"
                asp-area="Main"
                asp-page="/News/List"
-               asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.TagIds))">
+               asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.TagIds, search: Model.Search))">
                 Більше новини
             </a>
         </div>

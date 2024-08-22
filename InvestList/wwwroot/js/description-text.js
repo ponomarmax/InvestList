@@ -1,21 +1,24 @@
-var lastNumber = 0;
+const toolbarOptions = [
+    [{ 'font': [] }],
+    [{ size: ['small', false, 'large', 'huge'] }],
+    [{ 'color': [] }, { 'background': [] }],  
 
-function toggleBold() {
-    document.execCommand('bold');
-}
+    ['bold', 'italic', 'underline', 'strike'],
+    [{ list: 'ordered' }, { list: 'bullet' }],
 
-function addBulletPoints(elementId) {
-    var element = document.getElementById(elementId);
-    element.innerHTML += "<li>•</li>";
-}
+    ['link'],
+    ['clean'],
+]
 
-function addNumberedList(elementId) {
-    var element = document.getElementById(elementId);
-    lastNumber++;
-    element.innerHTML += "<li>" + lastNumber + ".</li>";
-}
+const quill = new Quill('#editor', {
+    modules: {
+        toolbar: toolbarOptions
+    },
+    theme: 'snow',
+});
 
-function syncDescription() {
-    const descriptionContent = document.getElementById('description').innerHTML;
-    document.getElementById('PostDescription').value = descriptionContent;
+quill.root.innerHTML = document.getElementById('PostDescription').value;
+
+function copyEditorContent() {
+    document.getElementById('PostDescription').value = quill.root.innerHTML;
 }

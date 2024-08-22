@@ -1,0 +1,12 @@
+@model List<SelectListItem>
+
+<div class="form-group col-6 d-flex flex-column">
+    <span asp-validation-for="@Model" class="text-danger"></span>
+    @{
+        if (Model != null)
+        {
+            <label asp-for="@Model">Теги</label><br>
+            <select rows="40" name="Post.TagIds" asp-items="@Model" multiple="multiple" class="listbox flex-grow-1 resizable-select"></select>
+        }
+    }
+</div>

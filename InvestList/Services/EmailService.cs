@@ -6,14 +6,9 @@ using InvestList.Configs;
 
 namespace InvestList.Services
 {
-    public class EmailSender: IEmailSender
+    public class EmailSender(IOptions<EmailConfig> smtpSettings): IEmailSender
     {
-        private readonly EmailConfig _smtpSettings;
-
-        public EmailSender(IOptions<EmailConfig> smtpSettings)
-        {
-            _smtpSettings = smtpSettings.Value;
-        }
+        private readonly EmailConfig _smtpSettings = smtpSettings.Value;
 
         public Task SendEmailAsync(string email, string subject, string htmlMessage)
         {

@@ -22,40 +22,6 @@ namespace DataAccess.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Core.Entities.Comment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<Guid?>("InvestAdId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("NewsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InvestAdId");
-
-                    b.HasIndex("NewsId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Comments");
-                });
-
             modelBuilder.Entity("Core.Entities.CustomHeader", b =>
                 {
                     b.Property<Guid>("Id")
@@ -70,26 +36,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("TagId");
 
                     b.ToTable("CustomHeaders");
-                });
-
-            modelBuilder.Entity("Core.Entities.Image", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ImageBase64")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("PostId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PostId");
-
-                    b.ToTable("Image");
                 });
 
             modelBuilder.Entity("Core.Entities.ImageMetadata", b =>
@@ -128,191 +74,6 @@ namespace DataAccess.Migrations
                     b.ToTable("ImageObject");
                 });
 
-            modelBuilder.Entity("Core.Entities.InvestAd", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AuthorId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<bool>("Published")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Slug")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTimeOffset>("UpdateAt")
-                        .HasColumnType("datetimeoffset");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
-
-                    b.HasIndex("Slug");
-
-                    b.ToTable("InvestAds");
-                });
-
-            modelBuilder.Entity("Core.Entities.InvestAdExtraInfo", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("AnnualInvestmentReturn")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageBase64")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("InvestAdId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("InvestDurationMonths")
-                        .HasColumnType("int");
-
-                    b.Property<int>("InvestDurationYears")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("TotalInvestment")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InvestAdId");
-
-                    b.ToTable("InvestAdExtraInfo");
-                });
-
-            modelBuilder.Entity("Core.Entities.InvestAdExtraInfoInvestField", b =>
-                {
-                    b.Property<Guid>("InvestAdExtraInfoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("InvestFieldId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("InvestAdExtraInfoId", "InvestFieldId");
-
-                    b.HasIndex("InvestFieldId");
-
-                    b.ToTable("InvestAdExtraInfoInvestField");
-                });
-
-            modelBuilder.Entity("Core.Entities.InvestField", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("InvestFields");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("4f711134-52bb-4bbf-a2d2-e59eda732d67"),
-                            Title = "Фінанси"
-                        },
-                        new
-                        {
-                            Id = new Guid("92ee46d1-5461-4772-8dbd-0ef62a8a1d34"),
-                            Title = "Сільськогосподарська техніка"
-                        },
-                        new
-                        {
-                            Id = new Guid("42c6356d-6754-434e-ab92-99a6fdfd1d88"),
-                            Title = "Займи"
-                        },
-                        new
-                        {
-                            Id = new Guid("da5eab20-13aa-4f44-a30b-7be764dbcfbf"),
-                            Title = "Кафе та ресторани"
-                        },
-                        new
-                        {
-                            Id = new Guid("4ac89c0c-b3de-488f-a99b-42601585b9ac"),
-                            Title = "Нерухомість в Україні"
-                        },
-                        new
-                        {
-                            Id = new Guid("9850f830-79cb-4e4c-8091-fa577047377d"),
-                            Title = "Нерухомість закордоном"
-                        },
-                        new
-                        {
-                            Id = new Guid("bf6a5de8-1bbc-4367-9812-58eb3d1d7834"),
-                            Title = "Агро"
-                        },
-                        new
-                        {
-                            Id = new Guid("8f4de586-06d7-45ed-bbbe-d6f732b02337"),
-                            Title = "IT"
-                        },
-                        new
-                        {
-                            Id = new Guid("6b38fcf2-47c5-41f2-878c-3a7c37072c55"),
-                            Title = "Рітейл"
-                        },
-                        new
-                        {
-                            Id = new Guid("07ba9b0e-aded-4706-ae0d-820d10cd2a7f"),
-                            Title = "Авто"
-                        },
-                        new
-                        {
-                            Id = new Guid("7e3fa98e-9422-468d-8dcd-d66673583a76"),
-                            Title = "Криптовалюти"
-                        },
-                        new
-                        {
-                            Id = new Guid("9d1c74fb-4160-46c7-bc4d-153a23ef39a3"),
-                            Title = "Виробництво"
-                        },
-                        new
-                        {
-                            Id = new Guid("e9dc75b6-df9e-456f-9cde-0a4435391c90"),
-                            Title = "Розваги"
-                        },
-                        new
-                        {
-                            Id = new Guid("60bdbcec-5716-4593-b3ea-3f4c080f03e4"),
-                            Title = "Енергетика"
-                        },
-                        new
-                        {
-                            Id = new Guid("3ad6cd6e-fc51-4f55-a20b-304e208667b9"),
-                            Title = "Освіта"
-                        },
-                        new
-                        {
-                            Id = new Guid("072aa2c8-7641-4e36-af85-41d0cef7db4d"),
-                            Title = "Спорт"
-                        });
-                });
-
             modelBuilder.Entity("Core.Entities.InvestPost", b =>
                 {
                     b.Property<Guid>("Id")
@@ -341,51 +102,6 @@ namespace DataAccess.Migrations
                     b.ToTable("InvestPosts");
                 });
 
-            modelBuilder.Entity("Core.Entities.InvestTags", b =>
-                {
-                    b.Property<Guid>("InvestId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("TagId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("InvestId", "TagId");
-
-                    b.HasIndex("TagId");
-
-                    b.ToTable("InvestTags");
-                });
-
-            modelBuilder.Entity("Core.Entities.Link", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AnchorText")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<bool>("Follow")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Hyperlink")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("NewsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NewsId");
-
-                    b.ToTable("Links");
-                });
-
             modelBuilder.Entity("Core.Entities.MinInvestValue", b =>
                 {
                     b.Property<Guid>("Id")
@@ -407,87 +123,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("InvestPostId");
 
                     b.ToTable("MinInvestValue");
-                });
-
-            modelBuilder.Entity("Core.Entities.MinimalInvestEntrance", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Currency")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("InvestAdExtraInfoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("MinValue")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InvestAdExtraInfoId");
-
-                    b.ToTable("MinimalInvestEntrance");
-                });
-
-            modelBuilder.Entity("Core.Entities.News", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AuthorId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DescriptionSeo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageBase64")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Slug")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TitleSeo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
-
-                    b.HasIndex("Slug");
-
-                    b.ToTable("News");
-                });
-
-            modelBuilder.Entity("Core.Entities.NewsToTags", b =>
-                {
-                    b.Property<Guid>("NewsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("TagId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("NewsId", "TagId");
-
-                    b.HasIndex("TagId");
-
-                    b.ToTable("NewsToTags");
                 });
 
             modelBuilder.Entity("Core.Entities.Post", b =>
@@ -514,6 +149,9 @@ namespace DataAccess.Migrations
                     b.Property<string>("PostType")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
 
                     b.Property<string>("Slug")
                         .IsRequired()
@@ -867,30 +505,6 @@ namespace DataAccess.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Core.Entities.Comment", b =>
-                {
-                    b.HasOne("Core.Entities.InvestAd", "InvestAd")
-                        .WithMany("Comments")
-                        .HasForeignKey("InvestAdId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("Core.Entities.News", "News")
-                        .WithMany("Comments")
-                        .HasForeignKey("NewsId");
-
-                    b.HasOne("Core.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("InvestAd");
-
-                    b.Navigation("News");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Core.Entities.CustomHeader", b =>
                 {
                     b.HasOne("Core.Entities.Tag", "Tag")
@@ -900,17 +514,6 @@ namespace DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("Tag");
-                });
-
-            modelBuilder.Entity("Core.Entities.Image", b =>
-                {
-                    b.HasOne("Core.Entities.Post", "Post")
-                        .WithMany("Images")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Post");
                 });
 
             modelBuilder.Entity("Core.Entities.ImageMetadata", b =>
@@ -932,47 +535,6 @@ namespace DataAccess.Migrations
                     b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("Core.Entities.InvestAd", b =>
-                {
-                    b.HasOne("Core.Entities.User", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Author");
-                });
-
-            modelBuilder.Entity("Core.Entities.InvestAdExtraInfo", b =>
-                {
-                    b.HasOne("Core.Entities.InvestAd", "InvestAd")
-                        .WithMany("History")
-                        .HasForeignKey("InvestAdId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("InvestAd");
-                });
-
-            modelBuilder.Entity("Core.Entities.InvestAdExtraInfoInvestField", b =>
-                {
-                    b.HasOne("Core.Entities.InvestAdExtraInfo", "InvestAdExtraInfo")
-                        .WithMany("InvestFields")
-                        .HasForeignKey("InvestAdExtraInfoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Core.Entities.InvestField", "InvestField")
-                        .WithMany("InvestAdExtraInfos")
-                        .HasForeignKey("InvestFieldId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("InvestAdExtraInfo");
-
-                    b.Navigation("InvestField");
-                });
-
             modelBuilder.Entity("Core.Entities.InvestPost", b =>
                 {
                     b.HasOne("Core.Entities.Post", "Post")
@@ -984,78 +546,11 @@ namespace DataAccess.Migrations
                     b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("Core.Entities.InvestTags", b =>
-                {
-                    b.HasOne("Core.Entities.InvestAd", "Invest")
-                        .WithMany("Tags")
-                        .HasForeignKey("InvestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Core.Entities.Tag", "Tag")
-                        .WithMany()
-                        .HasForeignKey("TagId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Invest");
-
-                    b.Navigation("Tag");
-                });
-
-            modelBuilder.Entity("Core.Entities.Link", b =>
-                {
-                    b.HasOne("Core.Entities.News", "News")
-                        .WithMany("Links")
-                        .HasForeignKey("NewsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("News");
-                });
-
             modelBuilder.Entity("Core.Entities.MinInvestValue", b =>
                 {
                     b.HasOne("Core.Entities.InvestPost", null)
                         .WithMany("MinInvestValues")
                         .HasForeignKey("InvestPostId");
-                });
-
-            modelBuilder.Entity("Core.Entities.MinimalInvestEntrance", b =>
-                {
-                    b.HasOne("Core.Entities.InvestAdExtraInfo", null)
-                        .WithMany("AcceptedCurrencies")
-                        .HasForeignKey("InvestAdExtraInfoId");
-                });
-
-            modelBuilder.Entity("Core.Entities.News", b =>
-                {
-                    b.HasOne("Core.Entities.User", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Author");
-                });
-
-            modelBuilder.Entity("Core.Entities.NewsToTags", b =>
-                {
-                    b.HasOne("Core.Entities.News", "News")
-                        .WithMany("Tags")
-                        .HasForeignKey("NewsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Core.Entities.Tag", "Tag")
-                        .WithMany()
-                        .HasForeignKey("TagId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("News");
-
-                    b.Navigation("Tag");
                 });
 
             modelBuilder.Entity("Core.Entities.Post", b =>
@@ -1168,46 +663,14 @@ namespace DataAccess.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Core.Entities.InvestAd", b =>
-                {
-                    b.Navigation("Comments");
-
-                    b.Navigation("History");
-
-                    b.Navigation("Tags");
-                });
-
-            modelBuilder.Entity("Core.Entities.InvestAdExtraInfo", b =>
-                {
-                    b.Navigation("AcceptedCurrencies");
-
-                    b.Navigation("InvestFields");
-                });
-
-            modelBuilder.Entity("Core.Entities.InvestField", b =>
-                {
-                    b.Navigation("InvestAdExtraInfos");
-                });
-
             modelBuilder.Entity("Core.Entities.InvestPost", b =>
                 {
                     b.Navigation("MinInvestValues");
                 });
 
-            modelBuilder.Entity("Core.Entities.News", b =>
-                {
-                    b.Navigation("Comments");
-
-                    b.Navigation("Links");
-
-                    b.Navigation("Tags");
-                });
-
             modelBuilder.Entity("Core.Entities.Post", b =>
                 {
                     b.Navigation("Comments");
-
-                    b.Navigation("Images");
 
                     b.Navigation("ImagesV2");
 

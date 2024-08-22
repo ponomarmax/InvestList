@@ -1,6 +1,6 @@
 using AutoMapper;
+using Core.Entities;
 using Core.Interfaces;
-using DataAccess.Repositories.V2;
 using InvestList.Models;
 using InvestList.Models.V2;
 using Microsoft.AspNetCore.Mvc;
@@ -15,17 +15,20 @@ namespace InvestList.Areas.Main.Pages.News
         public IEnumerable<PostView> Entities { get; set; }
         public IEnumerable<Guid> TagIds { get; set; }
         public PaginationInfo PaginationInfo { get; set; }
-
-        public async Task<IActionResult> OnGetAsync(int pageIndex = 1, IEnumerable<string> tagIds = null)
+        public string Search { get; set; }
+        
+        public async Task<IActionResult> OnGetAsync(int pageIndex = 1, IEnumerable<string> tagIds = null, string search = null)
         {
             if (pageIndex < 1)
             {
                 return NotFound();
             }
 
+            Search = search;
+
             var guidTagIds = tagIds?.Where(x => Guid.TryParse(x, out _)).Select(Guid.Parse);
 
-            var (count, resultDb) = await repository.Filter(pageIndex, ItemsPerPage, guidTagIds);
+            var (count, resultDb) = await repository.Filter(pageIndex, ItemsPerPage, guidTagIds, search, PostType.News);
             if (!resultDb.Any() && pageIndex != 1) return NotFound();
 
             var resultView = mapper.Map<IEnumerable<PostView>>(resultDb);
@@ -37,7 +40,8 @@ namespace InvestList.Areas.Main.Pages.News
             {
                 CurrentPage = pageIndex,
                 TotalPages = totalPages,
-                PageSize = ItemsPerPage
+                PageSize = ItemsPerPage,
+                Search = search
             };
             TagIds = guidTagIds;
 

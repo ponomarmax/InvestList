@@ -1,4 +1,5 @@
 using AutoMapper;
+using Core.Entities;
 using Core.Interfaces;
 using InvestList.Models;
 using InvestList.Models.V2;
@@ -14,9 +15,14 @@ namespace InvestList.Areas.Main.Pages
         public IEnumerable<PostView> NewsPosts { get; set; }
         public IEnumerable<InvestView> InvestPosts { get; set; }
         public IEnumerable<Guid> TagIds { get; set; }
+        public string Search { get; set; }
+        
+        public async Task<IActionResult> OnGetAsync(int pageIndex = 1,
+            IEnumerable<string> tagIds = null,
+            string search = null)
 
-        public async Task<IActionResult> OnGetAsync(int pageIndex = 1, IEnumerable<string> tagIds = null)
         {
+            Search = search;
             if (pageIndex < 1)
             {
                 return NotFound();
@@ -24,8 +30,8 @@ namespace InvestList.Areas.Main.Pages
 
             var guidTagIds = tagIds?.Where(x => Guid.TryParse(x, out _)).Select(Guid.Parse);
 
-            var (_, postDb) = await invRepository.Filter(pageIndex, ItemsPerPage, guidTagIds);
-            var (_, newsDb) = await postRepository.Filter(pageIndex, ItemsPerPage, guidTagIds);
+            var (_, postDb) = await invRepository.Filter(pageIndex, ItemsPerPage, guidTagIds, search);
+            var (_, newsDb) = await postRepository.Filter(pageIndex, ItemsPerPage, guidTagIds, search, PostType.News);
             // if (!postDb.Any() && pageIndex != 1) return NotFound();
 
             NewsPosts = mapper.Map<IEnumerable<PostView>>(newsDb);

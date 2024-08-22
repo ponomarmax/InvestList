@@ -1,5 +1,4 @@
 ﻿using Common;
-using InvestList.Models.News;
 
 namespace InvestList.Models.V2
 {

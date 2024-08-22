@@ -8,6 +8,7 @@
     ViewData["Title"] = "Створити оголошення";
     ViewData["DisplayNoIndexTag"] = true;
 }
+<link href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css" rel="stylesheet"/>
 
 <hr/>
 <div class="container">
@@ -24,7 +25,7 @@
         </div>
     }
 
-    <form method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data" onsubmit="copyEditorContent()">
         @Html.AntiForgeryToken()
         <div class="form-group d-flex mb-3 align-items-center">
             <input type="checkbox" class="bigger-checkbox" asp-for="Post.IsActive" checked="checked"/>
@@ -95,21 +96,13 @@
                     </div>
                 </div>
 
-                <div class="mb-2">
-                    <button type="button" class="btn btn-primary" onclick="toggleBold()">Жирний</button>
-                    <button type="button" class="btn btn-primary" onclick="addBulletPoints('description')">Булети</button>
-                    <button type="button" class="btn btn-primary" onclick="addNumberedList('description')">Нумерований список</button>
-                </div>
-                <div id="description" style="height: 12em;" contenteditable="true" class="form-control" oninput="syncDescription()">
+                <pre id="editor" style="height: 250px;">
                     @if (Model.Post != null && Model.Post.Description != null)
                     {
                         @Html.Raw(Model.Post.Description)
                     }
-                </div>
-                <input type="hidden" id="PostDescription" name="Post.Description" value="Post.Description" />
-                                
-                @* <label asp-for="Post.Description">Опис</label>
-                <textarea rows="10" asp-for="Post.Description" class="form-control"></textarea> *@
+                </pre>
+                <input type="hidden" id="PostDescription" name="Post.Description"/>
             </div>
         </div>
 
@@ -131,13 +124,13 @@
                     <input placeholder="Кількість місяців" type="number" asp-for="Post.InvestDurationMonths" class="form-control" />
                 </div>
             </div>
-            <div class="form-group col-6 tagg">
+            <div class="form-group col-6 d-flex flex-column">
                 <span asp-validation-for="AvailableTags" class="text-danger"></span>
                 @{
                     if (Model.AvailableTags != null)
                     {
                         <label asp-for="AvailableTags">Теги</label><br>
-                        <select rows="20" name="Post.TagIds" asp-items="Model.AvailableTags" multiple="multiple" class="listbox"></select>
+                        <select rows="40" name="Post.TagIds" asp-items="Model.AvailableTags" multiple="multiple" class="listbox flex-grow-1 resizable-select"></select>
                     }
                 }
             </div>
@@ -155,6 +148,7 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script src="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.js"></script>
     <script src="~/js/handleImageUpload.js"></script>
     <script src="~/js/description-text.js"></script>
 }

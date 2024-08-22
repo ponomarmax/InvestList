@@ -1,34 +1,32 @@
 @model InvestList.Models.V2.PostView
 
-<div class="card">
-    <div class="card-body">
-        <h4 class="card-title mb-3">
-            <a class="card-link" asp-area="Main" asp-page="/News/Get" asp-route-id="@Model.Slug">@Model.Title</a>
-        </h4>
+<div class="list-post-card">
+    <h4 class="list-post-title m-3">
+        <a class="list-post-link" asp-area="Main" asp-page="/News/Get" asp-route-id="@Model.Slug">@Model.Title</a>
+    </h4>
 
-        @if (Model.Tags != null && Model.Tags.Any())
+    @if (Model.Tags != null && Model.Tags.Any())
+    {
+        <div class="tags-container mx-3">
+            @foreach (var field in Model.Tags)
+            {
+                <span class="tag_index mb-1 mx-0">@field.Name</span>
+            }
+        </div>
+    }
+    <hr>
+
+    <div class="row">
+        @if (Model.Image != null)
         {
-            <div class="tags-container">
-                @foreach (var field in Model.Tags)
-                {
-                    <span class="tag_index">@field.Name</span>
-                }
+            <div class="col-auto ms-2">
+                <img src="@Model.Image.FilePath" alt="@Model.Image.AltText" class="img-fluid rounded" style="width: 100px; height: 100px;">
             </div>
         }
-        <hr>
 
-        <div class="row">
-            @if (Model.Image != null)
-            {
-                <div class="col-auto">
-                    <img src="@Model.Image.FilePath" alt="@Model.Image.AltText" class="img-fluid rounded" style="width: 100px; height: 100px;">
-                </div>
-            }
-
-            <div class="col">
-                <p class="card-text text-black mb-0">@Model.Description?.Substring(0, Math.Min(Model.Description.Length, 150))</p>
-                <div class="creation-data">@Model.CreatedAt.ToString("dd.MM.yyyy")</div>
-            </div>
+        <div class="col ms-3 mb-3">
+            <p class="text-black mb-1">@Model.Description?.Substring(0, Math.Min(Model.Description.Length, 150))</p>
+            <div class="creation-data">@Model.CreatedAt.ToString("dd.MM.yyyy")</div>
         </div>
     </div>
 </div>

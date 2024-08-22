@@ -16,13 +16,11 @@
         <h1>@Model.Post.Title</h1>
         @if (Model?.Post.Tags?.Any() == true)
         {
-            <div class="card-text">
-                <div class="tags mb-3">
-                    @foreach (var field in Model.Post.Tags)
-                    {
-                        <span class="badge bg-primary"># @field.Name</span>
-                    }
-                </div>
+            <div class="tags mb-3">
+                @foreach (var field in Model.Post.Tags)
+                {
+                    <span class="badge bg-primary"># @field.Name</span>
+                }
             </div>
         }
         @if (Model.Post.Image != null)
@@ -37,7 +35,7 @@
         @if (Model.Post.Links != null && Model.Post.Links.Any())
         {
             <div id="inputsContainer">
-                <p class="card-text mb-2"> Посилання на статті</p>
+                <p class="mb-2"> Посилання на статті</p>
                 <ul class="list-group">
                     @foreach (var link in Model.Post.Links)
                     {

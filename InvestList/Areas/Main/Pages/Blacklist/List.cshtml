@@ -1,7 +1,5 @@
-@page "/news"
-@using InvestList
-@using Microsoft.AspNetCore.Mvc.TagHelpers
-@model InvestList.Areas.Main.Pages.News.List
+@page "/blacklist"
+@model InvestList.Areas.Main.Pages.Blacklist.List
 
 <div class="container">
     @if (Model.Entities != null && Model.Entities.Any())
@@ -10,18 +8,18 @@
             @foreach (var ad in Model.Entities)
             {
                 <div class="col-12 col-lg-6 mb-4">
-                    @await Html.PartialAsync("_PostCard", ("News", ad))
+                    @await Html.PartialAsync("_PostCard", ("Blacklist",ad))
                 </div>
             }
         </div>
     }
     else
     {
-        <p>Немає оголошень</p>
+        <p>Немає новин про негідників</p>
     }
 
 </div>
 @if (Model.Entities != null && Model.Entities.Any())
 {
-    @await Html.PartialAsync("_Pagination", ("News", Model.PaginationInfo, Model.TagIds))
+    @await Html.PartialAsync("_Pagination", ("blacklist", Model.PaginationInfo, Model.TagIds))
 }

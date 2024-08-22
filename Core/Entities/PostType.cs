@@ -6,5 +6,6 @@ namespace Core.Entities
         Undefined = 0,
         InvestAd = 1,
         News = 2,
+        Blacklist = 3
     }
 }

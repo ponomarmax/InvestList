@@ -1,10 +1,10 @@
-@page "/news/edit/{id:guid}"
+@page "/blacklist/edit/{id:guid}"
 @using Common
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-@model InvestList.Areas.Main.Pages.News.Edit
+@model InvestList.Areas.Main.Pages.Blacklist.Edit
 
 @{
-    ViewData["Title"] = "Редагувати новину";
+    ViewData["Title"] = "Редагувати Blacklist";
 }
 
 <hr/>
@@ -25,12 +25,12 @@
         @Html.AntiForgeryToken()
         <div class="form-group d-flex mb-3 align-items-center">
             <input type="checkbox" class="bigger-checkbox" checked="@Model.Post.IsActive" asp-for="Post.IsActive"/>
-            <label asp-for="@Model.Post.IsActive">Новина буде відображене після публікації</label>
+            <label asp-for="@Model.Post.IsActive">Blacklist буде відображено після публікації</label>
         </div>
         <div class="row mb-4">
             <div class="form-group col-6">
                 <div class="mb-4">
-                    <p asp-for="Title">Заголовок новини</p>
+                    <p asp-for="Title">Заголовок Blacklist</p>
                     <input asp-for="Post.Title" class="form-control" placeholder="Вкажіть не менше 10 символів, не більше 200 символів"/>
                     <span asp-validation-for="Post.Title" class="text-danger"></span>
                 </div>

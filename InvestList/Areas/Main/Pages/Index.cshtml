@@ -24,7 +24,9 @@
                 </div>
             </div>
         </div>
-    </div><br><br>
+    </div>
+    <br>
+    <br>
 }
 <div class="container">
     <div class="d-flex justify-content-center">
@@ -64,7 +66,7 @@
             @foreach (var ad in Model.NewsPosts)
             {
                 <div class="col-12 col-lg-6 mb-4">
-                    @await Html.PartialAsync("_PostCard", ad)
+                    @await Html.PartialAsync("_PostCard", ("News", ad))
                 </div>
             }
         </div>
@@ -74,6 +76,35 @@
                asp-page="/News/List"
                asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.TagIds, search: Model.Search))">
                 Більше новини
+            </a>
+        </div>
+    }
+    else
+    {
+        <p>Немає новин за даним критерієм</p>
+    }
+
+    <hr/>
+    <hr/>
+    <div class="d-flex justify-content-center">
+        <h2>Останні новини про людей, що підвели цей світ</h2>
+    </div>
+    @if (Model.BlacklistPosts != null && Model.BlacklistPosts.Any())
+    {
+        <div class="row">
+            @foreach (var ad in Model.BlacklistPosts)
+            {
+                <div class="col-12 col-lg-6 mb-4">
+                    @await Html.PartialAsync("_PostCard", ("Blacklist", ad))
+                </div>
+            }
+        </div>
+        <div class="d-flex justify-content-center">
+            <a class="news"
+               asp-area="Main"
+               asp-page="/Blacklist/List"
+               asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.TagIds, search: Model.Search))">
+                Більше про негідників
             </a>
         </div>
     }

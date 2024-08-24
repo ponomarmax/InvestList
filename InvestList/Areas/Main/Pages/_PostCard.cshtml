@@ -25,7 +25,7 @@
         }
 
         <div class="col ms-3 mb-3">
-            <p class="text-black mb-1">@Model.postView.Description?.Substring(0, Math.Min(Model.postView.Description.Length, 150))</p>
+            <p class="description-color mb-1">@Model.postView.Description?.Substring(0, Math.Min(Model.postView.Description.Length, 150))</p>
             <div class="creation-data">@Model.postView.CreatedAt.ToString("dd.MM.yyyy")</div>
         </div>
     </div>

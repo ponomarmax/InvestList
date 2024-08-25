@@ -28,9 +28,9 @@
             <img src="@Model.Post.Image.FilePath" alt="@Model.Post.Image.AltText" class="img-fluid rounded mb-3">
         }
         <div class="row mb-4">
-            <div class="well col-12">
-                <pre>@Model.Post.Description</pre>
-            </div>
+            <pre class="invest-get-body md:order-1 order-2">
+                @Html.Raw(Model.Post.Description)
+            </pre>
         </div>
         @if (Model.Post.Links != null && Model.Post.Links.Any())
         {

@@ -214,6 +214,10 @@ li {
     text-transform: uppercase;
 }
 
+.creation-data {
+    text-transform: none;
+}
+
 .annualInvestment, .annualInvestment-get {
     margin-top: 5px;
     color: #183F80;

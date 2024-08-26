@@ -24,7 +24,7 @@
         </div>
     }
 
-    <form method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data" onsubmit="copyEditorContent()">
         @Html.AntiForgeryToken()
         <div class="form-group d-flex mb-3 align-items-center">
             <input type="checkbox" class="bigger-checkbox" asp-for="Post.IsActive" checked="checked"/>
@@ -58,7 +58,7 @@
         <div class="row mb-4">
             <div class="form-group">
                 <label asp-for="Post.Description">Опис</label>
-                <pre id="editor" style="height: 250px;">
+                <pre id="editor" class="create-description-box">
                     @if (Model.Post != null && @Model.Post.Description != null)
                     {
                         @Html.Raw(@Model.Post.Description)

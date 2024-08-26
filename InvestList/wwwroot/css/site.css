@@ -156,6 +156,10 @@ li {
     margin-right: 4px;
 }
 
+a.news.list-text-size {
+    font-size: 1em;
+}
+
 .logIn, .add_project, .profile, .admin, .projects, .news {
     height: 40px;
     padding: 10px;
@@ -374,6 +378,10 @@ li {
 
 .description-color {
     color: #6c757d;
+}
+
+pre.create-description-box {
+    height: 250px;
 }
 
 .footer {

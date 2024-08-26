@@ -3,7 +3,7 @@
 
 <div class="list-post-card">
     <h4 class="list-post-title m-3">
-        <a class="list-post-link" asp-area="Main" asp-page=@($"{Model.link}/Get") asp-route-id="@Model.postView.Slug">@Model.postView.Title</a>
+        <a class="list-post-link" asp-area="Main" asp-page=@($"/{Model.link}/Get") asp-route-id="@Model.postView.Slug">@Model.postView.Title</a>
     </h4>
 
     @if (Model.postView.Tags != null && Model.postView.Tags.Any())

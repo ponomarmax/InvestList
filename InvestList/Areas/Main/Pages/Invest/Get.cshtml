@@ -60,7 +60,7 @@
                 <small class="text-body-secondary">@Model.Post.CreatedAt.ToString("dd-MM-yyyy")</small>
             </p>
             <div class="d-flex p-1 flex-wrap justify-content-center">
-                <pre class="invest-get-body md:order-1 order-2">
+                <pre class="invest-get-body md:order-1 order-2 w-100">
                     @Html.Raw(Model.Post.Description)
                 </pre>
                 @if (Model.Post.Image != null)

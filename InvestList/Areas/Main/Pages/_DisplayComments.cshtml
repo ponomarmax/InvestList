@@ -29,6 +29,11 @@ else
         @foreach (var comment in Model.comments.OrderByDescending(x => x.CreatedAt))
         {
             var author = await UserManager.FindByIdAsync(comment.AuthorId);
+            if (author.UserName.Contains("@gmail.com"))
+            {
+                author.UserName = author.UserName.Replace("@gmail.com", "");
+            }
+
             <div class="display-comments-card mb-4 p-2">
                 <div class="d-flex flex-row justify-content-between mb-0">
                     <div class="creation-data">@author.UserName</div>

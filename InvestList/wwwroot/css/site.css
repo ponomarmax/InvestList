@@ -172,7 +172,12 @@ a.news.list-text-size {
     text-decoration: none;
 }
 
+.add_project {
+    width: max-content;
+}
+
 .reg {
+    width: max-content;
     height: 40px;
     padding: 10px;
     border: 2px солід #333333;
@@ -484,16 +489,6 @@ pre.create-description-box {
     color: #333333;
 }
 
-.search-button {
-    border: 1px solid black;
-    border-radius: 20px;
-}
-
-.search-input {
-    border: 1px solid black;
-    border-radius: 20px;
-    padding-left: 10px;
-}
 .bigger-checkbox {
     width: 30px; /* Adjust the width as needed */
     height: 30px; /* Adjust the height as needed */

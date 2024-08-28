@@ -45,7 +45,7 @@
 <body>
 <header class="navbar navbar-expand-lg navbar-light navbar-custom shadow-sm">
     <div class="container-fluid justify-content-start">
-        <div class="logo-container d-flex align-items-center me-2">
+        <div class="logo-container d-flex align-items-center">
             <a asp-area="Main" asp-page="/Index" class="mx-auto me-2 mt-1">
                 <img src="/ico/logo3.png" alt="invest radar logo" height="50" width="50"/>
             </a>
@@ -60,32 +60,26 @@
         @* <p class="language">УКР|ENG</p> *@
 
         <div class="collapse navbar-collapse" id="navbarNav">
-            <div class="nav-item mb-1">
-                <form class="d-flex me-3" role="search" method="get" asp-area="Main" asp-page="/Index">
-                    <input class="form-control search-input" name="search" type="search" placeholder="Пошук" aria-label="Search">
-                    <button class="btn search-button" type="submit">Search</button>
-                </form>
-            </div>
-            @* <form method="get" asp-area="Main" asp-page="/Index"> *@
-            @*     <div class="d-flex justify-content-center align-items-center flex-grow-1 ms-md-2 mt-lg-1 input-group mb-1"> *@
-            @*         <div class="input-group-prepend"> *@
-            @*             <button class="search_but" type="submit"> *@
-            @*                 <img src="/ico/search.png" height="16" width="16"> *@
-            @*             </button> *@
-            @*         </div> *@
-            @*         <input type="search" class="search" name="search" placeholder="Пошук"> *@
-            @*     </div> *@
-            @* </form> *@
+            <form method="get" asp-area="Main" asp-page="/Index">
+                <div class="d-flex justify-content-center align-items-center flex-grow-1 ms-md-2 mt-lg-1 input-group mb-1">
+                    <div class="input-group-prepend">
+                        <button class="search_but" type="submit">
+                            <img src="/ico/search.png" height="16" width="16">
+                        </button>
+                    </div>
+                    <input type="search" class="search" name="search" placeholder="Пошук">
+                </div>
+            </form>
             @if (!User.Identity.IsAuthenticated)
             {
                 <div class="d-flex justify-content-center align-items-center flex-grow-1 ms-lg-5 mt-lg-2">
                     <a asp-area="Main" asp-page="/Blacklist/List" class="news" rel="follow">BLACKLIST</a>
                     <a asp-area="Main" asp-page="/News/List" class="news" rel="follow">НОВИНИ</a>
                     <a asp-area="Main" asp-page="/Invest/List" class="projects" rel="follow">ПРОЕКТИ</a>
-                    <a asp-area="Identity" asp-page="/Account/Register" class="reg" rel="nofollow">ДОДАТИ ПРОЕКТ</a>
+                    <a asp-area="Identity" asp-page="/Account/Register" class="reg  d-flex align-items-center" rel="nofollow">ДОДАТИ ПРОЕКТ</a>
                 </div>
                 <div class="d-flex justify-content-center align-items-center mt-1 log_reg">
-                    <a asp-area="Identity" asp-page="/Account/Register" class="reg" rel="nofollow">ЗАРЕЄСТРУВАТИСЯ</a>
+                    <a asp-area="Identity" asp-page="/Account/Register" class="reg  d-flex align-items-center" rel="nofollow">ЗАРЕЄСТРУВАТИСЯ</a>
                     <a asp-area="Identity" asp-page="/Account/Login" class="logIn" rel="nofollow">УВІЙТИ</a>
                 </div>
             }

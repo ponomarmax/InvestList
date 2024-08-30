@@ -10,7 +10,7 @@ namespace InvestList.Services
     {
         private readonly EmailConfig _smtpSettings = smtpSettings.Value;
 
-        public Task SendEmailAsync(string email, string subject, string htmlMessage)
+        public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
             var smtpClient = new SmtpClient
             {
@@ -18,7 +18,7 @@ namespace InvestList.Services
                 Port = _smtpSettings.Port,
                 UseDefaultCredentials = false,
                 Credentials = new NetworkCredential(_smtpSettings.Username, _smtpSettings.Password),
-                EnableSsl = true
+                EnableSsl = _smtpSettings.EnableSsl
             };
 
             var mailMessage = new MailMessage
@@ -31,7 +31,7 @@ namespace InvestList.Services
 
             mailMessage.To.Add(email);
 
-            return smtpClient.SendMailAsync(mailMessage);
+            await smtpClient.SendMailAsync(mailMessage);
         }
     }
 }

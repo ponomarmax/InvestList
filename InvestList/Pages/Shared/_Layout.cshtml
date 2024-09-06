@@ -60,20 +60,16 @@
         @* <p class="language">УКР|ENG</p> *@
 
         <div class="collapse navbar-collapse" id="navbarNav">
-            <form method="get" asp-area="Main" asp-page="/Index">
-                <div class="d-flex justify-content-center align-items-center flex-grow-1 ms-md-2 mt-lg-1 input-group mb-1">
-                    <div class="input-group-prepend">
-                        <button class="search_but" type="submit">
-                            <img src="/ico/search.png" height="16" width="16">
-                        </button>
-                    </div>
-                    <input type="search" class="search" name="search" placeholder="Пошук">
-                </div>
-            </form>
+            <div class="nav-item d-flex justify-content-center justify-content-lg-none mb-1 ms-3">
+                <form class="d-flex mt-lg-2 me-3" role="search" method="get" asp-area="Main" asp-page="/Index">
+                    <input class="form-control search-input" name="search" type="search" placeholder="Пошук" aria-label="Search">
+                    <button class="btn search-button" type="submit">Пошук</button>
+                </form>
+            </div>
             @if (!User.Identity.IsAuthenticated)
             {
-                <div class="d-flex justify-content-center align-items-center flex-grow-1 ms-lg-5 mt-lg-2">
-                    <a asp-area="Main" asp-page="/Blacklist/List" class="news" rel="follow">BLACKLIST</a>
+                <div class="d-flex justify-content-center justify-content-lg-start align-items-center flex-grow-1 ms-lg-5 mt-lg-2">
+                    <a asp-area="Main" asp-page="/Blacklist/List" class="news ms-lg-3" rel="follow">BLACKLIST</a>
                     <a asp-area="Main" asp-page="/News/List" class="news" rel="follow">НОВИНИ</a>
                     <a asp-area="Main" asp-page="/Invest/List" class="projects" rel="follow">ПРОЕКТИ</a>
                     <a asp-area="Identity" asp-page="/Account/Register" class="reg  d-flex align-items-center" rel="nofollow">ДОДАТИ ПРОЕКТ</a>
@@ -85,8 +81,8 @@
             }
             @if (User.Identity.IsAuthenticated && !User.IsInRole(Const.AdminRole))
             {
-                <div class="d-flex justify-content-center align-items-center flex-grow-1 ms-md-4 mt-lg-2">
-                    <a asp-area="Main" asp-page="/Blacklist/List" class="news" rel="follow">BLACKLIST</a>
+                <div class="d-flex justify-content-center justify-content-lg-start align-items-center flex-grow-1 ms-md-4  ms-lg-5 mt-lg-2">
+                    <a asp-area="Main" asp-page="/Blacklist/List" class="news ms-lg-3" rel="follow">BLACKLIST</a>
                     <a asp-area="Main" asp-page="/News/List" class="news" rel="follow">НОВИНИ</a>
                     <a asp-area="Main" asp-page="/Invest/List" class="projects" rel="follow">ПРОЕКТИ</a>
                     <a asp-area="Main" asp-page="/Invest/Create" class="add_project" rel="nofollow">ДОДАТИ ПРОЕКТ</a>
@@ -108,8 +104,8 @@
             }
             @if (User.IsInRole(Const.AdminRole))
             {
-                <div class="d-flex justify-content-center align-items-center flex-grow-1 ms-md-2 mt-lg-1">
-                    <a asp-area="Main" asp-page="/Blacklist/List" class="news" rel="follow">BLACKLIST</a>
+                <div class="d-flex justify-content-center justify-content-lg-start align-items-center flex-grow-1 ms-md-2 ms-lg-5 mt-lg-1">
+                    <a asp-area="Main" asp-page="/Blacklist/List" class="news ms-lg-3" rel="follow">BLACKLIST</a>
                     <a asp-area="Main" asp-page="/News/List" class="news" rel="follow">НОВИНИ</a>
                     <a asp-area="Main" asp-page="/Invest/List" class="projects" rel="follow">ПРОЕКТИ</a>
                     <a asp-area="Main" asp-page="/Invest/Create" class="add_project" rel="nofollow">ДОДАТИ ПРОЕКТ</a>

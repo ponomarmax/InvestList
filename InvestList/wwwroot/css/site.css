@@ -71,6 +71,7 @@ li {
 }
 
 .invest_radar {
+    width: max-content;
     font-weight: 700;
     font-size: 20px;
     text-decoration: none;
@@ -482,6 +483,17 @@ pre.create-description-box {
 
 .icon-right {
     margin-left: 10px; /* Відступ після тексту для правої іконки */
+}
+
+.search-button {
+    border: 1px solid black;
+    border-radius: 20px;
+}
+
+.search-input {
+    border: 1px solid black;
+    border-radius: 20px;
+    padding-left: 10px;
 }
 
 .list-post-link, .similar-content-link {

@@ -1,4 +1,5 @@
 using InvestList.Models.V2;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace InvestList
@@ -13,7 +14,7 @@ namespace InvestList
         public static void SetupPostViewSeoDetails(this ViewDataDictionary viewData, PostView entity)
         {
             var title = entity.TitleSeo ?? entity.Title;
-            var desc = entity.DescriptionSeo ?? entity.Description;
+            var desc = Regex.Replace(entity.DescriptionSeo ?? entity.Description, "<.*?>", string.Empty);
             
             viewData["CustomTitle"] = maxTitleSize < title.Length
                 ? title.Substring(0, maxTitleSize)

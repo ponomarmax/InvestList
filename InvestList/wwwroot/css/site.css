@@ -71,6 +71,7 @@ li {
 }
 
 .invest_radar {
+    width: max-content;
     font-weight: 700;
     font-size: 20px;
     text-decoration: none;
@@ -172,7 +173,12 @@ a.news.list-text-size {
     text-decoration: none;
 }
 
+.add_project {
+    width: max-content;
+}
+
 .reg {
+    width: max-content;
     height: 40px;
     padding: 10px;
     border: 2px солід #333333;
@@ -479,11 +485,6 @@ pre.create-description-box {
     margin-left: 10px; /* Відступ після тексту для правої іконки */
 }
 
-.list-post-link, .similar-content-link {
-    text-decoration: none;
-    color: #333333;
-}
-
 .search-button {
     border: 1px solid black;
     border-radius: 20px;
@@ -494,6 +495,12 @@ pre.create-description-box {
     border-radius: 20px;
     padding-left: 10px;
 }
+
+.list-post-link, .similar-content-link {
+    text-decoration: none;
+    color: #333333;
+}
+
 .bigger-checkbox {
     width: 30px; /* Adjust the width as needed */
     height: 30px; /* Adjust the height as needed */

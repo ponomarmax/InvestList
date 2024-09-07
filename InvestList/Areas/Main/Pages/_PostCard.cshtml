@@ -17,7 +17,7 @@
     }
     <hr>
 
-    <div class="row">
+    <div class="row mx-2">
         @if (Model.postView.Image != null)
         {
             <div class="col-auto ms-2">
@@ -31,7 +31,7 @@
                 Model.postView.Description = Regex.Replace(Model.postView.Description, "<.*?>", " ");
             }
         }
-        <div class="col ms-3 mb-3">
+        <div class="col ms-2 mb-3">
             <p class="description-color mb-1">@Model.postView.Description?.Substring(0, Math.Min(Model.postView.Description.Length, 150))</p>
             <div class="creation-data">@Model.postView.CreatedAt.ToString("dd.MM.yyyy")</div>
         </div>

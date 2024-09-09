@@ -31,6 +31,19 @@
     }
 }
 
+@media (max-width: 400px) {
+    .d-flex {
+        flex-wrap: wrap;
+    }
+    .project-buttons {
+        display: flex;
+        margin-top: 3px;
+    }
+    .search-input {
+        width: 200px;
+    }
+}
+
 html {
     position: relative;
     min-height: 100%;
@@ -155,6 +168,11 @@ li {
 
 .news, .projects, .admin {
     margin-right: 4px;
+}
+
+.project-buttons {
+    display: flex;
+    flex-direction: row;
 }
 
 a.news.list-text-size {

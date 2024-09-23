@@ -28,9 +28,36 @@
     <br>
 }
 <div class="container">
-    <div class="d-flex justify-content-center mb-2">
-        <h2>Останні оголошення від бізнесу</h2>
-    </div><br>
+    @if (!Model.HttpContext.Request.QueryString.HasValue)
+    {
+        <div class="d-flex justify-content-center mb-2">
+            <h2>Останні коментарі</h2>
+        </div>
+        <br>
+        @if (Model.PostsWithLastComments != null && Model.PostsWithLastComments.Any())
+        {
+            <div class="row">
+                @foreach (var ad in Model.PostsWithLastComments)
+                {
+                <div class="col-12 col-lg-6 mb-4">
+                    @await Html.PartialAsync("_PostWithComment", (ad.GetUrlSlug(), ad))
+                </div>
+                }
+            </div>
+           
+        }
+        else
+        {
+            <p>Немає коментарів</p>
+        }
+
+        <hr/>
+        <hr/>
+        <div class="d-flex justify-content-center mb-2">
+            <h2>Останні оголошення від бізнесу</h2>
+        </div>
+        <br>
+    }
     @if (Model.InvestPosts != null && Model.InvestPosts.Any())
     {
         <div class="row">

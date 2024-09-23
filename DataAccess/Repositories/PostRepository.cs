@@ -9,7 +9,7 @@ namespace DataAccess.Repositories
         ApplicationDbContext dbContext,
         IMapper mapper,
         IImageService imageService
-        )
+    )
         : IPostRepository
     {
         public async Task<(int count, IEnumerable<Post> list)> Filter(int page,
@@ -34,8 +34,8 @@ namespace DataAccess.Repositories
             if (count > 0)
             {
                 var listAsync = await query
-                    .OrderByDescending(x=>x.Priority)
-                    .ThenByDescending(x=>x.CreatedAt)
+                    .OrderByDescending(x => x.Priority)
+                    .ThenByDescending(x => x.CreatedAt)
                     .Skip((page - 1) * offset)
                     .Take(offset)
                     .Include(x => x.ImagesV2)
@@ -83,10 +83,10 @@ namespace DataAccess.Repositories
             post = Guid.TryParse(id, out var idGuid)
                 ? post.Where(x => x.Id == idGuid)
                 : post.Where(x => x.Slug == id);
-            
+
             if (postType != null)
                 post = post.Where(x => x.PostType == postType);
-            
+
             return await post
                 .Include(x => x.ImagesV2).ThenInclude(x => x.ImageObject)
                 .Include(x => x.CreatedBy)
@@ -108,6 +108,41 @@ namespace DataAccess.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Post>> GetPostsWithLastComments()
+        {
+            var postsWithLatestComments = dbContext.Posts
+                .Where(x => x.Comments.Any())
+                .Select(post => new
+                {
+                    Post = post,
+                    LatestComment = post.Comments
+                        .OrderByDescending(comment => comment.CreatedAt)
+                        .Select(comment => new
+                        {
+                            Comment = comment,
+                            User = comment.User
+                        })
+                        .FirstOrDefault(),
+                })
+                .OrderByDescending(x => x.LatestComment.Comment.CreatedAt)
+                .Take(4);
+            var pos = await postsWithLatestComments.ToListAsync();
+
+            var result = pos.Select(x =>
+            {
+                var post = x.Post;
+                if (x.LatestComment == null) return post;
+
+                var latestComment = x.LatestComment.Comment;
+                latestComment.User = x.LatestComment.User;
+                post.Comments = new List<PostComment> { latestComment };
+
+                return post;
+            }).ToList();
+
+            return result;
+        }
+
         public async Task Put(Guid id, Post post)
         {
             var postOrigin = await Get(id.ToString());
@@ -125,7 +160,7 @@ namespace DataAccess.Repositories
             postOrigin = await Get(id.ToString());
             imageService.RefreshImages(postOrigin, oldImagePaths);
         }
-        
+
         public async Task SetPriority(Guid id, int priority)
         {
             var postOrigin = await Get(id.ToString());

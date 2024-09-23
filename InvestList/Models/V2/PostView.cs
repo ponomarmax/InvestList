@@ -34,6 +34,17 @@ namespace InvestList.Models.V2
 
         public IEnumerable<PostView>? SimilarInvests { get; set; }
         public IEnumerable<PostView>? SimilarNews { get; set; }
+
+        public string? GetUrlSlug()
+        {
+            return PostType switch
+            {
+                PostType.News => "news",
+                PostType.InvestAd => "invest",
+                PostType.Blacklist => "blacklist",
+                _ => null
+            };
+        }
     }
 
     public class AdminPostView

@@ -13,6 +13,7 @@ namespace InvestList.Areas.Main.Pages
         private const int ItemsPerPage = 4;
 
         public IEnumerable<PostView> BlacklistPosts { get; set; }
+        public IEnumerable<PostView> PostsWithLastComments { get; set; }
         public IEnumerable<PostView> NewsPosts { get; set; }
         public IEnumerable<InvestView> InvestPosts { get; set; }
         public IEnumerable<Guid> TagIds { get; set; }
@@ -34,10 +35,12 @@ namespace InvestList.Areas.Main.Pages
             var (_, postDb) = await invRepository.Filter(pageIndex, ItemsPerPage, guidTagIds, search);
             var (_, newsDb) = await postRepository.Filter(pageIndex, ItemsPerPage, guidTagIds, search, PostType.News);
             var (_, blacklist) = await postRepository.Filter(pageIndex, ItemsPerPage, guidTagIds, search, PostType.Blacklist);
+            var postWithLastComments = await postRepository.GetPostsWithLastComments();
 
             NewsPosts = mapper.Map<IEnumerable<PostView>>(newsDb);
             BlacklistPosts = mapper.Map<IEnumerable<PostView>>(blacklist);
             InvestPosts = mapper.Map<IEnumerable<InvestView>>(postDb);
+            PostsWithLastComments = mapper.Map<IEnumerable<PostView>>(postWithLastComments);
             
             TagIds = guidTagIds;
 

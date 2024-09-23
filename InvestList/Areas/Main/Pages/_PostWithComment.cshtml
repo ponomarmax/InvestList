@@ -1,0 +1,32 @@
+@model (string link, InvestList.Models.V2.PostView postView)
+
+<div class="list-post-card">
+    <h4 class="list-post-title m-3">
+        <a class="list-post-link" asp-area="Main" asp-page=@($"/{Model.link}/Get") asp-route-id="@Model.postView.Slug">@Model.postView.Title</a>
+    </h4>
+
+    @if (Model.postView.Tags != null && Model.postView.Tags.Any())
+    {
+        <div class="tags-container mx-3">
+            @foreach (var field in Model.postView.Tags)
+            {
+                <span class="tag_index mb-1 mx-0">@field.Name</span>
+            }
+        </div>
+    }
+    <hr>
+
+    <div class="row mx-2">
+        @if (Model.postView.Image != null)
+        {
+            <div class="col-auto ms-2">
+                <img src="@Model.postView.Image.FilePath" alt="@Model.postView.Image.AltText" class="img-fluid rounded" style="width: 100px; height: 100px;">
+            </div>
+        }
+
+        @{
+            var comment = Model.postView.Comments?.FirstOrDefault();
+            @await Html.PartialAsync("_CommentCard", comment)
+        }
+    </div>
+</div>

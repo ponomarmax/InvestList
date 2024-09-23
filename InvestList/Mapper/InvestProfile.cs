@@ -19,6 +19,7 @@ namespace InvestList.Mapper
                 // .ForMember(x => x.ImageBase64,
                 //     s => s.MapFrom(x =>
                 //         x.Post.Images.FirstOrDefault() == null ? null : x.Post.Images.FirstOrDefault().ImageBase64))
+                .ForMember(x=>x.GoogleAnalyticPostView, s => s.MapFrom(x=>x.Post.GoogleAnalyticPostView))
                 .ForMember(x => x.Image, s => s.MapFrom(x =>
                     x.Post.ImagesV2.FirstOrDefault() == null
                         ? null
@@ -130,6 +131,8 @@ namespace InvestList.Mapper
                 // .ForMember(x => x.ImageBase64,
                 //     s => s.MapFrom(x =>
                 //         x.Images.FirstOrDefault() == null ? null : x.Images.FirstOrDefault().ImageBase64))
+                // .ForMember(x=>x.GoogleAnalyticPostView, s => s.MapFrom(x=>x.GoogleAnalyticPostView))
+
                 .ForMember(x => x.Image, s => s.MapFrom(x =>
                     x.ImagesV2.FirstOrDefault() == null
                         ? null
@@ -145,6 +148,9 @@ namespace InvestList.Mapper
 
             CreateMap<Post, AdminPostView>();
             CreateMap<PutAdminPost, Post>();
+            
+            //
+            CreateMap<GoogleAnalyticPostView, GoogleAnalyticDataView>();
         }
     }
 }

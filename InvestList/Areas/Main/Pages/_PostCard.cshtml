@@ -34,6 +34,16 @@
         <div class="col ms-2 mb-3">
             <p class="description-color mb-1">@Model.postView.Description?.Substring(0, Math.Min(Model.postView.Description.Length, 150))</p>
             <div class="creation-data">@Model.postView.CreatedAt.ToString("dd.MM.yyyy")</div>
+            @if (Model.postView.GoogleAnalyticPostView != null)
+            {
+                <div class="d-flex justify-content-between">
+                    <span></span>
+                    <span class="text-muted ms-auto">
+                        <i class="bi bi-eye"></i>
+                        @Model.postView.GoogleAnalyticPostView?.PageViews
+                    </span>
+                </div>
+            }
         </div>
     </div>
 </div>

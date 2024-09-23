@@ -1,3 +1,4 @@
+using Core.Entities;
 using Slugify;
 
 namespace Core
@@ -6,7 +7,7 @@ namespace Core
     {
         private static readonly SlugHelper _slugGenerator;
         
-        private static Dictionary<string,string> mapReplacement = new()
+        private static Dictionary<string, string> mapReplacement = new()
         {
             // Uppercase Cyrillic letters to lowercase Latin letters
             { "А", "a" }, { "Б", "b" }, { "В", "v" }, { "Г", "g" }, { "Д", "d" },
@@ -15,7 +16,8 @@ namespace Core
             { "О", "o" }, { "П", "p" }, { "Р", "r" }, { "С", "s" }, { "Т", "t" },
             { "У", "u" }, { "Ф", "f" }, { "Х", "kh" }, { "Ц", "ts" }, { "Ч", "ch" },
             { "Ш", "sh" }, { "Щ", "shch" }, { "Ъ", "" }, { "Ы", "y" }, { "Ь", "" },
-            { "Э", "e" }, { "Ю", "yu" }, { "Я", "ya" },
+            { "Э", "e" }, { "Ю", "yu" }, { "Я", "ya" }, { "І", "i" }, { "Є", "ye" },
+            { "Ґ", "g" },
 
             // Lowercase Cyrillic letters to lowercase Latin letters
             { "а", "a" }, { "б", "b" }, { "в", "v" }, { "г", "g" }, { "д", "d" },
@@ -24,7 +26,8 @@ namespace Core
             { "о", "o" }, { "п", "p" }, { "р", "r" }, { "с", "s" }, { "т", "t" },
             { "у", "u" }, { "ф", "f" }, { "х", "kh" }, { "ц", "ts" }, { "ч", "ch" },
             { "ш", "sh" }, { "щ", "shch" }, { "ъ", "" }, { "ы", "y" }, { "ь", "" },
-            { "э", "e" }, { "ю", "yu" }, { "я", "ya" }, {" ", "-"}
+            { "э", "e" }, { "ю", "yu" }, { "я", "ya" }, { "і", "i" }, { "є", "ye" },
+            { "ґ", "g" }, {" ", "-"}
         };
 
         static SlugGenerator()
@@ -33,6 +36,22 @@ namespace Core
             config.StringReplacements = mapReplacement;
             _slugGenerator = new SlugHelper(config);
         }
+        
+        public static PostType GetPostType(string title) => title switch
+        {
+            "news"=>PostType.News,
+            "invest"=>PostType.InvestAd,
+            "blacklist"=>PostType.Blacklist,
+            _ => PostType.Undefined
+        };
+        
+        public static string? GetSlugByPostType(PostType type) => type switch
+        {
+            PostType.News => "news",
+            PostType.InvestAd => "invest",
+            PostType.Blacklist => "blacklist",
+            _ => null
+        };
 
         public static string Get(string title) => _slugGenerator.GenerateSlug(title);
     }

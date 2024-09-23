@@ -49,6 +49,16 @@
                 }
             }
             <div class="creation-data">@Model.CreatedAt.ToString("dd.MM.yyyy")</div>
+            @if (Model.GoogleAnalyticPostView != null)
+            {
+                <div class="d-flex justify-content-between">
+                    <span></span>
+                    <span class="text-muted ms-auto">
+                        <i class="bi bi-eye"></i>
+                        @Model.GoogleAnalyticPostView?.PageViews
+                    </span>
+                </div>
+            }
         </div>
     </div>
 </div>

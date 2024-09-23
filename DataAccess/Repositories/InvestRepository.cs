@@ -33,6 +33,7 @@ namespace DataAccess.Repositories
                     .Include(x => x.Post.CreatedBy)
                     .Include(x => x.Post.Tags).ThenInclude(x => x.Tag)
                     .Include(x => x.MinInvestValues)
+                    .Include(x=>x.Post.GoogleAnalyticPostView)
                     .ToListAsync());
             }
 

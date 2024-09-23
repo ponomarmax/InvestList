@@ -34,7 +34,7 @@ namespace InvestList.Models.V2
 
         public IEnumerable<PostView>? SimilarInvests { get; set; }
         public IEnumerable<PostView>? SimilarNews { get; set; }
-
+        public GoogleAnalyticDataView GoogleAnalyticPostView { get; set; }
         public string? GetUrlSlug()
         {
             return PostType switch
@@ -45,6 +45,11 @@ namespace InvestList.Models.V2
                 _ => null
             };
         }
+    }
+
+    public class GoogleAnalyticDataView
+    {
+        public int PageViews { get; set; }
     }
 
     public class AdminPostView

@@ -41,6 +41,7 @@ namespace DataAccess.Repositories
                     .Include(x => x.ImagesV2)
                     .Include(x => x.CreatedBy)
                     .Include(x => x.Tags).ThenInclude(x => x.Tag)
+                    .Include(x=>x.GoogleAnalyticPostView)
                     .AsSplitQuery()
                     // .Select(x => new Post()
                     // {

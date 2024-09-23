@@ -8,7 +8,7 @@
     if (author != null)
     {
         // Use regex to remove the email part
-        author.UserName = Regex.Replace(author.UserName, @"\S+@\S+\.\S+", string.Empty).Trim();
+        author.UserName = Regex.Replace(author.UserName, @"@\S+\.\S+", string.Empty).Trim();
     }
 
     <div class="display-comments-card mb-4 p-2">

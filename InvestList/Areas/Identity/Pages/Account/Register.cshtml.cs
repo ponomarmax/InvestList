@@ -132,8 +132,19 @@ namespace InvestList.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    await emailSender.SendEmailAsync(Input.Email, "Підтвердіть свою реєстрацію на invest-radar.com",
+                        """
+                        <div>Привіт,</div>
+                        <div></div>
+                        <div>Дякуємо за реєстрацію на invest-radar.com</div>
+                        <div>Щоб завершити процес, будь ласка, підтвердіть свою електронну адресу </div>
+                        <div>Якщо ви не реєструвалися на нашому сайті, просто ігноруйте цей лист.</div>
+                        <div></div>
+                        <div>З повагою, </div>
+                        <div>Команда invest-radar.com</div>
+                        <div></div>
+                        """+
+                        $"<div>Будь ласка, підтвердіть акаунт, <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>перейшовши за посиланням</a>.</div>");
 
                     if (userManager.Options.SignIn.RequireConfirmedAccount)
                     {

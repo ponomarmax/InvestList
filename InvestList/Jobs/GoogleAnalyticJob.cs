@@ -7,10 +7,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InvestList.Jobs;
 
-public class GoogleAnalyticJob(IServiceProvider serviceProvider, ILogger<GoogleAnalyticJob> logger, Timer timer)
+public class GoogleAnalyticJob(IServiceProvider serviceProvider, ILogger<GoogleAnalyticJob> logger)
     : IHostedService, IDisposable
 {
-    private Timer _timer = timer;
+    private Timer _timer;
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
@@ -41,8 +41,7 @@ public class GoogleAnalyticJob(IServiceProvider serviceProvider, ILogger<GoogleA
             }
             catch (Exception ex)
             {
-                // Handle exceptions (log them, for example)
-                Console.WriteLine($"Error during task execution: {ex.Message}");
+                logger.LogError($"Error during task execution: {ex.Message}");
             }
             logger.LogInformation("Google Analytic is updated");
         });

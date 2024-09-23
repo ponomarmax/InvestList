@@ -11,6 +11,7 @@ namespace DataAccess
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options): IdentityDbContext<User>(options)
     {
         public DbSet<PostLink> PostLinks { get; set; }
+        public DbSet<GoogleAnalyticPostView> GoogleAnalyticPostViews { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<InvestPost> InvestPosts { get; set; }

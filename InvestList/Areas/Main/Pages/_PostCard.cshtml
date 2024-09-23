@@ -1,14 +1,15 @@
-@model InvestList.Models.V2.PostView
+@using System.Text.RegularExpressions;
+@model (string link, InvestList.Models.V2.PostView postView)
 
 <div class="list-post-card">
     <h4 class="list-post-title m-3">
-        <a class="list-post-link" asp-area="Main" asp-page="/News/Get" asp-route-id="@Model.Slug">@Model.Title</a>
+        <a class="list-post-link" asp-area="Main" asp-page=@($"/{Model.link}/Get") asp-route-id="@Model.postView.Slug">@Model.postView.Title</a>
     </h4>
 
-    @if (Model.Tags != null && Model.Tags.Any())
+    @if (Model.postView.Tags != null && Model.postView.Tags.Any())
     {
         <div class="tags-container mx-3">
-            @foreach (var field in Model.Tags)
+            @foreach (var field in Model.postView.Tags)
             {
                 <span class="tag_index mb-1 mx-0">@field.Name</span>
             }
@@ -16,17 +17,33 @@
     }
     <hr>
 
-    <div class="row">
-        @if (Model.Image != null)
+    <div class="row mx-2">
+        @if (Model.postView.Image != null)
         {
             <div class="col-auto ms-2">
-                <img src="@Model.Image.FilePath" alt="@Model.Image.AltText" class="img-fluid rounded" style="width: 100px; height: 100px;">
+                <img src="@Model.postView.Image.FilePath" alt="@Model.postView.Image.AltText" class="img-fluid rounded" style="width: 100px; height: 100px;">
             </div>
         }
 
-        <div class="col ms-3 mb-3">
-            <p class="text-black mb-1">@Model.Description?.Substring(0, Math.Min(Model.Description.Length, 150))</p>
-            <div class="creation-data">@Model.CreatedAt.ToString("dd.MM.yyyy")</div>
+        @{
+            if (!string.IsNullOrEmpty(Model.postView.Description))
+            {
+                Model.postView.Description = Regex.Replace(Model.postView.Description, "<.*?>", " ");
+            }
+        }
+        <div class="col ms-2 mb-3">
+            <p class="description-color mb-1">@Model.postView.Description?.Substring(0, Math.Min(Model.postView.Description.Length, 150))</p>
+            <div class="creation-data">@Model.postView.CreatedAt.ToString("dd.MM.yyyy")</div>
+            @if (Model.postView.GoogleAnalyticPostView != null)
+            {
+                <div class="d-flex justify-content-between">
+                    <span></span>
+                    <span class="text-muted ms-auto">
+                        <i class="bi bi-eye"></i>
+                        @Model.postView.GoogleAnalyticPostView?.PageViews
+                    </span>
+                </div>
+            }
         </div>
     </div>
 </div>

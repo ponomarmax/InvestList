@@ -1,7 +1,7 @@
-@page "/news/{id}"
+@page "/blacklist/{id}"
 @using InvestList
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-@model InvestList.Areas.Main.Pages.News.Get
+@model InvestList.Areas.Main.Pages.Blacklist.Get
 
 <div class="container mb-4">
     @if (Model.CanUserEdit)
@@ -19,7 +19,7 @@
             <div class="tags mb-3">
                 @foreach (var field in Model.Post.Tags)
                 {
-                    <span class="tag_index">@field.Name</span>
+                    <span class="badge bg-primary"># @field.Name</span>
                 }
             </div>
         }
@@ -28,9 +28,9 @@
             <img src="@Model.Post.Image.FilePath" alt="@Model.Post.Image.AltText" class="img-fluid rounded mb-3">
         }
         <div class="row mb-4">
-            <pre class="invest-get-body md:order-1 order-2">
-                @Html.Raw(Model.Post.Description)
-            </pre>
+            <div class="well col-12">
+                <pre>@Model.Post.Description</pre>
+            </div>
         </div>
         @if (Model.Post.Links != null && Model.Post.Links.Any())
         {

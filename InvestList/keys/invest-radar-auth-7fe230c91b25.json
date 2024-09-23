@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "invest-radar-auth",
+  "private_key_id": "7fe230c91b25630411b1f160674ab3db99097c79",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDsbndKXkfGtQgy\njNW7Ikew8l5Dq6mvjweQCHXViiuwMuNCb2xvI7Bf6Vg/ogYna7jfgBwUg4RiHN9c\nKXiy4h/LUngSiVa5xeyLd714s8YdXoM2nClFYtwosY6BxbtAqjPw3q0FRGvFzy4v\nr5LZbqlODkKEs4tfZf0sI+rC2pZrCn2XF4v+MfURkJQ16lHmQ5pZzMOFrnATkiuR\n8PSeV7bG0gP0FZ0SAkprwIHbaH/htUHIHXGoPo4mCk0nDnxmAnXnnbF/+ZatLdYN\nnqyflSyjGHia1Sp8nT0f4ltjB0B93mKCdlsda3ER005onq70FqY2WOS9yplOmIMu\nPexz4jRnAgMBAAECggEAPUbmGPq1fJ0nyj4xGMaqMQSoBL7lhDA8RArFS3p7lzeh\nKfNJ9cYYrMsECb36/VWQfTCtVm29rlYQV8kR1L8BgYdWwmsg9JYFGCKJE1L4ml0I\nAevYUHjuWYenSSAPx5M1UgzMaAyTKBnpvQcytrLVI3tTpyQHj8qVos6ORkEz8fqv\nCTb15b5PkndWjuiFATAtoBshogQSu+sXYJ2Pl0LIdEyHxUsApmWt7BUkhgKWRgfb\nP0o5y3rEEvulR64ixuajCYBz7I2n37hN/mWoWkCDIX8hXlJVCzMomhXe15mGBE/6\nvMb/TKbo/dpn5XaWyLT8jvuD7ukVl56Jgebj82sN5QKBgQD4FBxav/pYBsfIqgGw\n9Ky/16AUHdBP4HUyhR+yxLupsLPssZc3W7miSk3IrRm7pGUgubmTGDrDV+g+SPzo\nC3bghipKoMBkFMiWhy9NVtsR9ZfsrJXK8UmUXiHjGD10vnX7omKipoOMvpbTsVkb\nkFQ2QAxq4wxKcFLhQmdsS3oDDQKBgQDz+yXUFPhvjTdM33UXK5zLat6vhiqK/2mT\n5qJdulCspiZ4O8w8YSV/TCr3KxxewKklU6rg2bEZwxEubiAC44pi4YPWsEvq8kfB\n1uC65g4CkBvBvL3ZZ+Pl7dobn9b7WqN9V+LEP485GXAah8nmvyZtKMPgBshWluP9\nHQSwo4cIQwKBgQDEUHXXwtBDVKpIu3A3Loh+EA6XnLg6Xa+g2QQqndC8Ch94EVlO\n74FJUm+XfJQ+j2uPqCmYo7Xs2+XnVC7/GgNqzgEtqWRWTrQlmrjuBOu7nJQrMLAh\nNyw5AvziD06i0g3fobNYb1juyevlfhS74U0i2TB6bU5OofCUXc4mPtxBCQKBgFx8\nSKOza1WF93+JeW5WFvK5ST7KIhhcp53sIIJdHTXFKfIL4OjGfptZuTPGwNNePwAq\nTi07+Dlmy32JO1M9A/lluT9Jxw2B2Bevp7LRgGASVqNDM8hU7Hv9hN9R4QGZIz5h\ncVGpMlaXwPodnTh+H0fj2xRyHcFNI5GQTXXUF1zXAoGAPfVguV9GqSMSYvB3Le4O\nSkYvIzarbtbcuS7z9jRwTQ4Pdq1JxJ12k+Mryd11mfLMYdaINLY8gLmOYvXtDhwD\nPSHEfd3Ahaqn4C24Ll1b/Mhsr3gZlPf/74JqgorKYO8B3sZp+JirLNfQXlw5j0HC\nGnKNyqLE7EI7zAF/PyoL9Jw=\n-----END PRIVATE KEY-----\n",
+  "client_email": "analytictest@invest-radar-auth.iam.gserviceaccount.com",
+  "client_id": "113952245927972181885",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/analytictest%40invest-radar-auth.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

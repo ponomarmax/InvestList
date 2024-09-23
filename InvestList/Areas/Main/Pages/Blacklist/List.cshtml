@@ -1,0 +1,25 @@
+@page "/blacklist"
+@model InvestList.Areas.Main.Pages.Blacklist.List
+
+<div class="container">
+    @if (Model.Entities != null && Model.Entities.Any())
+    {
+        <div class="row">
+            @foreach (var ad in Model.Entities)
+            {
+                <div class="col-12 col-lg-6 mb-4">
+                    @await Html.PartialAsync("_PostCard", ("Blacklist",ad))
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p>Немає новин про шахраїв</p>
+    }
+
+</div>
+@if (Model.Entities != null && Model.Entities.Any())
+{
+    @await Html.PartialAsync("_Pagination", ("blacklist", Model.PaginationInfo, Model.TagIds))
+}

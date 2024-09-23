@@ -3,14 +3,14 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model InvestList.Areas.Main.Pages.News.List
 
-<div class="container">
+<div class="container mt-5">
     @if (Model.Entities != null && Model.Entities.Any())
     {
         <div class="row">
             @foreach (var ad in Model.Entities)
             {
-                <div class="col-12 col-lg-6 mb-4">
-                    @await Html.PartialAsync("_PostCard", ad)
+                <div class="col-12 col-lg-6 mb-2">
+                    @await Html.PartialAsync("_PostCard", ("News", ad))
                 </div>
             }
         </div>

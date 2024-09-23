@@ -12,11 +12,10 @@ using Serilog;
 using InvestList;
 using InvestList.Configs;
 using InvestList.Extensions;
+using InvestList.Jobs;
 using InvestList.Logging;
 using InvestList.Services;
-using InvestList.Validators;
 using Microsoft.Extensions.FileProviders;
-using DataAccess.Migrations;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.LoadAppSettingAndEnvValues();
@@ -25,6 +24,7 @@ Log.Logger = new LoggerConfiguration().ConfigureDefaultLogger(builder.Configurat
 
 try
 {
+    
     // builder.Services.AddCors(options =>
     // {
     //     options.AddDefaultPolicy(
@@ -37,7 +37,7 @@ try
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(connectionString));
     builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
+    builder.Services.AddHostedService<GoogleAnalyticJob>();
     builder.Services.AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddDefaultTokenProviders();

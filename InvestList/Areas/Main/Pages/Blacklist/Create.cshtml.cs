@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace InvestList.Areas.Main.Pages.News
+namespace InvestList.Areas.Main.Pages.Blacklist
 {
     public class Create(
         IPostService service,
@@ -25,11 +25,12 @@ namespace InvestList.Areas.Main.Pages.News
             var user = await userManager.GetUserAsync(User);
             if (user == null)
                 return Forbid();
-
+            
             if (!await userManager.CanEditPost(User))
             {
                 return Forbid();
             }
+            
             await PrepareViewData();
 
             return Page();
@@ -43,7 +44,7 @@ namespace InvestList.Areas.Main.Pages.News
 
             if (!await userManager.IsEmailConfirmedAsync(user))
                 return RedirectToPage("/Account/ResendEmailConfirmation", new { area = "Identity" });
-            
+
             if (!await userManager.CanEditPost(User))
             {
                 return Forbid();
@@ -55,7 +56,7 @@ namespace InvestList.Areas.Main.Pages.News
                 return Page();
             }
 
-            var slug = await service.Put(null, Utils.GetUserId(User), Post, PostType.News);
+            var slug = await service.Put(null, Utils.GetUserId(User), Post, PostType.Blacklist);
             return RedirectToPage("./Get", new { id = slug });
         }
         

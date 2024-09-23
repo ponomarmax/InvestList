@@ -10,7 +10,7 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-6">
-                <div class="mb-3">
+                <div>
                     <h1>Бізнес шукає інвестиції</h1>
                     <p>Зареєструйте свій проект для пошуку інвесторів</p>
                     <h1>Інвестор шукає прибуток</h1>
@@ -24,12 +24,40 @@
                 </div>
             </div>
         </div>
-    </div><br><br>
+    </div>
+    <br>
 }
 <div class="container">
-    <div class="d-flex justify-content-center">
-        <h2>Останні оголошення від бізнесу</h2>
-    </div><br>
+    @if (!Model.HttpContext.Request.QueryString.HasValue)
+    {
+        <div class="d-flex justify-content-center mb-2">
+            <h2>Останні коментарі</h2>
+        </div>
+        <br>
+        @if (Model.PostsWithLastComments != null && Model.PostsWithLastComments.Any())
+        {
+            <div class="row">
+                @foreach (var ad in Model.PostsWithLastComments)
+                {
+                <div class="col-12 col-lg-6 mb-4">
+                    @await Html.PartialAsync("_PostWithComment", (ad.GetUrlSlug(), ad))
+                </div>
+                }
+            </div>
+           
+        }
+        else
+        {
+            <p>Немає коментарів</p>
+        }
+
+        <hr/>
+        <hr/>
+        <div class="d-flex justify-content-center mb-2">
+            <h2>Останні оголошення від бізнесу</h2>
+        </div>
+        <br>
+    }
     @if (Model.InvestPosts != null && Model.InvestPosts.Any())
     {
         <div class="row">
@@ -41,7 +69,7 @@
             }
         </div>
         <div class="d-flex justify-content-center">
-            <a class="news"
+            <a class="news list-text-size"
                asp-area="Main"
                asp-page="/Invest/List"
                asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.TagIds, search: Model.Search))">
@@ -55,25 +83,54 @@
     }
     <hr/>
     <hr/>
-    <div class="d-flex justify-content-center">
+    <div class="d-flex justify-content-center mt-4">
         <h2>Останні новини</h2>
-    </div>
+    </div><br>
     @if (Model.NewsPosts != null && Model.NewsPosts.Any())
     {
         <div class="row">
             @foreach (var ad in Model.NewsPosts)
             {
                 <div class="col-12 col-lg-6 mb-4">
-                    @await Html.PartialAsync("_PostCard", ad)
+                    @await Html.PartialAsync("_PostCard", ("News", ad))
                 </div>
             }
         </div>
         <div class="d-flex justify-content-center">
-            <a class="news"
+            <a class="news list-text-size"
                asp-area="Main"
                asp-page="/News/List"
                asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.TagIds, search: Model.Search))">
-                Більше новини
+                Більше новин
+            </a>
+        </div>
+    }
+    else
+    {
+        <p>Немає новин за даним критерієм</p>
+    }
+
+    <hr/>
+    <hr/>
+    <div class="d-flex justify-content-center">
+        <h2>Останні новини про людей, що підвели цей світ</h2>
+    </div>
+    @if (Model.BlacklistPosts != null && Model.BlacklistPosts.Any())
+    {
+        <div class="row">
+            @foreach (var ad in Model.BlacklistPosts)
+            {
+                <div class="col-12 col-lg-6 mb-4">
+                    @await Html.PartialAsync("_PostCard", ("Blacklist", ad))
+                </div>
+            }
+        </div>
+        <div class="d-flex justify-content-center">
+            <a class="news list-text-size"
+               asp-area="Main"
+               asp-page="/Blacklist/List"
+               asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.TagIds, search: Model.Search))">
+                Більше про шахраїв
             </a>
         </div>
     }

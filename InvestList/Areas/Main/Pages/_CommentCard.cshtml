@@ -1,0 +1,21 @@
+@inject UserManager<User> UserManager
+@using System.Text.RegularExpressions
+@using Core.Entities
+@model InvestList.Models.Comment.CommentView
+
+@{
+    var author = await UserManager.FindByIdAsync(Model.AuthorId);
+    if (author != null)
+    {
+        // Use regex to remove the email part
+        author.UserName = Regex.Replace(author.UserName, @"@\S+\.\S+", string.Empty).Trim();
+    }
+
+    <div class="display-comments-card mb-4 p-2">
+        <div class="d-flex flex-row justify-content-between mb-0">
+            <div class="creation-data">@author.UserName</div>
+            <div class="creation-data">@Model.CreatedAt.ToString("dd-MM-yyyy HH:mm")</div>
+        </div>
+        <p class="mb-0">@Model.Text</p>
+    </div>
+}

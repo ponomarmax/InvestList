@@ -22,6 +22,8 @@ namespace Core.Entities
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 
+        public GoogleAnalyticPostView GoogleAnalyticPostView { get; set; }
+
         public IEnumerable<PostTags>? Tags { get; set; }
         public IEnumerable<PostLink>? Links { get; set; }
         public IEnumerable<PostComment>? Comments { get; set; }

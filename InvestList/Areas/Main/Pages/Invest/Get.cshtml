@@ -17,29 +17,31 @@
         <div class="invest-get-card border-success mb-3">
             <h1 class="mx-3 mt-2">@Model.Post.Title</h1>
 
-            <div class="d-flex border align-content-start flex-wrap">
+            <div class="d-flex border align-content-start align-items-center flex-wrap">
                 @if (Model.Post.TotalInvestment > 0)
                 {
-                    <div class="p-2 flex-fill">Загальний обсяг інвестицій: $@Model.Post.TotalInvestment</div>
+                    <div class="p-2 flex-fill">Загальний обсяг інвестицій: <div class="creation-data-get">$@Model.Post.TotalInvestment</div></div>
                 }
-                <div class="p-2 flex-fill">Період інвестування: @InvestmentHelper.FormatInvestmentDuration(Model.Post.InvestDurationYears, Model.Post.InvestDurationMonths)</div>
-                <div class="p-2 flex-fill">Річна дохідність: @Model.Post.AnnualInvestmentReturn.ToString("0.")%</div>
+                <div class="p-2 flex-fill">Період інвестування: <div class="duration-get">@InvestmentHelper.FormatInvestmentDuration(Model.Post.InvestDurationYears, Model.Post.InvestDurationMonths)</div></div>
+                <div class="p-2 flex-fill">Річна дохідність: <div class="annualInvestment-get">@Model.Post.AnnualInvestmentReturn.ToString("0.")%</div></div>
             </div>
 
             <div class="d-flex border align-content-start flex-column flex-wrap">
                 <div class="d-flex p-2 flex-fill">
                     <span style="padding-right: 10px;">Мінімальний поріг входу </span>
-                    @if (Model.Post.MinInvestValues != null && Model.Post.MinInvestValues.Any())
-                    {
-                        @foreach (var currency in Model.Post.MinInvestValues)
+                    <div class="currency-get">
+                        @if (Model.Post.MinInvestValues != null && Model.Post.MinInvestValues.Any())
                         {
-                            <span > @currency.MinValue @currency.Currency </span>
+                            @foreach (var currency in Model.Post.MinInvestValues)
+                            {
+                                <span > @currency.MinValue @currency.Currency </span>
+                            }
                         }
-                    }
-                    else
-                    {
-                        <span>Немає валют</span>
-                    }
+                        else
+                        {
+                            <span>Немає валют</span>
+                        }
+                    </div>
                 </div>
 
                 @if (Model.Post.Tags != null && Model.Post.Tags.Any())
@@ -47,7 +49,7 @@
                     <div class="flex-fill mb-2">
                         @foreach (var field in Model.Post.Tags)
                         {
-                            <span id="tag" class="badge bg-primary">@field.Name</span>
+                            <span id="tag" class="tag_index">@field.Name</span>
                         }
 
                     </div>
@@ -58,22 +60,22 @@
                 <small class="text-body-secondary">@Model.Post.CreatedAt.ToString("dd-MM-yyyy")</small>
             </p>
             <div class="d-flex p-1 flex-wrap justify-content-center">
-                <pre class="invest-get-body md:order-2 order-1">
+                <pre class="invest-get-body md:order-1 order-2 w-100">
                     @Html.Raw(Model.Post.Description)
                 </pre>
                 @if (Model.Post.Image != null)
                 {
-                    <div class="md:order-1 order-md-2">
+                    <div class="md:order-2 order-md-1">
                         <img src="@Model.Post.Image.FilePath" alt="@Model.Post.Image.AltText" class="img-fluid rounded">
                     </div>
                 }
             </div>
 
-            <span class="share">
+            @* <span class="share">
                 <a class="telegram"href="" id="tg_share" alt="">
                     <img class="message" src="/ico/telegram.png" alt="">
                 </a>
-            </span>
+            </span> *@
         </div>
         @await Html.PartialAsync("_DisplayComments", (Model.Post.Id, Model.Post.PostType, Model.Post.Comments))
 

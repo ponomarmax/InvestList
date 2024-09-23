@@ -20,11 +20,12 @@ namespace InvestList.Controllers
             request.UserId = Guid.Parse(Utils.GetUserId(User));
             var db = mapper.Map<PostComment>(request);
             await commentRepository.PublishAsync(db);
-            if (request.PostType == PostType.InvestAd)
+            return request.PostType switch
             {
-                return RedirectToPagePermanent("/Invest/Get", new { area="Main", id = request.PostId });
-            }
-            return RedirectToPagePermanent("/News/Get", new { area="Main", id = request.PostId });
+                PostType.InvestAd => RedirectToPagePermanent("/Invest/Get", new { area = "Main", id = request.PostId }),
+                PostType.Blacklist => RedirectToPagePermanent("/Blacklist/Get", new { area = "Main", id = request.PostId }),
+                _ => RedirectToPagePermanent("/News/Get", new { area = "Main", id = request.PostId })
+            };
         }
     }
 }

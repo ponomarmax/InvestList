@@ -31,6 +31,19 @@
     }
 }
 
+@media (max-width: 400px) {
+    .d-flex {
+        flex-wrap: wrap;
+    }
+    .project-buttons {
+        display: flex;
+        margin-top: 3px;
+    }
+    .search-input {
+        width: 200px;
+    }
+}
+
 html {
     position: relative;
     min-height: 100%;
@@ -71,6 +84,7 @@ li {
 }
 
 .invest_radar {
+    width: max-content;
     font-weight: 700;
     font-size: 20px;
     text-decoration: none;
@@ -156,6 +170,15 @@ li {
     margin-right: 4px;
 }
 
+.project-buttons {
+    display: flex;
+    flex-direction: row;
+}
+
+a.news.list-text-size {
+    font-size: 1em;
+}
+
 .logIn, .add_project, .profile, .admin, .projects, .news {
     height: 40px;
     padding: 10px;
@@ -168,7 +191,12 @@ li {
     text-decoration: none;
 }
 
+.add_project {
+    width: max-content;
+}
+
 .reg {
+    width: max-content;
     height: 40px;
     padding: 10px;
     border: 2px солід #333333;
@@ -205,7 +233,7 @@ li {
 
 .annualInvestment, .duration, .currency, .creation-data, .creation-data-footer {
     display: inline-block;
-    padding: 6px 12px;
+    padding: 3px 6px;
     margin-right: 5px;
     margin-bottom: 4px;
     font-size: 15px;
@@ -214,30 +242,41 @@ li {
     text-transform: uppercase;
 }
 
-.annualInvestment {
+.creation-data {
+    text-transform: none;
+}
+
+.annualInvestment, .annualInvestment-get {
     margin-top: 5px;
     color: #183F80;
     background-color: #D1E4FD;
 }
 
-.duration {
+.duration, .duration-get {
     color: #692326;
     background-color: #F3D8DA;
 }
 
-.currency {
+.duration-get, .annualInvestment-get, .currency-get, .creation-data-get {
+    display: inline-block;
+    padding: 3px 6px;
+    border-radius: 5px;
+    text-transform: uppercase;
+}
+
+.currency, .currency-get {
     color: #806520;
     background-color: #FDF3D1;
 }
 
-.creation-data {
+.creation-data, .creation-data-get {
     color: #2A562A;
     background-color: #D9ECDB;
 }
 
 .tag_index {
     display: inline-block;
-    padding: 6px 12px;
+    padding: 2px 4px;
     margin-right: 5px;
     font-size: 15px;
     font-weight: 400;
@@ -248,7 +287,7 @@ li {
 
 .tag {
     display: inline-block;
-    padding: 6px 12px;
+    padding: 2px 4px;
     margin-right: 5px;
     margin-bottom: 15px;
     font-size: 15px;
@@ -361,6 +400,14 @@ li {
     font-weight: bold;
 }
 
+.description-color {
+    color: #6c757d;
+}
+
+pre.create-description-box {
+    height: 250px;
+}
+
 .footer {
     background-color: #f8f9fa;
     padding: 0px;
@@ -438,7 +485,7 @@ li {
 }
 
 .list-post-title, .similar-content-title {
-    font-size: 1.5rem; /* Розмір заголовка картки */
+    font-size: 20px; /* Розмір заголовка картки */
     color: #333333;
 }
 
@@ -454,6 +501,17 @@ li {
 
 .icon-right {
     margin-left: 10px; /* Відступ після тексту для правої іконки */
+}
+
+.search-button {
+    border: 1px solid black;
+    border-radius: 20px;
+}
+
+.search-input {
+    border: 1px solid black;
+    border-radius: 20px;
+    padding-left: 10px;
 }
 
 .list-post-link, .similar-content-link {

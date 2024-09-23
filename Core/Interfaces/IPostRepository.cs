@@ -19,5 +19,6 @@ namespace Core.Interfaces
         Task<bool> IsOwnerOfPost(string userId, string postId);
         Task<int> Count(PostType? postType);
         Task SetPriority(Guid id, int priority);
+        Task<IEnumerable<Post>> GetPostsWithLastComments();
     }
 }

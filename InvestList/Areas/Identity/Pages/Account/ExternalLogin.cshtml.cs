@@ -1,5 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
+
 #nullable disable
 
 using System.ComponentModel.DataAnnotations;
@@ -81,7 +82,7 @@ namespace InvestList.Areas.Identity.Pages.Account
             [EmailAddress]
             public string Email { get; set; }
         }
-        
+
         public IActionResult OnGet() => RedirectToPage("./Login");
 
         public IActionResult OnPost(string provider, string returnUrl = null)
@@ -100,6 +101,7 @@ namespace InvestList.Areas.Identity.Pages.Account
                 ErrorMessage = $"Error from external provider: {remoteError}";
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
+
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
@@ -107,31 +109,85 @@ namespace InvestList.Areas.Identity.Pages.Account
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
 
+
             // Sign in the user with this external login provider if the user already has a login.
-            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey,
+                isPersistent: false, bypassTwoFactor: true);
             if (result.Succeeded)
             {
-                _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
+                _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name,
+                    info.LoginProvider);
                 return LocalRedirect(returnUrl);
             }
+
             if (result.IsLockedOut)
             {
                 return RedirectToPage("./Lockout");
             }
-            else
+
+            // If user doesn't exist, create a new account for them.
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+
+            if (email != null)
             {
-                // If the user does not have an account, then ask the user to create an account.
-                ReturnUrl = returnUrl;
-                ProviderDisplayName = info.ProviderDisplayName;
-                if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
+                // Check if a user with the given email already exists.
+                var user = await _userManager.FindByEmailAsync(email);
+
+                if (user == null)
                 {
-                    Input = new InputModel
+                    // If user does not exist, create a new user with the external login information.
+                    user = new User
                     {
-                        Email = info.Principal.FindFirstValue(ClaimTypes.Email)
+                        UserName = email,
+                        Email = email,
+                        EmailConfirmed = true // Automatically confirm the email.
                     };
+
+                    var createResult = await _userManager.CreateAsync(user);
+
+                    if (createResult.Succeeded)
+                    {
+                        // Associate the external login provider with the new user.
+                        var addLoginResult = await _userManager.AddLoginAsync(user, info);
+
+                        if (addLoginResult.Succeeded)
+                        {
+                            _logger.LogInformation("User created and associated with {LoginProvider} provider.",
+                                info.LoginProvider);
+
+                            // Sign in the new user.
+                            await _signInManager.SignInAsync(user, isPersistent: false);
+                            return LocalRedirect(returnUrl);
+                        }
+                    }
                 }
-                return Page();
+                else
+                {
+                    // If the user already exists (but doesn't have the external login), link the external provider.
+                    var addLoginResult = await _userManager.AddLoginAsync(user, info);
+
+                    if (addLoginResult.Succeeded)
+                    {
+                        // Sign in the existing user.
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        return LocalRedirect(returnUrl);
+                    }
+                }
             }
+
+            // If we reach this point, prompt the user to create an account manually.
+            ReturnUrl = returnUrl;
+            ProviderDisplayName = info.ProviderDisplayName;
+
+            if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
+            {
+                Input = new InputModel
+                {
+                    Email = info.Principal.FindFirstValue(ClaimTypes.Email)
+                };
+            }
+
+            return Page();
         }
 
         public async Task<IActionResult> OnPostConfirmationAsync(string returnUrl = null)
@@ -150,10 +206,11 @@ namespace InvestList.Areas.Identity.Pages.Account
                 var existingUser = await _userManager.FindByEmailAsync(Input.Email);
                 if (existingUser != null)
                 {
-                    ModelState.AddModelError(string.Empty, "Емейл вже використовується. Спробуйте інший, або відновіть доступ.");
+                    ModelState.AddModelError(string.Empty,
+                        "Емейл вже використовується. Спробуйте інший, або відновіть доступ.");
                     return Page();
                 }
-                
+
                 var user = CreateUser();
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
@@ -171,7 +228,7 @@ namespace InvestList.Areas.Identity.Pages.Account
                     {
                         _logger.LogError("Role wasn't assigned {@Error}", roleAssign.Errors);
                     }
-                    
+
                     result = await _userManager.AddLoginAsync(user, info);
                     if (result.Succeeded)
                     {
@@ -199,6 +256,7 @@ namespace InvestList.Areas.Identity.Pages.Account
                         return LocalRedirect(returnUrl);
                     }
                 }
+
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
@@ -219,8 +277,8 @@ namespace InvestList.Areas.Identity.Pages.Account
             catch
             {
                 throw new InvalidOperationException($"Can't create an instance of '{nameof(IdentityUser)}'. " +
-                    $"Ensure that '{nameof(IdentityUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
-                    $"override the external login page in /Areas/Identity/Pages/Account/ExternalLogin.cshtml");
+                                                    $"Ensure that '{nameof(IdentityUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
+                                                    $"override the external login page in /Areas/Identity/Pages/Account/ExternalLogin.cshtml");
             }
         }
 
@@ -230,6 +288,7 @@ namespace InvestList.Areas.Identity.Pages.Account
             {
                 throw new NotSupportedException("The default UI requires a user store with email support.");
             }
+
             return (IUserEmailStore<User>)_userStore;
         }
     }

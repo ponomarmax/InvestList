@@ -47,14 +47,6 @@ namespace Core
             "blacklist"=>PostType.Blacklist,
             _ => PostType.Undefined
         };
-        
-        public static string? GetSlugByPostType(PostType type) => type switch
-        {
-            PostType.News => "news",
-            PostType.InvestAd => "invest",
-            PostType.Blacklist => "blacklist",
-            _ => null
-        };
 
         public static string Get(string title) => _slugGenerator.GenerateSlug(title);
     }

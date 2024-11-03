@@ -35,7 +35,7 @@ namespace InvestList.Services
                         ? $"{baseUrl}invest/{post.Slug}"
                         : $"{baseUrl}news/{post.Slug}";
 
-                    WriteUrl(writer, postUrl, post.CreatedAt);
+                    WriteUrl(writer, postUrl, post.UpdatedAt);
                 }
 
                 writer.WriteEndElement();

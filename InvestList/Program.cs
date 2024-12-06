@@ -15,6 +15,7 @@ using InvestList.Configs;
 using InvestList.Extensions;
 using InvestList.Jobs;
 using InvestList.Logging;
+using InvestList.Middlewares;
 using InvestList.Services;
 using Microsoft.Extensions.FileProviders;
 
@@ -99,66 +100,10 @@ try
     // }
 
     app.UseMiddleware<WwwRedirectMiddleware>();
+    app.UseMiddleware<GenerateCspHeader>();
     app.Use(async (context, next) =>
     {
-        var csp = new StringBuilder();
-
-        // Default and script-src
-        csp.Append("default-src 'self'; ");
-        csp.Append("script-src 'self' 'unsafe-inline' ");
-
-        csp.Append("https://cdn.jsdelivr.net https://code.jquery.com ");
-        // Preview Mode
-        csp.Append("https://googletagmanager.com https://tagmanager.google.com ");
         
-        // Google Analytic
-        csp.Append("https://*.googletagmanager.com ");
-        
-        // Google Ads
-        csp.Append("https://www.googleadservices.com https://www.google.com https://www.googletagmanager.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net ");
-        csp.Append(";");
-        
-        // Style src for Preview Mode
-        csp.Append($"style-src 'self' 'unsafe-inline' ");
-        csp.Append("https://cdn.jsdelivr.net ");
-        csp.Append("https://googletagmanager.com https://tagmanager.google.com https://fonts.googleapis.com ");
-        csp.Append(";");
-        
-        // Font src for Preview Mode
-        csp.Append("font-src 'self' ");
-        csp.Append("https://fonts.gstatic.com data: ");
-        csp.Append("https://cdn.jsdelivr.net");
-        
-        csp.Append(";");
-
-        // Image sources
-        csp.Append("img-src 'self' data: ");
-        // Preview Mode
-        csp.Append("https://googletagmanager.com https://tagmanager.google.com https://fonts.googleapis.com ");
-        // Google Analytic
-        csp.Append("https://*.google-analytics.com https://*.googletagmanager.com ");
-        csp.Append("https://*.analytics.google.com https://*.googletagmanager.com https://*.g.doubleclick.net https://*.google.com https://*.google.ua ");
-        // Google Ads
-        csp.Append("https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.google.com https://google.com https://www.google.com.ua https://pagead2.googlesyndication.com ");
-        csp.Append(";");
-        
-        // Connect sources
-        csp.Append("connect-src 'self' ");
-        // Google Analytic
-        csp.Append("https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com ");
-        csp.Append("https://*.g.doubleclick.net https://*.google.com https://*.google.com.ua ");
-        // Google Ads
-        csp.Append("https://pagead2.googlesyndication.com https://www.googleadservices.com https://www.google.com https://google.com ");
-        csp.Append(";");
-
-        // Frame sources
-        csp.Append("frame-src 'self' https://www.googletagmanager.com ");
-        csp.Append("https://td.doubleclick.net https://www.googletagmanager.com ");
-        csp.Append("https://googleads.g.doubleclick.net ");
-        csp.Append(";");
-
-        // Finalize the Content Security Policy
-        context.Response.Headers.Add("Content-Security-Policy", csp.ToString());
         await next();
     });
 

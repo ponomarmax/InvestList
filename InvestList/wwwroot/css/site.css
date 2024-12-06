@@ -551,7 +551,36 @@ pre.create-description-box {
     font-weight: 400;
     font-style: normal;
 }
+/* Google sign-in button styles */
+.google-signin-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #4285F4;
+    color: white;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    border: none;  /* Remove the default button border */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+}
 
+.google-signin-btn:hover {
+    background-color: #357AE8;
+}
+
+.google-logo {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.btn-text {
+    font-size: 16px;
+}
 /* @font-face {
     font-family: 'e-Ukraine';
     src: url('../fonts/e-Ukraine/e-Ukraine-Bold.woff2') format('woff2');

@@ -4,8 +4,8 @@
     ViewData["Title"] = "Зареєструватися";
 }
 
-<div class="d-flex justify-content-center">
-    <div class="col-md-4">
+<div class="d-flex flex-column justify-content-center">
+    <div>
         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
             <h2>Створити новий обліковий запис.</h2>
             <hr/>
@@ -32,7 +32,9 @@
             </div>
             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Зареєструватися</button>
         </form>
+        <br>
     </div>
+    @await Html.PartialAsync("_ExternalLogin", (Model.ExternalLogins, Model.ReturnUrl))
 </div>
 
 

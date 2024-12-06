@@ -17,7 +17,7 @@ namespace Core
             { "У", "u" }, { "Ф", "f" }, { "Х", "kh" }, { "Ц", "ts" }, { "Ч", "ch" },
             { "Ш", "sh" }, { "Щ", "shch" }, { "Ъ", "" }, { "Ы", "y" }, { "Ь", "" },
             { "Э", "e" }, { "Ю", "yu" }, { "Я", "ya" }, { "І", "i" }, { "Є", "ye" },
-            { "Ґ", "g" },
+            { "Ґ", "g" }, { "Ї", "yi" },
 
             // Lowercase Cyrillic letters to lowercase Latin letters
             { "а", "a" }, { "б", "b" }, { "в", "v" }, { "г", "g" }, { "д", "d" },
@@ -27,7 +27,10 @@ namespace Core
             { "у", "u" }, { "ф", "f" }, { "х", "kh" }, { "ц", "ts" }, { "ч", "ch" },
             { "ш", "sh" }, { "щ", "shch" }, { "ъ", "" }, { "ы", "y" }, { "ь", "" },
             { "э", "e" }, { "ю", "yu" }, { "я", "ya" }, { "і", "i" }, { "є", "ye" },
-            { "ґ", "g" }, {" ", "-"}
+            { "ґ", "g" }, { "ї", "yi" },
+
+            // Space to dash
+            { " ", "-" }
         };
 
         static SlugGenerator()
@@ -43,14 +46,6 @@ namespace Core
             "invest"=>PostType.InvestAd,
             "blacklist"=>PostType.Blacklist,
             _ => PostType.Undefined
-        };
-        
-        public static string? GetSlugByPostType(PostType type) => type switch
-        {
-            PostType.News => "news",
-            PostType.InvestAd => "invest",
-            PostType.Blacklist => "blacklist",
-            _ => null
         };
 
         public static string Get(string title) => _slugGenerator.GenerateSlug(title);

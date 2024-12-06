@@ -1,4 +1,4 @@
-namespace InvestList
+namespace InvestList.Middlewares
 {
     public class WwwRedirectMiddleware
     {

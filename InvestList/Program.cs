@@ -1,5 +1,4 @@
 using System.Reflection;
-using System.Text;
 using Core.Entities;
 using Core.Interfaces;
 using DataAccess;
@@ -26,15 +25,6 @@ Log.Logger = new LoggerConfiguration().ConfigureDefaultLogger(builder.Configurat
 
 try
 {
-    
-    // builder.Services.AddCors(options =>
-    // {
-    //     options.AddDefaultPolicy(
-    //         builder =>
-    //         {
-    //             builder.WithOrigins("https://pagead2.googlesyndication.com").AllowAnyHeader().AllowAnyMethod();
-    //         });
-    // });
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(connectionString));
@@ -45,14 +35,8 @@ try
         .AddDefaultTokenProviders();
     builder.Services.AddValidatorsFromAssemblyContaining<Program>()
         .AddFluentValidationAutoValidation();
-    // builder.Services.AddIdentity<User,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
-    //     .AddEntityFrameworkStores<ApplicationDbContext>();
-    // builder.Services.AddControllersWithViews()
-    //     .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<PostInvestAdViewModelValidator>())
-    //     .AddRazorRuntimeCompilation();
     builder.Services.AddRazorPages().AddRazorPagesOptions(options =>
     {
-        // Set the default page for Razor Pages in an area
         options.Conventions.AddAreaPageRoute("Main", "/Index", "");
     });
     ;
@@ -90,22 +74,8 @@ try
     //     Log.Logger.Information("Images are load");
     // }
 
-    // using (var scope = app.Services.CreateScope())
-    // {
-    //     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    //     var sitemapGenerator = scope.ServiceProvider.GetRequiredService<ISitemapGenerator>();
-    //     var sitemapXml = sitemapGenerator.GenerateSitemap();
-    //     var filePath = Path.Combine(app.Environment.ContentRootPath, "wwwroot", "sitemap.xml");
-    //     File.WriteAllText(filePath, sitemapXml);
-    // }
-
     app.UseMiddleware<WwwRedirectMiddleware>();
     app.UseMiddleware<GenerateCspHeader>();
-    app.Use(async (context, next) =>
-    {
-        
-        await next();
-    });
 
     if (app.Environment.IsDevelopment())
     {
@@ -114,7 +84,6 @@ try
     else
     {
         app.UseExceptionHandler("/Home/Error");
-        // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
         app.UseHsts();
     }
 

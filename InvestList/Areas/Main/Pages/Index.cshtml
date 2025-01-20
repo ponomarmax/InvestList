@@ -30,6 +30,116 @@
 <div class="container">
     @if (!Model.HttpContext.Request.QueryString.HasValue)
     {
+        <div class="d-flex justify-content-center mt-4">
+            <h2>Останні новини</h2>
+        </div><br>
+        @if (Model.NewsPosts != null && Model.NewsPosts.Any())
+        {
+            <div class="row">
+                @foreach (var ad in Model.NewsPosts)
+                {
+                    <div class="col-12 col-lg-6 mb-4">
+                        @await Html.PartialAsync("_PostCard", ("News", ad))
+                    </div>
+                }
+            </div>
+            <div class="d-flex justify-content-center">
+                <a class="news list-text-size"
+                   asp-area="Main"
+                   asp-page="/News/List"
+                   asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.TagIds, search: Model.Search))">
+                    Більше новин
+                </a>
+            </div>
+        }
+        else
+        {
+            <p>Немає новин за даним критерієм</p>
+        }
+
+        <hr/>
+        <hr/>
+        
+        @if (Model.InvestPosts != null && Model.InvestPosts.Any())
+        {
+            <div class="d-flex justify-content-center mb-2">
+                <h2>Останні оголошення від бізнесу</h2>
+            </div>
+            <br>
+            <div class="row">
+                @foreach (var ad in Model.InvestPosts)
+                {
+                    <div class="col-12 col-lg-6 mb-4">
+                        @await Html.PartialAsync("_InvestCard", ad)
+                    </div>
+                }
+            </div>
+            <div class="d-flex justify-content-center">
+                <a class="news list-text-size"
+                   asp-area="Main"
+                   asp-page="/Invest/List"
+                   asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.TagIds, search: Model.Search))">
+                    Більше оголошень
+                </a>
+            </div>
+        }
+        else
+        {
+            <p>Немає оголошень за даним критерієм</p>
+        }
+        <hr/>
+        <hr/>
+        
+        <div class="d-flex justify-content-center">
+            <h2>Популярна реклама в інтернеті</h2>
+        </div>
+    
+        <div class="row">
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7409000941565147"
+                    crossorigin="anonymous"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-format="autorelaxed"
+                 data-ad-client="ca-pub-7409000941565147"
+                 data-ad-slot="8253400351"></ins>
+            <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+        </div>
+        
+        <hr/>
+        <hr/>
+        
+        <div class="d-flex justify-content-center">
+            <h2>Останні новини про людей, що підвели цей світ</h2>
+        </div>
+        @if (Model.BlacklistPosts != null && Model.BlacklistPosts.Any())
+        {
+            <div class="row">
+                @foreach (var ad in Model.BlacklistPosts)
+                {
+                    <div class="col-12 col-lg-6 mb-4">
+                        @await Html.PartialAsync("_PostCard", ("Blacklist", ad))
+                    </div>
+                }
+            </div>
+            <div class="d-flex justify-content-center">
+                <a class="news list-text-size"
+                   asp-area="Main"
+                   asp-page="/Blacklist/List"
+                   asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.TagIds, search: Model.Search))">
+                    Більше про шахраїв
+                </a>
+            </div>
+        }
+        else
+        {
+            <p>Немає новин за даним критерієм</p>
+        }
+
+        <hr/>
+        <hr/>
+        
         <div class="d-flex justify-content-center mb-2">
             <h2>Останні коментарі</h2>
         </div>
@@ -53,109 +163,6 @@
 
         <hr/>
         <hr/>
-        <div class="d-flex justify-content-center mb-2">
-            <h2>Останні оголошення від бізнесу</h2>
-        </div>
-        <br>
     }
-    @if (Model.InvestPosts != null && Model.InvestPosts.Any())
-    {
-        <div class="row">
-            @foreach (var ad in Model.InvestPosts)
-            {
-                <div class="col-12 col-lg-6 mb-4">
-                    @await Html.PartialAsync("_InvestCard", ad)
-                </div>
-            }
-        </div>
-        <div class="d-flex justify-content-center">
-            <a class="news list-text-size"
-               asp-area="Main"
-               asp-page="/Invest/List"
-               asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.TagIds, search: Model.Search))">
-                Більше оголошень
-            </a>
-        </div>
-    }
-    else
-    {
-        <p>Немає оголошень за даним критерієм</p>
-    }
-    <hr/>
-    <hr/>
-    <div class="d-flex justify-content-center mt-4">
-        <h2>Останні новини</h2>
-    </div><br>
-    @if (Model.NewsPosts != null && Model.NewsPosts.Any())
-    {
-        <div class="row">
-            @foreach (var ad in Model.NewsPosts)
-            {
-                <div class="col-12 col-lg-6 mb-4">
-                    @await Html.PartialAsync("_PostCard", ("News", ad))
-                </div>
-            }
-        </div>
-        <div class="d-flex justify-content-center">
-            <a class="news list-text-size"
-               asp-area="Main"
-               asp-page="/News/List"
-               asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.TagIds, search: Model.Search))">
-                Більше новин
-            </a>
-        </div>
-    }
-    else
-    {
-        <p>Немає новин за даним критерієм</p>
-    }
-
-    <hr/>
-    <hr/>
-    <div class="d-flex justify-content-center">
-        <h2>Останні новини про людей, що підвели цей світ</h2>
-    </div>
-    @if (Model.BlacklistPosts != null && Model.BlacklistPosts.Any())
-    {
-        <div class="row">
-            @foreach (var ad in Model.BlacklistPosts)
-            {
-                <div class="col-12 col-lg-6 mb-4">
-                    @await Html.PartialAsync("_PostCard", ("Blacklist", ad))
-                </div>
-            }
-        </div>
-        <div class="d-flex justify-content-center">
-            <a class="news list-text-size"
-               asp-area="Main"
-               asp-page="/Blacklist/List"
-               asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.TagIds, search: Model.Search))">
-                Більше про шахраїв
-            </a>
-        </div>
-    }
-    else
-    {
-        <p>Немає новин за даним критерієм</p>
-    }
-
-    <hr/>
-    <hr/>
-    <div class="d-flex justify-content-center">
-        <h2>Популярна реклама в інтернеті</h2>
-    </div>
-    
-    <div class="row">
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7409000941565147"
-                crossorigin="anonymous"></script>
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-format="autorelaxed"
-             data-ad-client="ca-pub-7409000941565147"
-             data-ad-slot="8253400351"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-    </div>
     
 </div>

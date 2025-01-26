@@ -18,6 +18,7 @@ namespace DataAccess
         public DbSet<CustomHeader> CustomHeaders { get; set; }
         public DbSet<ImageMetadata> ImageMetadata { get; set; }
         public DbSet<PostComment> PostComments { get; set; }
+        public DbSet<SeoDetails> SeoDetails { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -33,6 +34,10 @@ namespace DataAccess
 
             modelBuilder.Entity<Post>()
                 .HasIndex(e => e.Slug);
+
+            modelBuilder.Entity<SeoDetails>()
+            .HasIndex(e => e.RelativePagePath);
+
             modelBuilder.Entity<Post>()
                 .HasIndex(e => new { e.PostType, e.IsActive });
             modelBuilder.Entity<Post>()

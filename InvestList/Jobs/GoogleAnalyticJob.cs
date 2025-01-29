@@ -74,7 +74,7 @@ public class GoogleAnalyticJob(IServiceProvider serviceProvider, ILogger<GoogleA
             Property = $"properties/{437562217}",
             Dimensions = { new Dimension { Name = "pagePath" } },
             Metrics = { new Metric { Name = "screenPageViews" } },
-            DateRanges = { new DateRange { StartDate = "60daysAgo", EndDate = "today" } }
+            DateRanges = { new DateRange { StartDate = "2015-08-14", EndDate = "today" } }
         };
 
         // Execute the request

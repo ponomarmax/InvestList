@@ -53,6 +53,8 @@ try
     builder.Services.AddScoped<ICommentRepository, CommentRepository>();
     builder.Services.AddSingleton<IInvestService, InvestService>();
     builder.Services.AddScoped<IImageService, ImageService>();
+    builder.Services.AddScoped<ISeoRepository, SeoRepository>();
+    builder.Services.AddScoped<ISeoService, SeoService>();
     builder.Services.AddTransient<ISitemapGenerator, SitemapGenerator>();
     builder.Services.AddAuthentication()
         .AddGoogle(options =>
@@ -76,6 +78,7 @@ try
 
     app.UseMiddleware<WwwRedirectMiddleware>();
     app.UseMiddleware<GenerateCspHeader>();
+    app.UseMiddleware<SeoMiddleware>();
 
     if (app.Environment.IsDevelopment())
     {

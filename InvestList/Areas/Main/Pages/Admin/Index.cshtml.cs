@@ -1,13 +1,14 @@
-using System.Collections;
 using AutoMapper;
 using Core.Interfaces;
 using InvestList.Models;
 using InvestList.Models.V2;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace InvestList.Areas.Main.Pages.Admin
 {
+    [Authorize(Roles = Const.AdminRole)]
     public class Index(ITagRepository tagRepository, IMapper mapper, IPostRepository postRepository): PageModel
     {
         public IEnumerable<TagView> AvailableTags;

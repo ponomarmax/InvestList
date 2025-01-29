@@ -28,7 +28,7 @@ public class Get(IPostRepository repository, IMapper mapper, UserManager<User> u
 
         if (string.IsNullOrEmpty(id)) return NotFound();
 
-        var post = await repository.Get(id);
+        var post = await repository.Get(id, PostType.Blacklist);
         if (post == null) return NotFound();
 
         CanUserEdit = await userManager.CanEditPost(User);

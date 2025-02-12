@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{BC0ADD3A-3A00-4A55-804A-56F13C853F8D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Radar.EF", "test\Radar.EF\Radar.EF.csproj", "{EF6CE254-6076-4266-81B5-8D11D7A2DD0A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Radar.EF", "radar-libs\Radar.EF\Radar.EF.csproj", "{4DEF8A98-8525-44D9-A523-DFF7343DE0CA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{BC0ADD3A-3A00-4A55-804A-56F13C853F8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC0ADD3A-3A00-4A55-804A-56F13C853F8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC0ADD3A-3A00-4A55-804A-56F13C853F8D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EF6CE254-6076-4266-81B5-8D11D7A2DD0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EF6CE254-6076-4266-81B5-8D11D7A2DD0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EF6CE254-6076-4266-81B5-8D11D7A2DD0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EF6CE254-6076-4266-81B5-8D11D7A2DD0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DEF8A98-8525-44D9-A523-DFF7343DE0CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DEF8A98-8525-44D9-A523-DFF7343DE0CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DEF8A98-8525-44D9-A523-DFF7343DE0CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DEF8A98-8525-44D9-A523-DFF7343DE0CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

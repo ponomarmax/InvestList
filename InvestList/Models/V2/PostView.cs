@@ -1,5 +1,6 @@
 using Core.Entities;
 using InvestList.Models.Comment;
+using Radar.Domain.Entities;
 
 namespace InvestList.Models.V2
 {

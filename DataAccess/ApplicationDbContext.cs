@@ -5,10 +5,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Radar.Domain.Entities;
 
 namespace DataAccess
 {
-    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options): IdentityDbContext<User>(options)
+    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<User>(options)
     {
         public DbSet<PostLink> PostLinks { get; set; }
         public DbSet<GoogleAnalyticPostView> GoogleAnalyticPostViews { get; set; }
@@ -23,8 +24,11 @@ namespace DataAccess
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
+            modelBuilder.Entity<BasePost>().UseTphMappingStrategy().ToTable("Posts")
+                .HasDiscriminator<int>("DiscriminatorType")
+                .HasValue<Post>(0);
             modelBuilder.Entity<Post>()
+                .ToTable("Posts")
                 .HasOne(p => p.CreatedBy)
                 .WithMany() // No navigation property
                 .HasForeignKey(p => p.CreatedById)
@@ -36,22 +40,22 @@ namespace DataAccess
                 .HasIndex(e => e.Slug);
 
             modelBuilder.Entity<SeoDetails>()
-            .HasIndex(e => e.RelativePagePath);
+                .HasIndex(e => e.RelativePagePath);
 
             modelBuilder.Entity<Post>()
                 .HasIndex(e => new { e.PostType, e.IsActive });
             modelBuilder.Entity<Post>()
                 .HasIndex(e => e.CreatedAt);
 
-            var postTypeConverter = new ValueConverter<PostType, string>(
-                v => v.ToString(),
-                v => (PostType)Enum.Parse(typeof(PostType), v));
+            // var postTypeConverter = new ValueConverter<PostType, string>(
+            //     v => v.ToString(),
+            //     v => (PostType)Enum.Parse(typeof(PostType), v));
             var currencyConverter = new ValueConverter<Currency, string>(
                 v => v.ToString(),
                 v => (Currency)Enum.Parse(typeof(Currency), v));
-            modelBuilder.Entity<Post>()
-                .Property(p => p.PostType)
-                .HasConversion(postTypeConverter);
+            // modelBuilder.Entity<Post>()
+            //     .Property(p => p.PostType)
+            //     .HasConversion(postTypeConverter);
             modelBuilder.Entity<MinInvestValue>()
                 .Property(p => p.Currency)
                 .HasConversion(currencyConverter);
@@ -59,20 +63,39 @@ namespace DataAccess
                 .HasKey(x => new { x.PostId, x.TagId });
             modelBuilder.Entity<PostTags>()
                 .HasOne(x => x.Post)
-                .WithMany(x => x.Tags);
+                .WithMany(x => x.Tags)
+                .HasForeignKey(x => x.PostId);
+
+            modelBuilder.Entity<PostTags>()
+                .HasOne(x => x.Tag).WithMany(x => x.Posts).HasForeignKey(x => x.TagId);
+            
+            modelBuilder.Entity<TagTranslation>()
+                .HasOne(x => x.Tag).WithMany(x => x.Translations).HasForeignKey(x => x.TagId);
+            
+            modelBuilder.Entity<PostTranslation>()
+                .HasOne(x=>x.Post)
+                .WithMany(x=>x.Translations)
+                .HasForeignKey(x=>x.PostId);
+            
+            modelBuilder.Entity<PostComment>()
+                .HasOne(x=>x.Post)
+                .WithMany(x=>x.Comments)
+                .HasForeignKey(x=>x.PostId);
+            
+            modelBuilder.Entity<PostLink>()
+                .HasOne(x=>x.Post)
+                .WithMany(x=>x.Links)
+                .HasForeignKey(x=>x.PostId);
+            
+            modelBuilder.Entity<GoogleAnalyticPostView>()
+                .HasOne(x=>x.Post)
+                .WithOne(x=>x.GoogleAnalyticPostView);
 
             Seed(modelBuilder);
         }
 
         private void Seed(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Tag>().HasData(
-                new Tag { Id = Guid.Parse("6A48934D-6459-4AAA-806A-594B4F05C7C3"), Name = "SCUM" },
-                new Tag { Id = Guid.Parse("A4A1BB92-EB6A-4538-AE0D-DFCF70D0528C"), Name = "Держрегулювання" },
-                new Tag { Id = Guid.Parse("D12CB617-608E-4109-85CB-AF9F2CB95B6F"), Name = "Рейтинги" },
-                new Tag { Id = Guid.Parse("681E4BC1-DE4E-42A7-98F6-4425476EFB03"), Name = "Інше" }
-            );
-
             modelBuilder.Entity<IdentityRole>().HasData(
                 new IdentityRole()
                 {

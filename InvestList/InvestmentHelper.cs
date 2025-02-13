@@ -2,6 +2,7 @@
 using Core;
 using Core.Entities;
 using Microsoft.AspNetCore.Identity;
+using Radar.Domain.Entities;
 
 namespace InvestList
 {

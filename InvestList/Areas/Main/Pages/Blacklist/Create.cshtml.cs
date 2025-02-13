@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Radar.Domain.Entities;
 
 namespace InvestList.Areas.Main.Pages.Blacklist
 {
@@ -65,7 +66,7 @@ namespace InvestList.Areas.Main.Pages.Blacklist
             var tagsV2 = await tagRepository.GetTags();
             foreach (var tag in tagsV2)
             {
-                var item = new SelectListItem(tag.Name, tag.Id.ToString());
+                var item = new SelectListItem(null, tag.Id.ToString());
                 AvailableTags.Add(item);
             }
         }

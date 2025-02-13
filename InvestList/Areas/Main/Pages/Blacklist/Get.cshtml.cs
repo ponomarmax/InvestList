@@ -5,6 +5,7 @@ using InvestList.Models.V2;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Radar.Domain.Entities;
 
 namespace InvestList.Areas.Main.Pages.Blacklist;
 
@@ -39,8 +40,8 @@ public class Get(IPostRepository repository, IMapper mapper, UserManager<User> u
 
         var similarContent = (await repository.GetSimilarPosts(post.Id, tagIds)).ToList();
         
-        Post.SimilarNews = mapper.Map<IEnumerable<PostView>>(similarContent.Where(x=>x.PostType==PostType.News));
-        Post.SimilarInvests = mapper.Map<IEnumerable<PostView>>(similarContent.Where(x=>x.PostType==PostType.InvestAd));
+        Post.SimilarNews = mapper.Map<IEnumerable<PostView>>(similarContent.Where(x=>x.PostType==PostType.News.ToString()));
+        Post.SimilarInvests = mapper.Map<IEnumerable<PostView>>(similarContent.Where(x=>x.PostType==PostType.InvestAd.ToString()));
         ViewData.SetupPostViewSeoDetails(Post);
 
         return Page();

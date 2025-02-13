@@ -4,6 +4,7 @@ using DataAccess;
 using Google.Analytics.Data.V1Beta;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.EntityFrameworkCore;
+using Radar.Domain.Entities;
 
 namespace InvestList.Jobs;
 
@@ -97,7 +98,7 @@ public class GoogleAnalyticJob(IServiceProvider serviceProvider, ILogger<GoogleA
 
             // Find the corresponding Post based on PostType and Slug
             var postT = SlugGenerator.GetPostType(postType);
-            var post = await context.Posts.FirstOrDefaultAsync(p => p.PostType == postT && p.Slug == slug);
+            var post = await context.Posts.FirstOrDefaultAsync(p => p.PostType == postT.ToString() && p.Slug == slug);
 
             if (post != null)
             {
@@ -107,7 +108,7 @@ public class GoogleAnalyticJob(IServiceProvider serviceProvider, ILogger<GoogleA
                 if (postView == null)
                 {
                     // Create new PostView entry
-                    postView = new GoogleAnalyticPostView
+                    postView = new GoogleAnalyticPostView()
                     {
                         PostId = post.Id,
                         PageViews = pageViews,

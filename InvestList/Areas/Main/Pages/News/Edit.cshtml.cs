@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Radar.Domain.Entities;
 
 namespace InvestList.Areas.Main.Pages.News
 {
@@ -65,7 +66,7 @@ namespace InvestList.Areas.Main.Pages.News
             Post = mapper.Map<PutPostModel>(db);
             foreach (var tag in tagsV2)
             {
-                var item = new SelectListItem(tag.Name, tag.Id.ToString());
+                var item = new SelectListItem(null, tag.Id.ToString());
                 if (db.Tags.FirstOrDefault(x => x.TagId == tag.Id) != null)
                     item.Selected = true;
                 AvailableTags.Add(item);

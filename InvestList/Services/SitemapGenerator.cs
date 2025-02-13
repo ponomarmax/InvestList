@@ -31,7 +31,7 @@ namespace InvestList.Services
 
                 foreach (var post in posts)
                 {
-                    var postUrl = post.PostType == PostType.InvestAd
+                    var postUrl = post.PostType == PostType.InvestAd.ToString()
                         ? $"{baseUrl}invest/{post.Slug}"
                         : $"{baseUrl}news/{post.Slug}";
 

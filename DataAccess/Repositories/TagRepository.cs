@@ -1,6 +1,7 @@
 using Core.Entities;
 using Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Radar.Domain.Entities;
 
 namespace DataAccess.Repositories
 {
@@ -17,7 +18,7 @@ namespace DataAccess.Repositories
                 throw new NullReferenceException("Empty tag");
             }
 
-            dbContext.Add(new Tag { Name = tagName });
+            // dbContext.Add(new Tag { Name = tagName });
             await dbContext.SaveChangesAsync();
             _tags =  await dbContext.Tags.ToArrayAsync();
         }
@@ -28,7 +29,8 @@ namespace DataAccess.Repositories
             {
                 _tags = await dbContext.Tags.ToArrayAsync();
             }
-            return _tags.OrderBy(x=>x.Name);
+
+            return _tags; //.OrderBy(x=>x.Name);
         }
 
         public async Task SubmitCustomHeader(List<Guid> tagIds)

@@ -17,6 +17,7 @@ using InvestList.Logging;
 using InvestList.Middlewares;
 using InvestList.Services;
 using Microsoft.Extensions.FileProviders;
+using Radar.Domain.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.LoadAppSettingAndEnvValues();

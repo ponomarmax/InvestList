@@ -37,7 +37,7 @@ namespace InvestList.Services
                 post.CreatedById = userId;
                 post.UpdatedAt = post.CreatedAt;
                 post.Slug = await CreateSlug(post.Title, repository);
-                post.PostType = PostType.InvestAd;
+                post.PostType = PostType.InvestAd.ToString();
                 await repository.Create(invest);
                 _investCount = null;
             }

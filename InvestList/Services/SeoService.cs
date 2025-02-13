@@ -3,6 +3,7 @@ using DataAccess;
 using DataAccess.Repositories;
 using InvestList.Areas.Main.Pages.Admin;
 using Microsoft.EntityFrameworkCore;
+using Radar.Domain.Entities;
 
 namespace InvestList.Services;
 

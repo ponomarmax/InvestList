@@ -185,7 +185,7 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-area="Main" asp-page="/Index"
                                 asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: new[] { tag.TagId }))">
-                                @tag.Tag.Name
+                                @tag.Tag.Id
                             </a>
                         </li>
                     }

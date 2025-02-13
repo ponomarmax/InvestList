@@ -6,6 +6,7 @@ using InvestList.Filters;
 using InvestList.Models.Comment;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Radar.Domain.Entities;
 
 namespace InvestList.Controllers
 {

@@ -13,7 +13,7 @@ namespace DataAccess.Repositories
             string search = null)
         {
             var query = dbContext.InvestPosts
-                .Where(x => x.Post.IsActive && x.Post.PostType == PostType.InvestAd).AsNoTracking();
+                .Where(x => x.Post.IsActive && x.Post.PostType == PostType.InvestAd.ToString()).AsNoTracking();
             if (tagIds?.Count() > 0)
                 query = query.Where(x => x.Post.Tags.Any(t => tagIds.Contains(t.TagId)));
 
@@ -29,7 +29,7 @@ namespace DataAccess.Repositories
                     .ThenByDescending(x => x.Post.CreatedAt)
                     .Skip((page - 1) * offset)
                     .Take(offset)
-                    .Include(x => x.Post.ImagesV2)
+                    .Include(x => x.Post.Images)
                     .Include(x => x.Post.CreatedBy)
                     .Include(x => x.Post.Tags).ThenInclude(x => x.Tag)
                     .Include(x => x.MinInvestValues)
@@ -43,11 +43,11 @@ namespace DataAccess.Repositories
         public async Task<InvestPost?> Get(string slug)
         {
             var post = await dbContext.Posts
-                .Include(x => x.ImagesV2)
+                .Include(x => x.Images)
                 .Include(x => x.CreatedBy)
                 .Include(x => x.Tags).ThenInclude(x => x.Tag)
                 .Include(x => x.Comments).ThenInclude(x => x.User)
-                .Where(x => x.Slug == slug.ToLower() && x.PostType == PostType.InvestAd).FirstOrDefaultAsync();
+                .Where(x => x.Slug == slug.ToLower() && x.PostType == PostType.InvestAd.ToString()).FirstOrDefaultAsync();
             if (post == null) return null;
             var relatedInfo = await dbContext.InvestPosts
                 .Include(x => x.MinInvestValues)
@@ -65,11 +65,11 @@ namespace DataAccess.Repositories
         public async Task<InvestPost?> Get(Guid id)
         {
             var post = await dbContext.Posts
-                .Include(x => x.ImagesV2).ThenInclude(x=>x.ImageObject)
+                .Include(x => x.Images).ThenInclude(x=>x.ImageObject)
                 .Include(x => x.CreatedBy)
                 .Include(x => x.Tags).ThenInclude(x => x.Tag)
                 .Include(x => x.Comments).ThenInclude(x => x.User)
-                .FirstOrDefaultAsync(x => x.Id == id && x.PostType == PostType.InvestAd);
+                .FirstOrDefaultAsync(x => x.Id == id && x.PostType == PostType.InvestAd.ToString());
             if (post == null) return null;
             var relatedInfo = await dbContext.InvestPosts
                 .Include(x => x.MinInvestValues)
@@ -81,7 +81,7 @@ namespace DataAccess.Repositories
         public async Task Put(Guid id, InvestPost invest)
         {
             var postOrigin = await Get(id);
-            var oldImagePaths = postOrigin.Post.ImagesV2.Select(x => x.Id);
+            var oldImagePaths = postOrigin.Post.Images.Select(x => x.Id);
             if (postOrigin != null)
             {
                 mapper.Map(invest, postOrigin);

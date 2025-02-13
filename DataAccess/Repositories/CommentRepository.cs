@@ -1,5 +1,6 @@
 using Core.Entities;
 using Core.Interfaces;
+using Radar.Domain.Entities;
 
 namespace DataAccess.Repositories
 {

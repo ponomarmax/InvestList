@@ -2,6 +2,11 @@ using AutoMapper;
 using Core.Entities;
 using Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Radar.Domain;
+using Radar.Domain.Entities;
+using Radar.Domain.Interfaces;
+using Radar.EF.Repositories;
+using IImageService = Core.Interfaces.IImageService;
 
 namespace DataAccess.Repositories
 {
@@ -10,7 +15,7 @@ namespace DataAccess.Repositories
         IMapper mapper,
         IImageService imageService
     )
-        : IPostRepository
+        : BasePostRepository<Post>(dbContext), IPostRepository
     {
         public async Task<(int count, IEnumerable<Post> list)> Filter(int page,
             int offset,
@@ -18,62 +23,16 @@ namespace DataAccess.Repositories
             string search = null,
             PostType? type = null)
         {
-            var query = dbContext.Posts.AsNoTracking()
-                .Where(x => x.IsActive);
-
-            if (type != null)
-                query = query.Where(x => x.PostType == type);
-
-            if (tagIds?.Count() > 0)
-                query = query.Where(x => x.Tags.Any(t => tagIds.Contains(t.TagId)));
-            if (!string.IsNullOrWhiteSpace(search))
-                query = query.Where(x => x.Title.Contains(search));
-
-            var count = await query.CountAsync();
-
-            if (count > 0)
+            var request = new PaginationData()
             {
-                var listAsync = await query
-                    .OrderByDescending(x => x.Priority)
-                    .ThenByDescending(x => x.CreatedAt)
-                    .Skip((page - 1) * offset)
-                    .Take(offset)
-                    .Include(x => x.ImagesV2)
-                    .Include(x => x.CreatedBy)
-                    .Include(x => x.Tags).ThenInclude(x => x.Tag)
-                    .Include(x=>x.GoogleAnalyticPostView)
-                    .AsSplitQuery()
-                    // .Select(x => new Post()
-                    // {
-                    //     Id = x.Id,
-                    //     Title = x.Title,
-                    //     TitleSeo = x.TitleSeo,
-                    //     PostType = x.PostType,
-                    //     Slug = x.Slug,
-                    //     IsActive = x.IsActive,
-                    //     CreatedAt = x.CreatedAt,
-                    //     UpdatedAt = x.UpdatedAt,
-                    //     CreatedById = x.CreatedById,
-                    //     DescriptionSeo = x.DescriptionSeo,
-                    //     Description = x.Description,
-                    //     Images = x.Images.Select(x => new Image
-                    //     {
-                    //         Id = x.Id,
-                    //         // ImageBase64 = x.ImageBase64,
-                    //         // this is excluded on purpose due to perfomance issue
-                    //         // it takes lots of time to dispose this large string.
-                    //         PostId = x.PostId
-                    //     }),
-                    //     Tags = x.Tags.Select(x => new PostTags()
-                    //     {
-                    //         PostId = x.PostId, TagId = x.TagId, Tag = new Tag { Name = x.Tag.Name, Id = x.TagId }
-                    //     })
-                    // })
-                    .ToListAsync();
-                return (count, listAsync);
-            }
-
-            return (0, Array.Empty<Post>());
+                Page = page,
+                Language = "ua",
+                PostType = Enum.GetName(typeof(PostType), type),
+                Search = search,
+                TagsIds = tagIds?.ToList(),
+                Take = offset
+            };
+            return await Filter(request);
         }
 
         public async Task<Post?> Get(string id, PostType? postType = null)
@@ -86,10 +45,10 @@ namespace DataAccess.Repositories
                 : post.Where(x => x.Slug == id);
 
             if (postType != null)
-                post = post.Where(x => x.PostType == postType);
+                post = post.Where(x => x.PostType == postType.ToString());
 
             return await post
-                .Include(x => x.ImagesV2).ThenInclude(x => x.ImageObject)
+                .Include(x => x.Images).ThenInclude(x => x.ImageObject)
                 .Include(x => x.CreatedBy)
                 .Include(x => x.Tags).ThenInclude(x => x.Tag)
                 .Include(x => x.Comments).ThenInclude(x => x.User)
@@ -147,7 +106,7 @@ namespace DataAccess.Repositories
         public async Task Put(Guid id, Post post)
         {
             var postOrigin = await Get(id.ToString());
-            var oldImagePaths = postOrigin.ImagesV2.Select(x => x.Id);
+            var oldImagePaths = postOrigin.Images.Select(x => x.Id);
             if (postOrigin != null)
             {
                 mapper.Map(post, postOrigin);
@@ -204,7 +163,7 @@ namespace DataAccess.Repositories
         {
             if (postType == null)
                 return await dbContext.Posts.CountAsync();
-            return await dbContext.Posts.Where(x => x.PostType == postType).CountAsync();
+            return await dbContext.Posts.Where(x => x.PostType == postType.ToString()).CountAsync();
         }
     }
 }

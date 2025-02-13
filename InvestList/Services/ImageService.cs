@@ -17,14 +17,14 @@ namespace InvestList.Services
             Directory.CreateDirectory(_root + _investF);
             Directory.CreateDirectory(_root + _newsF);
 
-            await foreach (var post in context.Posts.Include(x => x.ImagesV2).ThenInclude(x => x.ImageObject)
+            await foreach (var post in context.Posts.Include(x => x.Images).ThenInclude(x => x.ImageObject)
                                .AsAsyncEnumerable())
             {
-                if (post.ImagesV2?.Any() == true)
-                    foreach (var image in post.ImagesV2)
+                if (post.Images?.Any() == true)
+                    foreach (var image in post.Images)
                     {
                         SaveImage(image.ImageObject.Image,
-                            post.PostType == PostType.News ? _root + _newsF : _root + _investF,
+                            post.PostType == PostType.News.ToString() ? _root + _newsF : _root + _investF,
                             $"{image.Id}.jpg");
                     }
             }
@@ -42,11 +42,11 @@ namespace InvestList.Services
                     }
                 }
 
-            if (post.ImagesV2?.Any() == true)
-                foreach (var image in post.ImagesV2)
+            if (post.Images?.Any() == true)
+                foreach (var image in post.Images)
                 {
                     SaveImage(image.ImageObject.Image,
-                        post.PostType == PostType.News ? _root + _newsF : _root + _investF,
+                        post.PostType == PostType.News.ToString() ? _root + _newsF : _root + _investF,
                         $"{image.Id}.jpg");
                 }
         }
@@ -56,14 +56,14 @@ namespace InvestList.Services
             return new ImageView()
             {
                 AltText = post.Title,
-                FilePath = GetImagePath(post.ImagesV2.First().Id, post)
+                FilePath = GetImagePath(post.Images.First().Id, post)
             };
         }
 
         public static string GetImagePath(Guid imageId, Post post)
         {
             var filePath = string.Empty;
-            if (post.PostType == PostType.News)
+            if (post.PostType == PostType.News.ToString())
                 filePath = _newsF;
             else filePath = _investF;
             return $"{filePath}{imageId}.jpg";

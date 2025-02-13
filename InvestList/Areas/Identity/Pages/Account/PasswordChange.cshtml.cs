@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
-using Core.Entities; 
+using Core.Entities;
+using Radar.Domain.Entities;
 
 namespace InvestList.Areas.Identity.Pages.Account
 {

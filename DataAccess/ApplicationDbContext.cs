@@ -19,6 +19,8 @@ namespace DataAccess
         public DbSet<ImageMetadata> ImageMetadata { get; set; }
         public DbSet<PostComment> PostComments { get; set; }
         public DbSet<SeoDetails> SeoDetails { get; set; }
+        public DbSet<UserRequestInfo> UserRequestInfos { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

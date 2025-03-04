@@ -1,6 +1,8 @@
 ﻿using System.Security.Claims;
+using System.Text.Json;
 using Core;
 using Core.Entities;
+using InvestList.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace InvestList
@@ -100,6 +102,36 @@ namespace InvestList
                 1 => $"{months} місяць",
                 >= 2 and <= 4 => $"{months} місяці",
                 _ => $"{months} місяців"
+            };
+        }
+        
+        public static UserRequestInfo GetRequestInfo(HttpContext httpContext, string userId, UserDetectionInfo detectionInfo)
+        {
+            var headers = new Dictionary<string, string>();
+            foreach (var header in httpContext.Request.Headers)
+            {
+                headers[header.Key] = header.Value;
+            }
+
+            var cookies = new Dictionary<string, string>();
+            foreach (var cookie in httpContext.Request.Cookies)
+            {
+                cookies[cookie.Key] = cookie.Value;
+            }
+
+            return new UserRequestInfo
+            {
+                UserId = userId,
+                IpAddress = httpContext.Connection.RemoteIpAddress?.ToString(),
+                UserAgent = httpContext.Request.Headers["User-Agent"],
+                Headers = JsonSerializer.Serialize(headers),
+                Cookies = JsonSerializer.Serialize(cookies),
+                MouseMoved = detectionInfo.MouseMoved,
+                NavigatorWebdriver = detectionInfo.NavigatorWebdriver,
+                ScreenHeight = detectionInfo.ScreenHeight,
+                ScreenWidth = detectionInfo.ScreenWidth,
+                HasChrome = detectionInfo.HasChrome,
+                TimeSpent = detectionInfo.TimeSpent,
             };
         }
     }

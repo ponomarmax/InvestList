@@ -6,6 +6,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Text.Encodings.Web;
 using Core.Entities;
+using Core.Interfaces;
+using InvestList.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -20,7 +22,8 @@ namespace InvestList.Areas.Identity.Pages.Account
         IUserStore<User> userStore,
         SignInManager<User> signInManager,
         ILogger<RegisterModel> logger,
-        IEmailSender emailSender)
+        IEmailSender emailSender,
+        IUserRepository userRepository)
         : PageModel
     {
         /// <summary>
@@ -83,8 +86,14 @@ namespace InvestList.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+            
+            public int TimeSpent { get; set; }
+            public bool MouseMoved { get; set; }
+            public bool NavigatorWebdriver { get; set; }
+            public bool HasChrome { get; set; }
+            public int ScreenHeight { get; set; }
+            public int ScreenWidth { get; set; }
         }
-
 
         public async Task OnGetAsync(string returnUrl = null)
         {
@@ -124,6 +133,17 @@ namespace InvestList.Areas.Identity.Pages.Account
                     }
                     
                     var userId = await userManager.GetUserIdAsync(user);
+                    var requestInfo = InvestmentHelper.GetRequestInfo(HttpContext, Input.Username, new UserDetectionInfo()
+                    {
+                        HasChrome = Input.HasChrome,
+                        MouseMoved = Input.MouseMoved,
+                        NavigatorWebdriver = Input.NavigatorWebdriver,
+                        ScreenWidth = Input.ScreenWidth,
+                        ScreenHeight = Input.ScreenHeight,
+                        TimeSpent = Input.TimeSpent,
+                        
+                    });
+                    await userRepository.SaveRequestInfo(requestInfo);
                     var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
@@ -132,20 +152,28 @@ namespace InvestList.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await emailSender.SendEmailAsync(Input.Email, "Підтвердіть свою реєстрацію на invest-radar.com",
-                        """
-                        <div>Привіт,</div>
-                        <div></div>
-                        <div>Дякуємо за реєстрацію на invest-radar.com</div>
-                        <div>Щоб завершити процес, будь ласка, підтвердіть свою електронну адресу </div>
-                        <div>Якщо ви не реєструвалися на нашому сайті, просто ігноруйте цей лист.</div>
-                        <div></div>
-                        <div>З повагою, </div>
-                        <div>Команда invest-radar.com</div>
-                        <div></div>
-                        """+
-                        $"<div>Будь ласка, підтвердіть акаунт, <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>перейшовши за посиланням</a>.</div>");
+                    try
+                    {
 
+                        await emailSender.SendEmailAsync(Input.Email, "Підтвердіть свою реєстрацію на invest-radar.com",
+                            """
+                            <div>Привіт,</div>
+                            <div></div>
+                            <div>Дякуємо за реєстрацію на invest-radar.com</div>
+                            <div>Щоб завершити процес, будь ласка, підтвердіть свою електронну адресу </div>
+                            <div>Якщо ви не реєструвалися на нашому сайті, просто ігноруйте цей лист.</div>
+                            <div></div>
+                            <div>З повагою, </div>
+                            <div>Команда invest-radar.com</div>
+                            <div></div>
+                            """ +
+                            $"<div>Будь ласка, підтвердіть акаунт, <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>перейшовши за посиланням</a>.</div>");
+                    }
+                    catch (Exception ex)
+                    {
+                        await userRepository.MarkAsFailedToSendEmail(user.Id);
+                    }
+                    
                     if (userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });

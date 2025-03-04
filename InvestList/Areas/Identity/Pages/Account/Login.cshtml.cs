@@ -4,6 +4,7 @@
 
 using System.ComponentModel.DataAnnotations;
 using Core.Entities;
+using Core.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace InvestList.Areas.Identity.Pages.Account
 {
-    public class LoginModel(SignInManager<User> signInManager, ILogger<LoginModel> logger)
+    public class LoginModel(SignInManager<User> signInManager, ILogger<LoginModel> logger, IUserRepository userRepository)
         : PageModel
     {
         /// <summary>
@@ -90,7 +91,7 @@ namespace InvestList.Areas.Identity.Pages.Account
         {
             returnUrl ??= Url.Content("~/");
 
-            ExternalLogins = (await signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            // ExternalLogins = (await signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             if (ModelState.IsValid)
             {
@@ -100,6 +101,8 @@ namespace InvestList.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     logger.LogInformation("User logged in.");
+                    var requestInfo = InvestmentHelper.GetRequestInfo(HttpContext, Input.Username);
+                    await userRepository.SaveRequestInfo(requestInfo);
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)

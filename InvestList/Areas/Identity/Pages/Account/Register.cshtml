@@ -31,6 +31,13 @@
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Зареєструватися</button>
+
+            <input type="hidden" id="timeSpent" asp-for="Input.TimeSpent"/>
+            <input type="hidden" id="mouseMoved" asp-for="Input.MouseMoved"/>
+            <input type="hidden" id="navigatorWebdriver" asp-for="Input.NavigatorWebdriver"/>
+            <input type="hidden" id="hasChrome" asp-for="Input.HasChrome"/>
+            <input type="hidden" id="screenHeight" asp-for="Input.ScreenHeight"/>
+            <input type="hidden" id="screenWidth" asp-for="Input.ScreenWidth"/>
         </form>
         <br>
     </div>
@@ -40,4 +47,25 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial"/>
+
+<script>
+    let startTime = Date.now();
+    let mouseMoved = false;
+
+    document.addEventListener("mousemove", () => { mouseMoved = true; });
+
+    function collectData() {
+        let timeSpent = Date.now() - startTime;
+        let isBot = navigator.webdriver || !!window.chrome === false;
+
+        document.getElementById("timeSpent").value = timeSpent;
+        document.getElementById("mouseMoved").value = mouseMoved;
+        document.getElementById("navigatorWebdriver").value = navigator.webdriver;
+        document.getElementById("hasChrome").value = !!window.chrome;
+        document.getElementById("screenHeight").value = screen.height;
+        document.getElementById("screenWidth").value = screen.width;
+    }
+
+    document.getElementById("registerForm").addEventListener("submit", collectData);
+</script>
 }

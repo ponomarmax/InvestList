@@ -1,10 +1,9 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-#nullable disable
+﻿#nullable disable
 
 using System.ComponentModel.DataAnnotations;
 using Core.Entities;
 using Core.Interfaces;
+using InvestList.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,59 +14,34 @@ namespace InvestList.Areas.Identity.Pages.Account
     public class LoginModel(SignInManager<User> signInManager, ILogger<LoginModel> logger, IUserRepository userRepository)
         : PageModel
     {
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         [BindProperty]
         public InputModel Input { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public string ReturnUrl { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         [TempData]
         public string ErrorMessage { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public class InputModel
         {
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [Required]
             public string Username { get; set; }
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [Required]
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [Display(Name = "Remember me?")]
             public bool RememberMe { get; set; }
+            
+            public int TimeSpent { get; set; }
+            public bool MouseMoved { get; set; }
+            public bool NavigatorWebdriver { get; set; }
+            public bool HasChrome { get; set; }
+            public int ScreenHeight { get; set; }
+            public int ScreenWidth { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -101,7 +75,16 @@ namespace InvestList.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     logger.LogInformation("User logged in.");
-                    var requestInfo = InvestmentHelper.GetRequestInfo(HttpContext, Input.Username);
+                    var requestInfo = InvestmentHelper.GetRequestInfo(HttpContext, Input.Username, new UserDetectionInfo()
+                    {
+                        HasChrome = Input.HasChrome,
+                        MouseMoved = Input.MouseMoved,
+                        NavigatorWebdriver = Input.NavigatorWebdriver,
+                        ScreenWidth = Input.ScreenWidth,
+                        ScreenHeight = Input.ScreenHeight,
+                        TimeSpent = Input.TimeSpent,
+                        
+                    });
                     await userRepository.SaveRequestInfo(requestInfo);
                     return LocalRedirect(returnUrl);
                 }
@@ -121,7 +104,6 @@ namespace InvestList.Areas.Identity.Pages.Account
                 }
             }
 
-            // If we got this far, something failed, redisplay form
             return Page();
         }
     }

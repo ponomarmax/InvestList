@@ -7,7 +7,7 @@
 <div class="container flex-column justify-content-center">
     <div class="row justify-content-center">
         <div class="col-md-4">
-            <form method="post">
+            <form id="loginForm" method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="text-center mb-4">
                     <img class="mb-4" src="~/ico/logo3.png" alt="" width="57" height="57">
@@ -33,6 +33,12 @@
                 </div>
                 <button class="w-100 btn btn-lg btn-primary" type="submit">Увійти</button>
 
+                <input type="hidden" id="timeSpent" asp-for="Input.TimeSpent"/>
+                <input type="hidden" id="mouseMoved" asp-for="Input.MouseMoved"/>
+                <input type="hidden" id="navigatorWebdriver" asp-for="Input.NavigatorWebdriver"/>
+                <input type="hidden" id="hasChrome" asp-for="Input.HasChrome"/>
+                <input type="hidden" id="screenHeight" asp-for="Input.ScreenHeight"/>
+                <input type="hidden" id="screenWidth" asp-for="Input.ScreenWidth"/>
             </form>
         </div>
     </div><br>
@@ -56,4 +62,25 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial"/>
+
+<script>
+    let startTime = Date.now();
+    let mouseMoved = false;
+
+    document.addEventListener("mousemove", () => { mouseMoved = true; });
+
+    function collectData() {
+        let timeSpent = Date.now() - startTime;
+        let isBot = navigator.webdriver || !!window.chrome === false;
+
+        document.getElementById("timeSpent").value = timeSpent;
+        document.getElementById("mouseMoved").value = mouseMoved;
+        document.getElementById("navigatorWebdriver").value = navigator.webdriver;
+        document.getElementById("hasChrome").value = !!window.chrome;
+        document.getElementById("screenHeight").value = screen.height;
+        document.getElementById("screenWidth").value = screen.width;
+    }
+
+    document.getElementById("loginForm").addEventListener("submit", collectData);
+</script>
 }

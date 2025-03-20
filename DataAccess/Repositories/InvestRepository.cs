@@ -2,29 +2,41 @@ using AutoMapper;
 using Core.Entities;
 using Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Radar.Domain;
+using Radar.EF.Repositories;
 
 namespace DataAccess.Repositories
 {
-    public class InvestRepository(ApplicationDbContext dbContext, IMapper mapper, IImageService imageService): IInvestRepository
+    public class InvestRepository(ApplicationDbContext dbContext, IMapper mapper, IImageService imageService):BasePostRepository<Post>(dbContext), IInvestRepository
     {
         public async Task<(int count, IEnumerable<InvestPost> list)> Filter(int page,
             int offset,
             IEnumerable<Guid>? tagIds,
             string search = null)
         {
-            var query = dbContext.InvestPosts
-                .Where(x => x.Post.IsActive && x.Post.PostType == PostType.InvestAd.ToString()).AsNoTracking();
-            if (tagIds?.Count() > 0)
-                query = query.Where(x => x.Post.Tags.Any(t => tagIds.Contains(t.TagId)));
-
-            if (!string.IsNullOrWhiteSpace(search))
-                query = query.Where(x => x.Post.Title.Contains(search));
+            
+            var request = new PaginationData()
+            {
+                Page = page,
+                Language = "ua",
+                PostType = Enum.GetName(typeof(PostType), PostType.InvestAd),
+                Search = search,
+                TagsIds = tagIds?.ToList(),
+                Take = offset
+            };
+            
+            var query = BasePosts(request); 
             
             var count = await query.CountAsync();
 
+            var t = from inv in dbContext.InvestPosts 
+                join  p in query
+                    on inv.PostId equals p.Id 
+                select inv;
+            
             if (count > 0)
             {
-                return (count, await query
+                return (count, await t
                     .OrderByDescending(x => x.Post.Priority)
                     .ThenByDescending(x => x.Post.CreatedAt)
                     .Skip((page - 1) * offset)

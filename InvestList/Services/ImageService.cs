@@ -59,6 +59,15 @@ namespace InvestList.Services
                 FilePath = GetImagePath(post.Images.First().Id, post)
             };
         }
+        
+        public static Radar.Application.Models.ImageView GetImageView2(Guid imageId, Post post)
+        {
+            return new Radar.Application.Models.ImageView()
+            {
+                AltText = post.Title,
+                FilePath = GetImagePath(post.Images.First().Id, post)
+            };
+        }
 
         public static string GetImagePath(Guid imageId, Post post)
         {

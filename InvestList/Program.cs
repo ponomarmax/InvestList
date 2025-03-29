@@ -19,10 +19,17 @@ using InvestList.Logging;
 using InvestList.Middlewares;
 using InvestList.Services;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
+using Radar.Application;
 using Radar.Domain.Entities;
+using Radar.Domain.Interfaces;
+using Radar.EF.Authorization;
+using Radar.EF.Repositories;
+using IImageService = Core.Interfaces.IImageService;
+using IPostService = InvestList.Services.IPostService;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.LoadAppSettingAndEnvValues();
@@ -59,6 +66,10 @@ try
     });
     
     
+    builder.Services.Configure<RazorViewEngineOptions>(options =>
+    {
+        options.PageViewLocationFormats.Add("/Pages/Shared/{0}.cshtml");
+    });
     ;
 
     builder.Services.AddAutoMapper(typeof(Program));
@@ -76,6 +87,12 @@ try
     builder.Services.AddScoped<ISeoRepository, SeoRepository>();
     builder.Services.AddScoped<ISeoService, SeoService>();
     builder.Services.AddTransient<ISitemapGenerator, SitemapGenerator>();
+    builder.Services.AddScoped<IsAdminAuthorizationFilter>();
+    builder.Services.AddScoped<IsPostOwnerAuthorizationFilter>();
+    builder.Services.AddScoped<ITagService, TagService>();
+    builder.Services.AddScoped<IBaseTagRepository, TagRepository>();
+    builder.Services.AddScoped<IBaseUserRepository, UserRepository>();
+    builder.Services.AddHttpContextAccessor();
     builder.Services.AddAuthentication()
         .AddGoogle(options =>
         {
@@ -152,13 +169,8 @@ try
     app.Use(async (context, next) =>
     {
         var path = context.Request.Path.Value ?? "";
-        // Define supported cultures (adjust if you add more)
         var supportedCultures = new[] { "uk", "en" };
-
-        // Detect if the URL starts with a supported culture segment
         var match = Regex.Match(path, @"^/(?<culture>uk|en)(/|$)");
-
-        // Determine user's preferred culture from the cookie
         string preferredCulture = null;
         var cultureCookie = context.Request.Cookies[CookieRequestCultureProvider.DefaultCookieName];
         if (!string.IsNullOrEmpty(cultureCookie))
@@ -166,12 +178,10 @@ try
             var requestCulture = CookieRequestCultureProvider.ParseCookieValue(cultureCookie);
             preferredCulture = requestCulture?.Cultures.FirstOrDefault().Value;
         }
-
-        // Fallback to Accept-Language header if no cookie is found
         if (string.IsNullOrEmpty(preferredCulture))
         {
             var userLanguages = context.Request.GetTypedHeaders().AcceptLanguage;
-            preferredCulture = "uk"; // default if no match
+            preferredCulture = "uk";
             if (userLanguages != null)
             {
                 foreach (var language in userLanguages)
@@ -190,27 +200,21 @@ try
                 }
             }
         }
-
-        // Check if the URL has a culture segment and whether it matches the preferred culture
         if (!match.Success ||
             !match.Groups["culture"].Value.Equals(preferredCulture, StringComparison.OrdinalIgnoreCase))
         {
-            // If a culture is already present, remove it from the path.
             if (match.Success)
             {
-                // Remove the leading culture segment (e.g. "/en" or "/uk")
                 path = path.Substring(match.Groups["culture"].Value.Length + 1);
                 if (string.IsNullOrEmpty(path))
                 {
                     path = "/";
                 }
             }
-
-            var queryString = context.Request.QueryString; // ?culture=en&returnUrl=%2Fuk%2Fevents
-            context.Response.Redirect($"/{preferredCulture}{path}{queryString}", permanent: true);
+            var queryString = context.Request.QueryString;
+            context.Response.Redirect($"/{preferredCulture}{path}{queryString}", permanent: false);
             return;
         }
-
         await next();
     });
 // 4. Then apply localization and routing for dynamic requests.

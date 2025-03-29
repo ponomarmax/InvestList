@@ -42,7 +42,7 @@
             @foreach (var ad in Model.NewsPosts)
             {
                 <div class="col-12 col-lg-6 mb-4">
-                    @await Html.PartialAsync("_PostCard", ("News", ad))
+                    @await Html.PartialAsync("List/_PostCard", ("News", ad))
                 </div>
             }
         </div>

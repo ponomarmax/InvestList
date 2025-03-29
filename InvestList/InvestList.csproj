@@ -43,6 +43,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\DataAccess\DataAccess.csproj"/>
+        <ProjectReference Include="..\radar-libs\Radar.UI\Radar.UI.csproj" />
     </ItemGroup>
 
     <ItemGroup>

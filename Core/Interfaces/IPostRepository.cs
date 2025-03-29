@@ -1,4 +1,5 @@
 using Core.Entities;
+using Radar.Domain;
 
 namespace Core.Interfaces
 {
@@ -8,7 +9,8 @@ namespace Core.Interfaces
             int offset,
             IEnumerable<Guid>? tagIds,
             string search = null,
-            PostType? type = null);
+            PostType? type = null,
+            string language = Defaults.Language);
 
         Task<Post?> Get(string id, PostType? postType = null);
         Task<IEnumerable<Post>> GetSimilarPosts(Guid id, List<Guid> tagIds);

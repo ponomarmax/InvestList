@@ -1,8 +1,8 @@
-@model (string pageFolder, IEnumerable<InvestList.Models.V2.PostView> similarNews, IEnumerable<InvestList.Models.TagView> tags)
+@model (string pageFolder, IEnumerable<InvestList.Models.V2.PostView> similarPosts, IEnumerable<InvestList.Models.TagView> tags)
 
-@if (Model.similarNews != null && Model.similarNews.Any())
+@if (Model.similarPosts != null && Model.similarPosts.Any())
 {
-    foreach (var similarPost in Model.similarNews)
+    foreach (var similarPost in Model.similarPosts)
     {
         <div class="row">
             <a class="similar-content-link" asp-area="Main" asp-page=@($"/{Model.pageFolder}/Get") asp-route-id="@similarPost.Slug">

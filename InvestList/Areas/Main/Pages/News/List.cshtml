@@ -10,7 +10,7 @@
             @foreach (var ad in Model.Entities)
             {
                 <div class="col-12 col-lg-6 mb-2">
-                    @await Html.PartialAsync("_PostCard", ("News", ad))
+                    @await Html.PartialAsync("List/_PostCard", ("News", ad))
                 </div>
             }
             <div class="col-12 col-lg-6 mb-2">

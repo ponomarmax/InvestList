@@ -396,7 +396,8 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-.idea/*
+.idea/
+InvestList/.idea/*
 .config/*
 
 appsettings.private.json

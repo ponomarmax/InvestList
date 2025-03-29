@@ -2,39 +2,28 @@ using AutoMapper;
 using Common;
 using Core.Entities;
 using Core.Interfaces;
-using InvestList.Models.V2;
-using InvestList.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using Radar.Application;
+using Radar.Application.Models;
 using Radar.Domain.Entities;
+using Radar.EF.Authorization;
+using Radar.UI.Models;
+using IPostService = InvestList.Services.IPostService;
 
 namespace InvestList.Areas.Main.Pages.News
 {
-    // [Authorize(Roles = B)]
-    // [EmailConfirmedAuthorize]
-    public class Edit(IPostRepository repository, IPostService service, ITagRepository tagRepository, UserManager<User> userManager, IMapper mapper) : PageModel
+    [IsAdminAuthorize]
+    public class Edit(IPostRepository repository, IPostService service, ITagService tagService, UserManager<User> userManager, IMapper mapper) : BaseUpsertPage(tagService)
     {
         public Guid Id { get; set; }
         
-        [BindProperty]
-        public PutPostModel Post { get; set; }
-        
-        public List<SelectListItem> AvailableTags { get; set; } = new();
-
         public async Task<IActionResult> OnGetAsync(Guid id)
         {
             var db = await repository.Get(id.ToString());
-            if (db == null)
-                return NotFound();
-
-            if (!await userManager.CanEditPost(User))
-            {
-                return Forbid();
-            }
-
-            await PrepareViewData(id, db);
+            var postFormModel = mapper.Map<PostFormModel>(db);
+            await PrepareTags(postFormModel);
+            Id = db.Id;
             return Page();
         }
 
@@ -43,34 +32,17 @@ namespace InvestList.Areas.Main.Pages.News
             var db = await repository.Get(id.ToString());
             if (db == null)
                 return NotFound();
-           
-            if (!await userManager.CanEditPost(User))
-            {
-                return Forbid();
-            }
             
             if (!ModelState.IsValid)
             {
-                await PrepareViewData(id, db);
+                var postFormModel = mapper.Map<PostFormModel>(db);
+                await PrepareTags(postFormModel);
                 return Page();
             }
 
-            var slug = await service.Put(id.ToString(), Utils.GetUserId(User),  Post);
+            var post = mapper.Map<Post>(Post);
+            var slug = await service.Put(id.ToString(), Utils.GetUserId(User),  post);
             return RedirectToPage("./Get", new { id = slug });
-        }
-        
-        private async Task PrepareViewData(Guid id, Post db)
-        {
-            Id = id;
-            var tagsV2 = await tagRepository.GetTags();
-            Post = mapper.Map<PutPostModel>(db);
-            foreach (var tag in tagsV2)
-            {
-                var item = new SelectListItem(null, tag.Id.ToString());
-                if (db.Tags.FirstOrDefault(x => x.TagId == tag.Id) != null)
-                    item.Selected = true;
-                AvailableTags.Add(item);
-            }
         }
     }
 }

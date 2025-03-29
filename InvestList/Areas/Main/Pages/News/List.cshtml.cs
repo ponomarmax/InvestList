@@ -1,10 +1,11 @@
+using System.Globalization;
 using AutoMapper;
 using Core.Entities;
 using Core.Interfaces;
 using InvestList.Models;
-using InvestList.Models.V2;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Radar.Application.Models;
 
 namespace InvestList.Areas.Main.Pages.News
 {
@@ -28,13 +29,13 @@ namespace InvestList.Areas.Main.Pages.News
 
             var guidTagIds = tagIds?.Where(x => Guid.TryParse(x, out _)).Select(Guid.Parse);
 
-            var (count, resultDb) = await repository.Filter(pageIndex, ItemsPerPage, guidTagIds, search, PostType.News);
+            var (count, resultDb) = await repository.Filter(pageIndex, ItemsPerPage, guidTagIds, search, PostType.News, CultureInfo.CurrentCulture.ToString());
             if (!resultDb.Any() && pageIndex != 1) return NotFound();
 
             var resultView = mapper.Map<IEnumerable<PostView>>(resultDb);
 
             var totalPages = (int)Math.Ceiling((double)count / ItemsPerPage);
-            ViewData.SetupListPostViewSeoDetails(resultView);
+            // ViewData.SetupListPostViewSeoDetails(resultView);
             Entities = resultView;
             PaginationInfo = new PaginationInfo
             {

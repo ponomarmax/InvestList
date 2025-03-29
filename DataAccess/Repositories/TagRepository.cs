@@ -2,10 +2,11 @@ using Core.Entities;
 using Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Radar.Domain.Entities;
+using Radar.EF.Repositories;
 
 namespace DataAccess.Repositories
 {
-    public class TagRepository(ApplicationDbContext dbContext): ITagRepository
+    public class TagRepository(ApplicationDbContext dbContext): BaseTagRepository(dbContext), ITagRepository
     {
 
         private static Tag[] _tags = [];
@@ -25,12 +26,7 @@ namespace DataAccess.Repositories
         
         public async Task<IEnumerable<Tag>> GetTags()
         {
-            if (_tags == null || _tags.Length == 0)
-            {
-                _tags = await dbContext.Tags.ToArrayAsync();
-            }
-
-            return _tags; //.OrderBy(x=>x.Name);
+            return await base.GetTags();
         }
 
         public async Task SubmitCustomHeader(List<Guid> tagIds)

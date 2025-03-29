@@ -17,5 +17,16 @@ namespace InvestList.Models.V2
         public bool IsActive { get; set; }
         
         public IEnumerable<PostLinkView>? Links { get; set; }
+        
+        public List<PutPostTranslationModel> Translations { get; set; } = new();
+    }
+    
+    public class PutPostTranslationModel
+    {
+        public string Language { get; set; } = "uk"; // або "en", "pl" тощо
+        public string? Title { get; set; }
+        public string? TitleSeo { get; set; }
+        public string? Description { get; set; }
+        public string? DescriptionSeo { get; set; }
     }
 }

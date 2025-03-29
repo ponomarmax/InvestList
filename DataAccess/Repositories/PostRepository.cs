@@ -21,12 +21,13 @@ namespace DataAccess.Repositories
             int offset,
             IEnumerable<Guid>? tagIds,
             string search = null,
-            PostType? type = null)
+            PostType? type = null,
+            string language = Defaults.Language)
         {
             var request = new PaginationData()
             {
                 Page = page,
-                Language = "ua",
+                Language =language,
                 PostType = Enum.GetName(typeof(PostType), type),
                 Search = search,
                 TagsIds = tagIds?.ToList(),
@@ -37,35 +38,13 @@ namespace DataAccess.Repositories
 
         public async Task<Post?> Get(string id, PostType? postType = null)
         {
-            if (string.IsNullOrEmpty(id)) return null;
-
-            var post = Queryable.AsQueryable(dbContext.Posts);
-            post = Guid.TryParse(id, out var idGuid)
-                ? post.Where(x => x.Id == idGuid)
-                : post.Where(x => x.Slug == id);
-
-            if (postType != null)
-                post = post.Where(x => x.PostType == postType.ToString());
-
-            return await post
-                .Include(x => x.Images).ThenInclude(x => x.ImageObject)
-                .Include(x => x.CreatedBy)
-                .Include(x => x.Tags).ThenInclude(x => x.Tag)
-                .Include(x => x.Comments).ThenInclude(x => x.User)
-                .Include(x => x.Links)
-                .AsSplitQuery().FirstOrDefaultAsync();
+            return await Get(id, postType.ToString());
         }
 
 
         public async Task<IEnumerable<Post>> GetSimilarPosts(Guid id, List<Guid> tagIds)
         {
-            return await dbContext.Posts
-                .Where(x => x.Id != id && x.Tags.Any(
-                    t => tagIds.Any(pt => pt == t.TagId))
-                ).OrderByDescending(x => x.CreatedAt)
-                .Take(100)
-                .Include(x => x.Tags).ThenInclude(x => x.Tag)
-                .ToListAsync();
+            return await base.GetSimilarPosts(id, tagIds);
         }
 
         public async Task<IEnumerable<Post>> GetPostsWithLastComments()
@@ -140,8 +119,8 @@ namespace DataAccess.Repositories
         {
             dbContext.Posts.Add(post);
             await dbContext.SaveChangesAsync();
-            var postOrigin = await Get(post.Slug);
-            imageService.RefreshImages(postOrigin, null);
+            // var postOrigin = await Get(post.Slug);
+            imageService.RefreshImages(post, null);
         }
 
         public async Task<bool> Exists(string slug)

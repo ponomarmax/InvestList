@@ -1,10 +1,10 @@
+using System.Globalization;
 using AutoMapper;
 using Core.Entities;
 using Core.Interfaces;
-using InvestList.Models;
-using InvestList.Models.V2;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Radar.Application.Models;
 
 namespace InvestList.Areas.Main.Pages
 {
@@ -12,10 +12,10 @@ namespace InvestList.Areas.Main.Pages
     {
         private const int ItemsPerPage = 4;
 
-        public IEnumerable<PostView> BlacklistPosts { get; set; }
-        public IEnumerable<PostView> PostsWithLastComments { get; set; }
+        public IEnumerable<InvestList.Models.V2.PostView> BlacklistPosts { get; set; }
+        public IEnumerable<InvestList.Models.V2.PostView> PostsWithLastComments { get; set; }
         public IEnumerable<PostView> NewsPosts { get; set; }
-        public IEnumerable<InvestView> InvestPosts { get; set; }
+        public IEnumerable<InvestList.Models.V2.InvestView> InvestPosts { get; set; }
         public IEnumerable<Guid> TagIds { get; set; }
         public string Search { get; set; }
         
@@ -32,15 +32,15 @@ namespace InvestList.Areas.Main.Pages
 
             var guidTagIds = tagIds?.Where(x => Guid.TryParse(x, out _)).Select(Guid.Parse);
 
-            var (_, postDb) = await invRepository.Filter(pageIndex, ItemsPerPage, guidTagIds, search);
-            var (_, newsDb) = await postRepository.Filter(pageIndex, ItemsPerPage, guidTagIds, search, PostType.News);
-            var (_, blacklist) = await postRepository.Filter(pageIndex, ItemsPerPage, guidTagIds, search, PostType.Blacklist);
+            var (_, postDb) = await invRepository.Filter(pageIndex, ItemsPerPage, CultureInfo.CurrentCulture.ToString(), guidTagIds, search);
+            var (_, newsDb) = await postRepository.Filter(pageIndex, ItemsPerPage, CultureInfo.CurrentCulture.ToString(), guidTagIds, search, PostType.News);
+            var (_, blacklist) = await postRepository.Filter(pageIndex, ItemsPerPage, CultureInfo.CurrentCulture.ToString(),guidTagIds, search, PostType.Blacklist);
             var postWithLastComments = await postRepository.GetPostsWithLastComments();
 
             NewsPosts = mapper.Map<IEnumerable<PostView>>(newsDb);
-            BlacklistPosts = mapper.Map<IEnumerable<PostView>>(blacklist);
-            InvestPosts = mapper.Map<IEnumerable<InvestView>>(postDb);
-            PostsWithLastComments = mapper.Map<IEnumerable<PostView>>(postWithLastComments);
+            // BlacklistPosts = mapper.Map<IEnumerable<InvestList.Models.V2.PostView>>(blacklist);
+            InvestPosts = mapper.Map<IEnumerable<InvestList.Models.V2.InvestView>>(postDb);
+            // PostsWithLastComments = mapper.Map<IEnumerable<InvestList.Models.V2.PostView>>(postWithLastComments);
             
             TagIds = guidTagIds;
 

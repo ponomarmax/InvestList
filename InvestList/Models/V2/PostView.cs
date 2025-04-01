@@ -1,6 +1,7 @@
 using Core.Entities;
-using InvestList.Models.Comment;
+using Radar.Application.Models;
 using Radar.Domain.Entities;
+using CommentView = InvestList.Models.Comment.CommentView;
 
 namespace InvestList.Models.V2
 {
@@ -11,7 +12,7 @@ namespace InvestList.Models.V2
 
         public string CreatedById { get; set; }
 
-        public User CreatedBy { get; set; }
+        public UserView CreatedBy { get; set; }
 
         public string Title { get; set; }
         

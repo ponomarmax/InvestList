@@ -7,10 +7,10 @@ namespace Core.Interfaces
     {
         Task<(int count, IEnumerable<Post> list)> Filter(int page,
             int offset,
+            string language,
             IEnumerable<Guid>? tagIds,
             string search = null,
-            PostType? type = null,
-            string language = Defaults.Language);
+            PostType? type = null);
 
         Task<Post?> Get(string id, PostType? postType = null);
         Task<IEnumerable<Post>> GetSimilarPosts(Guid id, List<Guid> tagIds);

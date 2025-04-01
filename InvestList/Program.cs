@@ -18,6 +18,7 @@ using InvestList.Jobs;
 using InvestList.Logging;
 using InvestList.Middlewares;
 using InvestList.Services;
+using Mapster;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Rewrite;
@@ -26,6 +27,7 @@ using Microsoft.Extensions.Options;
 using Radar.Application;
 using Radar.Domain.Entities;
 using Radar.Domain.Interfaces;
+using Radar.EF;
 using Radar.EF.Authorization;
 using Radar.EF.Repositories;
 using IImageService = Core.Interfaces.IImageService;
@@ -74,6 +76,9 @@ try
 
     builder.Services.AddAutoMapper(typeof(Program));
 
+    var config = TypeAdapterConfig.GlobalSettings;
+    config.Scan(Assembly.GetExecutingAssembly());
+    builder.Services.AddMapsterBase();
     builder.Services.Load<EmailConfig>(builder.Configuration, "Email");
     builder.Services.AddTransient<IEmailSender, InvestList.Services.EmailSender>();
     builder.Services.AddScoped<IInvestRepository, InvestRepository>();
@@ -92,6 +97,7 @@ try
     builder.Services.AddScoped<ITagService, TagService>();
     builder.Services.AddScoped<IBaseTagRepository, TagRepository>();
     builder.Services.AddScoped<IBaseUserRepository, UserRepository>();
+    builder.Services.AddScoped<ISanitizerService, SanitizerService>();
     builder.Services.AddHttpContextAccessor();
     builder.Services.AddAuthentication()
         .AddGoogle(options =>
@@ -135,6 +141,7 @@ try
     var defaultRoot = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
     var wwwrootPath = defaultRoot == null ? builder.Environment.WebRootPath : Path.Combine(defaultRoot, "wwwroot");
     
+    app.UseStaticFiles();
     app.UseFileServer(new FileServerOptions
     {
         FileProvider = new PhysicalFileProvider(wwwrootPath),

@@ -15,8 +15,8 @@ namespace InvestList.Areas.Main.Pages.News
     public class Create(
         IPostService service,
         ITagService tagService,
-        UserManager<User> userManager,
-        IMapper mapper): BaseUpsertPage(tagService)
+        ISanitizerService sanitizerService,
+        IMapper mapper): BaseUpsertPage(tagService, sanitizerService)
     {
         public async Task<IActionResult> OnGetAsync()
         {
@@ -34,7 +34,7 @@ namespace InvestList.Areas.Main.Pages.News
                 await PrepareTags();
                 return Page();
             }
-
+            BasePost();
             var post = mapper.Map<Post>(Post);
             var slug = await service.Put((string?)null, Utils.GetUserId(User), post, PostType.News);
             return RedirectToPage("./Get", new { id = slug });

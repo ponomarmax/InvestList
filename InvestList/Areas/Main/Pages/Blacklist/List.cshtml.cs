@@ -1,3 +1,4 @@
+using System.Globalization;
 using AutoMapper;
 using Core.Entities;
 using Core.Interfaces;
@@ -28,7 +29,7 @@ namespace InvestList.Areas.Main.Pages.Blacklist
 
             var guidTagIds = tagIds?.Where(x => Guid.TryParse(x, out _)).Select(Guid.Parse);
 
-            var (count, resultDb) = await repository.Filter(pageIndex, ItemsPerPage, guidTagIds, search, PostType.Blacklist);
+            var (count, resultDb) = await repository.Filter(pageIndex, ItemsPerPage, CultureInfo.CurrentCulture.ToString(), guidTagIds, search, PostType.Blacklist);
             if (!resultDb.Any() && pageIndex != 1) return NotFound();
 
             var resultView = mapper.Map<IEnumerable<PostView>>(resultDb);

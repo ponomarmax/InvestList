@@ -1,13 +1,12 @@
-﻿using Common;
-using Core;
+﻿using Core;
 
 namespace InvestList.Models.V2
 {
-    public class PutInvestModel: PutPostModel
+    public class PutInvestModel
     {
         public decimal AnnualInvestmentReturn { get; set; }
 
-        public IEnumerable<CurrencyView>? MinInvestValues { get; set; }
+        public List<CurrencyView>? MinInvestValues { get; set; } = [];
 
         public int? InvestDurationYears { get; set; }
 

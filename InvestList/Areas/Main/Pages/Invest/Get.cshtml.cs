@@ -36,14 +36,13 @@ public class Get(IInvestRepository repository, IPostRepository postRepository, I
         
         Post = mapper.Map<InvestView>(investPost);
 
-        var tagIds = Post.Tags.Select(x => x.Id).ToList();
+        var tagIds = Post.Post.Tags.Select(x => x.Id).ToList();
 
         var similarContent = (await postRepository.GetSimilarPosts(investPost.Post.Id, tagIds)).ToList();
         
-        Post.SimilarNews = mapper.Map<IEnumerable<PostView>>(similarContent.Where(x=>x.PostType==PostType.News.ToString()));
-        Post.SimilarInvests = mapper.Map<IEnumerable<PostView>>(similarContent.Where(x=>x.PostType==PostType.InvestAd.ToString()));
-        ViewData.SetupPostViewSeoDetails(Post);
-        ViewData.SetupPostViewSeoDetails(Post);
+        Post.Post.SimilarNews = mapper.Map<IEnumerable<Radar.Application.Models.PostView>>(similarContent.Where(x=>x.PostType==PostType.News.ToString()));
+        Post.Post.SimilarInvests = mapper.Map<IEnumerable<Radar.Application.Models.PostView>>(similarContent.Where(x=>x.PostType==PostType.InvestAd.ToString()));
+        Radar.UI.SeoHelper.SetupPostViewSeoDetails(ViewData, Post.Post);
 
         return Page();
     }

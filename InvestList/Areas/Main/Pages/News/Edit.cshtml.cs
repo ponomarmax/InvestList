@@ -14,7 +14,7 @@ using IPostService = InvestList.Services.IPostService;
 namespace InvestList.Areas.Main.Pages.News
 {
     [IsAdminAuthorize]
-    public class Edit(IPostRepository repository, IPostService service, ITagService tagService, UserManager<User> userManager, IMapper mapper) : BaseUpsertPage(tagService)
+    public class Edit(IPostRepository repository, IPostService service, ITagService tagService, IMapper mapper, ISanitizerService sanitizerService) : BaseUpsertPage(tagService, sanitizerService)
     {
         public Guid Id { get; set; }
         
@@ -29,17 +29,15 @@ namespace InvestList.Areas.Main.Pages.News
 
         public async Task<IActionResult> OnPostAsync(Guid id)
         {
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
             var db = await repository.Get(id.ToString());
             if (db == null)
                 return NotFound();
-            
-            if (!ModelState.IsValid)
-            {
-                var postFormModel = mapper.Map<PostFormModel>(db);
-                await PrepareTags(postFormModel);
-                return Page();
-            }
 
+            BasePost();
             var post = mapper.Map<Post>(Post);
             var slug = await service.Put(id.ToString(), Utils.GetUserId(User),  post);
             return RedirectToPage("./Get", new { id = slug });

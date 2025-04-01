@@ -18,9 +18,9 @@ namespace InvestList.Areas.Main.Pages.Admin
         public async Task OnGet()
         {
             var tags = await tagRepository.GetTags();
-            var (count, posts) = await postRepository.Filter(1, int.MaxValue, null);
-            Posts = mapper.Map<IEnumerable<AdminPostView>>(posts); 
-            AvailableTags = mapper.Map<IEnumerable<TagView>>(tags);
+            // var (count, posts) = await postRepository.Filter(1, int.MaxValue, null);
+            // Posts = mapper.Map<IEnumerable<AdminPostView>>(posts); 
+            // AvailableTags = mapper.Map<IEnumerable<TagView>>(tags);
         }
 
         public async Task<IActionResult> OnPostAddTag(string tagName)

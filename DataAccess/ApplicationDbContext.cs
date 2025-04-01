@@ -16,6 +16,7 @@ namespace DataAccess
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<InvestPost> InvestPosts { get; set; }
+        public DbSet<MinInvestValue> MinInvestValue { get; set; }
         public DbSet<CustomHeader> CustomHeaders { get; set; }
         public DbSet<ImageMetadata> ImageMetadata { get; set; }
         public DbSet<PostComment> PostComments { get; set; }

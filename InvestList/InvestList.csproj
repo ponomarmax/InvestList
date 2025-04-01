@@ -49,10 +49,7 @@
     <ItemGroup>
         <Content Update="appsettings.private.json">
             <CopyToPublishDirectory>Never</CopyToPublishDirectory>
-        </Content>
-        <Content Update="wwwroot\**\*">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
+        </Content>  
 
     </ItemGroup>
 
@@ -64,4 +61,13 @@
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>
+
+<!--    <Target Name="CopyRadarUIStaticFiles" AfterTargets="Build">-->
+<!--        <ItemGroup>-->
+<!--            <RadarUIStaticFiles Include="..\radar-libs\Radar.UI\wwwroot\**\*" />-->
+<!--        </ItemGroup>-->
+<!--        <Copy SourceFiles="@(RadarUIStaticFiles)"-->
+<!--              DestinationFolder="wwwroot\%(RecursiveDir)"-->
+<!--              SkipUnchangedFiles="true" />-->
+<!--    </Target>-->
 </Project>

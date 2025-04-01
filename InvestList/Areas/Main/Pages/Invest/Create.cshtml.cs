@@ -1,34 +1,27 @@
 using Common;
-using Core.Entities;
-using Core.Interfaces;
 using InvestList.Models.V2;
 using InvestList.Services;
-using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Radar.Application;
 using Radar.Domain.Entities;
+using Radar.UI.Models;
 
 namespace InvestList.Areas.Main.Pages.Invest
 {
     public class Create(
         IInvestService service,
-        ITagRepository tagRepository,
-        UserManager<User> userManager): PageModel
+        ITagService tagService,
+        UserManager<User> userManager,ISanitizerService sanitizerService):  BaseInvestUpsertPage(tagService,sanitizerService)
     {
-        [BindProperty]
-        public PutInvestModel Post { get; set; }
-
-        public List<SelectListItem> AvailableTags { get; set; } = new();
-
         public async Task<IActionResult> OnGetAsync()
         {
             var user = await userManager.GetUserAsync(User);
             if (user == null)
                 return Forbid();
-
-            await PrepareViewData();
+            Prepare();
+            await PrepareTags();
             return Page();
         }
 
@@ -37,28 +30,19 @@ namespace InvestList.Areas.Main.Pages.Invest
             var user = await userManager.GetUserAsync(User);
             if (user == null)
                 return Forbid();
+            
+            BasePost();
 
-            if (!await userManager.IsEmailConfirmedAsync(user))
-                return RedirectToPage("/Account/ResendEmailConfirmation", new { area = "Identity" });
+            // if (!await userManager.IsEmailConfirmedAsync(user))
+            //     return RedirectToPage("/Account/ResendEmailConfirmation", new { area = "Identity" });
 
             if (!ModelState.IsValid)
             {
-                await PrepareViewData();
+                await PrepareTags();
                 return Page();
             }
-
-            var slug = await service.Put(null, Utils.GetUserId(User), Post);
+            var slug = await service.Put(null, Utils.GetUserId(User), Post, InvestPost);
             return RedirectToPage("./Get", new { id = slug });
-        }
-        
-        private async Task PrepareViewData()
-        {
-            var tagsV2 = await tagRepository.GetTags();
-            foreach (var tag in tagsV2)
-            {
-                var item = new SelectListItem(null, tag.Id.ToString());
-                AvailableTags.Add(item);
-            }
         }
     }
 }

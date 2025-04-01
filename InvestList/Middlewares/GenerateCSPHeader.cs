@@ -14,7 +14,7 @@ public class GenerateCspHeader(RequestDelegate next)
         csp.Append("default-src 'self'; ");
         csp.Append("script-src 'self' 'unsafe-inline' ");
 
-        csp.Append("https://cdn.jsdelivr.net https://code.jquery.com ");
+        csp.Append("https://cdn.jsdelivr.net https://code.jquery.com https://uicdn.toast.com ");
         // Preview Mode
         csp.Append("https://googletagmanager.com https://tagmanager.google.com ");
         
@@ -27,7 +27,7 @@ public class GenerateCspHeader(RequestDelegate next)
         
         // Style src for Preview Mode
         csp.Append($"style-src 'self' 'unsafe-inline' ");
-        csp.Append("https://cdn.jsdelivr.net ");
+        csp.Append("https://cdn.jsdelivr.net https://uicdn.toast.com ");
         csp.Append("https://googletagmanager.com https://tagmanager.google.com https://fonts.googleapis.com ");
         csp.Append(";");
         

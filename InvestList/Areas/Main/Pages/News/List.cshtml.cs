@@ -29,7 +29,7 @@ namespace InvestList.Areas.Main.Pages.News
 
             var guidTagIds = tagIds?.Where(x => Guid.TryParse(x, out _)).Select(Guid.Parse);
 
-            var (count, resultDb) = await repository.Filter(pageIndex, ItemsPerPage, guidTagIds, search, PostType.News, CultureInfo.CurrentCulture.ToString());
+            var (count, resultDb) = await repository.Filter(pageIndex, ItemsPerPage, CultureInfo.CurrentCulture.ToString(), guidTagIds, search, PostType.News);
             if (!resultDb.Any() && pageIndex != 1) return NotFound();
 
             var resultView = mapper.Map<IEnumerable<PostView>>(resultDb);

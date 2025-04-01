@@ -23,24 +23,7 @@ namespace InvestList.Mapper
         {
             // DB->GET
             CreateMap<InvestPost, InvestView>()
-                .ForMember(x => x.Id, s => s.MapFrom(x => x.Post.Id))
-                .ForMember(x => x.PostType, s => s.MapFrom(x => x.Post.PostType))
-                .ForMember(x => x.CreatedById, s => s.MapFrom(x => x.Post.CreatedById))
-                // .ForMember(x => x.ImageBase64,
-                //     s => s.MapFrom(x =>
-                //         x.Post.Images.FirstOrDefault() == null ? null : x.Post.Images.FirstOrDefault().ImageBase64))
-                .ForMember(x=>x.GoogleAnalyticPostView, s => s.MapFrom(x=>x.Post.GoogleAnalyticPostView))
-                .ForMember(x => x.Image, s => s.MapFrom(x =>
-                    x.Post.Images.FirstOrDefault() == null
-                        ? null
-                        : ImageService.GetImageView(x.Post.Images.FirstOrDefault().Id, x.Post)))
-                .ForMember(x => x.CreatedAt, s => s.MapFrom(x => x.Post.CreatedAt))
-                .ForMember(x => x.UpdateAt, s => s.MapFrom(x => x.Post.UpdatedAt))
-                .ForMember(x => x.Slug, s => s.MapFrom(x => x.Post.Slug))
-                .ForMember(x => x.Title, s => s.MapFrom(x => x.Post.Title))
-                .ForMember(x => x.Description, s => s.MapFrom(x => x.Post.Description))
-                .ForMember(x => x.Tags, s => s.MapFrom(x => x.Post.Tags))
-                .ForMember(x => x.Comments, s => s.MapFrom(x => x.Post.Comments));
+                .ForMember(x => x.Post, s => s.MapFrom(x => x.Post));
 
             CreateMap<PostTags, TagView>()
                 .ForMember(x => x.Id, s => s.MapFrom(x => x.TagId))
@@ -58,37 +41,11 @@ namespace InvestList.Mapper
             CreateMap<MinInvestValue, CurrencyView>();
             CreateMap<CurrencyView, MinInvestValue>();
             CreateMap<InvestPost, PutInvestModel>()
-                .ForMember(x => x.ImageBase64,
-                    s => s.MapFrom(x =>
-                        x.Post.Images.FirstOrDefault() == null
-                            ? null
-                            : Convert.ToBase64String(x.Post.Images.FirstOrDefault().ImageObject.Image)))
-                .ForMember(x => x.Title, s => s.MapFrom(x => x.Post.Title))
-                .ForMember(x => x.IsActive, s => s.MapFrom(x => x.Post.IsActive))
-                .ForMember(x => x.MinInvestValues, s => s.MapFrom(x => x.MinInvestValues))
-                .ForMember(x => x.Description, s => s.MapFrom(x => x.Post.Description))
-                .ForMember(x => x.TagIds, s => s.MapFrom(x => x.Post.Tags));
+                .ForMember(x => x.MinInvestValues, s => s.MapFrom(x => x.MinInvestValues));
 
             //PUT -> DB
             CreateMap<PutInvestModel, InvestPost>();
             CreateMap<PutInvestModel, Post>()
-                .ForMember(x => x.Tags,
-                    s => s.MapFrom(x =>
-                        x.TagIds == null ? null : x.TagIds.Select(t => new PostTags() { TagId = Guid.Parse(t) })))
-                .ForMember(x => x.Images,
-                    s => s.MapFrom(x =>
-                        x.ImageBase64 == null
-                            ? null
-                            : new List<ImageMetadata>
-                            {
-                                new ImageMetadata
-                                {
-                                    ImageObject = new ImageObject()
-                                    {
-                                        Image = Convert.FromBase64String(x.ImageBase64)
-                                    }
-                                }
-                            }))
                 ;
             
             CreateMap<PostFormModel, Post>()
@@ -166,14 +123,14 @@ namespace InvestList.Mapper
             // DB-> DB
 
             CreateMap<Post, Post>()
-                .ForMember(x => x.Id, s => s.Ignore())
+               .ForMember(x => x.Id, s => s.Ignore())
                 .ForMember(x => x.PostType, s => s.Ignore())
                 .ForMember(x => x.CreatedBy, s => s.Ignore())
                 .ForMember(x => x.CreatedById, s => s.Ignore())
                 .ForMember(x => x.CreatedAt, s => s.Ignore())
                 .ForMember(x => x.UpdatedAt, s => s.MapFrom(x => DateTime.UtcNow))
                 .ForMember(x => x.Comments, s => s.Ignore())
-                .ForMember(x => x.Slug, s => s.Ignore());
+                .ForMember(x => x.Slug, s => s.Ignore()); 
 
             CreateMap<InvestPost, InvestPost>()
                 .ForMember(x => x.Id, s => s.Ignore())
@@ -189,10 +146,8 @@ namespace InvestList.Mapper
                 .ForMember(dest => dest.Description,
                     opt => opt.MapFrom(src => GetTranslation(src).Description))
                 .ForMember(dest => dest.DescriptionSeo,
-                    opt => opt.MapFrom(src => GetTranslation(src).DescriptionSeo))                // .ForMember(x => x.ImageBase64,
-                //     s => s.MapFrom(x =>
-                //         x.Images.FirstOrDefault() == null ? null : x.Images.FirstOrDefault().ImageBase64))
-                // .ForMember(x=>x.GoogleAnalyticPostView, s => s.MapFrom(x=>x.GoogleAnalyticPostView))
+                    opt => opt.MapFrom(src => GetTranslation(src).DescriptionSeo))                
+                .ForMember(x=>x.GoogleAnalyticPostView, s => s.MapFrom(x=>x.GoogleAnalyticPostView))
 
                 .ForMember(x => x.Image, s => s.MapFrom(x =>
                     x.Images.FirstOrDefault() == null
@@ -218,6 +173,7 @@ namespace InvestList.Mapper
             
             //
             CreateMap<GoogleAnalyticPostView, GoogleAnalyticDataView>();
+            CreateMap<GoogleAnalyticPostView, InvestList.Models.V2.GoogleAnalyticDataView>();
         }
         
         private static PostTranslation? GetTranslation(Post post)

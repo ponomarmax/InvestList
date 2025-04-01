@@ -1,9 +1,8 @@
-using InvestList.Models.Comment;
-
 namespace InvestList.Models.V2
 {
-    public class InvestView : PostView
+    public class InvestView
     {
+        public Radar.Application.Models.PostView Post { get; set; }
         public DateTime UpdateAt { get; set; }
 
         public decimal AnnualInvestmentReturn { get; set; }

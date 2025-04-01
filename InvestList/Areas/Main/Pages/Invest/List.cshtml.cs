@@ -1,3 +1,4 @@
+using System.Globalization;
 using AutoMapper;
 using Core.Interfaces;
 using InvestList.Models;
@@ -10,7 +11,6 @@ namespace InvestList.Areas.Main.Pages.Invest
     public class List(IInvestRepository repository, IMapper mapper): PageModel
     {
         private const int ItemsPerPage = 50;
-
         public IEnumerable<InvestView> Entities { get; set; }
         public IEnumerable<Guid> TagIds { get; set; }
         public PaginationInfo PaginationInfo { get; set; }
@@ -27,13 +27,13 @@ namespace InvestList.Areas.Main.Pages.Invest
 
             var guidTagIds = tagIds?.Where(x => Guid.TryParse(x, out _)).Select(Guid.Parse);
 
-            var (count, resultDb) = await repository.Filter(pageIndex, ItemsPerPage, guidTagIds, search);
+            var (count, resultDb) = await repository.Filter(pageIndex, ItemsPerPage, CultureInfo.CurrentCulture.ToString(), guidTagIds, search);
             if (!resultDb.Any() && pageIndex != 1) return NotFound();
 
             var resultView = mapper.Map<IEnumerable<InvestView>>(resultDb);
 
             var totalPages = (int)Math.Ceiling((double)count / ItemsPerPage);
-            ViewData.SetupListPostViewSeoDetails(resultView);
+            // ViewData.SetupListPostViewSeoDetails(resultView);
             Entities = resultView;
             PaginationInfo = new PaginationInfo
             {

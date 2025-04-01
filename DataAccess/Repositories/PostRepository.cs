@@ -19,10 +19,10 @@ namespace DataAccess.Repositories
     {
         public async Task<(int count, IEnumerable<Post> list)> Filter(int page,
             int offset,
+            string language,
             IEnumerable<Guid>? tagIds,
             string search = null,
-            PostType? type = null,
-            string language = Defaults.Language)
+            PostType? type = null)
         {
             var request = new PaginationData()
             {

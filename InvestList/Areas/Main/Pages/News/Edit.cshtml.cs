@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Radar.Application;
 using Radar.Application.Models;
 using Radar.Domain.Entities;
-using Radar.EF.Authorization;
+using Radar.Infrastructure.Authorization;
 using Radar.UI.Models;
 using IPostService = InvestList.Services.IPostService;
 
@@ -21,7 +21,7 @@ namespace InvestList.Areas.Main.Pages.News
         public async Task<IActionResult> OnGetAsync(Guid id)
         {
             var db = await repository.Get(id.ToString());
-            var postFormModel = mapper.Map<PostFormModel>(db);
+            var postFormModel = mapper.Map<PostDataDto>(db);
             await PrepareTags(postFormModel);
             Id = db.Id;
             return Page();

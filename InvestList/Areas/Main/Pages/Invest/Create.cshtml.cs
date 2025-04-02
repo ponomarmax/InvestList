@@ -1,16 +1,18 @@
 using Common;
-using InvestList.Models.V2;
 using InvestList.Services;
+using InvestList.Services.Invest.Commands;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Radar.Application;
 using Radar.Domain.Entities;
-using Radar.UI.Models;
+using Radar.Infrastructure.Authorization;
 
 namespace InvestList.Areas.Main.Pages.Invest
 {
+    [IsPostOwnerAuthorize]
     public class Create(
+        IMediator _mediator,
         IInvestService service,
         ITagService tagService,
         UserManager<User> userManager,ISanitizerService sanitizerService):  BaseInvestUpsertPage(tagService,sanitizerService)
@@ -27,10 +29,6 @@ namespace InvestList.Areas.Main.Pages.Invest
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var user = await userManager.GetUserAsync(User);
-            if (user == null)
-                return Forbid();
-            
             BasePost();
 
             // if (!await userManager.IsEmailConfirmedAsync(user))
@@ -41,7 +39,21 @@ namespace InvestList.Areas.Main.Pages.Invest
                 await PrepareTags();
                 return Page();
             }
-            var slug = await service.Put(null, Utils.GetUserId(User), Post, InvestPost);
+            
+            var command = new CreateInvestPostCommand
+            {
+                UserId = user.Id,
+                Post = Post,
+                MinInvestValues = InvestPostPost.MinInvestValues,
+                InvestDurationYears = InvestPostPost.InvestDurationYears,
+                InvestDurationMonths = InvestPostPost.InvestDurationMonths,
+                TotalInvestment = InvestPostPost.TotalInvestment,
+                AnnualInvestmentReturn = InvestPostPost.AnnualInvestmentReturn
+            };
+
+            var id = await _mediator.Send(command);
+            
+            var slug = await service.Put(null, Utils.GetUserId(User), Post, InvestPostPost);
             return RedirectToPage("./Get", new { id = slug });
         }
     }

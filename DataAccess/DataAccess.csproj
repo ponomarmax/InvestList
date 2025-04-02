@@ -21,7 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\Core\Core.csproj" />
-    <ProjectReference Include="..\radar-libs\Radar.EF\Radar.EF.csproj" />
+    <ProjectReference Include="..\radar-libs\Radar.Infrastructure\Radar.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Migrations\20250213172214_w.cs" />

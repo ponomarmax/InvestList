@@ -4,7 +4,7 @@ using Core.Interfaces;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Radar.Domain;
-using Radar.EF.Repositories;
+using Radar.Infrastructure.Repositories;
 
 namespace DataAccess.Repositories
 {

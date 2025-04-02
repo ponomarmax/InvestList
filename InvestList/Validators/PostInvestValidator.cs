@@ -3,7 +3,7 @@ using InvestList.Models.V2;
 
 namespace InvestList.Validators
 {
-    public class PostInvestValidator: AbstractValidator<PutInvestModel>
+    public class PostInvestValidator: AbstractValidator<InvestPostDto>
     {
         public PostInvestValidator()
         {

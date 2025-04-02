@@ -9,7 +9,7 @@ namespace InvestList.Areas.Main.Pages.Invest;
 public class BaseInvestUpsertPage(ITagService tagService, ISanitizerService sanitizerService):  BaseUpsertPage(tagService, sanitizerService)
 {
     [BindProperty]
-    public PutInvestModel InvestPost { get; set; } = new();
+    public InvestPostDto InvestPostPost { get; set; } = new();
     
     protected void Prepare()
     {
@@ -17,8 +17,8 @@ public class BaseInvestUpsertPage(ITagService tagService, ISanitizerService sani
         var supportedCurrencies = Enum.GetValues(typeof(Currency)).Cast<Currency>();
         foreach (var currency in supportedCurrencies)
         {
-            if (InvestPost.MinInvestValues.FirstOrDefault(x => x.Currency == currency) == null)
-                InvestPost.MinInvestValues.Add(new CurrencyView
+            if (InvestPostPost.MinInvestValues.FirstOrDefault(x => x.Currency == currency) == null)
+                InvestPostPost.MinInvestValues.Add(new CurrencyView
                 {
                     Currency = currency,
                     MinValue = null

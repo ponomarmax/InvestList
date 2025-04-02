@@ -4,7 +4,7 @@ using Radar.Application.Models;
 
 namespace InvestList.Validators
 {
-    public class PostValidator: AbstractValidator<PostFormModel>
+    public class PostValidator: AbstractValidator<PostDataDto>
     {
         public PostValidator()
         {

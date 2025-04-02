@@ -27,9 +27,9 @@ using Microsoft.Extensions.Options;
 using Radar.Application;
 using Radar.Domain.Entities;
 using Radar.Domain.Interfaces;
-using Radar.EF;
-using Radar.EF.Authorization;
-using Radar.EF.Repositories;
+using Radar.Infrastructure;
+using Radar.Infrastructure.Authorization;
+using Radar.Infrastructure.Repositories;
 using IImageService = Core.Interfaces.IImageService;
 using IPostService = InvestList.Services.IPostService;
 
@@ -75,7 +75,8 @@ try
     ;
 
     builder.Services.AddAutoMapper(typeof(Program));
-
+    builder.Services.AddAutoMapper(typeof(Radar.Application.Mapping.DtoToEntityProfile).Assembly);
+    
     var config = TypeAdapterConfig.GlobalSettings;
     config.Scan(Assembly.GetExecutingAssembly());
     builder.Services.AddMapsterBase();

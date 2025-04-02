@@ -3,7 +3,7 @@ using Core.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Radar.Domain.Entities;
-using Radar.EF.Repositories;
+using Radar.Infrastructure.Repositories;
 
 namespace DataAccess.Repositories
 {

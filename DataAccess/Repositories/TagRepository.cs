@@ -2,7 +2,7 @@ using Core.Entities;
 using Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Radar.Domain.Entities;
-using Radar.EF.Repositories;
+using Radar.Infrastructure.Repositories;
 
 namespace DataAccess.Repositories
 {

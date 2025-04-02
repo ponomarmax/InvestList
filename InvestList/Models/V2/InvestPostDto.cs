@@ -2,7 +2,7 @@
 
 namespace InvestList.Models.V2
 {
-    public class PutInvestModel
+    public class InvestPostDto
     {
         public decimal AnnualInvestmentReturn { get; set; }
 

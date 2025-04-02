@@ -10,7 +10,7 @@ namespace InvestList.Services
 {
     public interface IInvestService
     {
-        Task<string> Put(string? idString, string userId, PostFormModel post, PutInvestModel putInvestModel);
+        Task<string> Put(string? idString, string userId, PostDataDto post, InvestPostDto investPostDto);
         Task<int> Count(PostType type = PostType.InvestAd);
     }
 
@@ -18,11 +18,11 @@ namespace InvestList.Services
     {
         private int? _investCount;
 
-        public async Task<string> Put(string? idString, string userId, PostFormModel post,  PutInvestModel putInvestModel)
+        public async Task<string> Put(string? idString, string userId, PostDataDto post,  InvestPostDto investPostDto)
         {
-            putInvestModel.MinInvestValues = putInvestModel.MinInvestValues.Where(x => x.MinValue.HasValue).ToList();
+            investPostDto.MinInvestValues = investPostDto.MinInvestValues.Where(x => x.MinValue.HasValue).ToList();
             
-            var invest = mapper.Map<InvestPost>(putInvestModel);
+            var invest = mapper.Map<InvestPost>(investPostDto);
             var postDb = mapper.Map<Post>(post);
             invest.Post = postDb;
             using var scope = serviceProvider.CreateScope();
@@ -48,21 +48,7 @@ namespace InvestList.Services
                 _investCount = null;
             }
             imageService.RefreshImages(postDb, oldImagePaths);
-
-            // var investDb = await dbContext.InvestPosts.FindAsync(id);
-            // var postOrigin = await Get(id);
-            // 
-            // if (postOrigin != null)
-            // {
-            //     mapper.Map(invest, postOrigin);
-            //     
-            // }
-            // else
-            // {
-            //     throw new ArgumentException("Attempt to modify unexisting object");
-            // }
-            // postOrigin = await Get(id);
-            // imageService.RefreshImages(postOrigin.Post, oldImagePaths);
+            
             return idString ?? postDb.Slug;
         }
         

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Radar.Domain;
 using Radar.Domain.Entities;
 using Radar.Domain.Interfaces;
-using Radar.EF.Repositories;
+using Radar.Infrastructure.Repositories;
 using IImageService = Core.Interfaces.IImageService;
 
 namespace DataAccess.Repositories

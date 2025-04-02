@@ -12,7 +12,6 @@ using GoogleAnalyticDataView = Radar.Application.Models.GoogleAnalyticDataView;
 using LinkView = Radar.Application.Models.LinkView;
 using PostLinkView = Radar.Application.Models.PostLinkView;
 using PostView = Radar.Application.Models.PostView;
-using PutPostTranslationModel = Radar.Application.Models.PutPostTranslationModel;
 using TagView = Radar.Application.Models.TagView;
 
 namespace InvestList.Mapper
@@ -40,15 +39,15 @@ namespace InvestList.Mapper
             //DB->PUT
             CreateMap<MinInvestValue, CurrencyView>();
             CreateMap<CurrencyView, MinInvestValue>();
-            CreateMap<InvestPost, PutInvestModel>()
+            CreateMap<InvestPost, InvestPostDto>()
                 .ForMember(x => x.MinInvestValues, s => s.MapFrom(x => x.MinInvestValues));
 
             //PUT -> DB
-            CreateMap<PutInvestModel, InvestPost>();
-            CreateMap<PutInvestModel, Post>()
+            CreateMap<InvestPostDto, InvestPost>();
+            CreateMap<InvestPostDto, Post>()
                 ;
             
-            CreateMap<PostFormModel, Post>()
+            CreateMap<PostDataDto, Post>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations))
                 .ForMember(dest=>dest.Tags,opt=>opt.MapFrom(x=> x.SelectedTagIds.Select(y=>new PostTags(){ TagId = y })))
@@ -71,12 +70,12 @@ namespace InvestList.Mapper
                                     }
                                 }
                             }));
-            CreateMap<PostTranslation, PutPostTranslationModel>();
+            CreateMap<PostTranslation, PostTranslationDto>();
 
-            CreateMap<PutPostTranslationModel, PostTranslation>()
+            CreateMap<PostTranslationDto, PostTranslation>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.PostId, opt => opt.Ignore());
-            CreateMap<PostLinkModel, PostLink>()
+            CreateMap<PostLinkDto, PostLink>()
                 .ForMember(dest => dest.Follow, opt => opt.MapFrom(src => src.Follow ?? false));
             CreateMap<Post, PutPostModel>()
                 .ForMember(x => x.ImageBase64,
@@ -89,7 +88,7 @@ namespace InvestList.Mapper
                 .ForMember(x => x.Description, s => s.MapFrom(x => x.Description))
                 .ForMember(x => x.TagIds, s => s.MapFrom(x => x.Tags));
 
-            CreateMap<Post, PostFormModel>()
+            CreateMap<Post, PostDataDto>()
                 .ForMember(x => x.ImageBase64,
                     s => s.MapFrom(x =>
                         x.Images.FirstOrDefault() == null

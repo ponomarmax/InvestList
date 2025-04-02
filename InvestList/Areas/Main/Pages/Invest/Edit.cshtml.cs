@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Radar.Application;
 using Radar.Application.Models;
 using Radar.Domain.Entities;
-using Radar.EF.Authorization;
+using Radar.Infrastructure.Authorization;
 using Radar.UI.Models;
 
 namespace InvestList.Areas.Main.Pages.Invest
@@ -21,8 +21,8 @@ namespace InvestList.Areas.Main.Pages.Invest
         public async Task<IActionResult> OnGetAsync(Guid id)
         {
             var db = await repository.Get(id.ToString());
-            var postFormModel = mapper.Map<PostFormModel>(db.Post);
-            InvestPost = mapper.Map<PutInvestModel>(db);
+            var postFormModel = mapper.Map<PostDataDto>(db.Post);
+            InvestPostPost = mapper.Map<InvestPostDto>(db);
             Prepare();
             await PrepareTags(postFormModel);
             Id = db.Post.Id;
@@ -44,7 +44,7 @@ namespace InvestList.Areas.Main.Pages.Invest
             if (db == null)
                 return NotFound();
 
-            var slug = await service.Put(id.ToString(), Utils.GetUserId(User), Post, InvestPost);
+            var slug = await service.Put(id.ToString(), Utils.GetUserId(User), Post, InvestPostPost);
             return RedirectToPage("./Get", new { id = slug });
         }
     }

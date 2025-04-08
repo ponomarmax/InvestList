@@ -1,8 +1,8 @@
 namespace InvestList.Models.V2
 {
-    public class InvestView
+    public class InvestPostDetailDto
     {
-        public Radar.Application.Models.PostView Post { get; set; }
+        public Radar.Application.Models.PostDetailDto Post { get; set; }
         public DateTime UpdateAt { get; set; }
 
         public decimal AnnualInvestmentReturn { get; set; }

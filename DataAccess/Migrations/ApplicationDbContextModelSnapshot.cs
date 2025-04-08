@@ -73,6 +73,61 @@ namespace DataAccess.Migrations
                     b.ToTable("MinInvestValue");
                 });
 
+            modelBuilder.Entity("Core.Entities.TopPostWithInvestResult", b =>
+                {
+                    b.Property<decimal?>("AnnualInvestmentReturn")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<byte[]>("ImageBytes")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<Guid?>("ImageId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("InvestDurationMonths")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("InvestDurationYears")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("InvestId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("InvestPostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("PostType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("TotalInvestment")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("TranslationDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TranslationTitle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.ToTable("TopPostWithInvestResult");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -330,7 +385,6 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Title")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TitleSeo")
@@ -615,7 +669,7 @@ namespace DataAccess.Migrations
                     b.HasOne("Core.Entities.InvestPost", "InvestPost")
                         .WithMany("MinInvestValues")
                         .HasForeignKey("InvestPostId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.ClientCascade);
 
                     b.Navigation("InvestPost");
                 });

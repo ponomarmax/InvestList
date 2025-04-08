@@ -10,9 +10,9 @@ using Radar.Infrastructure.Authorization;
 
 namespace InvestList.Areas.Main.Pages.Invest
 {
-    [IsPostOwnerAuthorize]
+    [RequireConfirmedEmail]
     public class Create(
-        IMediator _mediator,
+        IMediator mediator,
         IInvestService service,
         ITagService tagService,
         UserManager<User> userManager,ISanitizerService sanitizerService):  BaseInvestUpsertPage(tagService,sanitizerService)
@@ -31,9 +31,6 @@ namespace InvestList.Areas.Main.Pages.Invest
         {
             BasePost();
 
-            // if (!await userManager.IsEmailConfirmedAsync(user))
-            //     return RedirectToPage("/Account/ResendEmailConfirmation", new { area = "Identity" });
-
             if (!ModelState.IsValid)
             {
                 await PrepareTags();
@@ -42,18 +39,13 @@ namespace InvestList.Areas.Main.Pages.Invest
             
             var command = new CreateInvestPostCommand
             {
-                UserId = user.Id,
                 Post = Post,
-                MinInvestValues = InvestPostPost.MinInvestValues,
-                InvestDurationYears = InvestPostPost.InvestDurationYears,
-                InvestDurationMonths = InvestPostPost.InvestDurationMonths,
-                TotalInvestment = InvestPostPost.TotalInvestment,
-                AnnualInvestmentReturn = InvestPostPost.AnnualInvestmentReturn
+                InvestPost = InvestPost,
+                UserId = Utils.GetUserId(User),
             };
 
-            var id = await _mediator.Send(command);
+            var slug = await mediator.Send(command);
             
-            var slug = await service.Put(null, Utils.GetUserId(User), Post, InvestPostPost);
             return RedirectToPage("./Get", new { id = slug });
         }
     }

@@ -1,3 +1,4 @@
+using System.Globalization;
 using Core.Entities;
 using Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -53,7 +54,7 @@ namespace DataAccess.Repositories
         {
             if (_customeHeader == null || _customeHeader.Length == 0)
             {
-                _customeHeader = await dbContext.CustomHeaders.Include(x => x.Tag).ToArrayAsync();
+                _customeHeader = await dbContext.CustomHeaders.Include(x => x.Tag).ThenInclude(x=>x.Translations.Where(x=>x.Language==CultureInfo.CurrentUICulture.TwoLetterISOLanguageName)).ToArrayAsync();
             }
             return _customeHeader;
         }

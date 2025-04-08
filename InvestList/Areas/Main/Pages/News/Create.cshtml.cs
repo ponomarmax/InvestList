@@ -29,11 +29,11 @@ namespace InvestList.Areas.Main.Pages.News
                 // if (!await userManager.IsEmailConfirmedAsync(user))
                 //     return RedirectToPage("/Account/ResendEmailConfirmation", new { area = "Identity" });
             
-            if (!ModelState.IsValid)
-            {
-                await PrepareTags();
-                return Page();
-            }
+            // if (!ModelState.IsValid)
+            // {
+            //     await PrepareTags();
+            //     return Page();
+            // }
             BasePost();
             var command = new CreatePostCommand
             {

@@ -1,20 +1,18 @@
 using AutoMapper;
-using Common;
-using Core.Entities;
 using Core.Interfaces;
-using Microsoft.AspNetCore.Identity;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Radar.Application;
 using Radar.Application.Models;
-using Radar.Domain.Entities;
+using Radar.Application.Posts.Commands;
+using Radar.Domain.Interfaces;
 using Radar.Infrastructure.Authorization;
 using Radar.UI.Models;
-using IPostService = InvestList.Services.IPostService;
 
 namespace InvestList.Areas.Main.Pages.News
 {
     [IsAdminAuthorize]
-    public class Edit(IPostRepository repository, IPostService service, ITagService tagService, IMapper mapper, ISanitizerService sanitizerService) : BaseUpsertPage(tagService, sanitizerService)
+    public class Edit(IBasePostRepository repository, ITagService tagService, IMapper mapper, ISanitizerService sanitizerService, IMediator mediator) : BaseUpsertPage(tagService, sanitizerService)
     {
         public Guid Id { get; set; }
         
@@ -38,8 +36,14 @@ namespace InvestList.Areas.Main.Pages.News
                 return NotFound();
 
             BasePost();
-            var post = mapper.Map<Post>(Post);
-            var slug = await service.Put(id.ToString(), Utils.GetUserId(User),  post);
+            var command = new UpdatePostCommand
+            {
+                Id = id,
+                Post = Post,
+            };
+
+
+            var slug = await mediator.Send(command);
             return RedirectToPage("./Get", new { id = slug });
         }
     }

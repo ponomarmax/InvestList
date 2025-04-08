@@ -3,19 +3,21 @@ using Core.Interfaces;
 using DataAccess;
 using InvestList.Models.V2;
 using Microsoft.EntityFrameworkCore;
+using Radar.Domain.Entities;
+using Radar.Domain.Interfaces;
 
 namespace InvestList.Services
 {
     public class ImageService(ApplicationDbContext context): IImageService
     {
-        private static string _root = "wwwroot";
-        private static string _investF = "/images/investad/";
-        private static string _newsF = "/images/news/";
+        private static string _baseImagePath = "wwwroot/images/";
 
         public async Task LoadOnFileSystem()
         {
-            Directory.CreateDirectory(_root + _investF);
-            Directory.CreateDirectory(_root + _newsF);
+            foreach (var type in Enum.GetNames(typeof(PostType)))
+            {
+                Directory.CreateDirectory(Path.Combine(_baseImagePath, type.ToLower()));
+            }
 
             await foreach (var post in context.Posts.Include(x => x.Images).ThenInclude(x => x.ImageObject)
                                .AsAsyncEnumerable())
@@ -24,7 +26,7 @@ namespace InvestList.Services
                     foreach (var image in post.Images)
                     {
                         SaveImage(image.ImageObject.Image,
-                            post.PostType == PostType.News.ToString() ? _root + _newsF : _root + _investF,
+                            Path.Combine(_baseImagePath, post.PostType.ToLower()),
                             $"{image.Id}.jpg");
                     }
             }
@@ -35,7 +37,7 @@ namespace InvestList.Services
             if (oldImagePaths != null)
                 foreach (var oldId in oldImagePaths)
                 {
-                    var path = $"{_root}{GetImagePath(oldId, post)}";
+                    var path = Path.Combine(_baseImagePath, post.PostType.ToLower(), $"{oldId}.jpg");
                     if(File.Exists(path))
                     {
                         File.Delete(path);
@@ -46,18 +48,9 @@ namespace InvestList.Services
                 foreach (var image in post.Images)
                 {
                     SaveImage(image.ImageObject.Image,
-                        post.PostType == PostType.News.ToString() ? _root + _newsF : _root + _investF,
+                        Path.Combine(_baseImagePath, post.PostType.ToLower()),
                         $"{image.Id}.jpg");
                 }
-        }
-
-        public static ImageView GetImageView(Guid imageId, Post post)
-        {
-            return new ImageView()
-            {
-                AltText = post.Title,
-                FilePath = GetImagePath(post.Images.First().Id, post)
-            };
         }
         
         public static Radar.Application.Models.ImageView GetImageView2(Guid imageId, Post post)
@@ -71,11 +64,7 @@ namespace InvestList.Services
 
         public static string GetImagePath(Guid imageId, Post post)
         {
-            var filePath = string.Empty;
-            if (post.PostType == PostType.News.ToString())
-                filePath = _newsF;
-            else filePath = _investF;
-            return $"{filePath}{imageId}.jpg";
+            return $"/images/{post.PostType.ToLower()}/{imageId}.jpg";
         }
 
         public static void SaveImage(byte[] base64Image, string folderPath, string fileName)

@@ -8,34 +8,34 @@
     <div class="form-group col-6">
 
         <div class="mb-4">
-            <label asp-for="InvestPostPost.AnnualInvestmentReturn">Річна дохідність у %</label>
-            <input asp-for="InvestPostPost.AnnualInvestmentReturn" class="form-control" type="number" step="0.01"/>
-            <span asp-validation-for="InvestPostPost.AnnualInvestmentReturn" class="text-danger"></span>
+            <label asp-for="InvestPost.AnnualInvestmentReturn">Річна дохідність у %</label>
+            <input asp-for="InvestPost.AnnualInvestmentReturn" class="form-control" type="number" step="0.01"/>
+            <span asp-validation-for="InvestPost.AnnualInvestmentReturn" class="text-danger"></span>
         </div>
 
         <div class="mb-4">
-            <label asp-for="InvestPostPost.TotalInvestment">Загальний обсяг інвестицій (у $):</label>
-            <input asp-for="InvestPostPost.TotalInvestment" class="form-control" type="number" step="0.01"/>
-            <span asp-validation-for="InvestPostPost.TotalInvestment" class="text-danger"></span>
+            <label asp-for="InvestPost.TotalInvestment">Загальний обсяг інвестицій (у $):</label>
+            <input asp-for="InvestPost.TotalInvestment" class="form-control" type="number" step="0.01"/>
+            <span asp-validation-for="InvestPost.TotalInvestment" class="text-danger"></span>
         </div>
 
         <div class="mb-4">
             <div class="input-group flex-column gap-2">
                 @{
-                    @if (Model.InvestPostPost.MinInvestValues != null && Model.InvestPostPost.MinInvestValues.Any())
+                    @if (Model.InvestPost.MinInvestValues != null && Model.InvestPost.MinInvestValues.Any())
                     {
                         <h4>Minimum Investment Values</h4>
-                        @for (int i = 0; i < Model.InvestPostPost.MinInvestValues.Count; i++)
+                        @for (int i = 0; i < Model.InvestPost.MinInvestValues.Count; i++)
                         {
                             <div class="form-group">
-                                <label asp-for="InvestPostPost.MinInvestValues[i].Currency" class="form-label">
-                                    @Model.InvestPostPost.MinInvestValues[i].Currency
+                                <label asp-for="InvestPost.MinInvestValues[i].Currency" class="form-label">
+                                    @Model.InvestPost.MinInvestValues[i].Currency
                                 </label>
-                                <input type="hidden" asp-for="InvestPostPost.MinInvestValues[i].Currency"/>
+                                <input type="hidden" asp-for="InvestPost.MinInvestValues[i].Currency"/>
 
-                                <label asp-for="InvestPostPost.MinInvestValues[i].MinValue" class="control-label">Minimum Value</label>
-                                <input asp-for="InvestPostPost.MinInvestValues[i].MinValue" class="form-control"/>
-                                <span asp-validation-for="InvestPostPost.MinInvestValues[i].MinValue" class="text-danger"></span>
+                                <label asp-for="InvestPost.MinInvestValues[i].MinValue" class="control-label">Minimum Value</label>
+                                <input asp-for="InvestPost.MinInvestValues[i].MinValue" class="form-control"/>
+                                <span asp-validation-for="InvestPost.MinInvestValues[i].MinValue" class="text-danger"></span>
                             </div>
                         }
                     }
@@ -48,20 +48,22 @@
     <div class="form-group col-6 dur">
         <label>На який термін залучаються інвестиції (вкажіть кількість років та місяців):</label>
 
-        <span asp-validation-for="InvestPostPost.InvestDurationYears" class="text-danger"></span>
+        <span asp-validation-for="InvestPost.InvestDurationYears" class="text-danger"></span>
         <div class="input-group mb-3">
             <span class="input-group-addon">
                 <i class="glyphicon glyphicon-calendar"></i>
             </span>
-            <input asp-for="InvestPostPost.InvestDurationYears" type="number" min="0" class="form-control" placeholder="Кількість років"/>
+            <input asp-for="InvestPost.InvestDurationYears" type="number" min="0" class="form-control" placeholder="Кількість років"/>
+            <span asp-validation-for="InvestPost.InvestDurationYears" class="text-danger"></span>
         </div>
 
-        <span asp-validation-for="InvestPostPost.InvestDurationMonths" class="text-danger"></span>
+        <span asp-validation-for="InvestPost.InvestDurationMonths" class="text-danger"></span>
         <div class="input-group">
             <span class="input-group-addon">
                 <i class="glyphicon glyphicon-calendar"></i>
             </span>
-            <input asp-for="InvestPostPost.InvestDurationMonths" type="number" min="0" max="11" class="form-control" placeholder="Кількість місяців"/>
+            <input asp-for="InvestPost.InvestDurationMonths" type="number" min="0" max="11" class="form-control" placeholder="Кількість місяців"/>
+            <span asp-validation-for="InvestPost.InvestDurationMonths" class="text-danger"></span>
         </div>
     </div>
 </div>

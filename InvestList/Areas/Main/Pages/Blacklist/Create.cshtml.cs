@@ -1,74 +1,49 @@
 using Common;
 using Core.Entities;
-using Core.Interfaces;
-using InvestList.Models.V2;
-using InvestList.Services;
-using Microsoft.AspNetCore.Identity;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Radar.Domain.Entities;
+using Radar.Application;
+using Radar.Application.Posts.Commands;
+using Radar.Infrastructure.Authorization;
+using Radar.UI.Models;
 
 namespace InvestList.Areas.Main.Pages.Blacklist
 {
+    [IsAdminAuthorize]
     public class Create(
-        IPostService service,
-        ITagRepository tagRepository,
-        UserManager<User> userManager): PageModel
+        ITagService tagService,
+        ISanitizerService sanitizerService,
+        IMediator mediator): BaseUpsertPage(tagService, sanitizerService)
     {
-        [BindProperty]
-        public PutPostModel Post { get; set; }
-
-        public List<SelectListItem> AvailableTags { get; set; } = new();
-
         public async Task<IActionResult> OnGetAsync()
         {
-            var user = await userManager.GetUserAsync(User);
-            if (user == null)
-                return Forbid();
-            
-            if (!await userManager.CanEditPost(User))
-            {
-                return Forbid();
-            }
-            
-            await PrepareViewData();
-
+            await PrepareTags();
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var user = await userManager.GetUserAsync(User);
-            if (user == null)
-                return Forbid();
-
-            if (!await userManager.IsEmailConfirmedAsync(user))
-                return RedirectToPage("/Account/ResendEmailConfirmation", new { area = "Identity" });
-
-            if (!await userManager.CanEditPost(User))
-            {
-                return Forbid();
-            }
+            // if (!await userManager.IsEmailConfirmedAsync(user))
+            //     return RedirectToPage("/Account/ResendEmailConfirmation", new { area = "Identity" });
             
-            if (!ModelState.IsValid)
+            // if (!ModelState.IsValid)
+            // {
+            //     await PrepareTags();
+            //     return Page();
+            // }
+            BasePost();
+            var command = new CreatePostCommand
             {
-                await PrepareViewData();
-                return Page();
-            }
+                UserId = Utils.GetUserId(User),
+                Post = Post
+            };
 
-            var slug = await service.Put(null, Utils.GetUserId(User), Post, PostType.Blacklist);
+            // Set the post type
+            Post.PostType = PostType.Blacklist.ToString();
+
+            var slug = await mediator.Send(command);
+
             return RedirectToPage("./Get", new { id = slug });
-        }
-        
-        private async Task PrepareViewData()
-        {
-            var tagsV2 = await tagRepository.GetTags();
-            foreach (var tag in tagsV2)
-            {
-                var item = new SelectListItem(null, tag.Id.ToString());
-                AvailableTags.Add(item);
-            }
         }
     }
 }

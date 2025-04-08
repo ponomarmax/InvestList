@@ -1,33 +1,29 @@
-using AutoMapper;
+using System.Globalization;
 using Core.Entities;
-using Core.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Radar.Application.Models;
+using Radar.Application.Posts.Queries;
 using Radar.Domain.Entities;
 using Radar.UI.Models;
 
 namespace InvestList.Areas.Main.Pages.News;
 
-public class Get(IPostRepository repository, IMapper mapper, UserManager<User> userManager): BaseGetPage
+public class Get(UserManager<User> userManager, IMediator mediator): BaseGetPage
 {
-    public async Task<IActionResult> OnGetAsync(string slug)
+    public async Task<IActionResult> OnGetAsync(string id)
     {
-        if (string.IsNullOrEmpty(slug)) return NotFound();
-
-        var post = await repository.Get(slug, PostType.News);
-        if (post == null) return NotFound();
+        if (string.IsNullOrEmpty(id)) return NotFound();
 
         CanUserEdit = await userManager.CanEditPost(User);
-        
-        Post = mapper.Map<PostView>(post);
-
-        var tagIds = Post.Tags.Select(x => x.Id).ToList();
-    
-        var similarContent = (await repository.GetSimilarPosts(post.Id, tagIds)).ToList();
-        
-        Post.SimilarNews = mapper.Map<IEnumerable<PostView>>(similarContent.Where(x=>x.PostType==PostType.News.ToString()));
-        Post.SimilarInvests = mapper.Map<IEnumerable<PostView>>(similarContent.Where(x=>x.PostType==PostType.InvestAd.ToString()));
+        var postWithSimilar = await mediator.Send(new GetPostWithSimilarQuery
+        (
+            id, PostType.News.ToString(),
+            CultureInfo.CurrentUICulture.TwoLetterISOLanguageName
+        ));
+        Post = postWithSimilar.Post;
+            Post.SimilarNews = postWithSimilar.SimilarPosts.TryGetValue(PostType.News.ToString(), out var similarNews)?similarNews:null; 
+        Post.SimilarInvests = postWithSimilar.SimilarPosts.TryGetValue(PostType.InvestAd.ToString(), out var similarAds)?similarAds:null;  
         Radar.UI.SeoHelper.SetupPostViewSeoDetails(ViewData, Post);
 
         return Page();

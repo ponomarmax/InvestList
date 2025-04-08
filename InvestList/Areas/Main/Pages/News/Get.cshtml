@@ -1,5 +1,4 @@
 @page "/news/{id}"
-@using InvestList
 @using Radar.UI.Pages.Shared.Get
 @model InvestList.Areas.Main.Pages.News.Get
 
@@ -57,10 +56,3 @@
        
     </div>
 </div>
-
-<script>
-    window.onload = function() {
-        var shareUrl = encodeURIComponent(window.location.href);
-        tg_share.href ='https://t.me/share/url?url=' + shareUrl;
-    }
-</script>

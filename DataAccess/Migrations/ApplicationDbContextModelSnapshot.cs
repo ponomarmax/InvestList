@@ -73,6 +73,61 @@ namespace DataAccess.Migrations
                     b.ToTable("MinInvestValue");
                 });
 
+            modelBuilder.Entity("Core.Entities.TopPostWithInvestResult", b =>
+                {
+                    b.Property<decimal?>("AnnualInvestmentReturn")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<byte[]>("ImageBytes")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<Guid?>("ImageId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("InvestDurationMonths")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("InvestDurationYears")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("InvestId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("InvestPostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("PostType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("TotalInvestment")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("TranslationDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TranslationTitle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.ToTable("TopPostWithInvestResult");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -222,49 +277,6 @@ namespace DataAccess.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Radar.Domain.Entities.BasePost", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedById")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("DiscriminatorType")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("PostType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("Priority")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Slug")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedById");
-
-                    b.ToTable("Posts", (string)null);
-
-                    b.HasDiscriminator<int>("DiscriminatorType");
-
-                    b.UseTphMappingStrategy();
-                });
-
             modelBuilder.Entity("Radar.Domain.Entities.CustomHeader", b =>
                 {
                     b.Property<Guid>("Id")
@@ -338,6 +350,60 @@ namespace DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ImageObject");
+                });
+
+            modelBuilder.Entity("Radar.Domain.Entities.Post", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedById")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DescriptionSeo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PostType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TitleSeo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("Slug");
+
+                    b.HasIndex("PostType", "IsActive");
+
+                    b.ToTable("Posts", (string)null);
                 });
 
             modelBuilder.Entity("Radar.Domain.Entities.PostComment", b =>
@@ -587,37 +653,9 @@ namespace DataAccess.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Core.Entities.Post", b =>
-                {
-                    b.HasBaseType("Radar.Domain.Entities.BasePost");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DescriptionSeo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TitleSeo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasIndex("CreatedAt");
-
-                    b.HasIndex("Slug");
-
-                    b.HasIndex("PostType", "IsActive");
-
-                    b.ToTable("Posts", (string)null);
-
-                    b.HasDiscriminator().HasValue(0);
-                });
-
             modelBuilder.Entity("Core.Entities.InvestPost", b =>
                 {
-                    b.HasOne("Core.Entities.Post", "Post")
+                    b.HasOne("Radar.Domain.Entities.Post", "Post")
                         .WithMany()
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -628,9 +666,12 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Core.Entities.MinInvestValue", b =>
                 {
-                    b.HasOne("Core.Entities.InvestPost", null)
+                    b.HasOne("Core.Entities.InvestPost", "InvestPost")
                         .WithMany("MinInvestValues")
-                        .HasForeignKey("InvestPostId");
+                        .HasForeignKey("InvestPostId")
+                        .OnDelete(DeleteBehavior.ClientCascade);
+
+                    b.Navigation("InvestPost");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -684,16 +725,6 @@ namespace DataAccess.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Radar.Domain.Entities.BasePost", b =>
-                {
-                    b.HasOne("Radar.Domain.Entities.User", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("CreatedBy");
-                });
-
             modelBuilder.Entity("Radar.Domain.Entities.CustomHeader", b =>
                 {
                     b.HasOne("Radar.Domain.Entities.Tag", "Tag")
@@ -707,7 +738,7 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Radar.Domain.Entities.GoogleAnalyticPostView", b =>
                 {
-                    b.HasOne("Radar.Domain.Entities.BasePost", "Post")
+                    b.HasOne("Radar.Domain.Entities.Post", "Post")
                         .WithOne("GoogleAnalyticPostView")
                         .HasForeignKey("Radar.Domain.Entities.GoogleAnalyticPostView", "PostId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -724,7 +755,7 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Radar.Domain.Entities.BasePost", "Post")
+                    b.HasOne("Radar.Domain.Entities.Post", "Post")
                         .WithMany("Images")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -735,9 +766,19 @@ namespace DataAccess.Migrations
                     b.Navigation("Post");
                 });
 
+            modelBuilder.Entity("Radar.Domain.Entities.Post", b =>
+                {
+                    b.HasOne("Radar.Domain.Entities.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("CreatedBy");
+                });
+
             modelBuilder.Entity("Radar.Domain.Entities.PostComment", b =>
                 {
-                    b.HasOne("Radar.Domain.Entities.BasePost", "Post")
+                    b.HasOne("Radar.Domain.Entities.Post", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -756,7 +797,7 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Radar.Domain.Entities.PostLink", b =>
                 {
-                    b.HasOne("Radar.Domain.Entities.BasePost", "Post")
+                    b.HasOne("Radar.Domain.Entities.Post", "Post")
                         .WithMany("Links")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -767,7 +808,7 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Radar.Domain.Entities.PostTags", b =>
                 {
-                    b.HasOne("Radar.Domain.Entities.BasePost", "Post")
+                    b.HasOne("Radar.Domain.Entities.Post", "Post")
                         .WithMany("Tags")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -786,7 +827,7 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Radar.Domain.Entities.PostTranslation", b =>
                 {
-                    b.HasOne("Radar.Domain.Entities.BasePost", "Post")
+                    b.HasOne("Radar.Domain.Entities.Post", "Post")
                         .WithMany("Translations")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -811,7 +852,7 @@ namespace DataAccess.Migrations
                     b.Navigation("MinInvestValues");
                 });
 
-            modelBuilder.Entity("Radar.Domain.Entities.BasePost", b =>
+            modelBuilder.Entity("Radar.Domain.Entities.Post", b =>
                 {
                     b.Navigation("Comments");
 

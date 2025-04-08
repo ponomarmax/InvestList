@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{BC0ADD3A-3A00-4A55-804A-56F13C853F8D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Radar.EF", "radar-libs\Radar.EF\Radar.EF.csproj", "{4DEF8A98-8525-44D9-A523-DFF7343DE0CA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Radar.Infrastructure", "radar-libs\Radar.Infrastructure\Radar.Infrastructure.csproj", "{4DEF8A98-8525-44D9-A523-DFF7343DE0CA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Radar.Domain", "radar-libs\Radar.Domain\Radar.Domain.csproj", "{80AB6087-F405-4DCC-AD6F-5A91602A4443}"
 EndProject

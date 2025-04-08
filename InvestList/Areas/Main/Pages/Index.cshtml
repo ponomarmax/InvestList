@@ -2,6 +2,8 @@
 @using InvestList
 @using InvestList.Services
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Radar.UI
+@using Radar.UI.Pages
 @model InvestList.Areas.Main.Pages.Index
 @inject IInvestService InvestService
 
@@ -50,7 +52,7 @@
             <a class="news list-text-size"
                asp-area="Main"
                asp-page="/News/List"
-               asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.TagIds, search: Model.Search))">
+               asp-all-route-data="@(PaginationHelper.GetPaginationData(tagIds: Model.TagIds, search: Model.Search))">
                 Більше новин
             </a>
         </div>
@@ -81,7 +83,7 @@
             <a class="news list-text-size"
                asp-area="Main"
                asp-page="/Invest/List"
-               asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.TagIds, search: Model.Search))">
+               asp-all-route-data="@(PaginationHelper.GetPaginationData(tagIds: Model.TagIds, search: Model.Search))">
                 Більше оголошень
             </a>
         </div>
@@ -123,7 +125,7 @@
             @foreach (var ad in Model.BlacklistPosts)
             {
                 <div class="col-12 col-lg-6 mb-4">
-                    @await Html.PartialAsync("_PostCard", ("Blacklist", ad))
+                    @await Html.PartialAsync("List/_PostCard", ("Blacklist", ad))
                 </div>
             }
         </div>
@@ -131,7 +133,7 @@
             <a class="news list-text-size"
                asp-area="Main"
                asp-page="/Blacklist/List"
-               asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.TagIds, search: Model.Search))">
+               asp-all-route-data="@(PaginationHelper.GetPaginationData(tagIds: Model.TagIds, search: Model.Search))">
                 Більше про шахраїв
             </a>
         </div>
@@ -154,7 +156,7 @@
             @foreach (var ad in Model.PostsWithLastComments)
             {
                 <div class="col-12 col-lg-6 mb-4">
-                    @await Html.PartialAsync("_PostWithComment", (ad.GetUrlSlug(), ad))
+                    @await Html.PartialAsync("_PostWithComment",ad)
                 </div>
             }
         </div>

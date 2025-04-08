@@ -54,6 +54,7 @@
                 <i class="glyphicon glyphicon-calendar"></i>
             </span>
             <input asp-for="InvestPost.InvestDurationYears" type="number" min="0" class="form-control" placeholder="Кількість років"/>
+            <span asp-validation-for="InvestPost.InvestDurationYears" class="text-danger"></span>
         </div>
 
         <span asp-validation-for="InvestPost.InvestDurationMonths" class="text-danger"></span>
@@ -62,6 +63,7 @@
                 <i class="glyphicon glyphicon-calendar"></i>
             </span>
             <input asp-for="InvestPost.InvestDurationMonths" type="number" min="0" max="11" class="form-control" placeholder="Кількість місяців"/>
+            <span asp-validation-for="InvestPost.InvestDurationMonths" class="text-danger"></span>
         </div>
     </div>
 </div>

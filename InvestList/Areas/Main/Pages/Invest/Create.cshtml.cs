@@ -1,16 +1,18 @@
 using Common;
-using InvestList.Models.V2;
 using InvestList.Services;
+using InvestList.Services.Invest.Commands;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Radar.Application;
 using Radar.Domain.Entities;
-using Radar.UI.Models;
+using Radar.Infrastructure.Authorization;
 
 namespace InvestList.Areas.Main.Pages.Invest
 {
+    [RequireConfirmedEmail]
     public class Create(
+        IMediator mediator,
         IInvestService service,
         ITagService tagService,
         UserManager<User> userManager,ISanitizerService sanitizerService):  BaseInvestUpsertPage(tagService,sanitizerService)
@@ -27,21 +29,23 @@ namespace InvestList.Areas.Main.Pages.Invest
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var user = await userManager.GetUserAsync(User);
-            if (user == null)
-                return Forbid();
-            
             BasePost();
-
-            // if (!await userManager.IsEmailConfirmedAsync(user))
-            //     return RedirectToPage("/Account/ResendEmailConfirmation", new { area = "Identity" });
 
             if (!ModelState.IsValid)
             {
                 await PrepareTags();
                 return Page();
             }
-            var slug = await service.Put(null, Utils.GetUserId(User), Post, InvestPost);
+            
+            var command = new CreateInvestPostCommand
+            {
+                Post = Post,
+                InvestPost = InvestPost,
+                UserId = Utils.GetUserId(User),
+            };
+
+            var slug = await mediator.Send(command);
+            
             return RedirectToPage("./Get", new { id = slug });
         }
     }

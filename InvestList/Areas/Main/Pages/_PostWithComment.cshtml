@@ -1,14 +1,14 @@
-@model (string link, InvestList.Models.V2.PostView postView)
+@model PostShortWithCommentDto
 
 <div class="list-post-card">
     <h4 class="list-post-title m-3">
-        <a class="list-post-link" asp-area="Main" asp-page=@($"/{Model.link}/Get") asp-route-id="@Model.postView.Slug">@Model.postView.Title</a>
+        <a class="list-post-link" asp-area="Main" asp-page=@($"/{Model.Link}/Get") asp-route-id="@Model.Slug">@Model.Title</a>
     </h4>
 
-    @if (Model.postView.Tags != null && Model.postView.Tags.Any())
+    @if (Model.Tags != null && Model.Tags.Any())
     {
         <div class="tags-container mx-3">
-            @foreach (var field in Model.postView.Tags)
+            @foreach (var field in Model.Tags)
             {
                 <span class="tag_index mb-1 mx-0">@field.Name</span>
             }
@@ -17,15 +17,15 @@
     <hr>
 
     <div class="row mx-2">
-        @if (Model.postView.Image != null)
+        @if (Model.Image != null)
         {
             <div class="col-auto ms-2">
-                <img src="@Model.postView.Image.FilePath" alt="@Model.postView.Image.AltText" class="img-fluid rounded" style="width: 100px; height: 100px;">
+                <img src="@Model.Image.FilePath" alt="@Model.Image.AltText" class="img-fluid rounded" style="width: 100px; height: 100px;">
             </div>
         }
 
         @{
-            var comment = Model.postView.Comments?.FirstOrDefault();
+            var comment = Model.Comment;
             @await Html.PartialAsync("_CommentCard", comment)
         }
     </div>

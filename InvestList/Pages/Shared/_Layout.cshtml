@@ -2,6 +2,8 @@
 @using InvestList
 @using Microsoft.AspNetCore.Localization
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Radar.UI
+@using Radar.UI.Pages
 @inject ITagRepository tagService
 @inject IWebHostEnvironment env
 <!DOCTYPE html>
@@ -207,8 +209,8 @@
                     {
                         <li class="nav-item">
                             <a class="nav-link" asp-area="Main" asp-page="/Index"
-                                asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: new[] { tag.TagId }))">
-                                @tag.Tag.Id
+                                asp-all-route-data="@(PaginationHelper.GetPaginationData(tagIds: new[] { tag.TagId }))">
+                                @tag.Tag.Translations.FirstOrDefault().Name
                             </a>
                         </li>
                     }
@@ -284,6 +286,8 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     @await RenderSectionAsync("Scripts", required: false)
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
     <script src="~/radar-ui/js/description-text.js"></script>
     <script src="~/radar-ui/js/site.js"></script>
     <script src="~/radar-ui/js/handleImageUpload.js"></script>

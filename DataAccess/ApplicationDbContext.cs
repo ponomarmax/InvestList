@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Radar.Domain.Entities;
+using Post = Radar.Domain.Entities.Post;
 
 namespace DataAccess
 {
@@ -25,9 +26,7 @@ namespace DataAccess
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<BasePost>().UseTphMappingStrategy().ToTable("Posts")
-                .HasDiscriminator<int>("DiscriminatorType")
-                .HasValue<Post>(0);
+            modelBuilder.Entity<Post>().ToTable("Posts");
             modelBuilder.Entity<Post>()
                 .ToTable("Posts")
                 .HasOne(p => p.CreatedBy)
@@ -60,6 +59,12 @@ namespace DataAccess
             modelBuilder.Entity<MinInvestValue>()
                 .Property(p => p.Currency)
                 .HasConversion(currencyConverter);
+            
+            modelBuilder.Entity<MinInvestValue>()
+                .HasOne(p => p.InvestPost)
+                .WithMany(x=>x.MinInvestValues)
+                .HasForeignKey(p => p.InvestPostId)
+                .OnDelete(DeleteBehavior.ClientCascade);
             modelBuilder.Entity<PostTags>()
                 .HasKey(x => new { x.PostId, x.TagId });
             modelBuilder.Entity<PostTags>()
@@ -91,6 +96,7 @@ namespace DataAccess
             modelBuilder.Entity<GoogleAnalyticPostView>()
                 .HasOne(x=>x.Post)
                 .WithOne(x=>x.GoogleAnalyticPostView);
+            modelBuilder.Entity<TopPostWithInvestResult>().HasNoKey();
 
             Seed(modelBuilder);
         }

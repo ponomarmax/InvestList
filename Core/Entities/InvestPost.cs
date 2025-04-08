@@ -1,20 +1,22 @@
+using Radar.Domain.Entities;
+
 namespace Core.Entities
 {
-    public class InvestPost
-    {
-        public Guid Id { get; set; }
-        public Guid PostId { get; set; }
-        public Post Post { get; set; }
-        public List<MinInvestValue> MinInvestValues { get; set; }
+        public class InvestPost
+        {
+            public Guid Id { get; set; }
+            public Guid PostId { get; set; }
+            public Post Post { get; set; }
+            public List<MinInvestValue>? MinInvestValues { get; set; }
 
-        public int InvestDurationYears { get; set; }
+            public int InvestDurationYears { get; set; }
 
-        public int InvestDurationMonths { get; set; }
+            public int InvestDurationMonths { get; set; }
 
-        public decimal TotalInvestment { get; set; }
+            public decimal TotalInvestment { get; set; }
 
-        public decimal AnnualInvestmentReturn { get; set; }
-    }
+            public decimal AnnualInvestmentReturn { get; set; }
+        }
     
     public static class InvestPostManualMapper
     {
@@ -29,14 +31,7 @@ namespace Core.Entities
             target.AnnualInvestmentReturn = source.AnnualInvestmentReturn;
 
             // Якщо потрібно повністю замінити список мінімальних інвест значень:
-            target.MinInvestValues = source.MinInvestValues != null
-                ? source.MinInvestValues
-                    .Select(mv => new MinInvestValue
-                    {
-                        Currency = mv.Currency,
-                        MinValue = mv.MinValue
-                    }).ToList()
-                : new List<MinInvestValue>();
+            target.MinInvestValues = source.MinInvestValues != null ? new List<MinInvestValue>(source.MinInvestValues) : null;
         }
     }
 }

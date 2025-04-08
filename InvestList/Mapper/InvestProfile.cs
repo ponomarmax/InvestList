@@ -2,7 +2,6 @@ using System.Globalization;
 using AutoMapper;
 using Core.Entities;
 using InvestList.Models;
-using InvestList.Models.Comment;
 using InvestList.Models.V2;
 using InvestList.Services;
 using Radar.Application.Models;
@@ -11,23 +10,17 @@ using CommentView = Radar.Application.Models.CommentView;
 using GoogleAnalyticDataView = Radar.Application.Models.GoogleAnalyticDataView;
 using LinkView = Radar.Application.Models.LinkView;
 using PostLinkView = Radar.Application.Models.PostLinkView;
-using PostView = Radar.Application.Models.PostView;
-using PutPostTranslationModel = Radar.Application.Models.PutPostTranslationModel;
-using TagView = Radar.Application.Models.TagView;
 
 namespace InvestList.Mapper
 {
+
     public class InvestProfile: Profile
     {
         public InvestProfile()
         {
             // DB->GET
-            CreateMap<InvestPost, InvestView>()
+            CreateMap<InvestPost, InvestPostDetailDto>()
                 .ForMember(x => x.Post, s => s.MapFrom(x => x.Post));
-
-            CreateMap<PostTags, TagView>()
-                .ForMember(x => x.Id, s => s.MapFrom(x => x.TagId))
-                .ForMember(x => x.Name, s => s.MapFrom(x => x.Tag.Id));
 
             CreateMap<PostComment, CommentView>()
                 .ForMember(x => x.AuthorId, s => s.MapFrom(x => x.UserId));
@@ -40,56 +33,25 @@ namespace InvestList.Mapper
             //DB->PUT
             CreateMap<MinInvestValue, CurrencyView>();
             CreateMap<CurrencyView, MinInvestValue>();
-            CreateMap<InvestPost, PutInvestModel>()
+            CreateMap<InvestPost, InvestPostDto>()
                 .ForMember(x => x.MinInvestValues, s => s.MapFrom(x => x.MinInvestValues));
 
             //PUT -> DB
-            CreateMap<PutInvestModel, InvestPost>();
-            CreateMap<PutInvestModel, Post>()
+            CreateMap<InvestPostDto, InvestPost>();
+            CreateMap<InvestPostDto, Post>()
                 ;
             
-            CreateMap<PostFormModel, Post>()
-                .ForMember(dest => dest.Id, opt => opt.Ignore())
-                .ForMember(dest => dest.Translations, opt => opt.MapFrom(src => src.Translations))
-                .ForMember(dest=>dest.Tags,opt=>opt.MapFrom(x=> x.SelectedTagIds.Select(y=>new PostTags(){ TagId = y })))
-                .ForMember(dest => dest.Links, opt => opt.MapFrom(src => src.Links))
-                .ForMember(dest => dest.PostType, opt => opt.Ignore())
-                .ForMember(x => x.Tags,
-                    s => s.MapFrom(x =>
-                        x.SelectedTagIds == null ? null : x.SelectedTagIds.Select(t => new PostTags() { TagId = t })))
-                .ForMember(x => x.Images,
-                    s => s.MapFrom(x =>
-                        x.ImageBase64 == null
-                            ? null
-                            : new List<ImageMetadata>
-                            {
-                                new ImageMetadata
-                                {
-                                    ImageObject = new ImageObject()
-                                    {
-                                        Image = Convert.FromBase64String(x.ImageBase64)
-                                    }
-                                }
-                            }));
-            CreateMap<PostTranslation, PutPostTranslationModel>();
+         
+            CreateMap<PostTranslation, PostTranslationDto>();
 
-            CreateMap<PutPostTranslationModel, PostTranslation>()
-                .ForMember(dest => dest.Id, opt => opt.Ignore())
-                .ForMember(dest => dest.PostId, opt => opt.Ignore());
-            CreateMap<PostLinkModel, PostLink>()
-                .ForMember(dest => dest.Follow, opt => opt.MapFrom(src => src.Follow ?? false));
-            CreateMap<Post, PutPostModel>()
-                .ForMember(x => x.ImageBase64,
-                    s => s.MapFrom(x =>
-                        x.Images.FirstOrDefault() == null
-                            ? null
-                            : Convert.ToBase64String(x.Images.FirstOrDefault().ImageObject.Image)))
-                .ForMember(x => x.Title, s => s.MapFrom(x => x.Title))
-                .ForMember(x => x.IsActive, s => s.MapFrom(x => x.IsActive))
-                .ForMember(x => x.Description, s => s.MapFrom(x => x.Description))
-                .ForMember(x => x.TagIds, s => s.MapFrom(x => x.Tags));
+            // CreateMap<PostTranslationDto, PostTranslation>()
+            //     .ForMember(dest => dest.Id, opt => opt.Ignore())
+            //     .ForMember(dest => dest.PostId, opt => opt.Ignore());
+            // CreateMap<PostLinkDto, PostLink>()
+            //     .ForMember(dest => dest.Follow, opt => opt.MapFrom(src => src.Follow ?? false));
+            
 
-            CreateMap<Post, PostFormModel>()
+            CreateMap<Post, PostDataDto>()
                 .ForMember(x => x.ImageBase64,
                     s => s.MapFrom(x =>
                         x.Images.FirstOrDefault() == null
@@ -100,28 +62,7 @@ namespace InvestList.Mapper
                 // .ForMember(x => x.Description, s => s.MapFrom(x => x.Description))
                 .ForMember(x => x.SelectedTagIds, s => s.MapFrom(x => x.Tags.Select(t => t.TagId)));
             
-            CreateMap<PutPostModel, Post>()
-                .ForMember(x => x.Tags,
-                    s => s.MapFrom(x =>
-                        x.TagIds == null ? null : x.TagIds.Select(t => new PostTags() { TagId = Guid.Parse(t) })))
-                .ForMember(x => x.Images,
-                    s => s.MapFrom(x =>
-                        x.ImageBase64 == null
-                            ? null
-                            : new List<ImageMetadata>
-                            {
-                                new ImageMetadata
-                                {
-                                    ImageObject = new ImageObject()
-                                    {
-                                        Image = Convert.FromBase64String(x.ImageBase64)
-                                    }
-                                }
-                            }));
-
-
-            // DB-> DB
-
+          
             CreateMap<Post, Post>()
                .ForMember(x => x.Id, s => s.Ignore())
                 .ForMember(x => x.PostType, s => s.Ignore())
@@ -138,7 +79,7 @@ namespace InvestList.Mapper
             CreateMap<User, UserView>();
 
           
-            CreateMap<Post, PostView>()
+            CreateMap<Post, PostDetailDto>()
                 .ForMember(dest => dest.Title,
                     opt => opt.MapFrom(src => GetTranslation(src).Title ?? string.Empty))
                 .ForMember(dest => dest.TitleSeo,
@@ -157,13 +98,7 @@ namespace InvestList.Mapper
             CreateMap<PostLinkView, PostLink>();
             CreateMap<PostLink, LinkView>();
             CreateMap<PostLink, PostLinkView>();
-            CreateMap<PostTags, TagView>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src=>src.TagId))
-                .ForMember(dest => dest.Name,
-                    opt => opt.MapFrom(src => GetTranslation(src.Tag).Name ?? string.Empty));
-            CreateMap<Tag, TagView>()
-                .ForMember(dest => dest.Name,
-                    opt => opt.MapFrom(src => GetTranslation(src).Name ?? string.Empty));
+           
             
             
             // Admin
@@ -173,7 +108,6 @@ namespace InvestList.Mapper
             
             //
             CreateMap<GoogleAnalyticPostView, GoogleAnalyticDataView>();
-            CreateMap<GoogleAnalyticPostView, InvestList.Models.V2.GoogleAnalyticDataView>();
         }
         
         private static PostTranslation? GetTranslation(Post post)
@@ -183,12 +117,7 @@ namespace InvestList.Mapper
                    ?? post.Translations?.FirstOrDefault(); // fallback
         }
         
-        private static TagTranslation? GetTranslation(Tag post)
-        {
-            var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
-            return post.Translations?.FirstOrDefault(t => t.Language == culture)
-                   ?? post.Translations?.FirstOrDefault(); // fallback
-        }
+       
     }
     
 }

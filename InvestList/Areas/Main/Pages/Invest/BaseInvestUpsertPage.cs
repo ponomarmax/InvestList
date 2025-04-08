@@ -9,7 +9,7 @@ namespace InvestList.Areas.Main.Pages.Invest;
 public class BaseInvestUpsertPage(ITagService tagService, ISanitizerService sanitizerService):  BaseUpsertPage(tagService, sanitizerService)
 {
     [BindProperty]
-    public PutInvestModel InvestPost { get; set; } = new();
+    public InvestPostDto InvestPost { get; set; } = new();
     
     protected void Prepare()
     {

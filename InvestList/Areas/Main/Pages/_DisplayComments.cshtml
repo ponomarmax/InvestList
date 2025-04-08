@@ -1,35 +1,31 @@
-@* @using InvestList.Models.Comment *@
-@* @using System.Security.Claims *@
-@* @using Core.Entities *@
-@* @using Microsoft.AspNetCore.Mvc.TagHelpers *@
-@* @using Radar.Domain.Entities *@
-@* @inject UserManager<User> UserManager *@
-@* @model (Guid postId, PostType postType, IEnumerable<CommentView> comments) *@
-@* @inject SignInManager<User> SignInManager *@
-@* *@
-@* @if (!SignInManager.IsSignedIn(User)) *@
-@* { *@
-@*     <div class="row row-cols-lg-auto g-3 align-items-center"> *@
-@*         <div class="col-12"> *@
-@*             <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-primary me-2">Увійти</a> *@
-@*         </div> *@
-@*         <div class="col-12"> *@
-@*             <label class="form-check-label" for="inlineFormCheck"> *@
-@*                 Для написання відгуку, будь ласка, увійдіть у свій обліковий запис *@
-@*             </label> *@
-@*         </div> *@
-@*     </div> *@
-@* } *@
-@* else *@
-@* { *@
-@*     await Html.RenderPartialAsync("_CommentForm", new PostCommentRequest { PostId = Model.postId, PostType = Model.postType, UserId = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier)) }); *@
-@* } *@
-@* @if (Model.comments?.Count() > 0) *@
-@* { *@
-@*     <div class="p-4"> *@
-@*         @foreach (var comment in Model.comments.OrderByDescending(x => x.CreatedAt)) *@
-@*         { *@
-@*             @await Html.PartialAsync("_CommentCard", comment) *@
-@*         } *@
-@*     </div> *@
-@* } *@
+@using System.Security.Claims
+@using Radar.Domain.Entities
+@model (Guid postId, string postType, IEnumerable<CommentView> comments)
+@inject SignInManager<User> SignInManager
+
+@if (!SignInManager.IsSignedIn(User))
+{
+    <div class="row row-cols-lg-auto g-3 align-items-center">
+        <div class="col-12">
+            <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-primary me-2">Увійти</a>
+        </div>
+        <div class="col-12">
+            <label class="form-check-label" for="inlineFormCheck">
+                Для написання відгуку, будь ласка, увійдіть у свій обліковий запис
+            </label>
+        </div>
+    </div>
+}
+else
+{
+    await Html.RenderPartialAsync("_CommentForm", new PostCommentRequest { PostId = Model.postId, PostType = Model.postType, UserId = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier)) });
+}
+@if (Model.comments?.Count() > 0)
+{
+    <div class="p-4">
+        @foreach (var comment in Model.comments.OrderByDescending(x => x.CreatedAt))
+        {
+            @await Html.PartialAsync("_CommentCard", comment)
+        }
+    </div>
+}

@@ -5,11 +5,13 @@ using InvestList.Models.V2;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Radar.Application.Models;
+using Radar.Domain.Interfaces;
 
 namespace InvestList.Areas.Main.Pages.Admin
 {
     [Authorize(Roles = Const.AdminRole)]
-    public class Index(ITagRepository tagRepository, IMapper mapper, IPostRepository postRepository): PageModel
+    public class Index(ITagRepository tagRepository, IMapper mapper, IBasePostRepository postRepository): PageModel
     {
         public IEnumerable<TagView> AvailableTags;
         public IEnumerable<AdminPostView> Posts { get; set; }
@@ -39,7 +41,7 @@ namespace InvestList.Areas.Main.Pages.Admin
         
         public async Task<IActionResult> OnPostUpdatePriority(PutAdminPost Post)
         {
-            await postRepository.SetPriority(Post.Id, Post.Priority);
+            // await postRepository.SetPriority(Post.Id, Post.Priority);
             // await tagRepository.SubmitCustomHeader(tagIds);
             await OnGet();
             return Page();

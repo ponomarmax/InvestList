@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.HttpLogging;
+using Radar.Infrastructure.Logging;
 using Serilog;
-using Serilog.Events;
 
 namespace InvestList.Logging
 {
@@ -11,22 +11,11 @@ namespace InvestList.Logging
         /// <param name="extendLoggerConfiguration">Add the ability to extend existing logger configuration</param>
         public static WebApplicationBuilder ConfigureLogging(this WebApplicationBuilder builder, Action<HostBuilderContext, IServiceProvider, LoggerConfiguration>? customLoggerConfiguration = null, Action<LoggerConfiguration>? extendLoggerConfiguration = null)
         {
-            Activity.DefaultIdFormat = ActivityIdFormat.W3C;
-            Environment.CurrentDirectory = AppContext.BaseDirectory;
-            builder.Host.UseSerilog(customLoggerConfiguration?? ConfigureDefaultLogger);
-            builder.Services.AddHttpLogging(logging =>
+            builder.Host.UseSerilog((ctx, services, loggerConfig) =>
             {
-                logging.LoggingFields =
-                    HttpLoggingFields.RequestBody |
-                    HttpLoggingFields.RequestHeaders;
+                LogConfigurator.Configure(loggerConfig, ctx.Configuration);
             });
             return builder;
-
-            void ConfigureDefaultLogger(HostBuilderContext hostingContext, IServiceProvider services, LoggerConfiguration loggerConfiguration)
-            {
-                loggerConfiguration.ConfigureDefaultLogger(hostingContext.Configuration);
-                extendLoggerConfiguration?.Invoke(loggerConfiguration);
-            }
         }
         
         public static LoggerConfiguration ConfigureDefaultLogger(this LoggerConfiguration loggerConfiguration, IConfiguration configuration)

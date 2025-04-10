@@ -13,7 +13,6 @@ namespace InvestList.Areas.Main.Pages.Invest
     [RequireConfirmedEmail]
     public class Create(
         IMediator mediator,
-        IInvestService service,
         ITagService tagService,
         UserManager<User> userManager,ISanitizerService sanitizerService):  BaseInvestUpsertPage(tagService,sanitizerService)
     {

@@ -8,6 +8,7 @@ public class TopPostWithInvestResult
     public string Slug { get; set; }
     public string PostType { get; set; }
     public int Priority { get; set; }
+    public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
     public bool IsActive { get; set; }
 
@@ -22,7 +23,6 @@ public class TopPostWithInvestResult
     public string? TranslationDescription { get; set; }
 
     public Guid? ImageId { get; set; }
-    public byte[]? ImageBytes { get; set; }
     public Guid? TagId { get; set; }
     public string? TagTitle { get; set; }
 }

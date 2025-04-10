@@ -1,6 +1,7 @@
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using InvestList.Services;
+using Radar.Domain.Interfaces;
 
 namespace InvestList.Controllers
 {

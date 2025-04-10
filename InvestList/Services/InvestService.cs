@@ -10,7 +10,7 @@ namespace InvestList.Services
         Task<int> Count(PostType type = PostType.InvestAd);
     }
 
-    public class InvestService(IMapper mapper, IServiceProvider serviceProvider): IInvestService
+    public class InvestService( IServiceProvider serviceProvider): IInvestService
     {
         private int? _investCount;
 

@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using InvestList;
-using InvestList.Configs;
 using InvestList.Extensions;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Rewrite;

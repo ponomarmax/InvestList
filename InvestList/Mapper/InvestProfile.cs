@@ -1,19 +1,12 @@
-using System.Globalization;
 using AutoMapper;
 using Core.Entities;
-using InvestList.Models;
 using InvestList.Models.V2;
-using InvestList.Services;
 using Radar.Application.Models;
 using Radar.Domain.Entities;
 using CommentView = Radar.Application.Models.CommentView;
-using GoogleAnalyticDataView = Radar.Application.Models.GoogleAnalyticDataView;
-using LinkView = Radar.Application.Models.LinkView;
-using PostLinkView = Radar.Application.Models.PostLinkView;
 
 namespace InvestList.Mapper
 {
-
     public class InvestProfile: Profile
     {
         public InvestProfile()
@@ -41,65 +34,10 @@ namespace InvestList.Mapper
             CreateMap<InvestPostDto, Post>()
                 ;
             
-         
-            CreateMap<PostTranslation, PostTranslationDto>();
-
-            // CreateMap<PostTranslationDto, PostTranslation>()
-            //     .ForMember(dest => dest.Id, opt => opt.Ignore())
-            //     .ForMember(dest => dest.PostId, opt => opt.Ignore());
-            // CreateMap<PostLinkDto, PostLink>()
-            //     .ForMember(dest => dest.Follow, opt => opt.MapFrom(src => src.Follow ?? false));
-            
-
-            CreateMap<Post, PostDataDto>()
-                .ForMember(x => x.ImageBase64,
-                    s => s.MapFrom(x =>
-                        x.Images.FirstOrDefault() == null
-                            ? null
-                            : Convert.ToBase64String(x.Images.FirstOrDefault().ImageObject.Image)))
-                // .ForMember(x => x.Title, s => s.MapFrom(x => x.Title))
-                .ForMember(x => x.IsActive, s => s.MapFrom(x => x.IsActive))
-                // .ForMember(x => x.Description, s => s.MapFrom(x => x.Description))
-                .ForMember(x => x.SelectedTagIds, s => s.MapFrom(x => x.Tags.Select(t => t.TagId)));
-            
-          
-            CreateMap<Post, Post>()
-               .ForMember(x => x.Id, s => s.Ignore())
-                .ForMember(x => x.PostType, s => s.Ignore())
-                .ForMember(x => x.CreatedBy, s => s.Ignore())
-                .ForMember(x => x.CreatedById, s => s.Ignore())
-                .ForMember(x => x.CreatedAt, s => s.Ignore())
-                .ForMember(x => x.UpdatedAt, s => s.MapFrom(x => DateTime.UtcNow))
-                .ForMember(x => x.Comments, s => s.Ignore())
-                .ForMember(x => x.Slug, s => s.Ignore()); 
-
             CreateMap<InvestPost, InvestPost>()
                 .ForMember(x => x.Id, s => s.Ignore())
                 .ForMember(x => x.PostId, s => s.Ignore());
             CreateMap<User, UserView>();
-
-          
-            CreateMap<Post, PostDetailDto>()
-                .ForMember(dest => dest.Title,
-                    opt => opt.MapFrom(src => GetTranslation(src).Title ?? string.Empty))
-                .ForMember(dest => dest.TitleSeo,
-                    opt => opt.MapFrom(src => GetTranslation(src).TitleSeo))
-                .ForMember(dest => dest.Description,
-                    opt => opt.MapFrom(src => GetTranslation(src).Description))
-                .ForMember(dest => dest.DescriptionSeo,
-                    opt => opt.MapFrom(src => GetTranslation(src).DescriptionSeo))                
-                .ForMember(x=>x.GoogleAnalyticPostView, s => s.MapFrom(x=>x.GoogleAnalyticPostView))
-
-                .ForMember(x => x.Image, s => s.MapFrom(x =>
-                    x.Images.FirstOrDefault() == null
-                        ? null
-                        : ImageService.GetImageView2(x.Images.FirstOrDefault().Id, x)));
-
-            CreateMap<PostLinkView, PostLink>();
-            CreateMap<PostLink, LinkView>();
-            CreateMap<PostLink, PostLinkView>();
-           
-            
             
             // Admin
 
@@ -107,16 +45,7 @@ namespace InvestList.Mapper
             CreateMap<PutAdminPost, Post>();
             
             //
-            CreateMap<GoogleAnalyticPostView, GoogleAnalyticDataView>();
         }
-        
-        private static PostTranslation? GetTranslation(Post post)
-        {
-            var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
-            return post.Translations?.FirstOrDefault(t => t.Language == culture)
-                   ?? post.Translations?.FirstOrDefault(); // fallback
-        }
-        
        
     }
     

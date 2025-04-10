@@ -131,6 +131,7 @@ namespace DataAccess.Repositories
                 p.Slug,
                 p.PostType,
                 p.Priority,
+                p.CreatedAt,
                 p.UpdatedAt,
                 p.IsActive,
 
@@ -145,7 +146,7 @@ namespace DataAccess.Repositories
                 pt.Description AS TranslationDescription,
 
                 im.Id AS ImageId,
-                io.Image AS ImageBytes,
+                
                 t.Id AS TagId,
                 tt.Name AS TagTitle,
 
@@ -154,7 +155,6 @@ namespace DataAccess.Repositories
             LEFT JOIN InvestPosts i ON p.Id = i.PostId
             JOIN PostTranslation pt ON p.Id = pt.PostId AND pt.Language = @language
             LEFT JOIN FirstImagePerPost im ON p.Id = im.PostId AND im.rn = 1
-            LEFT JOIN ImageObject io ON im.ImageObjectId = io.Id
             LEFT JOIN PostTags ptg ON ptg.PostId = p.Id
             LEFT JOIN Tags t ON ptg.TagId = t.Id
             LEFT JOIN TagTranslation tt ON t.Id = tt.TagId AND tt.Language = @language
@@ -228,6 +228,7 @@ namespace DataAccess.Repositories
                             PostType = r.PostType,
                             Priority = r.Priority,
                             UpdatedAt = r.UpdatedAt,
+                            CreatedAt = r.CreatedAt,
                             IsActive = r.IsActive,
                             Translations = string.IsNullOrEmpty(r.TranslationTitle)
                                 ? []
@@ -246,11 +247,7 @@ namespace DataAccess.Repositories
                                 [
                                     new ImageMetadata
                                     {
-                                        Id = r.ImageId.Value,
-                                        ImageObject = new ImageObject
-                                        {
-                                            Image = r.ImageBytes
-                                        }
+                                        Id = r.ImageId.Value
                                     }
                                 ]
                                 : new List<ImageMetadata>(),

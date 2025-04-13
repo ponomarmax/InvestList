@@ -11,7 +11,7 @@ namespace DataAccess.Repositories
     {
 
         private static Tag[] _tags = [];
-        private static CustomHeader[] _customeHeader = [];
+        private static Dictionary<string, CustomHeader[]>? CustomHeader = new();
         
         public async Task Add(string tagName)
         {
@@ -23,11 +23,6 @@ namespace DataAccess.Repositories
             // dbContext.Add(new Tag { Name = tagName });
             await dbContext.SaveChangesAsync();
             _tags =  await dbContext.Tags.ToArrayAsync();
-        }
-        
-        public async Task<IEnumerable<Tag>> GetTags()
-        {
-            return await base.GetTags();
         }
 
         public async Task SubmitCustomHeader(List<Guid> tagIds)
@@ -47,16 +42,20 @@ namespace DataAccess.Repositories
                 throw;
             }
 
-            _customeHeader = await dbContext.CustomHeaders.Include(x => x.Tag).ToArrayAsync();
+            // _customeHeader = await dbContext.CustomHeaders.Include(x => x.Tag).ToArrayAsync();
         }
         
-        public async Task<IEnumerable<CustomHeader>> GetCustomHeader()
+        public async Task<IEnumerable<CustomHeader>> GetCustomHeader(string language)
         {
-            if (_customeHeader == null || _customeHeader.Length == 0)
+            if (string.IsNullOrWhiteSpace(language) || CustomHeader == null)
+                throw new NullReferenceException("Empty custom header");
+            
+            if (CustomHeader.TryGetValue(language, out CustomHeader[] headers) && headers!=null && headers.Length > 0)
             {
-                _customeHeader = await dbContext.CustomHeaders.Include(x => x.Tag).ThenInclude(x=>x.Translations.Where(x=>x.Language==CultureInfo.CurrentUICulture.TwoLetterISOLanguageName)).ToArrayAsync();
+                return headers;
             }
-            return _customeHeader;
+            CustomHeader[language] = await dbContext.CustomHeaders.Include(x => x.Tag).ThenInclude(x=>x.Translations.Where(x=>x.Language==language)).ToArrayAsync();
+            return CustomHeader[language];
         }
     }
 }

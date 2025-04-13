@@ -3,7 +3,13 @@
 @using System.Text.RegularExpressions;
 @model InvestList.Services.Queries.InvestPostShortDto
 
-<div class="list-post-card">
+@{
+var isClickable = string.IsNullOrWhiteSpace(Model.Post.Title);
+var href = Url.Page($"/Invest/Get", new { id = Model.Post.Slug });
+var onclickAttr = isClickable ? $"location.href='{href}'" : "";
+}
+
+<div class="list-post-card" style="cursor:@(isClickable ? "pointer" : "default")" @(isClickable ? $"onclick={onclickAttr}" : "")>
     <h4 class="list-post-title m-3">
         <a class="list-post-link" asp-area="Main" asp-page="/Invest/Get" asp-route-id="@Model.Post.Slug">@Model.Post.Title</a>
     </h4>

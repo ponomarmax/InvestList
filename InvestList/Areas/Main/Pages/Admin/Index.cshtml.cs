@@ -1,6 +1,4 @@
-using AutoMapper;
-using Core.Interfaces;
-using InvestList.Models;
+using System.Globalization;
 using InvestList.Models.V2;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +9,7 @@ using Radar.Domain.Interfaces;
 namespace InvestList.Areas.Main.Pages.Admin
 {
     [Authorize(Roles = Const.AdminRole)]
-    public class Index(ITagRepository tagRepository, IMapper mapper, IBasePostRepository postRepository): PageModel
+    public class Index(IBaseTagRepository tagRepository): PageModel
     {
         public IEnumerable<TagView> AvailableTags;
         public IEnumerable<AdminPostView> Posts { get; set; }
@@ -19,7 +17,7 @@ namespace InvestList.Areas.Main.Pages.Admin
         
         public async Task OnGet()
         {
-            var tags = await tagRepository.GetTags();
+            var tags = await tagRepository.GetTags(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName);
             // var (count, posts) = await postRepository.Filter(1, int.MaxValue, null);
             // Posts = mapper.Map<IEnumerable<AdminPostView>>(posts); 
             // AvailableTags = mapper.Map<IEnumerable<TagView>>(tags);
@@ -27,14 +25,14 @@ namespace InvestList.Areas.Main.Pages.Admin
 
         public async Task<IActionResult> OnPostAddTag(string tagName)
         {
-            await tagRepository.Add(tagName);
+            // await tagRepository.Add(tagName);
             await OnGet();
             return Page();
         }
         
         public async Task<IActionResult> OnPostSubmitCustomHeader(List<Guid> tagIds)
         {
-            await tagRepository.SubmitCustomHeader(tagIds);
+            // await tagRepository.SubmitCustomHeader(tagIds);
             await OnGet();
             return Page();
         }

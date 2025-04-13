@@ -59,7 +59,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Jobs\" />
       <Folder Include="Services\Commands\" />
     </ItemGroup>
 

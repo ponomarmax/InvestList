@@ -7,7 +7,6 @@ namespace Core.Interfaces
     {
         Task Add(string tagName);
         Task SubmitCustomHeader(List<Guid> tagIds);
-        Task<IEnumerable<Tag>> GetTags();
-        Task<IEnumerable<CustomHeader>> GetCustomHeader();
+        Task<IEnumerable<CustomHeader>> GetCustomHeader(string language);
     }
 }

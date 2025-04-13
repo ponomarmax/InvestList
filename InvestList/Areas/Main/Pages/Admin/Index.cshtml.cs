@@ -17,7 +17,7 @@ namespace InvestList.Areas.Main.Pages.Admin
         
         public async Task OnGet()
         {
-            var tags = await tagRepository.GetTags(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName);
+            // var tags = await tagRepository.GetTags(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName);
             // var (count, posts) = await postRepository.Filter(1, int.MaxValue, null);
             // Posts = mapper.Map<IEnumerable<AdminPostView>>(posts); 
             // AvailableTags = mapper.Map<IEnumerable<TagView>>(tags);

@@ -43,7 +43,7 @@ try
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(connectionString));
     builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-    builder.Services.AddHostedService<GoogleAnalyticJob>();
+    // builder.Services.AddHostedService<GoogleAnalyticJob>();
     
     builder.Services.Load<GoogleAnalyticsConfig>(builder.Configuration, "InvestRadar:GoogleAnalytics");
     

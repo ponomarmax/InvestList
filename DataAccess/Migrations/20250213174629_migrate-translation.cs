@@ -22,7 +22,8 @@ namespace DataAccess.Migrations
                      .AddJsonFile("appsettings.private.json", optional: true, reloadOnChange: true)
                      .AddEnvironmentVariables().Build();
 
-             var connectionString = configuration.GetConnectionString("DefaultConnection");
+             var connectionString = configuration.GetSection("InvestRadar:ConnectionStrings")
+                 .GetValue<string>("DefaultConnection");
              optionsBuilder.UseSqlServer(connectionString);
          }
 

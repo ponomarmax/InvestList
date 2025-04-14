@@ -1,9 +1,6 @@
-@using InvestList.Models.Comment
 @using System.Security.Claims
-@using Core.Entities
-@using Microsoft.AspNetCore.Mvc.TagHelpers
-@inject UserManager<User> UserManager
-@model (Guid postId, PostType postType, IEnumerable<CommentView> comments)
+@using Radar.Domain.Entities
+@model (Guid postId, string postType, IEnumerable<CommentView> comments)
 @inject SignInManager<User> SignInManager
 
 @if (!SignInManager.IsSignedIn(User))

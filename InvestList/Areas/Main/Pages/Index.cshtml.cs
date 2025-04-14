@@ -1,26 +1,26 @@
+using System.Globalization;
 using AutoMapper;
 using Core.Entities;
 using Core.Interfaces;
-using InvestList.Models;
-using InvestList.Models.V2;
+using InvestList.Services.Queries;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Radar.Application.Models;
 
 namespace InvestList.Areas.Main.Pages
 {
-    public class Index(IPostRepository postRepository, IInvestRepository invRepository, IMapper mapper): PageModel
+    public class Index( IMediator mediator) : PageModel
     {
-        private const int ItemsPerPage = 4;
-
-        public IEnumerable<PostView> BlacklistPosts { get; set; }
-        public IEnumerable<PostView> PostsWithLastComments { get; set; }
-        public IEnumerable<PostView> NewsPosts { get; set; }
-        public IEnumerable<InvestView> InvestPosts { get; set; }
-        public IEnumerable<Guid> TagIds { get; set; }
+        public IEnumerable<PostShortDto> BlacklistPosts { get; set; }
+        public IEnumerable<PostShortWithCommentDto> PostsWithLastComments { get; set; }
+        public IEnumerable<PostShortDto> NewsPosts { get; set; }
+        public IEnumerable<InvestPostShortDto> InvestPosts { get; set; }
+        public List<Guid> TagIds { get; set; }
         public string Search { get; set; }
-        
+
         public async Task<IActionResult> OnGetAsync(int pageIndex = 1,
-            IEnumerable<string> tagIds = null,
+            List<Guid> tagIds = null,
             string search = null)
 
         {
@@ -29,20 +29,21 @@ namespace InvestList.Areas.Main.Pages
             {
                 return NotFound();
             }
-
-            var guidTagIds = tagIds?.Where(x => Guid.TryParse(x, out _)).Select(Guid.Parse);
-
-            var (_, postDb) = await invRepository.Filter(pageIndex, ItemsPerPage, guidTagIds, search);
-            var (_, newsDb) = await postRepository.Filter(pageIndex, ItemsPerPage, guidTagIds, search, PostType.News);
-            var (_, blacklist) = await postRepository.Filter(pageIndex, ItemsPerPage, guidTagIds, search, PostType.Blacklist);
-            var postWithLastComments = await postRepository.GetPostsWithLastComments();
-
-            NewsPosts = mapper.Map<IEnumerable<PostView>>(newsDb);
-            BlacklistPosts = mapper.Map<IEnumerable<PostView>>(blacklist);
-            InvestPosts = mapper.Map<IEnumerable<InvestView>>(postDb);
-            PostsWithLastComments = mapper.Map<IEnumerable<PostView>>(postWithLastComments);
             
-            TagIds = guidTagIds;
+            var command = new GetPrimarySectionsQuery()
+            {
+                Search = search,
+                TagIds = tagIds
+            };
+
+            var result = await mediator.Send(command);
+
+            NewsPosts = result.News;
+            BlacklistPosts = result.Blacklists;
+            InvestPosts = result.Invests;
+            PostsWithLastComments = result.PostWithComments;
+
+            TagIds = tagIds;
 
             return Page();
         }

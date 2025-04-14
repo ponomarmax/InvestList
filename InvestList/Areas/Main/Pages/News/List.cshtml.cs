@@ -1,18 +1,19 @@
-using AutoMapper;
 using Core.Entities;
-using Core.Interfaces;
 using InvestList.Models;
-using InvestList.Models.V2;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Radar.Application.Models;
+using Radar.Application.Posts.Queries;
+using Radar.UI.Models;
 
 namespace InvestList.Areas.Main.Pages.News
 {
-    public class List(IPostRepository repository, IMapper mapper): PageModel
+    public class List( IMediator mediator): PageModel
     {
         private const int ItemsPerPage = 50;
 
-        public IEnumerable<PostView> Entities { get; set; }
+        public IEnumerable<PostShortDto> Entities { get; set; }
         public IEnumerable<Guid> TagIds { get; set; }
         public PaginationInfo PaginationInfo { get; set; }
         public string Search { get; set; }
@@ -26,24 +27,33 @@ namespace InvestList.Areas.Main.Pages.News
 
             Search = search;
 
-            var guidTagIds = tagIds?.Where(x => Guid.TryParse(x, out _)).Select(Guid.Parse);
+            var guidTagIds = tagIds?.Where(x => Guid.TryParse(x, out _)).Select(Guid.Parse).ToList();
 
-            var (count, resultDb) = await repository.Filter(pageIndex, ItemsPerPage, guidTagIds, search, PostType.News);
-            if (!resultDb.Any() && pageIndex != 1) return NotFound();
+            var command = new GetPostListQuery()
+            {
+                Page = pageIndex,
+                Search = search,
+                TagIds = guidTagIds,
+                PostType = PostType.News.ToString(),
+                PageSize = ItemsPerPage
+            };
+        
+            var result = await mediator.Send(command);
+            if (!result.Items.Any() && pageIndex != 1) return NotFound();
 
-            var resultView = mapper.Map<IEnumerable<PostView>>(resultDb);
 
-            var totalPages = (int)Math.Ceiling((double)count / ItemsPerPage);
-            ViewData.SetupListPostViewSeoDetails(resultView);
-            Entities = resultView;
+            // ViewData.SetupListPostViewSeoDetails(resultView);
+            Entities = result.Items;
             PaginationInfo = new PaginationInfo
             {
                 CurrentPage = pageIndex,
-                TotalPages = totalPages,
+                TotalPages =  (int)Math.Ceiling((double)result.TotalCount / ItemsPerPage),
                 PageSize = ItemsPerPage,
                 Search = search
             };
             TagIds = guidTagIds;
+            Radar.UI.SeoHelper.SetupListPostViewSeoDetails(ViewData, Entities);
+
 
             return Page();
         }

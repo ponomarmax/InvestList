@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Core.Entities;
 using InvestList.Services;
 using Microsoft.AspNetCore.Authorization;
+using Radar.Domain.Entities;
+using Radar.Domain.Interfaces;
 
 namespace InvestList.Areas.Main.Pages.Admin;
 

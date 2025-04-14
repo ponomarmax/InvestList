@@ -1,75 +1,50 @@
 using AutoMapper;
-using Common;
-using Core.Entities;
 using Core.Interfaces;
-using InvestList.Models.V2;
-using InvestList.Services;
-using Microsoft.AspNetCore.Identity;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using Radar.Application;
+using Radar.Application.Models;
+using Radar.Application.Posts.Commands;
+using Radar.Domain.Interfaces;
+using Radar.Infrastructure.Authorization;
+using Radar.UI.Models;
 
 namespace InvestList.Areas.Main.Pages.Blacklist
 {
-    // [Authorize(Roles = B)]
-    // [EmailConfirmedAuthorize]
-    public class Edit(IPostRepository repository, IPostService service, ITagRepository tagRepository, UserManager<User> userManager, IMapper mapper) : PageModel
+    [IsAdminAuthorize]
+    public class Edit(IBasePostRepository repository, ITagService tagService, IMapper mapper, ISanitizerService sanitizerService, IMediator mediator) : BaseUpsertPage(tagService, sanitizerService)
     {
         public Guid Id { get; set; }
         
-        [BindProperty]
-        public PutPostModel Post { get; set; }
-        
-        public List<SelectListItem> AvailableTags { get; set; } = new();
-
         public async Task<IActionResult> OnGetAsync(Guid id)
         {
             var db = await repository.Get(id.ToString());
-            if (db == null)
-                return NotFound();
-
-            if (!await userManager.CanEditPost(User))
-            {
-                return Forbid();
-            }
-
-            await PrepareViewData(id, db);
+            var postFormModel = mapper.Map<PostDataDto>(db);
+            await PrepareTags(postFormModel);
+            Id = db.Id;
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(Guid id)
         {
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
             var db = await repository.Get(id.ToString());
             if (db == null)
                 return NotFound();
-           
-            if (!await userManager.CanEditPost(User))
-            {
-                return Forbid();
-            }
-            
-            if (!ModelState.IsValid)
-            {
-                await PrepareViewData(id, db);
-                return Page();
-            }
 
-            var slug = await service.Put(id.ToString(), Utils.GetUserId(User),  Post);
-            return RedirectToPage("./Get", new { id = slug });
-        }
-        
-        private async Task PrepareViewData(Guid id, Post db)
-        {
-            Id = id;
-            var tagsV2 = await tagRepository.GetTags();
-            Post = mapper.Map<PutPostModel>(db);
-            foreach (var tag in tagsV2)
+            BasePost();
+            var command = new UpdatePostCommand
             {
-                var item = new SelectListItem(tag.Name, tag.Id.ToString());
-                if (db.Tags.FirstOrDefault(x => x.TagId == tag.Id) != null)
-                    item.Selected = true;
-                AvailableTags.Add(item);
-            }
+                Id = id,
+                Post = Post,
+            };
+
+
+            var slug = await mediator.Send(command);
+            return RedirectToPage("./Get", new { id = slug });
         }
     }
 }

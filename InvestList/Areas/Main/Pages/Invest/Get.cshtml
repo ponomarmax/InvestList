@@ -2,12 +2,14 @@
 @using InvestList
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using System.Text.RegularExpressions;
+@using Radar.UI
+@using Radar.UI.Pages.Shared.Get
 @model InvestList.Areas.Main.Pages.Invest.Get
 
 <div class="container mb-4">
     @if (Model.CanUserEdit)
     {
-        <a asp-page="./Edit" asp-route-id="@Model.Post.Id" class="btn btn-primary me-2">Редагувати</a>
+        <a asp-page="./Edit" asp-route-id="@Model.Post.Post.Id" class="btn btn-primary me-2">Редагувати</a>
     }
 
     <a asp-page="./List" class="btn btn-secondary">Повернутись до списку</a>
@@ -15,15 +17,24 @@
 <div class="row">
     <div class="col-8">
         <div class="invest-get-card border-success mb-3">
-            <h1 class="mx-3 mt-2">@Model.Post.Title</h1>
+            <h1 class="mx-3 mt-2">@Model.Post.Post.Title</h1>
 
             <div class="d-flex border align-content-start align-items-center flex-wrap">
                 @if (Model.Post.TotalInvestment > 0)
                 {
-                    <div class="p-2 flex-fill">Загальний обсяг інвестицій: <div class="creation-data-get">$@Model.Post.TotalInvestment</div></div>
+                    <div class="p-2 flex-fill">
+                        Загальний обсяг інвестицій:
+                        <div class="creation-data-get">$@Model.Post.TotalInvestment</div>
+                    </div>
                 }
-                <div class="p-2 flex-fill">Період інвестування: <div class="duration-get">@InvestmentHelper.FormatInvestmentDuration(Model.Post.InvestDurationYears, Model.Post.InvestDurationMonths)</div></div>
-                <div class="p-2 flex-fill">Річна дохідність: <div class="annualInvestment-get">@Model.Post.AnnualInvestmentReturn.ToString("0.")%</div></div>
+                <div class="p-2 flex-fill">
+                    Період інвестування:
+                    <div class="duration-get">@InvestmentHelper.FormatInvestmentDuration(Model.Post.InvestDurationYears, Model.Post.InvestDurationMonths)</div>
+                </div>
+                <div class="p-2 flex-fill">
+                    Річна дохідність:
+                    <div class="annualInvestment-get">@Model.Post.AnnualInvestmentReturn.ToString("0.")%</div>
+                </div>
             </div>
 
             <div class="d-flex border align-content-start flex-column flex-wrap">
@@ -44,65 +55,40 @@
                     </div>
                 </div>
 
-                @if (Model.Post.Tags != null && Model.Post.Tags.Any())
-                {
-                    <div class="flex-fill mb-2">
-                        @foreach (var field in Model.Post.Tags)
-                        {
-                            <span id="tag" class="tag_index">@field.Name</span>
-                        }
-
-                    </div>
-                }
+                @await Html.PartialAsync("Get/PostTags", Model.Post.Post.Tags)
+                @await Html.PartialAsync("Get/PostImage", Model.Post.Post.Image)
             </div>
 
             <p class="p-2">
-                <small class="text-body-secondary">@Model.Post.CreatedAt.ToString("dd-MM-yyyy")</small>
+                <small class="text-body-secondary">@Model.Post.Post.CreatedAt.ToString("dd-MM-yyyy")</small>
             </p>
             <div class="d-flex p-1 flex-wrap justify-content-center">
                 <pre class="invest-get-body md:order-1 order-2 w-100">
-                    @Html.Raw(Model.Post.Description)
+                    @Html.Raw(Model.Post.Post.Description)
                 </pre>
-                @if (Model.Post.Image != null)
-                {
-                    <div class="md:order-2 order-md-1">
-                        <img src="@Model.Post.Image.FilePath" alt="@Model.Post.Image.AltText" class="img-fluid rounded">
-                    </div>
-                }
             </div>
 
-            @* <span class="share">
-                <a class="telegram"href="" id="tg_share" alt="">
-                    <img class="message" src="/ico/telegram.png" alt="">
-                </a>
-            </span> *@
+
         </div>
-        @await Html.PartialAsync("_DisplayComments", (Model.Post.Id, Model.Post.PostType, Model.Post.Comments))
+        @await Html.PartialAsync("_DisplayComments", (Model.Post.Post.Id, Model.Post.Post.PostType, Model.Post.Post.Comments))
 
     </div>
     <div class="col-4">
-        @if (Model.Post.SimilarInvests != null && Model.Post.SimilarInvests.Any())
-        {
-            <p>Схожі оголошення</p>
-            @await Html.PartialAsync("_SimilarContent", ("Invest", Model.Post.SimilarInvests, Model.Post.Tags))
-            <a class="btn-primary"
-               asp-area="Main"
-               asp-page="/Invest/List"
-               asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.Post.Tags.Select(x => x.Id)))">
-                Більше оголошень...
-            </a>
-        }
-        @if (Model.Post.SimilarNews != null && Model.Post.SimilarNews.Any())
-        {
-            <p>Схожі новини</p>
-            @await Html.PartialAsync("_SimilarContent", ("News", Model.Post.SimilarNews, Model.Post.Tags))
-            <a class="btn-primary"
-               asp-area="Main"
-               asp-page="/News/List"
-               asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.Post.Tags.Select(x => x.Id)))">
-                Більше новини...
-            </a>
-        }
+        @await Html.PartialAsync("Get/PostSimilarSection", (
+            new GetCustomizationSimilarContent
+            {
+                Title = "Схожі оголошення",
+                BaseUrlPrefix = "Invest",
+                MoreContentTitle = "Більше оголошень"
+            }, Model.Post.Post.SimilarInvests, Model.Post.Post.Tags))
+        <hr/>
+        @await Html.PartialAsync("Get/PostSimilarSection", (
+            new GetCustomizationSimilarContent
+            {
+                Title = "Схожі новини",
+                BaseUrlPrefix = "News",
+                MoreContentTitle = "Більше новини..."
+            }, Model.Post.Post.SimilarNews, Model.Post.Post.Tags))
+
     </div>
 </div>
-

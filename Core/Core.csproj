@@ -10,5 +10,8 @@
         <PackageReference Include="Slugify.Core" Version="4.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.4" />
     </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\radar-libs\Radar.Domain\Radar.Domain.csproj" />
+    </ItemGroup>
 
 </Project>

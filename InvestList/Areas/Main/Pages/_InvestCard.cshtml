@@ -1,17 +1,23 @@
 @using InvestList
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using System.Text.RegularExpressions;
-@model InvestList.Models.V2.InvestView
+@model InvestList.Services.Queries.InvestPostShortDto
 
-<div class="list-post-card">
+@{
+var isClickable = string.IsNullOrWhiteSpace(Model.Post.Title);
+var href = Url.Page($"/Invest/Get", new { id = Model.Post.Slug });
+var onclickAttr = isClickable ? $"location.href='{href}'" : "";
+}
+
+<div class="list-post-card" style="cursor:@(isClickable ? "pointer" : "default")" @(isClickable ? $"onclick={onclickAttr}" : "")>
     <h4 class="list-post-title m-3">
-        <a class="list-post-link" asp-area="Main" asp-page="/Invest/Get" asp-route-id="@Model.Slug">@Model.Title</a>
+        <a class="list-post-link" asp-area="Main" asp-page="/Invest/Get" asp-route-id="@Model.Post.Slug">@Model.Post.Title</a>
     </h4>
 
-    @if (Model.Tags != null && Model.Tags.Any())
+    @if (Model.Post.Tags != null && Model.Post.Tags.Any())
     {
         <div class="tags-container mx-3">
-            @foreach (var field in Model.Tags)
+            @foreach (var field in Model.Post.Tags)
             {
                 <span class="tag_index">@field.Name</span>
             }
@@ -20,21 +26,21 @@
     <hr>
 
     <div class="row mx-2">
-        @if (Model.Image != null)
+        @if (Model.Post.Image != null)
         {
             <div class="col-auto ms-2">
-                <img src="@Model.Image.FilePath" alt="@Model.Image.AltText" class="img-fluid rounded" style="width: 100px; height: 100px;">
+                <img src="@Model.Post.Image.FilePath" alt="@Model.Post.Image.AltText" class="img-fluid rounded" style="width: 100px; height: 100px;">
             </div>
         }
 
         <div class="col ms-2 mb-3">
             @{
-                if (!string.IsNullOrEmpty(Model.Description))
+                if (!string.IsNullOrEmpty(Model.Post.Description))
                 {
-                    Model.Description = Regex.Replace(Model.Description, "<.*?>", " ");
+                    Model.Post.Description = Regex.Replace(Model.Post.Description, "<.*?>", " ");
                 }
             }
-            <p class="description-color mb-0">@Html.Raw(Model.Description?.Substring(0, Math.Min(Model.Description.Length, 150)))</p>
+            <p class="description-color mb-0">@Html.Raw(Model.Post.Description?.Substring(0, Math.Min(Model.Post.Description.Length, 150)))</p>
             <div class="annualInvestment">
                 @Model.AnnualInvestmentReturn.ToString("0.")<i class="bi bi-percent"></i>
             </div>
@@ -48,14 +54,14 @@
                     </div>
                 }
             }
-            <div class="creation-data">@Model.CreatedAt.ToString("dd.MM.yyyy")</div>
-            @if (Model.GoogleAnalyticPostView != null)
+            <div class="creation-data">@Model.Post.CreatedAt.ToString("dd.MM.yyyy")</div>
+            @if (Model.Post.GoogleAnalyticPostView != null)
             {
                 <div class="d-flex justify-content-between">
                     <span></span>
                     <span class="text-muted ms-auto">
                         <i class="bi bi-eye"></i>
-                        @Model.GoogleAnalyticPostView?.PageViews
+                        @Model.Post.GoogleAnalyticPostView?.PageViews
                     </span>
                 </div>
             }

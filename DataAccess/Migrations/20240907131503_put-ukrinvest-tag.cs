@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
+using Radar.Domain.Entities;
 
 #nullable disable
 
@@ -38,12 +39,12 @@ var anchorDateTime = new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc);
                 {
                     if (post.CreatedAt < anchorDateTime)
                     {
-                        if(post.Tags == null)
-                            post.Tags = new PostTags[]{new PostTags(){TagId = Guid.Parse("0C9B81E4-A577-4021-36F6-08DCCBE0B91D")}};
-                        else
-                        {
-                            post.Tags = post.Tags.Union(new []{new PostTags(){TagId = Guid.Parse("0C9B81E4-A577-4021-36F6-08DCCBE0B91D")}}).ToList();
-                        }
+                        // if(post.Tags == null)
+                        //     post.Tags = new PostTags<[]{new PostTags(){TagId = Guid.Parse("0C9B81E4-A577-4021-36F6-08DCCBE0B91D")}};
+                        // else
+                        // {
+                        //     post.Tags = post.Tags.Union(new []{new PostTags(){TagId = Guid.Parse("0C9B81E4-A577-4021-36F6-08DCCBE0B91D")}}).ToList();
+                        // }
                     }
                         
                 }

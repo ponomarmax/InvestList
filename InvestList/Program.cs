@@ -1,35 +1,52 @@
 using System.Reflection;
-using Core.Entities;
-using Core.Interfaces;
 using DataAccess;
-using DataAccess.Repositories;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using InvestList;
-using InvestList.Configs;
 using InvestList.Extensions;
-using InvestList.Jobs;
-using InvestList.Logging;
-using InvestList.Middlewares;
-using InvestList.Services;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Options;
+using Radar.Application.Posts.Commands;
+using Radar.Domain.Entities;
+using Radar.Infrastructure;
+using Radar.Infrastructure.Configs;
+using Radar.Infrastructure.Jobs;
+using Radar.Infrastructure.Logging;
+using Radar.Infrastructure.Middlewares;
+using Radar.UI;
 
-var builder = WebApplication.CreateBuilder(args);
-builder.LoadAppSettingAndEnvValues();
-builder.ConfigureLogging();
-Log.Logger = new LoggerConfiguration().ConfigureDefaultLogger(builder.Configuration).CreateLogger();
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.File("Logs/startup-errors.txt")
+    .CreateBootstrapLogger();
 
 try
 {
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    Log.Information("🔧 Запуск застосунку...");
+
+    var builder = WebApplication.CreateBuilder(args);
+    builder.LoadAppSettingAndEnvValues();
+    // -------------------- Logging --------------------
+    builder.Host.UseSerilog((ctx, services, loggerConfig) =>
+    {
+        LogConfigurator.Configure(loggerConfig, ctx.Configuration);
+    });
+    
+    var connectionString = builder.Configuration
+        .GetSection("InvestRadar:ConnectionStrings")
+        .GetValue<string>("DefaultConnection");
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(connectionString));
     builder.Services.AddDatabaseDeveloperPageExceptionFilter();
     builder.Services.AddHostedService<GoogleAnalyticJob>();
+    
+    builder.Services.Load<GoogleAnalyticsConfig>(builder.Configuration, "InvestRadar:GoogleAnalytics");
+    
     builder.Services.AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddDefaultTokenProviders();
@@ -37,45 +54,47 @@ try
         .AddFluentValidationAutoValidation();
     builder.Services.AddRazorPages().AddRazorPagesOptions(options =>
     {
-        options.Conventions.AddAreaPageRoute("Main", "/Index", "");
+        options.Conventions.Add(new GlobalCultureTemplatePageRouteModelConvention());
+    });
+    
+    builder.Services.AddMediatR(cfg =>
+        cfg.RegisterServicesFromAssembly(typeof(CreatePostCommand).Assembly));
+    
+    builder.Services.AddMediatR(cfg =>
+        cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+
+    builder.Services.ConfigureLocalisation();
+    
+    builder.Services.Configure<RazorViewEngineOptions>(options =>
+    {
+        options.PageViewLocationFormats.Add("/Pages/Shared/{0}.cshtml");
     });
     ;
 
     builder.Services.AddAutoMapper(typeof(Program));
-
-    builder.Services.Load<EmailConfig>(builder.Configuration, "Email");
-    builder.Services.AddTransient<IEmailSender, InvestList.Services.EmailSender>();
-    builder.Services.AddScoped<IInvestRepository, InvestRepository>();
-    builder.Services.AddScoped<IUserRepository, UserRepository>();
-    builder.Services.AddScoped<IPostService, PostService>();
-    builder.Services.AddScoped<IPostRepository, PostRepository>();
-    builder.Services.AddScoped<ITagRepository, TagRepository>();
-    builder.Services.AddScoped<ICommentRepository, CommentRepository>();
-    builder.Services.AddSingleton<IInvestService, InvestService>();
-    builder.Services.AddScoped<IImageService, ImageService>();
-    builder.Services.AddScoped<ISeoRepository, SeoRepository>();
-    builder.Services.AddScoped<ISeoService, SeoService>();
-    builder.Services.AddTransient<ISitemapGenerator, SitemapGenerator>();
+    builder.Services.AddAutoMapper(typeof(Radar.Application.Mapping.DtoToEntityProfile).Assembly);
+    
+    builder.Services.Load<EmailConfig>(builder.Configuration, "InvestRadar:Email");
+    builder.Services.Load<GoogleAnalyticsConfig>(builder.Configuration, "InvestRadar:GoogleAnalytics");
+    builder.Services.AddInvestRadarServices();
+    builder.Services.AddHttpContextAccessor();
     builder.Services.AddAuthentication()
         .AddGoogle(options =>
         {
             var googleAuthNSection =
-                builder.Configuration.GetSection("Authentication:Google");
+                builder.Configuration.GetSection("InvestRadar:Authentication:Google");
             options.ClientId = googleAuthNSection["ClientId"];
             options.ClientSecret = googleAuthNSection["ClientSecret"];
         });
     builder.Services.ConfigureApplicationCookie(options => { options.LoginPath = "/Identity/Account/Login"; });
-
     Log.Logger.Information("App is starting");
 
     var app = builder.Build();
-    // using (var scope = app.Services.CreateScope())
-    // {
-    //     var i = scope.ServiceProvider.GetRequiredService<IImageService>();
-    //     await i.LoadOnFileSystem();
-    //     Log.Logger.Information("Images are load");
-    // }
 
+    // -------------------- Middleware --------------------
+    app.UseMiddleware<ErrorHandlingMiddleware>();                 // Ловить всі помилки
+    app.UseMiddleware<RequestResponseLoggingMiddleware>();
+    
     app.UseMiddleware<WwwRedirectMiddleware>();
     app.UseMiddleware<GenerateCspHeader>();
     app.UseMiddleware<SeoMiddleware>();
@@ -92,36 +111,73 @@ try
 
     app.UseHttpsRedirection();
 
+    var rewriteOptions = new RewriteOptions()
+        .AddRewrite(@"^(uk|en)/(images/.*)$", "$2", skipRemainingRules: true);
+    app.UseRewriter(rewriteOptions);
     var defaultRoot = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
-    if (defaultRoot == null)
-        app.UseStaticFiles();
-    else
-        app.UseStaticFiles(new StaticFileOptions
+    var wwwrootPath = defaultRoot == null ? builder.Environment.WebRootPath : Path.Combine(defaultRoot, "wwwroot");
+    
+    app.UseStaticFiles();
+    app.UseFileServer(new FileServerOptions
+    {
+        FileProvider = new PhysicalFileProvider(wwwrootPath),
+        RequestPath = "",
+        StaticFileOptions = { ServeUnknownFileTypes = true }
+    });
+    
+    app.Use(async (context, next) =>
+    {
+        // Check if the response has started (i.e., file was served)
+        if (!context.Response.HasStarted && IsStaticFilePath(context.Request.Path))
         {
-            FileProvider = new PhysicalFileProvider(
-                Path.Combine(defaultRoot, "wwwroot"))
-        });
+            // If response hasn't started and it's a static file path, the file wasn't found
+            context.Response.StatusCode = 404;
+            await context.Response.WriteAsync("File not found");
+            return; // End the request here
+        }
+        // Otherwise, proceed to the next middleware
+        await next();
+    });
+
+    bool IsStaticFilePath(PathString path)
+    {
+        return path.StartsWithSegments("/images") ||
+               path.StartsWithSegments("/css") ||
+               path.StartsWithSegments("/js");
+        // Add other static file prefixes as needed
+    }
+    
+    app.UseMiddleware<LanguageRedirectMiddleware>();
+    app.UseRequestLocalization(app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
 
     app.UseRouting();
-    // app.UseCors();
-
     app.UseAuthentication();
     app.UseAuthorization();
 
     app.MapControllerRoute(
-            name: "default",
-            pattern: "{controller=Home}/{action=Index}/{id?}")
-        ;
+        name: "language",
+        pattern: "Language/SetLanguage", 
+        defaults: new { controller = "Language", action = "SetLanguage" }
+    );
 
+    app.MapControllerRoute(
+        name: "default",
+        pattern: "{culture:regex(^[a-z]{{2}}$)}/{controller=Home}/{action=Index}/{id?}",
+        defaults: new { culture = "uk" }
+    );
+    
     app.MapRazorPages();
 
+    Log.Information("Middleware configuration completed, starting application");
     app.Run();
 }
 catch (Exception e)
 {
-    Log.Logger.Error(e, "App failed to run due to error");
+    Log.Fatal(e, "Application failed to start");
+    throw;
 }
 finally
 {
-    Log.Logger.Information("App shutdowns");
+    Log.Information("Shutting down application");
+    Log.CloseAndFlush();
 }

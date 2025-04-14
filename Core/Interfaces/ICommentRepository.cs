@@ -1,4 +1,5 @@
 using Core.Entities;
+using Radar.Domain.Entities;
 
 namespace Core.Interfaces
 {

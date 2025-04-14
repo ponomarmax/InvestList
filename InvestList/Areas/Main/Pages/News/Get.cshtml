@@ -1,6 +1,5 @@
 @page "/news/{id}"
-@using InvestList
-@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Radar.UI.Pages.Shared.Get
 @model InvestList.Areas.Main.Pages.News.Get
 
 <div class="container mb-4">
@@ -14,19 +13,10 @@
 <div class="row">
     <div class="col-8">
         <h1>@Model.Post.Title</h1>
-        @if (Model?.Post.Tags?.Any() == true)
-        {
-            <div class="tags mb-3">
-                @foreach (var field in Model.Post.Tags)
-                {
-                    <span class="tag_index">@field.Name</span>
-                }
-            </div>
-        }
-        @if (Model.Post.Image != null)
-        {
-            <img src="@Model.Post.Image.FilePath" alt="@Model.Post.Image.AltText" class="img-fluid rounded mb-3">
-        }
+        @await Html.PartialAsync("Get/PostTags", Model.Post.Tags)
+        @await Html.PartialAsync("Get/PostImage", Model.Post.Image)
+       
+       
         <div class="row mb-4">
             <pre class="invest-get-body md:order-1 order-2">
                 @Html.Raw(Model.Post.Description)
@@ -43,56 +33,26 @@
                 (adsbygoogle = window.adsbygoogle || []).push({});
             </script>
         </div>
-        @if (Model.Post.Links != null && Model.Post.Links.Any())
-        {
-            <div id="inputsContainer">
-                <p class="mb-2"> Посилання на статті</p>
-                <ul class="list-group">
-                    @foreach (var link in Model.Post.Links)
-                    {
-                        <li class="list-group-item">
-                            <a href="@link.Hyperlink" rel="@((link.Follow ? "follow" : "nofollow"))">
-                                <strong>@link.AnchorText</strong>
-                            </a>
-                        </li>
-                    }
-                </ul>
-            </div>
-        }
-
+        @await Html.PartialAsync("Get/PostLinks", Model.Post.Links)
         @await Html.PartialAsync("_DisplayComments", (Model.Post.Id, Model.Post.PostType, Model.Post.Comments))
 
     </div>
     <div class="col-4">
-        @if (Model.Post.SimilarNews != null && Model.Post.SimilarNews.Any())
-        {
-            <p>Схожі новини</p>
-            @await Html.PartialAsync("_SimilarContent", ("News", Model.Post.SimilarNews, Model.Post.Tags))
-            <a class="btn-primary"
-               asp-area="Main"
-               asp-page="/News/List"
-               asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.Post.Tags.Select(x => x.Id)))">
-                Більше новини...
-            </a>
-        }
+        @await Html.PartialAsync("Get/PostSimilarSection", (
+            new GetCustomizationSimilarContent
+            {
+                Title = "Схожі новини",
+                BaseUrlPrefix = "News",
+                MoreContentTitle = "Більше новини..."
+            }, Model.Post.SimilarNews, Model.Post.Tags))
         <hr/>
-        @if (Model.Post.SimilarInvests != null && Model.Post.SimilarInvests.Any())
-        {
-            <p>Схожі оголошення</p>
-            @await Html.PartialAsync("_SimilarContent", ("Invest", Model.Post.SimilarInvests, Model.Post.Tags))
-            <a class="btn-primary"
-               asp-area="Main"
-               asp-page="/Invest/List"
-               asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.Post.Tags.Select(x => x.Id)))">
-                Більше оголошень...
-            </a>
-        }
+        @await Html.PartialAsync("Get/PostSimilarSection", (
+            new GetCustomizationSimilarContent
+            {
+                Title = "Схожі оголошення",
+                BaseUrlPrefix = "Invest",
+                MoreContentTitle = "Більше оголошень..."
+            }, Model.Post.SimilarInvests, Model.Post.Tags))
+       
     </div>
 </div>
-
-<script>
-    window.onload = function() {
-        var shareUrl = encodeURIComponent(window.location.href);
-        tg_share.href ='https://t.me/share/url?url=' + shareUrl;
-    }
-</script>

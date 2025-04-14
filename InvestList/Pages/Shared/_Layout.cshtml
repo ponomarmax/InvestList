@@ -1,5 +1,10 @@
-﻿@using Core.Interfaces
+﻿@using System.Globalization
+@using Core.Interfaces
 @using InvestList
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Radar.UI
+@using Radar.UI.Pages
 @inject ITagRepository tagService
 @inject IWebHostEnvironment env
 <!DOCTYPE html>
@@ -59,12 +64,33 @@
                 <a asp-area="Main" asp-page="/Index" class="invest_radar">Invest Radar</a>
                 <div class="ms-auto">
                     <button class="navbar-toggler mt-2" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
-                        aria-label="Toggle navigation">
+                            data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                            aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                 </div>
             </div>
+
+            @{
+            // Get current culture from the request
+            var rqf = Context.Features.Get<IRequestCultureFeature>();
+            var currentCulture = rqf.RequestCulture.Culture.TwoLetterISOLanguageName;
+            }
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarLang" role="button" data-bs-toggle="dropdown">
+                        @currentCulture.ToUpper()
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarLang">
+                        <li>
+                            <a class="dropdown-item" href="@Url.Action("SetLanguage", "Language", new { culture = "uk", returnUrl = Context.Request.Path + Context.Request.QueryString })">UK</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="@Url.Action("SetLanguage", "Language", new { culture = "en", returnUrl = Context.Request.Path + Context.Request.QueryString })">EN</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
 
             @* <p class="language">УКР|ENG</p> *@
 
@@ -175,7 +201,7 @@
     </header>
 
     @{
-        var header = await tagService.GetCustomHeader();
+        var header = await tagService.GetCustomHeader(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName);
         if (header?.Count() > 0)
         {
             <div class="nav-panel my-2">
@@ -184,8 +210,8 @@
                     {
                         <li class="nav-item">
                             <a class="nav-link" asp-area="Main" asp-page="/Index"
-                                asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: new[] { tag.TagId }))">
-                                @tag.Tag.Name
+                                asp-all-route-data="@(PaginationHelper.GetPaginationData(tagIds: new[] { tag.TagId }))">
+                                @tag.Tag.Translations.FirstOrDefault().Name
                             </a>
                         </li>
                     }
@@ -261,6 +287,12 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     @await RenderSectionAsync("Scripts", required: false)
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+    <script src="~/radar-ui/js/description-text.js"></script>
+    <script src="~/radar-ui/js/site.js"></script>
+    <script src="~/radar-ui/js/handleImageUpload.js"></script>
+    <script src="~/radar-ui/js/add-links.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>

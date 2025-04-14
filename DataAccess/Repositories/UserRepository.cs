@@ -1,10 +1,13 @@
 ﻿using Core.Entities;
 using Core.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Radar.Domain.Entities;
+using Radar.Infrastructure.Repositories;
 
 namespace DataAccess.Repositories
 {
-    public class UserRepository(ApplicationDbContext dbContext): IUserRepository
+    public class UserRepository(ApplicationDbContext dbContext, UserManager<User> userManager): BaseUserRepository(userManager, dbContext), IUserRepository
     {
         public async Task<bool> IsEmailConfirmed(string userId)
         {

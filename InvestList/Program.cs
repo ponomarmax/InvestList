@@ -43,7 +43,7 @@ try
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(connectionString));
     builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-    // builder.Services.AddHostedService<GoogleAnalyticJob>();
+    builder.Services.AddHostedService<GoogleAnalyticJob>();
     
     builder.Services.Load<GoogleAnalyticsConfig>(builder.Configuration, "InvestRadar:GoogleAnalytics");
     
@@ -168,13 +168,16 @@ try
     
     app.MapRazorPages();
 
+    Log.Information("Middleware configuration completed, starting application");
     app.Run();
 }
 catch (Exception e)
 {
-    Log.Logger.Error(e, "App failed to run due to error");
+    Log.Fatal(e, "Application failed to start");
+    throw;
 }
 finally
 {
-    Log.Logger.Information("App shutdowns");
+    Log.Information("Shutting down application");
+    Log.CloseAndFlush();
 }

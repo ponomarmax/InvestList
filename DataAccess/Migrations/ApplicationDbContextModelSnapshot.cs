@@ -607,6 +607,9 @@ namespace DataAccess.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("FailedToSendEmailVerification")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -653,6 +656,60 @@ namespace DataAccess.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Core.Entities.UserRequestInfo", b =>
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
+
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                b.Property<string>("Cookies")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<bool>("HasChrome")
+                    .HasColumnType("bit");
+
+                b.Property<string>("Headers")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<string>("IpAddress")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<bool>("MouseMoved")
+                    .HasColumnType("bit");
+
+                b.Property<bool>("NavigatorWebdriver")
+                    .HasColumnType("bit");
+
+                b.Property<DateTime>("RequestTime")
+                    .HasColumnType("datetime2");
+
+                b.Property<int>("ScreenHeight")
+                    .HasColumnType("int");
+
+                b.Property<int>("ScreenWidth")
+                    .HasColumnType("int");
+
+                b.Property<int>("TimeSpent")
+                    .HasColumnType("int");
+
+                b.Property<string>("UserAgent")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<string>("UserId")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)");
+
+                b.HasKey("Id");
+
+                b.ToTable("UserRequestInfos");
+            });
+            
             modelBuilder.Entity("Core.Entities.InvestPost", b =>
                 {
                     b.HasOne("Radar.Domain.Entities.Post", "Post")

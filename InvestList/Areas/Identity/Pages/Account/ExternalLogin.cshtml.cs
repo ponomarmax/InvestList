@@ -15,6 +15,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Radar.Domain.Entities;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace InvestList.Areas.Identity.Pages.Account
 {
@@ -91,6 +94,13 @@ namespace InvestList.Areas.Identity.Pages.Account
             // Request a redirect to the external login provider.
             var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl });
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            
+            // Get current culture from route or default to uk
+            var culture = HttpContext.Request.RouteValues["culture"] as string ?? "uk";
+            
+            // Store culture in properties
+            properties.Items["culture"] = culture;
+            
             return new ChallengeResult(provider, properties);
         }
 
@@ -99,165 +109,86 @@ namespace InvestList.Areas.Identity.Pages.Account
             returnUrl = returnUrl ?? Url.Content("~/");
             if (remoteError != null)
             {
-                ErrorMessage = $"Error from external provider: {remoteError}";
+                _logger.LogError("Error from external provider: {RemoteError}", remoteError);
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
-
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
-                ErrorMessage = "Error loading external login information.";
+                _logger.LogError("Error loading external login information.");
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
 
-
+            // Get the culture from properties or default to uk
+            var culture = info.AuthenticationProperties.Items["culture"] ?? "uk";
+            
             // Sign in the user with this external login provider if the user already has a login.
-            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey,
-                isPersistent: false, bypassTwoFactor: true);
+            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
             if (result.Succeeded)
             {
-                _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name,
-                    info.LoginProvider);
-                return LocalRedirect(returnUrl);
+                _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
+                return LocalRedirect($"/{culture}{returnUrl}");
             }
-
             if (result.IsLockedOut)
             {
                 return RedirectToPage("./Lockout");
             }
-
-            // If user doesn't exist, create a new account for them.
-            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-
-            if (email != null)
+            else
             {
-                // Check if a user with the given email already exists.
-                var user = await _userManager.FindByEmailAsync(email);
-
-                if (user == null)
+                // If the user does not have an account, then ask the user to create an account.
+                ReturnUrl = returnUrl;
+                ProviderDisplayName = info.ProviderDisplayName;
+                if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
                 {
-                    // If user does not exist, create a new user with the external login information.
-                    user = new User
+                    Input = new InputModel
                     {
-                        UserName = email,
-                        Email = email,
-                        EmailConfirmed = true // Automatically confirm the email.
+                        Email = info.Principal.FindFirstValue(ClaimTypes.Email)
                     };
-
-                    var createResult = await _userManager.CreateAsync(user);
-
-                    if (createResult.Succeeded)
-                    {
-                        // Associate the external login provider with the new user.
-                        var addLoginResult = await _userManager.AddLoginAsync(user, info);
-
-                        if (addLoginResult.Succeeded)
-                        {
-                            _logger.LogInformation("User created and associated with {LoginProvider} provider.",
-                                info.LoginProvider);
-
-                            // Sign in the new user.
-                            await _signInManager.SignInAsync(user, isPersistent: false);
-                            return LocalRedirect(returnUrl);
-                        }
-                    }
                 }
-                else
-                {
-                    // If the user already exists (but doesn't have the external login), link the external provider.
-                    var addLoginResult = await _userManager.AddLoginAsync(user, info);
-
-                    if (addLoginResult.Succeeded)
-                    {
-                        // Sign in the existing user.
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
-                    }
-                }
+                return Page();
             }
-
-            // If we reach this point, prompt the user to create an account manually.
-            ReturnUrl = returnUrl;
-            ProviderDisplayName = info.ProviderDisplayName;
-
-            if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
-            {
-                Input = new InputModel
-                {
-                    Email = info.Principal.FindFirstValue(ClaimTypes.Email)
-                };
-            }
-
-            return Page();
         }
 
         public async Task<IActionResult> OnPostConfirmationAsync(string returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
-            // Get the information about the user from the external login provider
+            // Get the external login info
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
-                ErrorMessage = "Error loading external login information during confirmation.";
+                _logger.LogError("Error loading external login information during confirmation.");
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
 
+            // Get the culture from properties or default to uk
+            var culture = info.AuthenticationProperties.Items["culture"] ?? "uk";
+
             if (ModelState.IsValid)
             {
-                var existingUser = await _userManager.FindByEmailAsync(Input.Email);
-                if (existingUser != null)
-                {
-                    ModelState.AddModelError(string.Empty,
-                        "Емейл вже використовується. Спробуйте інший, або відновіть доступ.");
-                    return Page();
-                }
-
                 var user = CreateUser();
-
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-                await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
-                    var roleAssign = await _userManager.AddToRoleAsync(user, Const.BusinessRole);
-                    if (roleAssign.Succeeded)
-                    {
-                        _logger.LogInformation("Role assigned for the user");
-                    }
-                    else
-                    {
-                        _logger.LogError("Role wasn't assigned {@Error}", roleAssign.Errors);
-                    }
-
                     result = await _userManager.AddLoginAsync(user, info);
                     if (result.Succeeded)
                     {
                         _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
-
-                        var userId = await _userManager.GetUserIdAsync(user);
-                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                        var callbackUrl = Url.Page(
-                            "/Account/ConfirmEmail",
-                            pageHandler: null,
-                            values: new { area = "Identity", userId = userId, code = code },
-                            protocol: Request.Scheme);
-
-                        await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                            $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                        // If account confirmation is required, we need to show the link if we don't have a real email sender
-                        if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                        
+                        // Add claims for the user
+                        if (info.Principal.HasClaim(c => c.Type == ClaimTypes.GivenName))
                         {
-                            return RedirectToPage("./RegisterConfirmation", new { Email = Input.Email });
+                            await _userManager.AddClaimAsync(user, info.Principal.FindFirst(ClaimTypes.GivenName));
+                        }
+                        if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Surname))
+                        {
+                            await _userManager.AddClaimAsync(user, info.Principal.FindFirst(ClaimTypes.Surname));
                         }
 
                         await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
-                        return LocalRedirect(returnUrl);
+                        return LocalRedirect($"/{culture}{returnUrl}");
                     }
                 }
-
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
@@ -277,9 +208,9 @@ namespace InvestList.Areas.Identity.Pages.Account
             }
             catch
             {
-                throw new InvalidOperationException($"Can't create an instance of '{nameof(IdentityUser)}'. " +
-                                                    $"Ensure that '{nameof(IdentityUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
-                                                    $"override the external login page in /Areas/Identity/Pages/Account/ExternalLogin.cshtml");
+                throw new InvalidOperationException($"Can't create an instance of '{nameof(User)}'. " +
+                    $"Ensure that '{nameof(User)}' is not an abstract class and has a parameterless constructor, or alternatively " +
+                    $"override the external login page in /Areas/Identity/Pages/Account/ExternalLogin.cshtml");
             }
         }
 

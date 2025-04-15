@@ -81,12 +81,18 @@ try
     builder.Services.AddAuthentication()
         .AddGoogle(options =>
         {
-            var googleAuthNSection =
-                builder.Configuration.GetSection("InvestRadar:Authentication:Google");
+            var googleAuthNSection = builder.Configuration.GetSection("InvestRadar:Authentication:Google");
             options.ClientId = googleAuthNSection["ClientId"];
             options.ClientSecret = googleAuthNSection["ClientSecret"];
+            
+            // Save tokens for later use if needed
+            options.SaveTokens = true;
         });
-    builder.Services.ConfigureApplicationCookie(options => { options.LoginPath = "/Identity/Account/Login"; });
+    builder.Services.ConfigureApplicationCookie(options => 
+    { 
+        options.LoginPath = "/Identity/Account/Login";
+        options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+    });
     Log.Logger.Information("App is starting");
 
     var app = builder.Build();
@@ -147,12 +153,18 @@ try
         // Add other static file prefixes as needed
     }
     
-    app.UseMiddleware<LanguageRedirectMiddleware>();
-    app.UseRequestLocalization(app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
-
+    // Middleware order is crucial
     app.UseRouting();
+
+    // Add the ExternalAuthMiddleware before authentication
+    app.UseMiddleware<ExternalAuthMiddleware>();
+
     app.UseAuthentication();
     app.UseAuthorization();
+
+    // Culture handling middleware after authentication
+    app.UseRequestLocalization(app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
+    app.UseMiddleware<LanguageRedirectMiddleware>();
 
     app.MapControllerRoute(
         name: "language",

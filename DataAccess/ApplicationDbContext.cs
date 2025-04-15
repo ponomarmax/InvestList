@@ -35,8 +35,12 @@ namespace DataAccess
                 .WithMany() // No navigation property
                 .HasForeignKey(p => p.CreatedById)
                 .OnDelete(DeleteBehavior.SetNull);
-            // modelBuilder.Entity<Post>()
-            //     .HasOne(x => x.CreatedBy).OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<Post>()
+                .ToTable("Posts")
+                .HasOne(p => p.UpdatedBy)
+                .WithMany()
+                .HasForeignKey(p => p.UpdatedById)
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Post>()
                 .HasIndex(e => e.Slug);

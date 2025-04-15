@@ -2,16 +2,12 @@ using AutoMapper;
 using Common;
 using Core.Interfaces;
 using InvestList.Models.V2;
-using InvestList.Services;
 using InvestList.Services.Invest.Commands;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Radar.Application;
 using Radar.Application.Models;
-using Radar.Domain.Entities;
 using Radar.Infrastructure.Authorization;
-using Radar.UI.Models;
 
 namespace InvestList.Areas.Main.Pages.Invest
 {
@@ -49,6 +45,7 @@ namespace InvestList.Areas.Main.Pages.Invest
             {
                 Id = id,
                 Post = Post,
+                UserId = Utils.GetUserId(User),
                 InvestPost = InvestPost
             };
 

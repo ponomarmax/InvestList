@@ -1,5 +1,5 @@
 using AutoMapper;
-using Core.Interfaces;
+using Common;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Radar.Application;
@@ -39,6 +39,7 @@ namespace InvestList.Areas.Main.Pages.Blacklist
             var command = new UpdatePostCommand
             {
                 Id = id,
+                UserId = Utils.GetUserId(User),
                 Post = Post,
             };
 

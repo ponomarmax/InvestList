@@ -15,6 +15,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Radar.Domain.Entities;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace InvestList.Areas.Identity.Pages.Account
 {
@@ -91,6 +94,13 @@ namespace InvestList.Areas.Identity.Pages.Account
             // Request a redirect to the external login provider.
             var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl });
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            
+            // Get current culture from route or default to uk
+            var culture = HttpContext.Request.RouteValues["culture"] as string ?? "uk";
+            
+            // Store culture in properties
+            properties.Items["culture"] = culture;
+            
             return new ChallengeResult(provider, properties);
         }
 
@@ -99,33 +109,30 @@ namespace InvestList.Areas.Identity.Pages.Account
             returnUrl = returnUrl ?? Url.Content("~/");
             if (remoteError != null)
             {
-                ErrorMessage = $"Error from external provider: {remoteError}";
+                _logger.LogError("Error from external provider: {RemoteError}", remoteError);
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
-
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
-                ErrorMessage = "Error loading external login information.";
+                _logger.LogError("Error loading external login information.");
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
 
-
+            // Get the culture from properties or default to uk
+            var culture = info.AuthenticationProperties.Items["culture"] ?? "uk";
+            
             // Sign in the user with this external login provider if the user already has a login.
-            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey,
-                isPersistent: false, bypassTwoFactor: true);
+            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
             if (result.Succeeded)
             {
-                _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name,
-                    info.LoginProvider);
-                return LocalRedirect(returnUrl);
+                _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
+                return LocalRedirect($"/{culture}{returnUrl}");
             }
-
             if (result.IsLockedOut)
             {
                 return RedirectToPage("./Lockout");
             }
-
             // If user doesn't exist, create a new account for them.
             var email = info.Principal.FindFirstValue(ClaimTypes.Email);
 
@@ -194,17 +201,20 @@ namespace InvestList.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPostConfirmationAsync(string returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
-            // Get the information about the user from the external login provider
+            // Get the external login info
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
-                ErrorMessage = "Error loading external login information during confirmation.";
+                _logger.LogError("Error loading external login information during confirmation.");
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
 
+            // Get the culture from properties or default to uk
+            var culture = info.AuthenticationProperties.Items["culture"] ?? "uk";
+
             if (ModelState.IsValid)
             {
-                var existingUser = await _userManager.FindByEmailAsync(Input.Email);
+                 var existingUser = await _userManager.FindByEmailAsync(Input.Email);
                 if (existingUser != null)
                 {
                     ModelState.AddModelError(string.Empty,
@@ -257,7 +267,6 @@ namespace InvestList.Areas.Identity.Pages.Account
                         return LocalRedirect(returnUrl);
                     }
                 }
-
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
@@ -273,13 +282,15 @@ namespace InvestList.Areas.Identity.Pages.Account
         {
             try
             {
-                return Activator.CreateInstance<User>();
+                var instance = Activator.CreateInstance<User>();
+                instance.CreatedAt = DateTime.UtcNow;
+                return instance;
             }
             catch
             {
-                throw new InvalidOperationException($"Can't create an instance of '{nameof(IdentityUser)}'. " +
-                                                    $"Ensure that '{nameof(IdentityUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
-                                                    $"override the external login page in /Areas/Identity/Pages/Account/ExternalLogin.cshtml");
+                throw new InvalidOperationException($"Can't create an instance of '{nameof(User)}'. " +
+                    $"Ensure that '{nameof(User)}' is not an abstract class and has a parameterless constructor, or alternatively " +
+                    $"override the external login page in /Areas/Identity/Pages/Account/ExternalLogin.cshtml");
             }
         }
 

@@ -1,4 +1,5 @@
 using AutoMapper;
+using Common;
 using Core.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -39,6 +40,7 @@ namespace InvestList.Areas.Main.Pages.News
             var command = new UpdatePostCommand
             {
                 Id = id,
+                UserId = Utils.GetUserId(User),
                 Post = Post,
             };
 

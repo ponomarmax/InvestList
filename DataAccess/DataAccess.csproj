@@ -27,6 +27,7 @@
     <Compile Remove="Migrations\20250213172214_w.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Configurations\" />
     <Folder Include="Interfaces\" />
   </ItemGroup>
 </Project>

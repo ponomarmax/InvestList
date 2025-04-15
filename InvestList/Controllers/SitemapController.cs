@@ -7,6 +7,7 @@ namespace InvestList.Controllers
 {
     public class SitemapController(ISitemapGenerator sitemapGenerator): Controller
     {
+        [HttpGet]
         [Route("/sitemap.xml")]
         public IActionResult SitemapXml()
         {

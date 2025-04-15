@@ -157,7 +157,7 @@ try
     app.UseRouting();
 
     // Add the ExternalAuthMiddleware before authentication
-    app.UseMiddleware<ExternalAuthMiddleware>();
+    // app.UseMiddleware<ExternalAuthMiddleware>();
 
     app.UseAuthentication();
     app.UseAuthorization();

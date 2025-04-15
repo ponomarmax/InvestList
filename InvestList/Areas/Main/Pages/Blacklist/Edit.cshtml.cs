@@ -39,7 +39,7 @@ namespace InvestList.Areas.Main.Pages.Blacklist
             var command = new UpdatePostCommand
             {
                 Id = id,
-                UserId = Utils.GetUserId(User),
+                // UserId = Utils.GetUserId(User),
                 Post = Post,
             };
 

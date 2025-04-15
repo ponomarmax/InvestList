@@ -1,0 +1,98 @@
+@font-face {
+  font-family: 'e-Ukraine';
+  src: url('/fonts/e-Ukraine-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+* {
+  font-family: 'e-Ukraine', Arial, sans-serif;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #fff;
+}
+
+.nav-panel {
+  border-bottom: 2px solid #F2F2F2;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  margin: 1rem 0;
+}
+
+.nav-panel::-webkit-scrollbar {
+  height: 4px;
+}
+
+.nav-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.nav-panel::-webkit-scrollbar-thumb {
+  background-color: black;
+  border-radius: 10px;
+  width: 30px;
+}
+
+.nav-tags {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.nav-link {
+  color: #444444;
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  white-space: nowrap;
+  text-decoration: none;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-link:focus,
+.nav-link.active {
+  color: black;
+}
+
+@media (max-width: 992px) {
+  .col-4 {
+    width: 100%;
+    margin-top: 10px;
+  }
+  .col-8 {
+    width: 100%;
+  }
+}
+
+@media (max-width: 400px) {
+  .d-flex {
+    flex-wrap: wrap;
+  }
+  .project-buttons {
+    display: flex;
+    margin-top: 3px;
+  }
+  .search-input {
+    width: 200px;
+  }
+} 

@@ -40,7 +40,7 @@ namespace InvestList.Areas.Main.Pages.News
             var command = new UpdatePostCommand
             {
                 Id = id,
-                UserId = Utils.GetUserId(User),
+                // UserId = Utils.GetUserId(User),
                 Post = Post,
             };
 

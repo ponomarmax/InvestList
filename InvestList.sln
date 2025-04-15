@@ -1,5 +1,4 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34221.43
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -16,6 +15,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Radar.Domain", "radar-libs\Radar.Domain\Radar.Domain.csproj", "{80AB6087-F405-4DCC-AD6F-5A91602A4443}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Radar.UI", "radar-libs\Radar.UI\Radar.UI.csproj", "{31E276BF-5A0E-4BF0-86E8-13A67EB74B64}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InvestList.API", "InvestList.API\InvestList.API.csproj", "{A1B2C3D4-E5F6-4A5B-8C7D-9E0F1A2B3C4D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Radar.Libs", "Radar.Libs", "{0A499FDE-70E2-4653-93E0-621F74FF3802}"
 EndProject
@@ -55,6 +56,10 @@ Global
 		{31E276BF-5A0E-4BF0-86E8-13A67EB74B64}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31E276BF-5A0E-4BF0-86E8-13A67EB74B64}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31E276BF-5A0E-4BF0-86E8-13A67EB74B64}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1B2C3D4-E5F6-4A5B-8C7D-9E0F1A2B3C4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1B2C3D4-E5F6-4A5B-8C7D-9E0F1A2B3C4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1B2C3D4-E5F6-4A5B-8C7D-9E0F1A2B3C4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1B2C3D4-E5F6-4A5B-8C7D-9E0F1A2B3C4D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F999E122-CEEA-407E-B1DA-5D734E0CD008}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F999E122-CEEA-407E-B1DA-5D734E0CD008}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F999E122-CEEA-407E-B1DA-5D734E0CD008}.Release|Any CPU.ActiveCfg = Release|Any CPU

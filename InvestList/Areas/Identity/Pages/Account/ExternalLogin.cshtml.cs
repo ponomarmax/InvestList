@@ -133,20 +133,69 @@ namespace InvestList.Areas.Identity.Pages.Account
             {
                 return RedirectToPage("./Lockout");
             }
-            else
+            // If user doesn't exist, create a new account for them.
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+
+            if (email != null)
             {
-                // If the user does not have an account, then ask the user to create an account.
-                ReturnUrl = returnUrl;
-                ProviderDisplayName = info.ProviderDisplayName;
-                if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
+                // Check if a user with the given email already exists.
+                var user = await _userManager.FindByEmailAsync(email);
+
+                if (user == null)
                 {
-                    Input = new InputModel
+                    // If user does not exist, create a new user with the external login information.
+                    user = new User
                     {
-                        Email = info.Principal.FindFirstValue(ClaimTypes.Email)
+                        UserName = email,
+                        Email = email,
+                        EmailConfirmed = true // Automatically confirm the email.
                     };
+
+                    var createResult = await _userManager.CreateAsync(user);
+
+                    if (createResult.Succeeded)
+                    {
+                        // Associate the external login provider with the new user.
+                        var addLoginResult = await _userManager.AddLoginAsync(user, info);
+
+                        if (addLoginResult.Succeeded)
+                        {
+                            _logger.LogInformation("User created and associated with {LoginProvider} provider.",
+                                info.LoginProvider);
+
+                            // Sign in the new user.
+                            await _signInManager.SignInAsync(user, isPersistent: false);
+                            return LocalRedirect(returnUrl);
+                        }
+                    }
                 }
-                return Page();
+                else
+                {
+                    // If the user already exists (but doesn't have the external login), link the external provider.
+                    var addLoginResult = await _userManager.AddLoginAsync(user, info);
+
+                    if (addLoginResult.Succeeded)
+                    {
+                        // Sign in the existing user.
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        return LocalRedirect(returnUrl);
+                    }
+                }
             }
+
+            // If we reach this point, prompt the user to create an account manually.
+            ReturnUrl = returnUrl;
+            ProviderDisplayName = info.ProviderDisplayName;
+
+            if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
+            {
+                Input = new InputModel
+                {
+                    Email = info.Principal.FindFirstValue(ClaimTypes.Email)
+                };
+            }
+
+            return Page();
         }
 
         public async Task<IActionResult> OnPostConfirmationAsync(string returnUrl = null)
@@ -165,28 +214,57 @@ namespace InvestList.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
+                 var existingUser = await _userManager.FindByEmailAsync(Input.Email);
+                if (existingUser != null)
+                {
+                    ModelState.AddModelError(string.Empty,
+                        "Емейл вже використовується. Спробуйте інший, або відновіть доступ.");
+                    return Page();
+                }
+
                 var user = CreateUser();
+
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+                await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
+                    var roleAssign = await _userManager.AddToRoleAsync(user, Const.BusinessRole);
+                    if (roleAssign.Succeeded)
+                    {
+                        _logger.LogInformation("Role assigned for the user");
+                    }
+                    else
+                    {
+                        _logger.LogError("Role wasn't assigned {@Error}", roleAssign.Errors);
+                    }
+
                     result = await _userManager.AddLoginAsync(user, info);
                     if (result.Succeeded)
                     {
                         _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
-                        
-                        // Add claims for the user
-                        if (info.Principal.HasClaim(c => c.Type == ClaimTypes.GivenName))
+
+                        var userId = await _userManager.GetUserIdAsync(user);
+                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                        var callbackUrl = Url.Page(
+                            "/Account/ConfirmEmail",
+                            pageHandler: null,
+                            values: new { area = "Identity", userId = userId, code = code },
+                            protocol: Request.Scheme);
+
+                        await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                            $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
+                        // If account confirmation is required, we need to show the link if we don't have a real email sender
+                        if (_userManager.Options.SignIn.RequireConfirmedAccount)
                         {
-                            await _userManager.AddClaimAsync(user, info.Principal.FindFirst(ClaimTypes.GivenName));
-                        }
-                        if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Surname))
-                        {
-                            await _userManager.AddClaimAsync(user, info.Principal.FindFirst(ClaimTypes.Surname));
+                            return RedirectToPage("./RegisterConfirmation", new { Email = Input.Email });
                         }
 
                         await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
-                        return LocalRedirect($"/{culture}{returnUrl}");
+                        return LocalRedirect(returnUrl);
                     }
                 }
                 foreach (var error in result.Errors)
@@ -204,7 +282,9 @@ namespace InvestList.Areas.Identity.Pages.Account
         {
             try
             {
-                return Activator.CreateInstance<User>();
+                var instance = Activator.CreateInstance<User>();
+                instance.CreatedAt = DateTime.UtcNow;
+                return instance;
             }
             catch
             {

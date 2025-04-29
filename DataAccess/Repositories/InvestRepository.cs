@@ -96,36 +96,33 @@ namespace DataAccess.Repositories
             return invest.Post.Slug;
         }
 
-        public async Task<Dictionary<string, List<(Post Post, InvestPost? Invest)>>> GetGroupedPostsWithInvestAsync(
-            string language,
-            string? search,
-            List<Guid>? tagIds,
-            CancellationToken ct)
-        {
-            // Define SQL parameters
-            var languageParam = new SqlParameter("@language", language);
-            var searchParam = string.IsNullOrWhiteSpace(search) ? null : new SqlParameter("@search", search);
-            var tagParams = tagIds?.Select((tag, index) => new SqlParameter($"@tag{index}", tag)).ToArray() ?? [];
+       public async Task<Dictionary<string, List<(Post Post, InvestPost? Invest)>>> GetGroupedPostsWithInvestAsync(
+    string language,
+    string? search,
+    List<Guid>? tagIds,
+    CancellationToken ct)
+{
+    var languageParam = new SqlParameter("@language", language);
+    var searchParam = string.IsNullOrWhiteSpace(search) ? null : new SqlParameter("@search", search);
+    var tagParams = tagIds?.Select((tag, index) => new SqlParameter($"@tag{index}", tag)).ToArray() ?? [];
 
-            // Build the WHERE clause with parameterized conditions
-            var searchCondition = searchParam == null ? "" : "AND pt.Title LIKE '%' + @search + '%'";
-            var tagCondition = tagParams.Length == 0
-                ? ""
-                : $"AND EXISTS (SELECT 1 FROM PostTags ptg2 WHERE ptg2.PostId = p.Id AND ptg2.TagId IN ({string.Join(", ", tagParams.Select(p => p.ParameterName))}))";
-            var whereClause = $@"
+    var searchCondition = searchParam == null ? "" : "AND pt.Title LIKE '%' + @search + '%'";
+    var tagCondition = tagParams.Length == 0
+        ? ""
+        : $"AND EXISTS (SELECT 1 FROM PostTags ptg2 WHERE ptg2.PostId = p.Id AND ptg2.TagId IN ({string.Join(", ", tagParams.Select(p => p.ParameterName))}))";
+
+    var whereClause = $@"
         WHERE p.IsActive = 1
         {searchCondition}
         {tagCondition}
     ";
 
-            // Define the parameterized SQL query
-            var sql = $@"
+    var sql = $@"
         WITH FirstImagePerPost AS (
-            SELECT *, 
-                   ROW_NUMBER() OVER (PARTITION BY PostId ORDER BY Id) AS rn
+            SELECT *, ROW_NUMBER() OVER (PARTITION BY PostId ORDER BY Id) AS rn
             FROM ImageMetadata
         ),
-        RankedPosts AS (
+        TopRankedPosts AS (
             SELECT 
                 p.Id AS PostId,
                 p.Slug,
@@ -146,134 +143,129 @@ namespace DataAccess.Repositories
                 pt.Description AS TranslationDescription,
 
                 im.Id AS ImageId,
-                
-                t.Id AS TagId,
-                tt.Name AS TagTitle,
 
-                ROW_NUMBER() OVER (PARTITION BY p.PostType ORDER BY p.Priority DESC, p.UpdatedAt DESC) AS rn
+                ROW_NUMBER() OVER (
+                    PARTITION BY p.PostType 
+                    ORDER BY p.Priority DESC, p.UpdatedAt DESC, p.Id DESC
+                ) AS rn
             FROM Posts p
             LEFT JOIN InvestPosts i ON p.Id = i.PostId
             JOIN PostTranslation pt ON p.Id = pt.PostId AND pt.Language = @language
             LEFT JOIN FirstImagePerPost im ON p.Id = im.PostId AND im.rn = 1
-            LEFT JOIN PostTags ptg ON ptg.PostId = p.Id
+            {whereClause}
+        ),
+        TopPostsWithTags AS (
+            SELECT 
+                trp.*,
+                ptg.TagId,
+                tt.Name AS TagTitle
+            FROM TopRankedPosts trp
+            LEFT JOIN PostTags ptg ON ptg.PostId = trp.PostId
             LEFT JOIN Tags t ON ptg.TagId = t.Id
             LEFT JOIN TagTranslation tt ON t.Id = tt.TagId AND tt.Language = @language
-            {whereClause}
+            WHERE trp.rn <= 4
         )
-        SELECT * 
-        FROM RankedPosts
-        WHERE rn <= 4;
+        SELECT * FROM TopPostsWithTags;
     ";
 
-            // Collect all parameters into an array for FromSqlRaw
-            var parameters = new List<SqlParameter> { languageParam };
-            if (searchParam != null)
-            {
-                parameters.Add(searchParam);
-            }
+    var parameters = new List<SqlParameter> { languageParam };
+    if (searchParam != null)
+        parameters.Add(searchParam);
+    parameters.AddRange(tagParams);
 
-            parameters.AddRange(tagParams);
+    var rawResults = await dbContext
+        .Set<TopPostWithInvestResult>()
+        .FromSqlRaw(sql, parameters.ToArray())
+        .ToListAsync(ct);
 
-            // Execute the query with parameters
-            var rawResults = await dbContext
-                .Set<TopPostWithInvestResult>()
-                .FromSqlRaw(sql, parameters.ToArray())
-                .ToListAsync(ct);
-
-            // Group tags per post (unchanged from original)
-            var tagGroups = rawResults
-                .Where(r => r.TagId.HasValue)
-                .GroupBy(r => r.PostId)
-                .ToDictionary(
-                    g => g.Key,
-                    g => g
-                        .Where(x => x.TagId.HasValue)
-                        .GroupBy(x => x.TagId)
-                        .Select(r =>
-                        {
-                            var first = r.First();
-                            return new PostTags
-                            {
-                                TagId = r.Key!.Value,
-                                Tag = new Tag
-                                {
-                                    Id = r.Key!.Value,
-                                    Translations = first.TagTitle != null
-                                        ? new List<TagTranslation>
-                                        {
-                                            new()
-                                            {
-                                                TagId = r.Key.Value,
-                                                Name = first.TagTitle!,
-                                                Language = language
-                                            }
-                                        }
-                                        : []
-                                }
-                            };
-                        }).ToList()
-                );
-
-            // Group and map the results (unchanged from original)
-            var grouped = rawResults
-                .GroupBy(r => r.PostType)
-                .ToDictionary(
-                    g => g.Key,
-                    g => g.Select(r =>
+    var tagGroups = rawResults
+        .Where(r => r.TagId.HasValue)
+        .GroupBy(r => r.PostId)
+        .ToDictionary(
+            g => g.Key,
+            g => g
+                .GroupBy(x => x.TagId)
+                .Select(r =>
+                {
+                    var first = r.First();
+                    return new PostTags
                     {
-                        var post = new Post
+                        TagId = r.Key!.Value,
+                        Tag = new Tag
                         {
-                            Id = r.PostId,
-                            Slug = r.Slug,
-                            PostType = r.PostType,
-                            Priority = r.Priority,
-                            UpdatedAt = r.UpdatedAt,
-                            CreatedAt = r.CreatedAt,
-                            IsActive = r.IsActive,
-                            Translations = string.IsNullOrEmpty(r.TranslationTitle)
-                                ? []
-                                : new List<PostTranslation>
+                            Id = r.Key.Value,
+                            Translations = first.TagTitle != null
+                                ? new List<TagTranslation>
                                 {
                                     new()
                                     {
-                                        PostId = r.PostId,
-                                        Title = r.TranslationTitle!,
-                                        Description = r.TranslationDescription,
+                                        TagId = r.Key.Value,
+                                        Name = first.TagTitle!,
                                         Language = language
                                     }
-                                },
-                            Images = r.ImageId.HasValue
-                                ?
-                                [
-                                    new ImageMetadata
-                                    {
-                                        Id = r.ImageId.Value
-                                    }
-                                ]
-                                : new List<ImageMetadata>(),
-                            Tags = tagGroups.ContainsKey(r.PostId)
-                                ? tagGroups[r.PostId]
-                                : new List<PostTags>()
-                        };
+                                }
+                                : []
+                        }
+                    };
+                }).ToList()
+        );
 
-                        var invest = r.InvestId.HasValue
-                            ? new InvestPost
+    var grouped = rawResults
+        .GroupBy(r => r.PostType)
+        .ToDictionary(
+            g => g.Key,
+            g => g
+                .GroupBy(x => x.PostId)
+                .Select(gr =>
+                {
+                    var first = gr.First();
+                    var post = new Post
+                    {
+                        Id = first.PostId,
+                        Slug = first.Slug,
+                        PostType = first.PostType,
+                        Priority = first.Priority,
+                        UpdatedAt = first.UpdatedAt,
+                        CreatedAt = first.CreatedAt,
+                        IsActive = first.IsActive,
+                        Translations = string.IsNullOrEmpty(first.TranslationTitle)
+                            ? []
+                            : new List<PostTranslation>
                             {
-                                Id = r.InvestId.Value,
-                                PostId = r.InvestPostId!.Value,
-                                TotalInvestment = r.TotalInvestment ?? 0,
-                                InvestDurationYears = r.InvestDurationYears ?? 0,
-                                InvestDurationMonths = r.InvestDurationMonths ?? 0,
-                                AnnualInvestmentReturn = r.AnnualInvestmentReturn ?? 0
-                            }
-                            : null;
+                                new()
+                                {
+                                    PostId = first.PostId,
+                                    Title = first.TranslationTitle!,
+                                    Description = first.TranslationDescription,
+                                    Language = language
+                                }
+                            },
+                        Images = first.ImageId.HasValue
+                            ? [ new ImageMetadata { Id = first.ImageId.Value } ]
+                            : [],
+                        Tags = tagGroups.ContainsKey(first.PostId)
+                            ? tagGroups[first.PostId]
+                            : []
+                    };
 
-                        return (post, invest);
-                    }).ToList()
-                );
+                    var invest = first.InvestId.HasValue
+                        ? new InvestPost
+                        {
+                            Id = first.InvestId.Value,
+                            PostId = first.InvestPostId!.Value,
+                            TotalInvestment = first.TotalInvestment ?? 0,
+                            InvestDurationYears = first.InvestDurationYears ?? 0,
+                            InvestDurationMonths = first.InvestDurationMonths ?? 0,
+                            AnnualInvestmentReturn = first.AnnualInvestmentReturn ?? 0
+                        }
+                        : null;
 
-            return grouped;
-        }
+                    return (post, invest);
+                }).ToList()
+        );
+
+    return grouped;
+}
         // public async Task<Dictionary<string, List<(Post Post, InvestPost Invest)>>> GetGroupedPostsWithInvestAsync(
         //     CancellationToken ct)
         // {

@@ -18,8 +18,10 @@ public class UpdateInvestPostCommandHandler(
     
     public async Task<string> Handle(UpdateInvestPostCommand command, CancellationToken ct)
     {
-        var post = mapper.Map<Post>(command.Post);
-        var investPost = mapper.Map<InvestPost>(command.InvestPost);
+        var post = mapper.Map<Post>(command.Post, opt =>
+        {
+            opt.Items["UpdatedById"] = command.UserId;
+        });         var investPost = mapper.Map<InvestPost>(command.InvestPost);
         investPost.Post = post;
         var slug = await repository.Put(command.Id, investPost);
         imageService.RefreshImages(investPost.Post, null);

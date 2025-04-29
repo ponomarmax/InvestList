@@ -3,13 +3,8 @@
 @using System.Text.RegularExpressions;
 @model InvestList.Services.Queries.InvestPostShortDto
 
-@{
-    var isClickable = string.IsNullOrWhiteSpace(Model.Post.Title);
-    var href = Url.Page($"/Invest/Get", new { id = Model.Post.Slug });
-    var onclickAttr = isClickable ? $"location.href='{href}'" : "";
-}
 
-<div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden" style="cursor:@(isClickable ? "pointer" : "default")" @(isClickable ? $"onclick={onclickAttr}" : "")>
+<div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
     @if (Model.Post.Image != null)
     {
         <div class="position-relative">
@@ -81,7 +76,7 @@
         </div>
 
         <div class="d-flex justify-content-between align-items-center">
-            <a href="@href" class="btn btn-outline-dark rounded-pill px-4">Детальніше</a>
+            <a asp-area="Main" asp-page="/Invest/Get" asp-route-id="@Model.Post.Slug" class="btn btn-outline-dark rounded-pill px-4">Детальніше</a>
             @if (Model.Post.GoogleAnalyticPostView != null)
             {
                 <div class="text-muted small">

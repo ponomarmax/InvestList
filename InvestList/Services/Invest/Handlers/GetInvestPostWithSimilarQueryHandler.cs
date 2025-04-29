@@ -5,6 +5,7 @@ using InvestList.Services.Invest.Queries;
 using MediatR;
 using Radar.Application;
 using Radar.Application.Models;
+using Radar.Domain.Interfaces;
 
 namespace InvestList.Services.Invest.Handlers;
 

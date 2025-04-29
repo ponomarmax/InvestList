@@ -4,9 +4,9 @@ using Core.Interfaces;
 using InvestList.Services.Invest.Queries;
 using InvestList.Services.Queries;
 using MediatR;
-using Radar.Application;
 using Radar.Application.Models;
 using Radar.Domain;
+using Radar.Domain.Interfaces;
 
 namespace InvestList.Services.Invest.Handlers;
 

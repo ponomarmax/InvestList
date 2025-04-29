@@ -133,11 +133,14 @@
 
         <!-- Project Cards -->
         <div class="row g-4">
-            @foreach (var investPost in Model.InvestPosts)
+            @if (Model.InvestPosts != null && Model.InvestPosts.Any())
             {
-                <div class="col-lg-4">
-                    @await Html.PartialAsync("_InvestCard", investPost)
-                </div>
+                @foreach (var investPost in Model.InvestPosts)
+                {
+                    <div class="col-lg-4">
+                        @await Html.PartialAsync("_InvestCard", investPost)
+                    </div>
+                }
             }
         </div>
     </div>

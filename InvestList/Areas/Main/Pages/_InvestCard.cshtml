@@ -3,66 +3,85 @@
 @using System.Text.RegularExpressions;
 @model InvestList.Services.Queries.InvestPostShortDto
 
-@{
-var isClickable = string.IsNullOrWhiteSpace(Model.Post.Title);
-var href = Url.Page($"/Invest/Get", new { id = Model.Post.Slug });
-var onclickAttr = isClickable ? $"location.href='{href}'" : "";
-}
 
-<div class="list-post-card" style="cursor:@(isClickable ? "pointer" : "default")" @(isClickable ? $"onclick={onclickAttr}" : "")>
-    <h4 class="list-post-title m-3">
-        <a class="list-post-link" asp-area="Main" asp-page="/Invest/Get" asp-route-id="@Model.Post.Slug">@Model.Post.Title</a>
-    </h4>
-
-    @if (Model.Post.Tags != null && Model.Post.Tags.Any())
+<div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+    @if (Model.Post.Image != null)
     {
-        <div class="tags-container mx-3">
-            @foreach (var field in Model.Post.Tags)
+        <div class="position-relative">
+            <img src="@Model.Post.Image.FilePath" alt="@Model.Post.Image.AltText" class="card-img-top" style="height: 200px; object-fit: cover;">
+            @if (Model.Post.Tags != null && Model.Post.Tags.Any())
             {
-                <span class="tag_index">@field.Name</span>
+                <div class="position-absolute top-0 start-0 p-3 d-flex flex-wrap gap-2">
+                    @foreach (var field in Model.Post.Tags)
+                    {
+                        <span class="badge rounded-pill px-3 py-2" style="background-color: rgba(255, 255, 255, 0.9); color: #000;">@field.Name</span>
+                    }
+                </div>
             }
         </div>
     }
-    <hr>
-
-    <div class="row mx-2">
-        @if (Model.Post.Image != null)
-        {
-            <div class="col-auto ms-2">
-                <img src="@Model.Post.Image.FilePath" alt="@Model.Post.Image.AltText" class="img-fluid rounded" style="width: 100px; height: 100px;">
-            </div>
-        }
-
-        <div class="col ms-2 mb-3">
-            @{
-                if (!string.IsNullOrEmpty(Model.Post.Description))
-                {
-                    Model.Post.Description = Regex.Replace(Model.Post.Description, "<.*?>", " ");
-                }
-            }
-            <p class="description-color mb-0">@Html.Raw(Model.Post.Description?.Substring(0, Math.Min(Model.Post.Description.Length, 150)))</p>
-            <div class="annualInvestment">
-                @Model.AnnualInvestmentReturn.ToString("0.")<i class="bi bi-percent"></i>
-            </div>
-            <div class="duration">@InvestmentHelper.FormatInvestmentDuration(Model.InvestDurationYears, Model.InvestDurationMonths)</div>
-            @if (Model.MinInvestValues != null && Model.MinInvestValues.Any())
+    else if (Model.Post.Tags != null && Model.Post.Tags.Any())
+    {
+        <div class="p-3 d-flex flex-wrap gap-2 border-bottom">
+            @foreach (var field in Model.Post.Tags)
             {
-                @foreach (var currency in Model.MinInvestValues)
-                {
-                    <div class="currency">
-                        @currency.MinValue @currency.Currency
-                    </div>
-                }
+                <span  class="badge bg-dark rounded-square">@field.Name</span>
             }
-            <div class="creation-data">@Model.Post.CreatedAt.ToString("dd.MM.yyyy")</div>
+        </div>
+    }
+
+    <div class="card-body p-4">
+        <h3 class="h5 fw-semibold mb-3">
+            <a class="text-decoration-none text-dark" asp-area="Main" asp-page="/Invest/Get" asp-route-id="@Model.Post.Slug">@Model.Post.Title</a>
+        </h3>
+
+        @{
+            if (!string.IsNullOrEmpty(Model.Post.Description))
+            {
+                Model.Post.Description = Regex.Replace(Model.Post.Description, "<.*?>", " ");
+            }
+        }
+        <p class="text-muted small mb-4">@Html.Raw(Model.Post.Description?.Substring(0, Math.Min(Model.Post.Description.Length, 150)))...</p>
+
+        <div class="row g-3 mb-3">
+            <div class="col-6">
+                <div class="d-flex align-items-baseline">
+                    <span class="h4 fw-bold mb-0">@Model.AnnualInvestmentReturn.ToString("0.")</span>
+                    <span class="text-muted ms-1">% / рік</span>
+                </div>
+                <div class="text-muted small">ROI</div>
+            </div>
+            <div class="col-6">
+                <div class="d-flex align-items-baseline">
+                    @if (Model.MinInvestValues != null && Model.MinInvestValues.Any())
+                    {
+                        var firstCurrency = Model.MinInvestValues.First();
+                        <span class="h4 fw-bold mb-0">$@firstCurrency.MinValue</span>
+                    }
+                </div>
+                <div class="text-muted small">Інвестиції</div>
+            </div>
+            <div class="col-6">
+                <div class="d-flex align-items-baseline">
+                    <span class="h4 fw-bold mb-0">@InvestmentHelper.FormatInvestmentDuration(Model.InvestDurationYears, Model.InvestDurationMonths)</span>
+                </div>
+                <div class="text-muted small">Термін</div>
+            </div>
+            <div class="col-6">
+                <div class="d-flex align-items-baseline">
+                    <span class="h4 fw-bold mb-0">Київська обл.</span>
+                </div>
+                <div class="text-muted small">Локація</div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center">
+            <a asp-area="Main" asp-page="/Invest/Get" asp-route-id="@Model.Post.Slug" class="btn btn-outline-dark rounded-pill px-4">Детальніше</a>
             @if (Model.Post.GoogleAnalyticPostView != null)
             {
-                <div class="d-flex justify-content-between">
-                    <span></span>
-                    <span class="text-muted ms-auto">
-                        <i class="bi bi-eye"></i>
-                        @Model.Post.GoogleAnalyticPostView?.PageViews
-                    </span>
+                <div class="text-muted small">
+                    <i class="bi bi-eye"></i>
+                    @Model.Post.GoogleAnalyticPostView?.PageViews
                 </div>
             }
         </div>

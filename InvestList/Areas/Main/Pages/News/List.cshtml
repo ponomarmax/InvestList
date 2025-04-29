@@ -1,52 +1,56 @@
 @page "/news"
-@using InvestList
-@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Radar.UI
+@using Radar.UI.Pages
 @model InvestList.Areas.Main.Pages.News.List
 
-<div class="container mt-5">
-    @if (Model.Entities != null && Model.Entities.Any())
-    {
-        <div class="row">
-            @foreach (var ad in Model.Entities)
-            {
-                <div class="col-12 col-lg-6 mb-2">
-                    @await Html.PartialAsync("List/_PostCard", ("News", ad))
+<!-- NEWS CARDS -->
+<section class="py-5">
+    <div class="container">
+        @if (Model.Entities != null && Model.Entities.Any())
+        {
+            <div class="row g-4">
+                @foreach (var news in Model.Entities)
+                {
+                    <div class="col-lg-4">
+                        @await Html.PartialAsync("List/_PostCard", ("News", news))
+                    </div>
+                }
+
+                <!-- Google AdSense -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 border-0 shadow-sm bg-light">
+                        <div class="card-body d-flex justify-content-center align-items-center">
+                            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7409000941565147"
+                                    crossorigin="anonymous"></script>
+                            <ins class="adsbygoogle"
+                                 style="display:block"
+                                 data-ad-format="fluid"
+                                 data-ad-layout-key="-er-s-6z-ez+1nt"
+                                 data-ad-client="ca-pub-7409000941565147"
+                                 data-ad-slot="8518592844">
+                            </ins>
+                            <script>
+                                (adsbygoogle = window.adsbygoogle || []).push({});
+                            </script>
+                        </div>
+                    </div>
                 </div>
-            }
-            <div class="col-12 col-lg-6 mb-2">
-                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7409000941565147"
-                        crossorigin="anonymous"></script>
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-format="fluid"
-                     data-ad-layout-key="-er-s-6z-ez+1nt"
-                     data-ad-client="ca-pub-7409000941565147"
-                     data-ad-slot="8518592844"></ins>
-                <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
             </div>
-            <div class="col-12 col-lg-6 mb-2">
-                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7409000941565147"
-                        crossorigin="anonymous"></script>
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-format="fluid"
-                     data-ad-layout-key="-eq-v-6o-e6+1l7"
-                     data-ad-client="ca-pub-7409000941565147"
-                     data-ad-slot="6073189060"></ins>
-                <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <div class="mb-4">
+                    <i class="bi bi-newspaper display-1 text-muted"></i>
+                </div>
+                <h3>Новин не знайдено</h3>
+                <p class="text-muted">Спробуйте змінити критерії пошуку або перевірте пізніше.</p>
+                <a asp-area="Main" asp-page="/News/List" class="btn btn-outline-dark rounded-pill px-4 mt-3">Всі новини</a>
             </div>
-        </div>
-    }
-    else
-    {
-        <p>Немає оголошень</p>
-    }
-    
-</div>
+        }
+    </div>
+</section>
+
 @if (Model.Entities != null && Model.Entities.Any())
 {
     @await Html.PartialAsync("_Pagination", ("News", Model.PaginationInfo, Model.TagIds))

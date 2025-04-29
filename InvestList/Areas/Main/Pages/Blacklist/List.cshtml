@@ -7,8 +7,8 @@
         <div class="row">
             @foreach (var ad in Model.Entities)
             {
-                <div class="col-12 col-lg-6 mb-4">
-                    @await Html.PartialAsync("List/_PostCard", ("Blacklist",ad))
+                <div class="col-lg-4">
+                    @await Html.PartialAsync("List/_PostCard", ("Blacklist", ad))
                 </div>
             }
         </div>

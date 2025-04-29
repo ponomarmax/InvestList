@@ -13,6 +13,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using Radar.Application.Posts.Commands;
 using Radar.Domain.Entities;
+using Radar.Domain.Interfaces;
 using Radar.Infrastructure;
 using Radar.Infrastructure.Configs;
 using Radar.Infrastructure.Jobs;
@@ -97,6 +98,7 @@ try
 
     var app = builder.Build();
 
+    // await LoadOnFileSystem(app);
     // -------------------- Middleware --------------------
     app.UseMiddleware<ErrorHandlingMiddleware>();                 // Ловить всі помилки
     app.UseMiddleware<RequestResponseLoggingMiddleware>();
@@ -192,4 +194,32 @@ finally
 {
     Log.Information("Shutting down application");
     Log.CloseAndFlush();
+}
+
+
+async Task LoadOnFileSystem(WebApplication app)
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var imagePathBuilder = scope.ServiceProvider.GetRequiredService<IImagePathBuilder>();
+        
+        await foreach (var post in context.Posts.Include(x => x.Images).ThenInclude(x => x.ImageObject)
+                           .AsAsyncEnumerable())
+        {
+            if (post.Images?.Any() == true)
+                foreach (var image in post.Images)
+                {
+                    var finalPath = "wwwroot"+imagePathBuilder.GetPostImageUrl(post.PostType, image.Id);
+                    string folderPath = Path.GetDirectoryName(finalPath);
+
+                    if (!string.IsNullOrEmpty(folderPath))
+                    {
+                        Directory.CreateDirectory(folderPath);
+                    }
+                    File.WriteAllBytes(finalPath,
+                        image.ImageObject.Image);
+                }
+        }
+    }
 }

@@ -101,25 +101,136 @@
                         </div>
                     </div>
 
-                    <div class="d-flex gap-2 order-lg-3">
-                        <a href="/Identity/Account/Login" class="btn btn-outline-dark btn-sm rounded-square px-3">Увійти</a>
-                        <a href="/Identity/Account/Register" class="btn btn-dark btn-sm rounded-square px-3">Зареєструватися</a>
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        <div class="d-flex gap-2 order-lg-3">
+                            <a href="/Identity/Account/Login" class="btn btn-outline-dark btn-sm rounded-square px-3">Увійти</a>
+                            <a href="/Identity/Account/Register" class="btn btn-dark btn-sm rounded-square px-3">Зареєструватися</a>
+                        </div>
+                    }
+                    else if (User.Identity.IsAuthenticated)
+                    {
+                        <div class="d-flex gap-2 order-lg-3">
+                            <a asp-area="Identity"
+                               asp-page="/Account/Profile" class="btn btn-outline-dark btn-sm rounded-square px-3">@User.Identity?.Name</a>
+                            <a asp-area="Identity" asp-page="/Account/Logout"
+                               asp-route-returnUrl="@Url.Action("Index", new { area = "Main" })" class="btn btn-dark btn-sm rounded-square px-3">Вийти</a>
+                        </div>
+                        @if (User.IsInRole(Const.AdminRole))
+
+                        {
+                            <ul class="dropdown-menu dropdown-menu-end text-small">
+                                <li>
+                                    <a class="dropdown-item" asp-area="Main" asp-page="/News/Create">Створити новину</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-area="Main" asp-page="/Blacklist/Create">Створити Blacklist</a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-area="Main" asp-page="/Admin/Index">Додати тег</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-area="Main" asp-page="/Admin/AllSeo">SEO</a>
+                                </li>
+                            </ul>
+                        }
+                    } 
                     </div>
-                </div>
             </div>
         </nav>
     </div>
 </header>
 
 <body>
-    @RenderBody()
+@RenderBody()
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
 
-    @await RenderSectionAsync("Scripts", required: false)
+@await RenderSectionAsync("Scripts", required: false)
 </body>
+
+<footer class="py-5 bg-white">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <a href="/" class="d-inline-block mb-4">
+                    <img src="/ico/logo3.png" alt="Invest Radar" height="32">
+                </a>
+                <p class="text-muted mb-0">Платформа для пошуку інвестиційних можливостей та залучення інвестицій в Україні.</p>
+                <div class="d-flex gap-3 mt-4">
+                    <a href="#" class="text-dark">
+                        <i class="bi bi-facebook"></i>
+                    </a>
+                    <a href="#" class="text-dark">
+                        <i class="bi bi-twitter"></i>
+                    </a>
+                    <a href="#" class="text-dark">
+                        <i class="bi bi-linkedin"></i>
+                    </a>
+                    <a href="#" class="text-dark">
+                        <i class="bi bi-instagram"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <h5 class="h6 mb-3">Категорії</h5>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2">
+                        <a href="#" class="text-muted text-decoration-none">Огляди</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="text-muted text-decoration-none">Фін бізнес</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="text-muted text-decoration-none">Агро</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="text-muted text-decoration-none">Будівництво</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-lg-3">
+                <h5 class="h6 mb-3">Для інвесторів</h5>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2">
+                        <a href="#" class="text-muted text-decoration-none">Знайти проект</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="text-muted text-decoration-none">Перед інвестуванням</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="text-muted text-decoration-none">Фондовий ринок</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="text-muted text-decoration-none">УкрінвестКлуб</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-lg-3">
+                <h5 class="h6 mb-3">Для бізнесу</h5>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2">
+                        <a href="#" class="text-muted text-decoration-none">Додати проект</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="text-muted text-decoration-none">Залучити інвестиції</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="text-muted text-decoration-none">Консультації</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="text-muted text-decoration-none">Партнерська програма</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
 
 </html>

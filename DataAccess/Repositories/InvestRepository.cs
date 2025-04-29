@@ -143,6 +143,7 @@ namespace DataAccess.Repositories
                 pt.Description AS TranslationDescription,
 
                 im.Id AS ImageId,
+                ga.PageViews AS PageViews,
 
                 ROW_NUMBER() OVER (
                     PARTITION BY p.PostType 
@@ -152,6 +153,7 @@ namespace DataAccess.Repositories
             LEFT JOIN InvestPosts i ON p.Id = i.PostId
             JOIN PostTranslation pt ON p.Id = pt.PostId AND pt.Language = @language
             LEFT JOIN FirstImagePerPost im ON p.Id = im.PostId AND im.rn = 1
+            LEFT JOIN GoogleAnalyticPostViews ga ON ga.PostId = p.Id
             {whereClause}
         ),
         TopPostsWithTags AS (
@@ -228,6 +230,12 @@ namespace DataAccess.Repositories
                         UpdatedAt = first.UpdatedAt,
                         CreatedAt = first.CreatedAt,
                         IsActive = first.IsActive,
+                        GoogleAnalyticPostView = first.PageViews.HasValue
+                            ? new GoogleAnalyticPostView()
+                            {
+                                PageViews = first.PageViews.Value,
+                            }
+                            : null,
                         Translations = string.IsNullOrEmpty(first.TranslationTitle)
                             ? []
                             : new List<PostTranslation>

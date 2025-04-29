@@ -98,7 +98,7 @@ try
 
     var app = builder.Build();
 
-    await LoadOnFileSystem(app);
+    // await LoadOnFileSystem(app);
     // -------------------- Middleware --------------------
     app.UseMiddleware<ErrorHandlingMiddleware>();                 // Ловить всі помилки
     app.UseMiddleware<RequestResponseLoggingMiddleware>();

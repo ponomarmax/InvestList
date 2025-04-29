@@ -37,13 +37,13 @@
                         </div>
 
                         <div class="feature-card-actions">
-                            <a href="/Invest/Add" class="btn btn-dark rounded-square px-3 py-2">
+                            <a asp-area="Main" asp-page="/Invest/Create" class="btn btn-dark rounded-square px-3 py-2">
                                 <i class="bi bi-plus-circle me-1"></i>Додати проект
                             </a>
-                            <a href="/Invest/List" class="btn btn-outline-dark rounded-square px-3 py-2">
+                            <a asp-area="Main" asp-page="/Invest/List" class="btn btn-outline-dark rounded-square px-3 py-2">
                                 <i class="bi bi-grid-3x3-gap me-1"></i>Проекти
                             </a>
-                            <a href="/News/List" class="btn btn-outline-dark rounded-square px-3 py-2">
+                            <a asp-area="Main" asp-page="/News/List" class="btn btn-outline-dark rounded-square px-3 py-2">
                                 <i class="bi bi-newspaper me-1"></i>Новини
                             </a>
                         </div>
@@ -78,16 +78,16 @@
                         </div>
 
                         <div class="feature-card-actions">
-                            <a href="/Invest/List" class="btn btn-dark rounded-square px-3 py-2">
+                            <a asp-area="Main" asp-page="/Invest/List" class="btn btn-dark rounded-square px-3 py-2">
                                 <i class="bi bi-grid-3x3-gap me-1"></i>Проекти
                             </a>
-                            <a href="/News/List" class="btn btn-outline-dark rounded-square px-3 py-2">
+                            <a asp-area="Main" asp-page="/News/List" class="btn btn-outline-dark rounded-square px-3 py-2">
                                 <i class="bi bi-newspaper me-1"></i>Новини
                             </a>
                             <a href="#" class="btn btn-outline-dark rounded-square px-3 py-2">
                                 <i class="bi bi-chat-dots me-1"></i>Відгук
                             </a>
-                            <a href="/Blacklist/List" class="btn btn-outline-dark rounded-square px-3 py-2">
+                            <a asp-area="Main" asp-page="/Blacklist/List" class="btn btn-outline-dark rounded-square px-3 py-2">
                                 <i class="bi bi-exclamation-triangle me-1"></i>Blacklist
                             </a>
                         </div>
@@ -113,7 +113,7 @@
             <div class="scroll-gradient-left"></div>
             <div class="scroll-gradient-right"></div>
             <div class="tags-filter-wrapper" id="tagFilterContainer">
-                <button class="tag-filter-btn active rounded-square" data-tag-id="all">Всі проекти</button>
+                <a asp-area="Main" asp-page="/Invest/List" class="tag-filter-btn active rounded-square" data-tag-id="all">Всі проекти</a>
 
                 @{
                     var header = await tagService.GetCustomHeader(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName);
@@ -168,7 +168,7 @@
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="h4 fw-bold mb-0">Останні новини</h2>
-            <a href="/News/List" class="btn btn-outline-dark btn-sm rounded-square px-4">Всі новини</a>
+            <a asp-area="Main" asp-page="/News/List" class="btn btn-outline-dark btn-sm rounded-square px-4">Всі новини</a>
         </div>
 
         <div class="row g-4">
@@ -195,8 +195,8 @@
 <section class="py-5 bg-light">
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="h4 fw-bold mb-0">Blacklist</h2>
-            <a href="/Blacklist/List" class="btn btn-outline-dark btn-sm rounded-square px-4">Весь blacklist</a>
+            <h2 class="h4 fw-bold mb-0">Чорний список</h2>
+            <a asp-area="Main" asp-page="/BlackList/List" class="btn btn-outline-dark btn-sm rounded-square px-4">Весь чорний список</a>
         </div>
 
         <div class="row g-4">
@@ -219,84 +219,6 @@
     </div>
 </section>
 
-<!-- FOOTER -->
-<footer class="py-5 bg-white">
-    <div class="container">
-        <div class="row g-4">
-            <div class="col-lg-4">
-                <a href="/" class="d-inline-block mb-4">
-                    <img src="/ico/logo3.png" alt="Invest Radar" height="32">
-                </a>
-                <p class="text-muted mb-0">Платформа для пошуку інвестиційних можливостей та залучення інвестицій в Україні.</p>
-                <div class="d-flex gap-3 mt-4">
-                    <a href="#" class="text-dark">
-                        <i class="bi bi-facebook"></i>
-                    </a>
-                    <a href="#" class="text-dark">
-                        <i class="bi bi-twitter"></i>
-                    </a>
-                    <a href="#" class="text-dark">
-                        <i class="bi bi-linkedin"></i>
-                    </a>
-                    <a href="#" class="text-dark">
-                        <i class="bi bi-instagram"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="col-lg-2">
-                <h5 class="h6 mb-3">Категорії</h5>
-                <ul class="list-unstyled mb-0">
-                    <li class="mb-2">
-                        <a href="#" class="text-muted text-decoration-none">Огляди</a>
-                    </li>
-                    <li class="mb-2">
-                        <a href="#" class="text-muted text-decoration-none">Фін бізнес</a>
-                    </li>
-                    <li class="mb-2">
-                        <a href="#" class="text-muted text-decoration-none">Агро</a>
-                    </li>
-                    <li class="mb-2">
-                        <a href="#" class="text-muted text-decoration-none">Будівництво</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="col-lg-3">
-                <h5 class="h6 mb-3">Для інвесторів</h5>
-                <ul class="list-unstyled mb-0">
-                    <li class="mb-2">
-                        <a href="#" class="text-muted text-decoration-none">Знайти проект</a>
-                    </li>
-                    <li class="mb-2">
-                        <a href="#" class="text-muted text-decoration-none">Перед інвестуванням</a>
-                    </li>
-                    <li class="mb-2">
-                        <a href="#" class="text-muted text-decoration-none">Фондовий ринок</a>
-                    </li>
-                    <li class="mb-2">
-                        <a href="#" class="text-muted text-decoration-none">УкрінвестКлуб</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="col-lg-3">
-                <h5 class="h6 mb-3">Для бізнесу</h5>
-                <ul class="list-unstyled mb-0">
-                    <li class="mb-2">
-                        <a href="#" class="text-muted text-decoration-none">Додати проект</a>
-                    </li>
-                    <li class="mb-2">
-                        <a href="#" class="text-muted text-decoration-none">Залучити інвестиції</a>
-                    </li>
-                    <li class="mb-2">
-                        <a href="#" class="text-muted text-decoration-none">Консультації</a>
-                    </li>
-                    <li class="mb-2">
-                        <a href="#" class="text-muted text-decoration-none">Партнерська програма</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</footer>
 
 <!-- Add JavaScript for interactivity -->
 

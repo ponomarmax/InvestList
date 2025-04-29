@@ -12,187 +12,6 @@
 @inject IHttpContextAccessor HttpContextAccessor
 @inject ITagRepository tagService
 
-<style>
-    /* Language Switcher Styles - Improved */
-    .language-switch {
-        position: relative;
-        width: 85px;
-        height: 34px;
-        background-color: #f0f0f0;
-        border-radius: 17px;
-        padding: 3px;
-        cursor: pointer;
-        user-select: none;
-        box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
-    }
-    
-    .switch-labels {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-    }
-    
-    .switch-label {
-        position: relative;
-        z-index: 2;
-        width: 50%;
-        text-align: center;
-        font-size: 14px;
-        font-weight: 600;
-        transition: color 0.3s ease;
-    }
-    
-    .ua-label {
-        color: #000;
-    }
-    
-    .en-label {
-        color: #000;
-    }
-    
-    .switch-handle {
-        position: absolute;
-        top: 3px;
-        left: 3px;
-        width: 40px;
-        height: 28px;
-        background-color: #212529;
-        border-radius: 14px;
-        transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        z-index: 1;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        opacity: 0.85;
-    }
-    
-    .language-switch[data-active="en"] .switch-handle {
-        transform: translateX(39px);
-    }
-    
-    .language-switch[data-active="en"] .ua-label {
-        color: #000;
-    }
-    
-    .language-switch[data-active="en"] .en-label {
-        color: #fff;
-    }
-    
-    .language-switch[data-active="uk"] .ua-label {
-        color: #fff;
-    }
-    
-    .language-switch[data-active="uk"] .en-label {
-        color: #000;
-    }
-
-    /* Pagination Styling */
-    .pagination .page-link {
-        color: #212529;
-        background-color: #fff;
-        border: 1px solid #dee2e6;
-        padding: 0.5rem 0.75rem;
-    }
-
-    .pagination .page-item.active .page-link {
-        background-color: #212529;
-        border-color: #212529;
-        color: #fff;
-    }
-
-    .pagination .page-link:hover {
-        color: #000;
-        background-color: #e9ecef;
-    }
-    
-    /* News Card Styling */
-    .news-card {
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-    
-    .news-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
-    }
-    
-    /* Search Bar Styling */
-    .search-form {
-        position: relative;
-        max-width: 400px;
-        margin: 0 auto;
-    }
-    
-    .search-form .form-control {
-        padding-right: 40px;
-    }
-    
-    .search-form .search-button {
-        position: absolute;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        background: none;
-        border: none;
-        padding: 0 15px;
-    }
-</style>
-
-<!-- HEADER -->
-<header class="border-bottom border-gray-200 py-3 sticky-top bg-white shadow-sm">
-    <div class="container">
-        <nav class="navbar navbar-expand-lg p-0">
-            <a class="navbar-brand me-auto me-lg-4" asp-area="Main" asp-page="/Index">
-                <img src="/ico/logo3.png" alt="Invest Radar" height="32">
-            </a>
-
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <!-- Main Navigation -->
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link px-lg-3 active" asp-area="Main" asp-page="/News/List">Новини</a></li>
-                    <li class="nav-item"><a class="nav-link px-lg-3" asp-area="Main" asp-page="/Invest/List">Проекти</a></li>
-                    <li class="nav-item"><a class="nav-link px-lg-3" asp-area="Main" asp-page="/Blacklist/List">Blacklist</a></li>
-                </ul>
-
-                <!-- Right Side Elements -->
-                <div class="d-flex flex-column flex-lg-row align-items-lg-center gap-3 mt-3 mt-lg-0">
-                    <form class="d-flex order-lg-1" role="search" method="get" asp-area="Main" asp-page="/News/List">
-                        <input class="form-control form-control-sm border rounded-pill px-3" 
-                               type="search" 
-                               placeholder="Пошук новин..." 
-                               name="search"
-                               value="@Model.Search"
-                               style="width: 100%; max-width: 200px;">
-                    </form>
-                    
-                    @{
-                        var rqf = HttpContextAccessor.HttpContext?.Features.Get<IRequestCultureFeature>();
-                        var currentCulture = rqf?.RequestCulture.Culture.TwoLetterISOLanguageName ?? "uk";
-                        var returnUrl = HttpContextAccessor.HttpContext?.Request.Path + HttpContextAccessor.HttpContext?.Request.QueryString;
-                    }
-                    <div class="language-switch order-lg-2" 
-                         data-active="@currentCulture" 
-                         onclick="switchLanguage('@Url.Action("SetLanguage", "Language", new { culture = currentCulture == "uk" ? "en" : "uk", returnUrl })')">
-                        <div class="switch-labels">
-                            <span class="switch-label ua-label">UA</span>
-                            <span class="switch-label en-label">EN</span>
-                            <span class="switch-handle"></span>
-                        </div>
-                    </div>
-                    
-                    <div class="d-flex gap-2 order-lg-3">
-                        <a href="/Identity/Account/Login" class="btn btn-outline-dark btn-sm rounded-pill px-3">Увійти</a>
-                        <a href="/Identity/Account/Register" class="btn btn-dark btn-sm rounded-pill px-3">Зареєструватися</a>
-                    </div>
-                </div>
-            </div>
-        </nav>
-    </div>
-</header>
-
 <!-- NEWS SECTION TITLE -->
 <section class="py-4 bg-light">
     <div class="container">
@@ -223,34 +42,8 @@
             <div class="row g-4">
                 @foreach (var news in Model.Entities)
                 {
-                    <div class="col-md-6 col-lg-4">
-                        <div class="card news-card h-100 border-0 shadow-sm">
-                            <div class="position-relative">
-                                @if (news.Image != null)
-                                {
-                                    <img src="@news.Image.FilePath" class="card-img-top" alt="@news.Image.AltText" style="height: 200px; object-fit: cover;">
-                                }
-                                else
-                                {
-                                    <div class="bg-light" style="height: 200px;"></div>
-                                }
-                                @if (news.GoogleAnalyticPostView != null)
-                                {
-                                    <div class="position-absolute bottom-0 end-0 p-2">
-                                        <span class="badge bg-dark rounded-pill">
-                                            <i class="bi bi-eye me-1"></i>@news.GoogleAnalyticPostView?.PageViews
-                                        </span>
-                                    </div>
-                                }
-                            </div>
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="card-title mt-auto">@news.Title</h5>
-                            </div>
-                            <div class="card-footer bg-transparent border-0 d-flex justify-content-between align-items-center py-3">
-                                <small class="text-muted">@news.CreatedAt.ToString("dd.MM.yyyy")</small>
-                                <a href="@Url.Page($"/News/Get", new { id = news.Slug })" class="btn btn-link text-dark text-decoration-none">Детальніше <i class="bi bi-arrow-right"></i></a>
-                            </div>
-                        </div>
+                    <div class="col-lg-4">
+                        @await Html.PartialAsync("List/_PostCard", ("News", news))
                     </div>
                 }
 
@@ -265,7 +58,8 @@
                                  data-ad-format="fluid"
                                  data-ad-layout-key="-er-s-6z-ez+1nt"
                                  data-ad-client="ca-pub-7409000941565147"
-                                 data-ad-slot="8518592844"></ins>
+                                 data-ad-slot="8518592844">
+                            </ins>
                             <script>
                                 (adsbygoogle = window.adsbygoogle || []).push({});
                             </script>
@@ -298,12 +92,16 @@
                                 if (startPage > 1)
                                 {
                                     <li class="page-item">
-                                        <a class="page-link rounded-pill" asp-area="Main" asp-page="/News/List" 
-                                           asp-all-route-data="@(PaginationHelper.GetPaginationData(1, Model.TagIds, Model.Search))">1</a>
+                                        <a class="page-link rounded-pill" asp-area="Main" asp-page="/News/List"
+                                           asp-all-route-data="@(PaginationHelper.GetPaginationData(1, Model.TagIds, Model.Search))">
+                                            1
+                                        </a>
                                     </li>
                                     if (startPage > 2)
                                     {
-                                        <li class="page-item disabled"><span class="page-link border-0">...</span></li>
+                                        <li class="page-item disabled">
+                                            <span class="page-link border-0">...</span>
+                                        </li>
                                     }
                                 }
 
@@ -311,7 +109,9 @@
                                 {
                                     <li class="page-item @(Model.PaginationInfo.CurrentPage == i ? "active" : "")">
                                         <a class="page-link rounded-pill" asp-area="Main" asp-page="/News/List"
-                                           asp-all-route-data="@(PaginationHelper.GetPaginationData(i, Model.TagIds, Model.Search))">@i</a>
+                                           asp-all-route-data="@(PaginationHelper.GetPaginationData(i, Model.TagIds, Model.Search))">
+                                            @i
+                                        </a>
                                     </li>
                                 }
 
@@ -319,8 +119,11 @@
                                 {
                                     if (endPage < Model.PaginationInfo.TotalPages - 1)
                                     {
-                                        <li class="page-item disabled"><span class="page-link border-0">...</span></li>
+                                        <li class="page-item disabled">
+                                            <span class="page-link border-0">...</span>
+                                        </li>
                                     }
+
                                     <li class="page-item">
                                         <a class="page-link rounded-pill" asp-area="Main" asp-page="/News/List"
                                            asp-all-route-data="@(PaginationHelper.GetPaginationData(Model.PaginationInfo.TotalPages, Model.TagIds, Model.Search))">
@@ -357,53 +160,6 @@
         }
     </div>
 </section>
-
-<!-- FOOTER -->
-<footer class="py-5 bg-white">
-    <div class="container">
-        <div class="row g-4">
-            <div class="col-lg-4">
-                <a href="/" class="d-inline-block mb-4">
-                    <img src="/ico/logo3.png" alt="Invest Radar" height="32">
-                </a>
-                <p class="text-muted mb-0">Платформа для пошуку інвестиційних можливостей та залучення інвестицій в Україні.</p>
-                <div class="d-flex gap-3 mt-4">
-                    <a href="#" class="text-dark"><i class="bi bi-facebook"></i></a>
-                    <a href="#" class="text-dark"><i class="bi bi-twitter"></i></a>
-                    <a href="#" class="text-dark"><i class="bi bi-linkedin"></i></a>
-                    <a href="#" class="text-dark"><i class="bi bi-instagram"></i></a>
-                </div>
-            </div>
-            <div class="col-lg-2">
-                <h5 class="h6 mb-3">Категорії</h5>
-                <ul class="list-unstyled mb-0">
-                    <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Огляди</a></li>
-                    <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Фін бізнес</a></li>
-                    <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Агро</a></li>
-                    <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Будівництво</a></li>
-                </ul>
-            </div>
-            <div class="col-lg-3">
-                <h5 class="h6 mb-3">Для інвесторів</h5>
-                <ul class="list-unstyled mb-0">
-                    <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Знайти проект</a></li>
-                    <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Перед інвестуванням</a></li>
-                    <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Фондовий ринок</a></li>
-                    <li class="mb-2"><a href="#" class="text-muted text-decoration-none">УкрінвестКлуб</a></li>
-                </ul>
-            </div>
-            <div class="col-lg-3">
-                <h5 class="h6 mb-3">Для бізнесу</h5>
-                <ul class="list-unstyled mb-0">
-                    <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Додати проект</a></li>
-                    <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Залучити інвестиції</a></li>
-                    <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Консультації</a></li>
-                    <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Партнерська програма</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</footer>
 
 @section Scripts {
     <script>

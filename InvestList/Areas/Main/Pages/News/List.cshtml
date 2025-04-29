@@ -55,12 +55,3 @@
 {
     @await Html.PartialAsync("_Pagination", ("News", Model.PaginationInfo, Model.TagIds))
 }
-
-@section Scripts {
-    <script>
-        // Language switcher functionality
-        function switchLanguage(url) {
-            window.location.href = url;
-        }
-    </script>
-}

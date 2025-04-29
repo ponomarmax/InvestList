@@ -40,7 +40,7 @@ namespace InvestList.Areas.Main.Pages
 
             NewsPosts = result.News;
             BlacklistPosts = result.Blacklists;
-            InvestPosts = result.Invests.Take(3);
+            InvestPosts = result.Invests?.Take(3);
             PostsWithLastComments = result.PostWithComments;
 
             TagIds = tagIds;

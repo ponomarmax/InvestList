@@ -3,29 +3,42 @@
 @model (Guid postId, string postType, IEnumerable<CommentView> comments)
 @inject SignInManager<User> SignInManager
 
-@if (!SignInManager.IsSignedIn(User))
-{
-    <div class="row row-cols-lg-auto g-3 align-items-center">
-        <div class="col-12">
-            <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-primary me-2">Увійти</a>
+<!-- === COMMENTS (same width & alignment as article) === -->
+<div style="max-width:75ch;">   <!-- identical width, no mx‑auto so it lines up flush -->
+
+    <!-- Prompt / comment form -->
+    @if (!SignInManager.IsSignedIn(User))
+    {
+        <div class="row row-cols-lg-auto g-3 align-items-center mb-4">
+            <div class="col-12">
+                <a asp-area="Identity"
+                   asp-page="/Account/Login"
+                   class="btn btn-outline-primary btn-sm me-2">Увійти</a>
+            </div>
+            <div class="col-12 small text-muted">
+                Для написання відгуку, будь&nbsp;ласка, увійдіть у свій обліковий запис
+            </div>
         </div>
-        <div class="col-12">
-            <label class="form-check-label" for="inlineFormCheck">
-                Для написання відгуку, будь ласка, увійдіть у свій обліковий запис
-            </label>
+    }
+    else
+    {
+        @await Html.PartialAsync(
+            "_CommentForm",
+            new PostCommentRequest {
+                PostId   = Model.postId,
+                PostType = Model.postType,
+                UserId   = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier))
+            })
+    }
+
+    <!-- Existing comments -->
+    @if (Model.comments?.Any() == true)
+    {
+        <div class="pt-4">
+            @foreach (var comment in Model.comments.OrderByDescending(x => x.CreatedAt))
+            {
+                @await Html.PartialAsync("_CommentCard", comment)
+            }
         </div>
-    </div>
-}
-else
-{
-    await Html.RenderPartialAsync("_CommentForm", new PostCommentRequest { PostId = Model.postId, PostType = Model.postType, UserId = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier)) });
-}
-@if (Model.comments?.Count() > 0)
-{
-    <div class="p-4">
-        @foreach (var comment in Model.comments.OrderByDescending(x => x.CreatedAt))
-        {
-            @await Html.PartialAsync("_CommentCard", comment)
-        }
-    </div>
-}
+    }
+</div>

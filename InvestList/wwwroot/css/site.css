@@ -880,3 +880,54 @@ pre.create-description-box {
         margin-top: 0.75rem;
     }
 }
+
+/* Tag Pills - Custom styling for article tags 
+   Compatible with both Bootstrap 4 and 5 */
+.tags .badge,
+.tag-pill {
+    display: inline-block;
+    padding: 0.35em 0.65em;
+    font-size: 0.75em;
+    font-weight: 400;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 50rem;
+    text-transform: uppercase;
+    color: #fff;
+    background-color: #212529;
+    opacity: 0.85;
+}
+
+/* Add .rounded-pill fallback for Bootstrap 4 */
+.badge.rounded-pill {
+    border-radius: 50rem;
+}
+
+/* Add bg-opacity fallback for Bootstrap 4 */
+.bg-dark.bg-opacity-75 {
+    background-color: rgba(33, 37, 41, 0.75) !important;
+}
+
+/* Add fw-normal fallback for Bootstrap 4 */
+.fw-normal {
+    font-weight: 400 !important;
+}
+/* wwwroot/css/site.css */
+.masonry       { column-gap: 1.5rem; }      /* same visual gap as g-4 */
+@media (min-width: 0)     { .masonry { column-count: 1; } }
+@media (min-width: 768px) { .masonry { column-count: 2; } } /* md */
+@media (min-width: 992px) { .masonry { column-count: 3; } } /* lg */
+
+.masonry-item { break-inside: avoid; margin-bottom: 1.5rem; }
+
+/* site.css – Safari‑safe title clamp */
+.card-title-link {
+    display:block;                 /* gives the link its own width */
+    width:100%;                    /* ← critical for Safari */
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    display: -webkit-box;
+    overflow:hidden;
+  }

@@ -19,7 +19,9 @@
                     @foreach (var t in Model.Post.Tags)
                     {
                         <span class="badge rounded-pill px-3 py-2"
-                              style="background:rgba(255,255,255,.9);color:#000;">@t.Name</span>
+                              style="background:rgba(255,255,255,.9);color:#000;">
+                            @t.Name
+                        </span>
                     }
                 </div>
             }
@@ -39,15 +41,15 @@
     <div class="card-body p-4">
 
         <!-- Title – block‑level link with clamp -->
-<!-- Title -->
-<div class="d-flex mb-3">
-    <a asp-area="Main"
-       asp-page="/Invest/Get"
-       asp-route-id="@Model.Post.Slug"
-       class="card-title-link fw-semibold h5 text-decoration-none link-dark">
-        @Model.Post.Title
-    </a>
-</div>
+        <!-- Title -->
+        <div class="d-flex mb-3">
+            <a asp-area="Main"
+               asp-page="/Invest/Get"
+               asp-route-id="@Model.Post.Slug"
+               class="card-title-link fw-semibold h5 text-decoration-none link-dark">
+                @Model.Post.Title
+            </a>
+        </div>
 
         <!-- Teaser -->
         @{
@@ -88,7 +90,7 @@
                     @if (Model.MinInvestValues?.Any() == true)
                     {
                         var first = Model.MinInvestValues.First();
-                        <span class="h4 fw-bold mb-0">$@first.MinValue</span>
+                        <span class="h4 fw-bold mb-0">@first.Currency @first.MinValue</span>
                     }
                 </div>
                 <div class="text-muted small">Мін. інвестиція</div>
@@ -101,7 +103,7 @@
                asp-page="/Invest/Get"
                asp-route-id="@Model.Post.Slug"
                class="btn btn-outline-dark rounded-pill px-4">
-               Детальніше
+                Детальніше
             </a>
 
             @if (Model.Post.GoogleAnalyticPostView != null)

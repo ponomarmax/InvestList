@@ -3,44 +3,83 @@
 @using Radar.UI.Pages.Shared.Get
 @model InvestList.Areas.Main.Pages.Blacklist.Get
 
-<div class="container mb-4">
-    @if (Model.CanUserEdit)
-    {
-        <a asp-page="./Edit" asp-route-id="@Model.Post.Id" class="btn btn-primary me-2">Редагувати</a>
-    }
+<!-- PAGE CONTAINER -->
+<div class="container py-4">         <!-- same left edge & padding as News page -->
 
-    <a asp-page="./List" class="btn btn-secondary">Повернутись до списку</a>
-</div>
-<div class="row">
-    <div class="col-8">
-        <h1>@Model.Post.Title</h1>
-        @await Html.PartialAsync("Get/PostTags", Model.Post.Tags)
-        @await Html.PartialAsync("Get/PostImage", Model.Post.Image)
-        <div class="row mb-4">
-            <div class="well col-12">
-                <pre>@Model.Post.Description</pre>
-            </div>
+    <!-- Back / Edit controls -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex gap-2">
+            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="history.back()">
+                <i class="bi bi-arrow-left me-1"></i> Назад
+            </button>
+            @if (Model.CanUserEdit)
+            {
+                <a asp-page="./Edit"
+                   asp-route-id="@Model.Post.Id"
+                   class="btn btn-primary btn-sm">
+                    Редагувати
+                </a>
+            }
         </div>
-        @await Html.PartialAsync("Get/PostLinks", Model.Post.Links)
-        @await Html.PartialAsync("_DisplayComments", (Model.Post.Id, Model.Post.PostType, Model.Post.Comments))
-
+        <a asp-page="./List" class="btn btn-secondary btn-sm">Усі в чорному списку</a>
     </div>
-    <div class="col-4">
-        @await Html.PartialAsync("Get/PostSimilarSection", (
-            new GetCustomizationSimilarContent
-            {
-                Title = "Схожі новини",
-                BaseUrlPrefix = "News",
-                MoreContentTitle = "Більше новини..."
-            }, Model.Post.SimilarNews, Model.Post.Tags))
-        <hr/>
-        @await Html.PartialAsync("Get/PostSimilarSection", (
-            new GetCustomizationSimilarContent
-            {
-                Title = "Схожі оголошення",
-                BaseUrlPrefix = "Invest",
-                MoreContentTitle = "Більше оголошень..."
-            }, Model.Post.SimilarInvests, Model.Post.Tags))
 
+    <div class="row gx-lg-3 gy-5">
+        <!-- ============ MAIN COLUMN ============ -->
+        <div class="col-lg-8">
+
+            <!-- Unified 75 ch wrapper (title‑to‑body) -->
+            <div style="max-width:75ch;">
+
+                <!-- Title -->
+                <h1 class="display-6 fw-semibold mb-2 text-break">
+                    @Model.Post.Title
+                </h1>
+
+                <!-- Tags -->
+                @await Html.PartialAsync("Get/PostTags", Model.Post.Tags)
+
+                <!-- Hero image -->
+                @await Html.PartialAsync("Get/PostImage", Model.Post.Image)
+
+                <!-- Body -->
+                <article style="font-size:1.05rem;line-height:1.7;">
+                    @Html.Raw(Model.Post.Description)
+                </article>
+            </div>
+
+            <!-- Links / sources -->
+            <section class="mt-5">
+                @await Html.PartialAsync("Get/PostLinks", Model.Post.Links)
+            </section>
+
+            <!-- Comments -->
+            <section class="mt-5">
+                @await Html.PartialAsync(
+                    "_DisplayComments",
+                    (Model.Post.Id, Model.Post.PostType, Model.Post.Comments))
+            </section>
+        </div>
+
+        <!-- ============ SIDEBAR ============ -->
+        <aside class="col-lg-4 pt-lg-2">
+            @await Html.PartialAsync(
+                "Get/PostSimilarSection",
+                (new GetCustomizationSimilarContent {
+                    Title = "Схожі новини",
+                    BaseUrlPrefix = "News",
+                    MoreContentTitle = "Більше статей..."
+                }, Model.Post.SimilarNews, Model.Post.Tags))
+
+            <hr class="my-4" />
+
+            @await Html.PartialAsync(
+                "Get/PostSimilarSection",
+                (new GetCustomizationSimilarContent {
+                    Title = "Схожі оголошення",
+                    BaseUrlPrefix = "Invest",
+                    MoreContentTitle = "Більше оголошень..."
+                }, Model.Post.SimilarInvests, Model.Post.Tags))
+        </aside>
     </div>
 </div>

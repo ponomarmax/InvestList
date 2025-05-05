@@ -4,10 +4,10 @@
 <div class="container">
     @if (Model.Entities != null && Model.Entities.Any())
     {
-        <div class="row">
+        <div class="masonry">
             @foreach (var ad in Model.Entities)
             {
-                <div class="col-lg-4">
+                <div class="masonry-item">
                     @await Html.PartialAsync("List/_PostCard", ("Blacklist", ad))
                 </div>
             }

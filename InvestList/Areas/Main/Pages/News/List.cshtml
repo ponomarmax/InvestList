@@ -3,21 +3,24 @@
 @using Radar.UI.Pages
 @model InvestList.Areas.Main.Pages.News.List
 
-<!-- NEWS CARDS -->
 <section class="py-5">
     <div class="container">
-        @if (Model.Entities != null && Model.Entities.Any())
+
+        @if (Model.Entities?.Any() == true)
         {
-            <div class="row g-4">
+            <!-- Masonry column layout -->
+            <div class="masonry">
+
+                @* News cards *@
                 @foreach (var news in Model.Entities)
                 {
-                    <div class="col-lg-4">
+                    <div class="masonry-item">
                         @await Html.PartialAsync("List/_PostCard", ("News", news))
                     </div>
                 }
 
-                <!-- Google AdSense -->
-                <div class="col-md-6 col-lg-4">
+                @* Google AdSense card as part of masonry *@
+                <div class="masonry-item">
                     <div class="card h-100 border-0 shadow-sm bg-light">
                         <div class="card-body d-flex justify-content-center align-items-center">
                             <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7409000941565147"
@@ -51,7 +54,9 @@
     </div>
 </section>
 
-@if (Model.Entities != null && Model.Entities.Any())
+@if (Model.Entities?.Any() == true)
 {
-    @await Html.PartialAsync("_Pagination", ("News", Model.PaginationInfo, Model.TagIds))
+    <div class="d-flex justify-content-center mt-5">
+        @await Html.PartialAsync("_Pagination", ("News", Model.PaginationInfo, Model.TagIds))
+    </div>
 }

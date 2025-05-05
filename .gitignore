@@ -402,3 +402,4 @@ InvestList/.idea/*
 
 appsettings.private.json
 sitemap.xml
+.DS_Store

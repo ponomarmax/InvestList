@@ -1,87 +1,116 @@
 @using InvestList
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-@using System.Text.RegularExpressions;
+@using System.Text.RegularExpressions
 @model InvestList.Services.Queries.InvestPostShortDto
 
-
 <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+
+    <!-- Image + tag badges -->
     @if (Model.Post.Image != null)
     {
         <div class="position-relative">
-            <img src="@Model.Post.Image.FilePath" alt="@Model.Post.Image.AltText" class="card-img-top" style="height: 200px; object-fit: cover;">
-            @if (Model.Post.Tags != null && Model.Post.Tags.Any())
+            <img src="@Model.Post.Image.FilePath"
+                 alt="@Model.Post.Image.AltText"
+                 class="card-img-top"
+                 style="height:200px;object-fit:cover;">
+            @if (Model.Post.Tags?.Any() == true)
             {
                 <div class="position-absolute top-0 start-0 p-3 d-flex flex-wrap gap-2">
-                    @foreach (var field in Model.Post.Tags)
+                    @foreach (var t in Model.Post.Tags)
                     {
-                        <span class="badge rounded-pill px-3 py-2" style="background-color: rgba(255, 255, 255, 0.9); color: #000;">@field.Name</span>
+                        <span class="badge rounded-pill px-3 py-2"
+                              style="background:rgba(255,255,255,.9);color:#000;">
+                            @t.Name
+                        </span>
                     }
                 </div>
             }
         </div>
     }
-    else if (Model.Post.Tags != null && Model.Post.Tags.Any())
+    else if (Model.Post.Tags?.Any() == true)
     {
         <div class="p-3 d-flex flex-wrap gap-2 border-bottom">
-            @foreach (var field in Model.Post.Tags)
+            @foreach (var t in Model.Post.Tags)
             {
-                <span  class="badge bg-dark rounded-square">@field.Name</span>
+                <span class="badge bg-dark rounded-square">@t.Name</span>
             }
         </div>
     }
 
+    <!-- Card body -->
     <div class="card-body p-4">
-        <h3 class="h5 fw-semibold mb-3">
-            <a class="text-decoration-none text-dark" asp-area="Main" asp-page="/Invest/Get" asp-route-id="@Model.Post.Slug">@Model.Post.Title</a>
-        </h3>
 
+        <!-- Title – block‑level link with clamp -->
+        <!-- Title -->
+        <div class="d-flex mb-3">
+            <a asp-area="Main"
+               asp-page="/Invest/Get"
+               asp-route-id="@Model.Post.Slug"
+               class="card-title-link fw-semibold h5 text-decoration-none link-dark">
+                @Model.Post.Title
+            </a>
+        </div>
+
+        <!-- Teaser -->
         @{
             if (!string.IsNullOrEmpty(Model.Post.Description))
             {
                 Model.Post.Description = Regex.Replace(Model.Post.Description, "<.*?>", " ");
             }
         }
-        <p class="text-muted small mb-4">@Html.Raw(Model.Post.Description?.Substring(0, Math.Min(Model.Post.Description.Length, 150)))...</p>
+        <p class="text-muted small mb-4">
+            @Html.Raw(Model.Post.Description?.Substring(0, Math.Min(Model.Post.Description.Length, 150)))…
+        </p>
 
-        <div class="row g-3 mb-3">
-            <div class="col-6">
+        <!-- Metrics -->
+        <div class="row g-3 mb-3 row-cols-2">
+
+            <!-- ROI -->
+            <div class="col">
                 <div class="d-flex align-items-baseline">
                     <span class="h4 fw-bold mb-0">@Model.AnnualInvestmentReturn.ToString("0.")</span>
                     <span class="text-muted ms-1">% / рік</span>
                 </div>
                 <div class="text-muted small">ROI</div>
             </div>
-            <div class="col-6">
+
+            <!-- Term -->
+            <div class="col">
                 <div class="d-flex align-items-baseline">
-                    @if (Model.MinInvestValues != null && Model.MinInvestValues.Any())
-                    {
-                        var firstCurrency = Model.MinInvestValues.First();
-                        <span class="h4 fw-bold mb-0">$@firstCurrency.MinValue</span>
-                    }
-                </div>
-                <div class="text-muted small">Інвестиції</div>
-            </div>
-            <div class="col-6">
-                <div class="d-flex align-items-baseline">
-                    <span class="h4 fw-bold mb-0">@InvestmentHelper.FormatInvestmentDuration(Model.InvestDurationYears, Model.InvestDurationMonths)</span>
+                    <span class="h4 fw-bold mb-0">
+                        @InvestmentHelper.FormatInvestmentDuration(Model.InvestDurationYears, Model.InvestDurationMonths)
+                    </span>
                 </div>
                 <div class="text-muted small">Термін</div>
             </div>
-            <div class="col-6">
+
+            <!-- Min Investment (second row, full width) -->
+            <div class="col-12">
                 <div class="d-flex align-items-baseline">
-                    <span class="h4 fw-bold mb-0">Київська обл.</span>
+                    @if (Model.MinInvestValues?.Any() == true)
+                    {
+                        var first = Model.MinInvestValues.First();
+                        <span class="h4 fw-bold mb-0">@first.Currency @first.MinValue</span>
+                    }
                 </div>
-                <div class="text-muted small">Локація</div>
+                <div class="text-muted small">Мін. інвестиція</div>
             </div>
         </div>
 
+        <!-- Footer -->
         <div class="d-flex justify-content-between align-items-center">
-            <a asp-area="Main" asp-page="/Invest/Get" asp-route-id="@Model.Post.Slug" class="btn btn-outline-dark rounded-pill px-4">Детальніше</a>
+            <a asp-area="Main"
+               asp-page="/Invest/Get"
+               asp-route-id="@Model.Post.Slug"
+               class="btn btn-outline-dark rounded-pill px-4">
+                Детальніше
+            </a>
+
             @if (Model.Post.GoogleAnalyticPostView != null)
             {
                 <div class="text-muted small">
                     <i class="bi bi-eye"></i>
-                    @Model.Post.GoogleAnalyticPostView?.PageViews
+                    @Model.Post.GoogleAnalyticPostView.PageViews
                 </div>
             }
         </div>

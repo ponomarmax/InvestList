@@ -1,16 +1,15 @@
 @page "{culture:regex(^[a-z]{{2}}$)}"
 @using System.Globalization
-@using System.Text.RegularExpressions
 @using InvestList.Services
 @using Core.Interfaces
 @using InvestList
 @using Radar.UI
 @using Radar.UI.Pages
 @model InvestList.Areas.Main.Pages.Index
-@inject IInvestService InvestService
-@inject ITagRepository tagService
+@inject IInvestService   InvestService
+@inject ITagRepository   tagService
 
-<!-- HERO SECTION -->
+<!-- ═════════════ HERO SECTION ═════════════ -->
 <section class="py-4">
     <div class="container">
         <div class="row g-4">
@@ -30,9 +29,10 @@
                             </div>
 
                             <div class="feature-card-content">
-                                <div class="feature-card-text">
-                                    <p class="text-muted mb-0">Зареєструйте свій проект для пошуку інвесторів та отримайте доступ до спільноти інвесторів. <strong>Реєстрація безкоштовна!</strong></p>
-                                </div>
+                                <p class="text-muted mb-0">
+                                    Зареєструйте свій проект для пошуку інвесторів та отримайте доступ до спільноти інвесторів.
+                                    <strong>Реєстрація безкоштовна!</strong>
+                                </p>
                             </div>
                         </div>
 
@@ -71,9 +71,10 @@
                             </div>
 
                             <div class="feature-card-content">
-                                <div class="feature-card-text">
-                                    <p class="text-muted mb-0">Інвестиційні проєкти з України, новини, чорний список шахраїв, відгуки та коментарі. Ретельно перевіряйте проекти та власників перед інвестуванням!</p>
-                                </div>
+                                <p class="text-muted mb-0">
+                                    Інвестиційні проєкти з України, новини, чорний список шахраїв, відгуки та коментарі.
+                                    Ретельно перевіряйте проекти та власників перед інвестуванням!
+                                </p>
                             </div>
                         </div>
 
@@ -98,7 +99,7 @@
     </div>
 </section>
 
-<!-- PROJECTS SECTION -->
+<!-- ═════════════ PROJECTS SECTION ═════════════ -->
 <section class="py-5 bg-light">
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -108,22 +109,34 @@
             </div>
         </div>
 
-        <!-- Tags Filter - Interactive -->
+        <!-- Tags Filter -->
         <div class="tags-filter">
             <div class="scroll-gradient-left"></div>
             <div class="scroll-gradient-right"></div>
-            <div class="tags-filter-wrapper" id="tagFilterContainer">
-                <a asp-area="Main" asp-page="/Invest/List" class="tag-filter-btn active rounded-square" data-tag-id="all">Всі проекти</a>
 
+            <div class="tags-filter-wrapper">
+                <!-- All projects -->
+                <a asp-area="Main"
+                   asp-page="/Invest/List"
+                   class="tag-filter-btn rounded-square @(Model.TagIds == null || !Model.TagIds.Any() ? "active" : "")">
+                    Всі проекти
+                </a>
+
+                <!-- Individual tags -->
                 @{
-                    var header = await tagService.GetCustomHeader(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName);
-                    if (header?.Count() > 0)
+                    var header = await tagService.GetCustomHeader(
+                        CultureInfo.CurrentUICulture.TwoLetterISOLanguageName);
+
+                    if (header?.Any() == true)
                     {
-                        @foreach (var tag in header)
+                        foreach (var tag in header)
                         {
-                            <a class="tag-filter-btn rounded-square" data-tag-id="agro" asp-area="Main" asp-page="/Index"
+                            bool isActive = Model.TagIds?.Contains(tag.TagId) ?? false;
+                            <a class="tag-filter-btn rounded-square @(isActive ? "active" : "")"
+                               asp-area="Main"
+                               asp-page="/Index"
                                asp-all-route-data="@(PaginationHelper.GetPaginationData(tagIds: new[] { tag.TagId }))">
-                                @tag.Tag.Translations.FirstOrDefault().Name
+                                @tag.Tag.Translations.FirstOrDefault()?.Name
                             </a>
                         }
                     }
@@ -132,10 +145,10 @@
         </div>
 
         <!-- Project Cards -->
-        <div class="row g-4">
-            @if (Model.InvestPosts != null && Model.InvestPosts.Any())
+        <div class="row g-4 mt-4">
+            @if (Model.InvestPosts?.Any() == true)
             {
-                @foreach (var investPost in Model.InvestPosts)
+                foreach (var investPost in Model.InvestPosts)
                 {
                     <div class="col-lg-4">
                         @await Html.PartialAsync("_InvestCard", investPost)
@@ -146,24 +159,21 @@
     </div>
 </section>
 
-<!-- Ad Section -->
+<!-- ═════════════ AD SECTION ═════════════ -->
 <section class="py-5">
     <div class="container">
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7409000941565147"
-                crossorigin="anonymous"></script>
         <ins class="adsbygoogle"
              style="display:block"
              data-ad-format="autorelaxed"
              data-ad-client="ca-pub-7409000941565147"
-             data-ad-slot="8253400351">
-        </ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
+             data-ad-slot="8253400351"></ins>
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7409000941565147"
+                crossorigin="anonymous"></script>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 </section>
 
-<!-- NEWS SECTION (Simplified Cards - No Tags) -->
+<!-- ═════════════ NEWS SECTION ═════════════ -->
 <section class="py-5">
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -172,7 +182,7 @@
         </div>
 
         <div class="row g-4">
-            @if (Model.NewsPosts != null && Model.NewsPosts.Any())
+            @if (Model.NewsPosts?.Any() == true)
             {
                 foreach (var news in Model.NewsPosts.Take(3))
                 {
@@ -191,7 +201,7 @@
     </div>
 </section>
 
-<!-- BLACKLIST SECTION (Simplified Cards) -->
+<!-- ═════════════ BLACKLIST SECTION ═════════════ -->
 <section class="py-5 bg-light">
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -200,7 +210,7 @@
         </div>
 
         <div class="row g-4">
-            @if (Model.BlacklistPosts != null && Model.BlacklistPosts.Any())
+            @if (Model.BlacklistPosts?.Any() == true)
             {
                 foreach (var blacklist in Model.BlacklistPosts.Take(3))
                 {
@@ -218,40 +228,6 @@
         </div>
     </div>
 </section>
-
-
-<!-- Add JavaScript for interactivity -->
-
-@section Scripts {
-    <script>
-        // Language switcher functionality
-        function switchLanguage(url) {
-            window.location.href = url;
-        }
-        
-        // Tag filter functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const tagButtons = document.querySelectorAll('.tag-filter-btn');
-            
-            tagButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    // Remove active class from all buttons
-                    tagButtons.forEach(btn => btn.classList.remove('active'));
-                    
-                    // Add active class to clicked button
-                    this.classList.add('active');
-                    
-                    // Here you would typically filter content based on the selected tag
-                    const tagId = this.getAttribute('data-tag-id');
-                    console.log('Selected tag:', tagId);
-                    
-                    // For demo purposes only - in a real implementation you'd filter projects
-                    // or redirect to a filtered URL
-                });
-            });
-        });
-    </script>
-}
 
 @section Styles {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">

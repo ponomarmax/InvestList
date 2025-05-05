@@ -931,3 +931,11 @@ pre.create-description-box {
     display: -webkit-box;
     overflow:hidden;
   }
+
+  /* Truncate very long link labels with an ellipsis */
+.link-truncate {
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

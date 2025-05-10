@@ -1,0 +1,115 @@
+@page "/subscription/payment"
+@model InvestList.Areas.Main.Pages.Subscription.Payment
+@{
+    ViewData["Title"] = "Оформити підписку";
+}
+
+<!-- PAGE CONTAINER -->
+<div class="container py-5">
+
+    <!-- Title & Intro -->
+    <div class="text-center mb-5">
+        <h1 class="fw-bold mb-3">Виберіть план підписки</h1>
+        <p class="text-muted mb-0">
+            Отримайте повний доступ до статей, коментарів та інвест-аналітики&nbsp;— без реклами
+        </p>
+    </div>
+
+    <!-- PRICING PLANS -->
+    <div class="row g-4 justify-content-center">
+        <!-- ==================== MONTHLY ==================== -->
+        <div class="col-sm-6 col-lg-4">
+            <div class="card h-100 border-0 shadow-sm rounded-4">
+                <div class="card-body d-flex flex-column p-4">
+                    <h3 class="h5 fw-semibold mb-2 text-center">1 місяць</h3>
+                    <p class="display-6 fw-bold text-center mb-3">₴199</p>
+
+                    <ul class="list-unstyled flex-grow-1 small mb-4">
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-1"></i> Необмежений доступ</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-1"></i> Коментарі без ліміту</li>
+                        <li><i class="bi bi-check-circle text-success me-1"></i> Підтримка e-mail</li>
+                    </ul>
+
+                    <form asp-area="Billing" asp-page="/Subscription/Checkout" method="post" class="d-grid">
+                        <input type="hidden" name="planId" value="monthly" />
+                        <button class="btn btn-dark rounded-pill py-2">Оформити</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== 6-MONTH ==================== -->
+        <div class="col-sm-6 col-lg-4">
+            <div class="card h-100 border-primary shadow-sm rounded-4 position-relative">
+                <!-- Ribbon -->
+                <span class="position-absolute top-0 start-50 translate-middle badge bg-primary rounded-pill">
+                    -15%
+                </span>
+
+                <div class="card-body d-flex flex-column p-4">
+                    <h3 class="h5 fw-semibold mb-2 text-center">6 місяців</h3>
+                    <p class="display-6 fw-bold text-center mb-3">₴999</p>
+
+                    <ul class="list-unstyled flex-grow-1 small mb-4">
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-1"></i> Усе з місячного плану</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-1"></i> Ексклюзивні аналітичні PDF</li>
+                        <li><i class="bi bi-check-circle text-success me-1"></i> Пріоритетна підтримка</li>
+                    </ul>
+
+                    <form asp-area="Billing" asp-page="/Subscription/Checkout" method="post" class="d-grid">
+                        <input type="hidden" name="planId" value="halfyear" />
+                        <button class="btn btn-primary rounded-pill py-2">Оформити</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== ANNUAL ==================== -->
+        <div class="col-sm-6 col-lg-4">
+            <div class="card h-100 border-0 shadow-sm rounded-4">
+                <div class="card-body d-flex flex-column p-4">
+                    <h3 class="h5 fw-semibold mb-2 text-center">12 місяців</h3>
+                    <p class="display-6 fw-bold text-center mb-3">₴1 799</p>
+
+                    <ul class="list-unstyled flex-grow-1 small mb-4">
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-1"></i> Усе з 6-міс. плану</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-1"></i> Закриті вебінари</li>
+                        <li><i class="bi bi-check-circle text-success me-1"></i> Перші 7 днів — безкоштовно</li>
+                    </ul>
+
+                    <form asp-area="Billing" asp-page="/Subscription/Checkout" method="post" class="d-grid">
+                        <input type="hidden" name="planId" value="annual" />
+                        <button class="btn btn-outline-dark rounded-pill py-2">Оформити</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ / DISCLAIMER -->
+    <div class="row justify-content-center mt-5">
+        <div class="col-lg-8">
+            <div class="alert alert-secondary rounded-4 small">
+                <strong>Питання щодо оплати?</strong> Підписка поновлюється автоматично, ви можете
+                відмінити її у будь-який момент у своєму профілі або написавши нам на&nbsp;
+                <a href="mailto:support@invest-radar.ua">support@invest-radar.ua</a>.
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Styles {
+    <style>
+        /* simple ribbon for “best value” */
+        .card .badge {
+            padding: .5rem .75rem;
+            font-size: .75rem;
+            transform: translate(-50%, -50%) rotate(10deg);
+        }
+    </style>
+}
+
+@section Scripts {
+    <!-- If you later add Stripe/WayForPay/Portmone JS, import here -->
+}

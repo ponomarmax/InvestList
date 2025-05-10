@@ -9,7 +9,7 @@ using Radar.UI.Models;
 
 namespace InvestList.Areas.Main.Pages.Subscription
 {
-    public class Create( IMediator mediator): PageModel
+    public class Plan( IMediator mediator): PageModel
     {
         private const int ItemsPerPage = 50;
 

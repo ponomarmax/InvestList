@@ -33,14 +33,14 @@ try
     var builder = WebApplication.CreateBuilder(args);
     builder.LoadAppSettingAndEnvValues();
     // -------------------- Logging --------------------
-    builder.Host.UseSerilog((ctx, services, loggerConfig) =>
-    {
-        LogConfigurator.Configure(loggerConfig, ctx.Configuration);
-    });
-    
     var connectionString = builder.Configuration
         .GetSection("InvestRadar:ConnectionStrings")
         .GetValue<string>("DefaultConnection");
+    builder.Host.UseSerilog((ctx, services, loggerConfig) =>
+    {
+        LogConfigurator.Configure(loggerConfig, ctx.Configuration, connectionString);
+    });
+    
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(connectionString));
     builder.Services.AddDatabaseDeveloperPageExceptionFilter();

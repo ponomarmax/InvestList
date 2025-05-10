@@ -4,22 +4,46 @@
     ViewData["Title"] = "Відправити емейл повторно";
 }
 
-<h1>@ViewData["Title"]</h1>
-<div class="d-flex justify-content-center">
-    <h2 class="text-center">Ви ще не підтвердили емейл. Введіть ваш емейл для відправлення нового листа</h2>
-</div>
-<hr/>
-<div class="d-flex justify-content-center">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-floating">
-                <input asp-for="Input.Email" class="form-control" aria-required="true"/>
-                <label asp-for="Input.Email" class="form-label"></label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6 col-lg-5">
+
+            <!-- Card -->
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-4 p-md-5">
+
+                    <!-- Heading -->
+                    <h1 class="h4 fw-semibold text-center mb-3">@ViewData["Title"]</h1>
+                    <p class="text-muted text-center mb-4">
+                        Ви ще не підтвердили електронну пошту.<br/>
+                        Введіть адресу, щоб відправити новий лист-підтвердження.
+                    </p>
+
+                    <!-- Validation summary -->
+                    <div asp-validation-summary="All" class="text-danger text-center mb-3"></div>
+
+                    <!-- Form -->
+                    <form method="post" novalidate>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Email"
+                                   class="form-control"
+                                   placeholder="email@example.com"
+                                   aria-required="true"/>
+                            <label asp-for="Input.Email">Електронна пошта</label>
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+
+                        <button type="submit"
+                                class="btn btn-primary w-100 rounded-pill py-2">
+                            Відправити повторно
+                        </button>
+                    </form>
+
+                </div>
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Відправити повторно</button>
-        </form>
+            <!-- /card -->
+
+        </div>
     </div>
 </div>
 

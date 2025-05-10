@@ -1,9 +1,9 @@
 @using InvestList
-@using Microsoft.AspNetCore.Mvc.TagHelpers
 @using System.Text.RegularExpressions
 @model InvestList.Services.Queries.InvestPostShortDto
 
-<div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+<div class="card h-100 border border-1 border-secondary-subtle     <!-- border added -->
+            shadow-sm rounded-4 overflow-hidden invest-card">
 
     <!-- Image + tag badges -->
     @if (Model.Post.Image != null)
@@ -40,16 +40,13 @@
     <!-- Card body -->
     <div class="card-body p-4">
 
-        <!-- Title – block‑level link with clamp -->
         <!-- Title -->
-        <div class="d-flex mb-3">
-            <a asp-area="Main"
-               asp-page="/Invest/Get"
-               asp-route-id="@Model.Post.Slug"
-               class="card-title-link fw-semibold h5 text-decoration-none link-dark">
-                @Model.Post.Title
-            </a>
-        </div>
+        <a asp-area="Main"
+           asp-page="/Invest/Get"
+           asp-route-id="@Model.Post.Slug"
+           class="card-title-link fw-semibold h5 text-decoration-none link-dark d-block mb-2">
+            @Model.Post.Title
+        </a>
 
         <!-- Teaser -->
         @{
@@ -84,13 +81,13 @@
                 <div class="text-muted small">Термін</div>
             </div>
 
-            <!-- Min Investment (second row, full width) -->
+            <!-- Min Investment -->
             <div class="col-12">
                 <div class="d-flex align-items-baseline">
                     @if (Model.MinInvestValues?.Any() == true)
                     {
                         var first = Model.MinInvestValues.First();
-                        <span class="h4 fw-bold mb-0">@first.Currency @first.MinValue</span>
+                        <span class="h4 fw-bold mb-0">@first.Currency&nbsp;@first.MinValue</span>
                     }
                 </div>
                 <div class="text-muted small">Мін. інвестиція</div>

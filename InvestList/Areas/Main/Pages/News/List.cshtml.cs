@@ -1,5 +1,4 @@
 using Core.Entities;
-using InvestList.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -41,8 +40,6 @@ namespace InvestList.Areas.Main.Pages.News
             var result = await mediator.Send(command);
             if (!result.Items.Any() && pageIndex != 1) return NotFound();
 
-
-            // ViewData.SetupListPostViewSeoDetails(resultView);
             Entities = result.Items;
             PaginationInfo = new PaginationInfo
             {

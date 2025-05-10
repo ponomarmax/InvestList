@@ -26,9 +26,9 @@
             })(window, document, 'script', 'dataLayer', 'GTM-TDCJJF5S');</script>
         <!-- End Google Tag Manager -->
     }
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <meta name="google-adsense-account" content="ca-pub-7409000941565147">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="icon" type="image/svg+xml" href="/ico/logo3.png">
     <title>@(Context.Items["CustomTitle"] ?? ViewData["CustomTitle"] ?? ViewData["Title"])</title>
     @if (Context.Items["CustomDescription"] != null)
@@ -52,7 +52,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     @await RenderSectionAsync("Styles", required: false)
 </head>
 
@@ -71,9 +71,15 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <!-- Main Navigation -->
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link px-lg-3" asp-area="Main" asp-page="/News/List">Новини</a></li>
-                    <li class="nav-item"><a class="nav-link px-lg-3" asp-area="Main" asp-page="/Invest/List">Проекти</a></li>
-                    <li class="nav-item"><a class="nav-link px-lg-3" asp-area="Main" asp-page="/Blacklist/List">Blacklist</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link px-lg-3" asp-area="Main" asp-page="/News/List">Новини</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-lg-3" asp-area="Main" asp-page="/Invest/List">Проекти</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-lg-3" asp-area="Main" asp-page="/Blacklist/List">Blacklist</a>
+                    </li>
                 </ul>
 
                 <!-- Right Side Elements -->
@@ -87,18 +93,20 @@
                     </form>
 
                     @{
-                    var rqf = HttpContextAccessor.HttpContext?.Features.Get<IRequestCultureFeature>();
-                    var currentCulture = rqf?.RequestCulture.Culture.TwoLetterISOLanguageName ?? "uk";
-                    var returnUrl = HttpContextAccessor.HttpContext?.Request.Path + HttpContextAccessor.HttpContext?.Request.QueryString;
+                        var rqf = HttpContextAccessor.HttpContext?.Features.Get<IRequestCultureFeature>();
+                        var currentCulture = rqf?.RequestCulture.Culture.TwoLetterISOLanguageName ?? "uk";
+                        var returnUrl = HttpContextAccessor.HttpContext?.Request.Path + HttpContextAccessor.HttpContext?.Request.QueryString;
                     }
-                    <div class="language-switch order-lg-2"
-                         data-active="@currentCulture"
-                         onclick="switchLanguage('@Url.Action("SetLanguage", "Language", new { culture = currentCulture == "uk" ? "en" : "uk", returnUrl })')">
-                        <div class="switch-labels">
-                            <span class="switch-label ua-label">UA</span>
-                            <span class="switch-label en-label">EN</span>
-                            <span class="switch-handle"></span>
-                        </div>
+                    <div class="d-flex align-items-center me-lg-3">
+                        <a href="@Url.Action("SetLanguage", "Language", new { culture = "uk", returnUrl = returnUrl })"
+                           class="lang-pill @(currentCulture == "uk" ? "active" : null)">
+                            UA
+                        </a>
+
+                        <a href="@Url.Action("SetLanguage", "Language", new { culture = "en", returnUrl = returnUrl })"
+                           class="lang-pill @(currentCulture == "en" ? "active" : null)">
+                            EN
+                        </a>
                     </div>
 
                     @if (!User.Identity.IsAuthenticated)
@@ -112,33 +120,48 @@
                     {
                         <div class="d-flex gap-2 order-lg-3">
                             <a asp-area="Identity"
-                               asp-page="/Account/Profile" class="btn btn-outline-dark btn-sm rounded-square px-3">@User.Identity?.Name</a>
+                               asp-page="/Account/Profile" class="btn btn-outline-dark btn-sm rounded-square px-3">
+                                @User.Identity?.Name
+                            </a>
                             <a asp-area="Identity" asp-page="/Account/Logout"
-                               asp-route-returnUrl="@Url.Action("Index", new { area = "Main" })" class="btn btn-dark btn-sm rounded-square px-3">Вийти</a>
+                               asp-route-returnUrl="@Url.Action("Index", new { area = "Main" })" class="btn btn-dark btn-sm rounded-square px-3">
+                                Вийти
+                            </a>
                         </div>
                         @if (User.IsInRole(Const.AdminRole))
 
                         {
-                            <ul class="dropdown-menu dropdown-menu-end text-small">
-                                <li>
-                                    <a class="dropdown-item" asp-area="Main" asp-page="/News/Create">Створити новину</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" asp-area="Main" asp-page="/Blacklist/Create">Створити Blacklist</a>
-                                </li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" asp-area="Main" asp-page="/Admin/Index">Додати тег</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" asp-area="Main" asp-page="/Admin/AllSeo">SEO</a>
-                                </li>
-                            </ul>
+                            <div class="dropdown">
+                                <a class="nav-link dropdown-toggle"
+                                   href="#"
+                                   role="button"
+                                   id="adminMenu"
+                                   data-bs-toggle="dropdown"
+                                   aria-expanded="false">
+                                    Адмін
+                                </a>
+
+                                <ul class="dropdown-menu dropdown-menu-end text-small" aria-labelledby="adminMenu">
+                                    <li>
+                                        <a class="dropdown-item" asp-area="Main" asp-page="/News/Create">Створити новину</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="Main" asp-page="/Blacklist/Create">Створити Blacklist</a>
+                                    </li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="Main" asp-page="/Admin/Index">Додати тег</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="Main" asp-page="/Admin/AllSeo">SEO</a>
+                                    </li>
+                                </ul>
+                            </div>
                         }
-                    } 
-                    </div>
+                    }
+                </div>
             </div>
         </nav>
     </div>
@@ -231,7 +254,7 @@
     await Html.RenderPartialAsync("_ValidationScriptsPartial");
 }
 @await RenderSectionAsync("Scripts", required: false)
-<link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+<link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css"/>
 <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
 <script src="~/radar-ui/js/description-text.js"></script>
 <script src="~/radar-ui/js/site.js"></script>

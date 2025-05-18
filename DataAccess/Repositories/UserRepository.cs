@@ -27,6 +27,13 @@ namespace DataAccess.Repositories
                 .ExecuteUpdateAsync(x => x.SetProperty(u => u.FailedToSendEmailVerification, true));
         }
         
+        public async Task IssueWeekSubscription(string userId, CancellationToken cancellationToken = default)
+        {
+            await dbContext.Users
+                .Where(u => u.Id==userId) // Example condition
+                .ExecuteUpdateAsync(x => x.SetProperty(u => u.SubscriptionExpiresOn, DateTime.UtcNow.AddDays(7)));
+        }
+        
         public async Task<User?> Get(string id) => await dbContext.Users.FindAsync(id);
     }
 }

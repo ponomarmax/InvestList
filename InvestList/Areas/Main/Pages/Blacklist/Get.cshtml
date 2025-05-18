@@ -42,10 +42,18 @@
                 <!-- Hero image -->
                 @await Html.PartialAsync("Get/PostImage", Model.Post.Image)
 
-                <!-- Body -->
-                <article style="font-size:1.05rem;line-height:1.7;">
-                    @Html.Raw(Model.Post.Description)
-                </article>
+                @if (Model.ShowSubscriptionBanner)
+                {
+                    <div class="position-absolute top-0 start-0 w-100 h-100 bg-white bg-opacity-75 backdrop-blur"
+                         style="z-index:5;">
+                    </div>
+                }
+                else
+                {
+                    <article style="font-size:1.05rem;line-height:1.7;">
+                        @Html.Raw(Model.Post.Description)
+                    </article>
+                }
             </div>
 
             <!-- Links / sources -->
@@ -83,3 +91,56 @@
         </aside>
     </div>
 </div>
+
+@if (Model.ShowSubscriptionBanner)
+{
+    <!-- =========================== PAYWALL MODAL =========================== -->
+    <div class="modal fade" id="subscribeModal" tabindex="-1"
+         aria-labelledby="subscribeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow">
+                <div class="modal-header border-0">
+                    <h5 id="subscribeModalLabel" class="modal-title fw-semibold">
+                        Доступ лише за підпискою
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-3">
+                        Щоб прочитати повну статтю, оформіть підписку. Ви отримаєте:
+                    </p>
+                    <ul class="list-unstyled small mb-4">
+                        <li><i class="bi bi-check-circle text-success me-1"></i> Необмежений доступ до статей</li>
+                        <li><i class="bi bi-check-circle text-success me-1"></i> Коментарі без обмежень</li>
+                        <li><i class="bi bi-check-circle text-success me-1"></i> Відсутність реклами</li>
+                    </ul>
+                    <a asp-area="Main" asp-page="/Subscription/Plan"
+                       class="btn btn-primary w-100 rounded-pill py-2">
+                        Оформити підписку
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+        <script>
+            // Show the pay-wall modal automatically
+            document.addEventListener('DOMContentLoaded', () => {
+                const modal = new bootstrap.Modal(
+                    document.getElementById('subscribeModal'),
+                    { backdrop: 'static', keyboard: false });
+                modal.show();
+            });
+        </script>
+    }
+
+    @section Styles {
+        <style>
+            /* Quick utility for blur effect without external CSS file */
+            .backdrop-blur { backdrop-filter: blur(5px); }
+        </style>
+    }
+}

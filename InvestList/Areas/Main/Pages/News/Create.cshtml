@@ -9,12 +9,9 @@ ViewData["Title"] = "Створення новини";
 <form id="putPostForm" method="post" enctype="multipart/form-data">
     @Html.AntiForgeryToken()
 
-    <div class="form-check form-switch mb-4">
-        <input asp-for="Post.IsActive" class="form-check-input" id="IsActiveSwitch" />
-        <label class="form-check-label" for="IsActiveSwitch">Новина активна</label>
-    </div>
 
-
+    @await Html.PartialAsync("PostIsActive", Model)
+    @await Html.PartialAsync("PostIsSubscription", Model)
     @await Html.PartialAsync("PostLoadImage", Model)
     @await Html.PartialAsync("PostFormTranslations", Model.Post.Translations)
     @await Html.PartialAsync("PostFormTags", Model)

@@ -1,7 +1,5 @@
 using System.Globalization;
-using AutoMapper;
 using Core.Entities;
-using Core.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +22,9 @@ public class Get(IMediator mediator, UserManager<User> userManager): BaseGetPage
             CultureInfo.CurrentUICulture.TwoLetterISOLanguageName
         ));
         Post = postWithSimilar.Post;
-        Post.SimilarNews = postWithSimilar.SimilarPosts.TryGetValue(PostType.News.ToString(), out var similarNews)?similarNews:null; 
+        var hasSubscription = await userManager.HasSubscription(User);
+        ShowSubscriptionBanner = Post.IsSubscription.HasValue && Post.IsSubscription.Value &&
+                                 !hasSubscription;        Post.SimilarNews = postWithSimilar.SimilarPosts.TryGetValue(PostType.News.ToString(), out var similarNews)?similarNews:null; 
         Post.SimilarInvests = postWithSimilar.SimilarPosts.TryGetValue(PostType.InvestAd.ToString(), out var similarAds)?similarAds:null;  
         Radar.UI.SeoHelper.SetupPostViewSeoDetails(ViewData, Post);
 

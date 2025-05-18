@@ -26,9 +26,9 @@ namespace DataAccess.Repositories
             return (count, items);
         }
 
-        public async Task<InvestPost?> Get(string slug)
+        public async Task<InvestPost?> Get(string slug, bool? loadDbImage = null)
         {
-            var postQuery = QueryableGet(slug, PostType.InvestAd.ToString());
+            var postQuery = QueryableGet(slug, PostType.InvestAd.ToString(), loadDbImage:loadDbImage);
             return await ComposeInvestPostQuery(postQuery).FirstOrDefaultAsync();
         }
 

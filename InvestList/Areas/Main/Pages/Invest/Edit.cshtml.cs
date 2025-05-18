@@ -18,7 +18,7 @@ namespace InvestList.Areas.Main.Pages.Invest
 
         public async Task<IActionResult> OnGetAsync(Guid id)
         {
-            var db = await repository.Get(id.ToString());
+            var db = await repository.Get(id.ToString(), loadDbImage:true);
             var postFormModel = mapper.Map<PostDataDto>(db.Post);
             InvestPost = mapper.Map<InvestPostDto>(db);
             Prepare();

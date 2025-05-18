@@ -10,9 +10,9 @@
                     <p>
                         @foreach (var provider in Model.ExternalLogin!)
                         {
-                            <button type="submit" class="google-signin-btn" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
-                                <img src="~/ico/google-icon.png" alt="Google Logo" class="google-logo">
-                                <span class="btn-text">Увійти через @provider.DisplayName</span>
+                            <button type="submit" class="google-btn" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
+                                <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google Logo">
+                                Увійти через @provider.DisplayName
                             </button>
                         }
                     </p>

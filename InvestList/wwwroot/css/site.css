@@ -985,3 +985,28 @@ pre.create-description-box {
 article * {
     margin: 0 !important;
 }
+
+.google-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    color: #555;
+    transition: box-shadow 0.3s ease;
+}
+
+.google-btn:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.google-btn img {
+    height: 20px;
+    margin-right: 12px;
+}

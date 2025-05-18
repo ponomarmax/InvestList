@@ -56,6 +56,6 @@
 @if (Model.Entities?.Any() == true)
 {
     <div class="d-flex justify-content-center mt-5">
-        @await Html.PartialAsync("_Pagination", ("News", Model.PaginationInfo, Model.TagIds))
+        @await Html.PartialAsync("_Pagination", ("Subscription", Model.PaginationInfo, Model.TagIds))
     </div>
 }

@@ -969,3 +969,44 @@ pre.create-description-box {
 @media (max-width: 576px) {
     .invest-card { border-radius: 1rem; }
 }
+
+/* Frosted glass */
+.backdrop-blur { backdrop-filter: blur(6px); }
+
+/* Accent gradient (same as Bootstrap primary but softer) */
+.bg-gradient-primary {
+    background: linear-gradient(135deg,#0d6efd 0%,#3e8bff 100%);
+}
+
+/* Bullet list spacing on small screens */
+@media (max-width: 576px) {
+    #subscribeModal ul { padding-left: .5rem; }
+}
+article * {
+    margin: 0 !important;
+}
+
+.google-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    color: #555;
+    transition: box-shadow 0.3s ease;
+}
+
+.google-btn:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.google-btn img {
+    height: 20px;
+    margin-right: 12px;
+}

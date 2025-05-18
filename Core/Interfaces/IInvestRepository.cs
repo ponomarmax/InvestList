@@ -7,7 +7,7 @@ namespace Core.Interfaces
 {
     public interface IInvestRepository:IBasePostRepository
     {
-        Task<InvestPost?> Get(string slug);
+        Task<InvestPost?> Get(string slug, bool? loadDbImage = null);
         Task<InvestPost?> Get(Guid id);
         Task<string> Put(Guid? id, InvestPost invest);
         Task<string> Create(InvestPost invest);

@@ -1,0 +1,135 @@
+@page "/subscription/plan"
+@model InvestList.Areas.Main.Pages.Subscription.Plan
+@{
+    ViewData["Title"] = "Оформити підписку";
+}
+
+<!-- PAGE CONTAINER -->
+<div class="container py-5">
+
+    <!-- Heading -->
+    <div class="text-center mb-5">
+        <h1 class="fw-bold mb-3">Виберіть план підписки</h1>
+        <p class="text-muted mb-0">
+            Повний доступ до гайдів, інтерв’ю та можливість замовляти дослідження&nbsp;— без&nbsp;реклами
+        </p>
+    </div>
+
+    <!-- PRICING PLANS -->
+    <div class="row g-4 justify-content-center">
+
+        <!-- ========== 1 WEEK ========== -->
+        <div class="col-sm-6 col-lg-4">
+            <div class="card h-100 border-0 shadow-sm rounded-4">
+                <div class="card-body d-flex flex-column p-4">
+                    <h3 class="h5 fw-semibold mb-2 text-center">1&nbsp;тиждень</h3>
+                    <p class="display-6 fw-bold text-center mb-3">₴50</p>
+
+                    <!-- Unified benefit list -->
+                    <ul class="list-unstyled flex-grow-1 small mb-4">
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Доступ до&nbsp;унікальних покрокових&nbsp;гайдів з&nbsp;інвестування
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Ексклюзивні інтерв’ю з&nbsp;інвесторами та&nbsp;їхні практичні&nbsp;поради
+                        </li>
+                        <li>
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Преміум-доступ до&nbsp;“чорного списку” з&nbsp;актуальними кейсами, звітами та&nbsp;розслідуваннями
+                        </li>
+                    </ul>
+
+                    <form asp-area="Main" asp-page="/Subscription/Checkout" method="get" class="d-grid">
+                        <input type="hidden" name="planId" value="weekly" />
+                        <button class="btn btn-dark rounded-pill py-2">Оформити</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== 1 MONTH ========== -->
+        <div class="col-sm-6 col-lg-4">
+            <div class="card h-100 border-0 shadow-sm rounded-4">
+                <div class="card-body d-flex flex-column p-4">
+                    <h3 class="h5 fw-semibold mb-2 text-center">1&nbsp;місяць</h3>
+                    <p class="display-6 fw-bold text-center mb-3">₴149</p>
+
+                    <!-- Same benefit list -->
+                    <ul class="list-unstyled flex-grow-1 small mb-4">
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Доступ до&nbsp;унікальних покрокових&nbsp;гайдів з&nbsp;інвестування
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Ексклюзивні інтерв’ю з&nbsp;інвесторами та&nbsp;їхні практичні&nbsp;поради
+                        </li>
+                        <li>
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Преміум-доступ до&nbsp;“чорного списку” з&nbsp;актуальними кейсами, звітами та&nbsp;розслідуваннями
+                        </li>
+                    </ul>
+
+                    <form asp-area="Main" asp-page="/Subscription/Checkout" method="get" class="d-grid">
+                        <input type="hidden" name="planId" value="monthly" />
+                        <button class="btn btn-dark rounded-pill py-2">Оформити</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== 6 MONTHS (BEST VALUE) ========== -->
+        <div class="col-sm-6 col-lg-4">
+            <div class="card h-100 border-primary shadow-sm rounded-4 position-relative">
+
+                <!-- Ribbon -->
+                <span class="position-absolute top-0 start-50 translate-middle badge bg-primary rounded-pill">
+                    -53.9%
+                </span>
+
+                <div class="card-body d-flex flex-column p-4">
+                    <h3 class="h5 fw-semibold mb-2 text-center">6&nbsp;місяців</h3>
+                    <p class="display-6 fw-bold text-center mb-3">₴599</p>
+
+                    <!-- Same benefit list -->
+                    <ul class="list-unstyled flex-grow-1 small mb-4">
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Доступ до&nbsp;унікальних покрокових&nbsp;гайдів з&nbsp;інвестування
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Ексклюзивні інтерв’ю з&nbsp;інвесторами та&nbsp;їхні практичні&nbsp;поради
+                        </li>
+                        <li>
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Преміум-доступ до&nbsp;“чорного списку” з&nbsp;актуальними кейсами, звітами та&nbsp;розслідуваннями
+                        </li>
+                    </ul>
+
+                    <form asp-area="Main" asp-page="/Subscription/Checkout" method="get" class="d-grid">
+                        <input type="hidden" name="planId" value="halfyear" />
+                        <button class="btn btn-primary rounded-pill py-2">Оформити</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        /* Ribbon “best value” */
+        .card .badge {
+            padding: .5rem .75rem;
+            font-size: .75rem;
+            transform: translate(-50%, -50%) rotate(10deg);
+        }
+    </style>
+}
+
+@section Scripts {
+    <!-- Якщо пізніше додасте Stripe / WayForPay — підключіть тут -->
+}

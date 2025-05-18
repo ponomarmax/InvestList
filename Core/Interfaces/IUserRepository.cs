@@ -9,5 +9,6 @@ namespace Core.Interfaces
         Task<User?> Get(string id);
         Task SaveRequestInfo(UserRequestInfo requestInfo, CancellationToken cancellationToken = default);
         Task MarkAsFailedToSendEmail(string userId, CancellationToken cancellationToken = default);
+        Task IssueWeekSubscription (string userId, CancellationToken cancellationToken = default);
     }
 }

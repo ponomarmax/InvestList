@@ -1,7 +1,3 @@
-using System.Globalization;
-using AutoMapper;
-using Core.Entities;
-using Core.Interfaces;
 using InvestList.Services.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

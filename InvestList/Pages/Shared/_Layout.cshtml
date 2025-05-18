@@ -80,6 +80,10 @@
                     <li class="nav-item">
                         <a class="nav-link px-lg-3" asp-area="Main" asp-page="/Blacklist/List">Blacklist</a>
                     </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link px-lg-3" asp-area="Main" asp-page="/Subscription/List">Преміум-контент</a>
+                    </li>
                 </ul>
 
                 <!-- Right Side Elements -->
@@ -113,7 +117,7 @@
                     {
                         <div class="d-flex gap-2 order-lg-3">
                             <a href="/Identity/Account/Login" class="btn btn-outline-dark btn-sm rounded-square px-3">Увійти</a>
-                            <a href="/Identity/Account/Register" class="btn btn-dark btn-sm rounded-square px-3">Зареєструватися</a>
+                            <a href="/Identity/Account/Login" class="btn btn-dark btn-sm rounded-square px-3">Зареєструватися</a>
                         </div>
                     }
                     else if (User.Identity.IsAuthenticated)

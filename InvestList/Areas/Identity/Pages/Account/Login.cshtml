@@ -6,120 +6,24 @@
 
 <!-- PAGE WRAPPER -->
 <div class="container py-5">
-
-    <!-- ---------- CARD ---------- -->
-    <div class="card shadow-sm mx-auto" style="max-width: 420px;">
-        <div class="card-body p-4">
-
-            <!-- Logo & heading -->
-            <div class="text-center mb-4">
-                <img src="~/ico/logo3.png"
-                     alt="Logo"
-                     width="57"
-                     height="57"
-                     class="mb-3" />
-                <h1 class="h4 fw-semibold m-0">Увійти до облікового запису</h1>
-            </div>
-
-            <!-- Login form -->
-            <form id="loginForm" method="post" novalidate>
-
-                <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
-
-                <!-- Username -->
-                <div class="form-floating mb-3">
-                    <input asp-for="Input.Username"
-                           class="form-control"
-                           autocomplete="username"
-                           aria-required="true"
-                           placeholder="Username"
-                           required autofocus />
-                    <label asp-for="Input.Username">Username</label>
-                    <span asp-validation-for="Input.Username" class="text-danger small"></span>
-                </div>
-
-                <!-- Password -->
-                <div class="form-floating mb-3">
-                    <input asp-for="Input.Password"
-                           type="password"
-                           class="form-control"
-                           autocomplete="current-password"
-                           aria-required="true"
-                           placeholder="Пароль" />
-                    <label asp-for="Input.Password">Пароль</label>
-                    <span asp-validation-for="Input.Password" class="text-danger small"></span>
-                </div>
-
-                <!-- Remember me -->
-                <div class="form-check mb-3">
-                    <input class="form-check-input"
-                           type="checkbox"
-                           asp-for="Input.RememberMe"
-                           id="rememberMeCheck" />
-                    <label class="form-check-label" for="rememberMeCheck">
-                        Запам'ятати мене
-                    </label>
-                </div>
-
-                <!-- Submit -->
-                <button class="btn btn-primary w-100" type="submit">
-                    Увійти
-                </button>
-
-                <!-- Anti‑bot hidden inputs -->
-                <input type="hidden" id="timeSpent"          asp-for="Input.TimeSpent" />
-                <input type="hidden" id="mouseMoved"         asp-for="Input.MouseMoved" />
-                <input type="hidden" id="navigatorWebdriver" asp-for="Input.NavigatorWebdriver" />
-                <input type="hidden" id="hasChrome"          asp-for="Input.HasChrome" />
-                <input type="hidden" id="screenHeight"       asp-for="Input.ScreenHeight" />
-                <input type="hidden" id="screenWidth"        asp-for="Input.ScreenWidth" />
-            </form>
-
-            <!-- Auxiliary links -->
-            <div class="mt-4 text-center small">
-                <p class="mb-2">
-                    <a id="forgot-password" asp-page="./ForgotPassword">Забули пароль?</a>
-                </p>
-                <p class="mb-2">
-                    <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Зареєструватися</a>
-                </p>
-                <p class="mb-0">
-                    <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">
-                        Відправити повторний email підтвердження
-                    </a>
-                </p>
-            </div>
-        </div>
-    </div>
-
     <!-- External providers -->
     <div class="mt-4 d-flex justify-content-center">
         @await Html.PartialAsync("_ExternalLogin", (Model.ExternalLogins, Model.ReturnUrl))
     </div>
+    <div class="mt-4 d-flex justify-content-center">
+        @* Telegram Login Widget *@
+        <script async
+                src="https://telegram.org/js/telegram-widget.js?22"
+                data-telegram-login="invest_radar_com_bot"
+                data-size="large"
+                data-userpic="true"
+                data-request-access="write"
+                data-lang="uk"
+                data-auth-url='@Url.Page("/Account/ExternalLogin", new { area = "Identity", handler = "Callback", provider = "Telegram", returnUrl = Model.ReturnUrl })'>
+        </script>
+    </div>
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-
-    <script>
-        /*  Bot‑detection: unchanged  */
-        let startTime  = Date.now();
-        let mouseMoved = false;
-
-        document.addEventListener("mousemove", () => { mouseMoved = true; });
-
-        function collectData () {
-            const timeSpent = Date.now() - startTime;
-
-            document.getElementById("timeSpent").value          = timeSpent;
-            document.getElementById("mouseMoved").value         = mouseMoved;
-            document.getElementById("navigatorWebdriver").value = navigator.webdriver;
-            document.getElementById("hasChrome").value          = !!window.chrome;
-            document.getElementById("screenHeight").value       = screen.height;
-            document.getElementById("screenWidth").value        = screen.width;
-        }
-
-        document.getElementById("loginForm")
-                .addEventListener("submit", collectData);
-    </script>
+    <partial name="_ValidationScriptsPartial"/>
 }

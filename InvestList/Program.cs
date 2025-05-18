@@ -80,6 +80,7 @@ try
     builder.Services.AddInvestRadarServices();
     builder.Services.AddHttpContextAccessor();
     builder.Services.AddAuthentication()
+        .AddCookie()
         .AddGoogle(options =>
         {
             var googleAuthNSection = builder.Configuration.GetSection("InvestRadar:Authentication:Google");

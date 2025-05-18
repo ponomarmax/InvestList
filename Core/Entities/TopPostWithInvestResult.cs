@@ -19,6 +19,8 @@ public class TopPostWithInvestResult
     public int? InvestDurationYears { get; set; }
     public int? InvestDurationMonths { get; set; }
     public decimal? AnnualInvestmentReturn { get; set; }
+    public decimal? MinValue { get; set; }
+    public string? Currency { get; set; }
 
     public string? TranslationTitle { get; set; }
     public string? TranslationDescription { get; set; }

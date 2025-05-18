@@ -2,18 +2,21 @@
 @using Radar.UI.Pages.Shared.Get
 @model InvestList.Areas.Main.Pages.News.Get
 
-<!-- PAGE CONTAINER -->
-<div class="container py-4">   <!-- keeps same left edge as header -->
+<div class="container py-4">
 
-    <!-- Back / Edit row -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div class="d-flex gap-2">
-            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="history.back()">
+            <button type="button"
+                    class="btn btn-outline-secondary btn-sm"
+                    onclick="history.back()">
                 <i class="bi bi-arrow-left me-1"></i> Назад
             </button>
+
             @if (Model.CanUserEdit)
             {
-                <a asp-page="./Edit" asp-route-id="@Model.Post.Id" class="btn btn-primary btn-sm">
+                <a asp-page="./Edit"
+                   asp-route-id="@Model.Post.Id"
+                   class="btn btn-primary btn-sm">
                     Редагувати
                 </a>
             }
@@ -22,59 +25,87 @@
     </div>
 
     <div class="row gx-lg-3 gy-5">
-        <!-- ============ MAIN COLUMN ============ -->
-        <div class="col-lg-8">
+        <div class="col-lg-8 position-relative">
 
-            <!-- Unified 75ch wrapper for title, tags, hero, and body -->
-            <div style="max-width:75ch;">   <!-- widened from 65ch -->
+            <div style="max-width:75ch;">
 
-                <!-- Title -->
                 <h1 class="display-6 fw-semibold mb-2 text-break">@Model.Post.Title</h1>
 
-                <!-- Tags -->
                 @await Html.PartialAsync("Get/PostTags", Model.Post.Tags)
 
-                <!-- Hero image -->
                 @await Html.PartialAsync("Get/PostImage", Model.Post.Image)
 
-                <!-- Article body -->
-                <article style="font-size:1.05rem;line-height:1.7;">
-                    @Html.Raw(Model.Post.Description)
-                </article>
+                @if (Model.ShowSubscriptionBanner)
+                {
+                    <div class="position-absolute top-0 start-0 w-100 h-100 bg-white bg-opacity-75 backdrop-blur"
+                         style="z-index:5;">
+                    </div>
+                }
+                else
+                {
+                    <article>
+                        @Html.Raw(Model.Post.Description)
+                    </article>
+                }
             </div>
 
-            <!-- Sources / links -->
-            <section class="mt-5">
-                @await Html.PartialAsync("Get/PostLinks", Model.Post.Links)
-            </section>
-
-            <!-- Comments -->
-            <section class="mt-5">
-                @await Html.PartialAsync(
-                    "_DisplayComments",
-                    (Model.Post.Id, Model.Post.PostType, Model.Post.Comments))
-            </section>
+            <!-- Frosted-glass overlay for guests -->
+            @if (Model.ShowSubscriptionBanner)
+            {
+                <div class="position-absolute top-0 start-0 w-100 h-100 bg-white bg-opacity-75 backdrop-blur"
+                     style="z-index:5;">
+                </div>
+            }
         </div>
 
         <!-- ============ SIDEBAR ============ -->
-        <aside class="col-lg-4 pt-lg-2">   <!-- reduced top padding -->
+        <aside class="col-lg-4 pt-lg-2">
             @await Html.PartialAsync(
                 "Get/PostSimilarSection",
-                (new GetCustomizationSimilarContent {
+                (new GetCustomizationSimilarContent
+                {
                     Title = "Схожі статті",
                     BaseUrlPrefix = "News",
                     MoreContentTitle = "Більше статей..."
                 }, Model.Post.SimilarNews, Model.Post.Tags))
 
-            <hr class="my-4" />
+            <hr class="my-4"/>
 
             @await Html.PartialAsync(
                 "Get/PostSimilarSection",
-                (new GetCustomizationSimilarContent {
+                (new GetCustomizationSimilarContent
+                {
                     Title = "Схожі оголошення",
                     BaseUrlPrefix = "Invest",
                     MoreContentTitle = "Більше оголошень..."
                 }, Model.Post.SimilarInvests, Model.Post.Tags))
         </aside>
     </div>
+
+    <section class="mt-5">
+        @await Html.PartialAsync("Get/PostLinks", Model.Post.Links)
+    </section>
+
+    <section class="mt-5">
+        @await Html.PartialAsync(
+            "_DisplayComments",
+            (Model.Post.Id, Model.Post.PostType, Model.Post.Comments))
+    </section>
 </div>
+
+@if (Model.ShowSubscriptionBanner)
+{
+    @await Html.PartialAsync("Get/SubscriptionModal")
+    @section Scripts {
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const modalElement = document.getElementById('subscribeModal');
+                const modal = new bootstrap.Modal(modalElement, {
+                    backdrop: 'static',
+                    keyboard: false
+                });
+                modal.show();
+            });
+        </script>
+    }
+}

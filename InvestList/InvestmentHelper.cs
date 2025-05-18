@@ -40,6 +40,15 @@ namespace InvestList
             return await userManager.CanEditPost(userDb);
         }
 
+        public static async Task<bool> HasSubscription(this UserManager<User> userManager,
+            ClaimsPrincipal? user)
+        {
+            if (user == null) return false;
+            var userDb = await userManager.GetUserAsync(user);
+            if (userDb == null) return false;
+            return userDb.SubscriptionExpiresOn.HasValue && userDb.SubscriptionExpiresOn.Value >= DateTime.UtcNow;
+        }
+
         public static string FormatInvestmentDuration(int years, int months)
         {
             var result = "";

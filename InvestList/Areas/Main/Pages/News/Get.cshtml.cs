@@ -9,7 +9,7 @@ using Radar.UI.Models;
 
 namespace InvestList.Areas.Main.Pages.News;
 
-public class Get(UserManager<User> userManager, IMediator mediator): BaseGetPage
+public class Get(UserManager<User> userManager, IMediator mediator) : BaseGetPage
 {
     public async Task<IActionResult> OnGetAsync(string id)
     {
@@ -22,8 +22,15 @@ public class Get(UserManager<User> userManager, IMediator mediator): BaseGetPage
             CultureInfo.CurrentUICulture.TwoLetterISOLanguageName
         ));
         Post = postWithSimilar.Post;
-            Post.SimilarNews = postWithSimilar.SimilarPosts.TryGetValue(PostType.News.ToString(), out var similarNews)?similarNews:null; 
-        Post.SimilarInvests = postWithSimilar.SimilarPosts.TryGetValue(PostType.InvestAd.ToString(), out var similarAds)?similarAds:null;  
+        var hasSubscription = await userManager.HasSubscription(User);
+        ShowSubscriptionBanner = Post.IsSubscription.HasValue && Post.IsSubscription.Value &&
+                                 !hasSubscription;
+        Post.SimilarNews = postWithSimilar.SimilarPosts.TryGetValue(PostType.News.ToString(), out var similarNews)
+            ? similarNews
+            : null;
+        Post.SimilarInvests = postWithSimilar.SimilarPosts.TryGetValue(PostType.InvestAd.ToString(), out var similarAds)
+            ? similarAds
+            : null;
         Radar.UI.SeoHelper.SetupPostViewSeoDetails(ViewData, Post);
 
         return Page();

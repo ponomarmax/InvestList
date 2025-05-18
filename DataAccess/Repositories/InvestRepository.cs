@@ -1,12 +1,10 @@
-using AutoMapper;
+using Core;
 using Core.Entities;
 using Core.Interfaces;
-using Mapster;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Radar.Domain;
 using Radar.Domain.Entities;
-using Radar.Domain.Interfaces;
 using Radar.Infrastructure.Repositories;
 
 namespace DataAccess.Repositories
@@ -37,6 +35,7 @@ namespace DataAccess.Repositories
             return from inv in dbContext.InvestPosts
                 join p in postQuery on inv.PostId equals p.Id
                 join cur in dbContext.MinInvestValue on inv.Id equals cur.InvestPostId into curGroup
+                orderby p.Priority descending, p.CreatedAt descending
                 select new InvestPost
                 {
                     Id = inv.Id,
@@ -47,7 +46,8 @@ namespace DataAccess.Repositories
                     InvestDurationYears = inv.InvestDurationYears,
                     AnnualInvestmentReturn = inv.AnnualInvestmentReturn,
                     MinInvestValues = curGroup.ToList()
-                };
+                }
+                ;
         }
 
         public async Task<bool> Exists(string slug)
@@ -122,6 +122,10 @@ namespace DataAccess.Repositories
             SELECT *, ROW_NUMBER() OVER (PARTITION BY PostId ORDER BY Id) AS rn
             FROM ImageMetadata
         ),
+        FirstMinInvestValuePerPost AS (
+            SELECT *, ROW_NUMBER() OVER (PARTITION BY InvestPostId ORDER BY Id) AS rn
+            FROM MinInvestValue
+        ),
         TopRankedPosts AS (
             SELECT 
                 p.Id AS PostId,
@@ -144,13 +148,16 @@ namespace DataAccess.Repositories
 
                 im.Id AS ImageId,
                 ga.PageViews AS PageViews,
+                mi.MinValue as MinValue,
+                mi.Currency as Currency,
 
                 ROW_NUMBER() OVER (
                     PARTITION BY p.PostType 
-                    ORDER BY p.Priority DESC, p.UpdatedAt DESC, p.Id DESC
+                    ORDER BY p.Priority DESC, p.CreatedAt DESC, p.Id DESC
                 ) AS rn
             FROM Posts p
             LEFT JOIN InvestPosts i ON p.Id = i.PostId
+            LEFT JOIN FirstMinInvestValuePerPost mi ON mi.InvestPostId = i.Id AND mi.rn = 1
             JOIN PostTranslation pt ON p.Id = pt.PostId AND pt.Language = @language
             LEFT JOIN FirstImagePerPost im ON p.Id = im.PostId AND im.rn = 1
             LEFT JOIN GoogleAnalyticPostViews ga ON ga.PostId = p.Id
@@ -264,9 +271,18 @@ namespace DataAccess.Repositories
                             TotalInvestment = first.TotalInvestment ?? 0,
                             InvestDurationYears = first.InvestDurationYears ?? 0,
                             InvestDurationMonths = first.InvestDurationMonths ?? 0,
-                            AnnualInvestmentReturn = first.AnnualInvestmentReturn ?? 0
+                            AnnualInvestmentReturn = first.AnnualInvestmentReturn ?? 0,
                         }
                         : null;
+
+                    if (!string.IsNullOrWhiteSpace(first.Currency))
+                    {
+                        invest.MinInvestValues =
+                        [
+                            new()
+                                { Currency = (Currency)Enum.Parse(typeof(Currency), first.Currency, ignoreCase: true), MinValue = first.MinValue.Value }
+                        ];
+                    }
 
                     return (post, invest);
                 }).ToList()

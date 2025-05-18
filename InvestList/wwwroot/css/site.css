@@ -982,3 +982,6 @@ pre.create-description-box {
 @media (max-width: 576px) {
     #subscribeModal ul { padding-left: .5rem; }
 }
+article * {
+    margin: 0 !important;
+}

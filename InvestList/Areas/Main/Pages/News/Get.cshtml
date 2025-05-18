@@ -24,7 +24,7 @@
         <a asp-page="./List" class="btn btn-secondary btn-sm">Усі новини</a>
     </div>
 
-    <div class="row gx-lg-3 gy-5">
+    <div class="row gx-lg-3 gy-5">  
         <!-- ================= MAIN COLUMN ================= -->
         <div class="col-lg-8 position-relative">
 
@@ -49,7 +49,7 @@
                 }
                 else
                 {
-                <article style="font-size:1.05rem;line-height:1.7;">
+                <article>
                     @Html.Raw(Model.Post.Description)
                 </article>
                 }

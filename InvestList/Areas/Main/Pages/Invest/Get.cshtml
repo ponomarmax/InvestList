@@ -81,7 +81,7 @@
                 @await Html.PartialAsync("Get/PostImage", Model.Post.Post.Image)
 
                 <!-- Date -->
-                <p class="text-muted small mb-4">@Model.Post.Post.CreatedAt:dd-MM-yyyy</p>
+                <p class="text-muted small mb-4">@Model.Post.Post.CreatedAt.ToString("dd-MM-yyyy")</p>
 
                 <!-- Description -->
                 <article style="font-size:1.05rem;line-height:1.7;">

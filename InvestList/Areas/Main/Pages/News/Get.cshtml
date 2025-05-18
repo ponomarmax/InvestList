@@ -3,10 +3,9 @@
 @model InvestList.Areas.Main.Pages.News.Get
 
 @{
-    /* ------------------------------------------------------------------
+    /* ------------------------------------------------------------
        TODO: Replace this stub with your real subscription check
-       (e.g., bool IsUserHasSubscription = User.IsInRole("Subscriber");)
-       ------------------------------------------------------------------ */
+       ------------------------------------------------------------ */
     bool IsUserHasSubscription = false;
 }
 
@@ -16,12 +15,17 @@
     <!-- Back / Edit row -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div class="d-flex gap-2">
-            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="history.back()">
+            <button type="button"
+                    class="btn btn-outline-secondary btn-sm"
+                    onclick="history.back()">
                 <i class="bi bi-arrow-left me-1"></i> Назад
             </button>
+
             @if (Model.CanUserEdit)
             {
-                <a asp-page="./Edit" asp-route-id="@Model.Post.Id" class="btn btn-primary btn-sm">
+                <a asp-page="./Edit"
+                   asp-route-id="@Model.Post.Id"
+                   class="btn btn-primary btn-sm">
                     Редагувати
                 </a>
             }
@@ -30,10 +34,10 @@
     </div>
 
     <div class="row gx-lg-3 gy-5">
-        <!-- ============ MAIN COLUMN ============ -->
-        <div class="col-lg-8 position-relative">   <!-- position-relative for overlay -->
+        <!-- ================= MAIN COLUMN ================= -->
+        <div class="col-lg-8 position-relative">
 
-            <!-- Unified 75ch wrapper for title, tags, hero, and body -->
+            <!-- 75-character width wrapper -->
             <div style="max-width:75ch;">
 
                 <!-- Title -->
@@ -45,20 +49,16 @@
                 <!-- Hero image -->
                 @await Html.PartialAsync("Get/PostImage", Model.Post.Image)
 
-                <!-- Body (shown only for subscribers) -->
+                <!-- Body (only for subscribers) -->
                 @if (IsUserHasSubscription)
                 {
                     <article style="font-size:1.05rem;line-height:1.7;">
                         @Html.Raw(Model.Post.Description)
                     </article>
                 }
-                else
-                {
-                    <!-- Optionally show a short preview here -->
-                }
             </div>
 
-            <!-- Blur overlay for non-subscribers -->
+            <!-- Frosted-glass overlay for guests -->
             @if (!IsUserHasSubscription)
             {
                 <div class="position-absolute top-0 start-0 w-100 h-100 bg-white bg-opacity-75 backdrop-blur"
@@ -66,7 +66,7 @@
             }
         </div>
 
-        <!-- ============ SIDEBAR ============ -->
+        <!-- ================= SIDEBAR ================= -->
         <aside class="col-lg-4 pt-lg-2">
             @await Html.PartialAsync(
                 "Get/PostSimilarSection",
@@ -88,45 +88,64 @@
         </aside>
     </div>
 
-    <!-- Sources / links -->
+    <!-- Links -->
     <section class="mt-5">
         @await Html.PartialAsync("Get/PostLinks", Model.Post.Links)
     </section>
 
     <!-- Comments -->
     <section class="mt-5">
-        @await Html.PartialAsync("_DisplayComments",
+        @await Html.PartialAsync(
+            "_DisplayComments",
             (Model.Post.Id, Model.Post.PostType, Model.Post.Comments))
     </section>
 </div>
 
 @if (!IsUserHasSubscription)
 {
-    <!-- =========================== PAYWALL MODAL =========================== -->
+    <!-- ====================== PAY-WALL  MODAL ====================== -->
     <div class="modal fade" id="subscribeModal" tabindex="-1"
          aria-labelledby="subscribeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4 shadow">
-                <div class="modal-header border-0">
-                    <h5 id="subscribeModalLabel" class="modal-title fw-semibold">
-                        Доступ лише за підпискою
+            <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+
+                <!-- Brand ribbon -->
+                <div class="bg-gradient-primary text-white text-center py-3">
+                    <h5 id="subscribeModalLabel" class="modal-title m-0">
+                        <i class="bi bi-lock-fill me-1"></i> Доступ лише за підпискою
                     </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <p class="mb-3">
+
+                <div class="modal-body p-4">
+                    <p class="mb-3 text-center">
                         Щоб прочитати повну статтю, оформіть підписку. Ви отримаєте:
                     </p>
-                    <ul class="list-unstyled small mb-4">
-                        <li><i class="bi bi-check-circle text-success me-1"></i> Необмежений доступ до статей</li>
-                        <li><i class="bi bi-check-circle text-success me-1"></i> Коментарі без обмежень</li>
-                        <li><i class="bi bi-check-circle text-success me-1"></i> Відсутність реклами</li>
+
+                    <ul class="list-unstyled small mb-4 px-2">
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Доступ до унікальних покрокових гайдiв з інвестування
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Ексклюзивні інтерв’ю з інвесторами та їхні практичні поради
+                        </li>
+                        <li>
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Преміум-доступ до “чорного списку” з актуальними кейсами, звітами та розслідуваннями
+                        </li>
                     </ul>
-                    <a asp-area="Main" asp-page="/Subscription/Plan"
-                       class="btn btn-primary w-100 rounded-pill py-2">
-                        Оформити підписку
+
+                    <a asp-area="Main"
+                       asp-page="/Subscription/Plan"
+                       class="btn btn-primary w-100 rounded-pill py-2 fs-6">
+                        <i class="bi bi-lightning-charge-fill me-1"></i> Оформити підписку
                     </a>
+
+                    <!-- Small legal note -->
+                    <p class="mt-3 mb-0 text-muted text-center small">
+                        Скасувати можна будь-коли у профілі
+                    </p>
                 </div>
             </div>
         </div>
@@ -134,20 +153,16 @@
 
     @section Scripts {
         <script>
-            // Show the pay-wall modal automatically
             document.addEventListener('DOMContentLoaded', () => {
-                const modal = new bootstrap.Modal(
-                    document.getElementById('subscribeModal'),
-                    { backdrop: 'static', keyboard: false });
+                const modalElement = document.getElementById('subscribeModal');
+                const modal = new bootstrap.Modal(modalElement, {
+                    backdrop: 'static',
+                    keyboard: false
+                });
                 modal.show();
             });
         </script>
     }
 
-    @section Styles {
-        <style>
-            /* Quick utility for blur effect without external CSS file */
-            .backdrop-blur { backdrop-filter: blur(5px); }
-        </style>
-    }
+    
 }

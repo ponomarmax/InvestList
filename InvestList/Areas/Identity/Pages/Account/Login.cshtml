@@ -10,8 +10,20 @@
     <div class="mt-4 d-flex justify-content-center">
         @await Html.PartialAsync("_ExternalLogin", (Model.ExternalLogins, Model.ReturnUrl))
     </div>
+    <div class="mt-4 d-flex justify-content-center">
+        @* Telegram Login Widget *@
+        <script async
+                src="https://telegram.org/js/telegram-widget.js?22"
+                data-telegram-login="invest_radar_com_bot"
+                data-size="large"
+                data-userpic="true"
+                data-request-access="write"
+                data-lang="uk"
+                data-auth-url='@Url.Page("/Account/ExternalLogin", new { area = "Identity", handler = "Callback", provider = "Telegram", returnUrl = Model.ReturnUrl })'>
+        </script>
+    </div>
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+    <partial name="_ValidationScriptsPartial"/>
 }

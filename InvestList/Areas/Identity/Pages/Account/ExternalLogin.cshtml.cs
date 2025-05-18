@@ -1,29 +1,22 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
-#nullable disable
+﻿#nullable disable
 
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
-using System.Text.Encodings.Web;
-using Core.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.WebUtilities;
 using Radar.Domain.Entities;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace InvestList.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class ExternalLoginModel : PageModel
     {
+        private readonly IConfiguration _config;
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
         private readonly IUserStore<User> _userStore;
@@ -32,12 +25,14 @@ namespace InvestList.Areas.Identity.Pages.Account
         private readonly ILogger<ExternalLoginModel> _logger;
 
         public ExternalLoginModel(
+            IConfiguration config,
             SignInManager<User> signInManager,
             UserManager<User> userManager,
             IUserStore<User> userStore,
             ILogger<ExternalLoginModel> logger,
             IEmailSender emailSender)
         {
+            _config = config;
             _signInManager = signInManager;
             _userManager = userManager;
             _userStore = userStore;
@@ -46,42 +41,24 @@ namespace InvestList.Areas.Identity.Pages.Account
             _emailSender = emailSender;
         }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         [BindProperty]
         public InputModel Input { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
+        // Bind Telegram callback parameters
+        [BindProperty(SupportsGet = true)] public string Provider { get; set; }
+        [BindProperty(SupportsGet = true)] public string Id { get; set; }
+        [BindProperty(SupportsGet = true)] public string FirstName { get; set; }
+        [BindProperty(SupportsGet = true)] public string Username { get; set; }
+        [BindProperty(SupportsGet = true)] public string PhotoUrl { get; set; }
+        [BindProperty(SupportsGet = true)] public string AuthDate { get; set; }
+        [BindProperty(SupportsGet = true)] public string Hash { get; set; }
+
         public string ProviderDisplayName { get; set; }
-
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public string ReturnUrl { get; set; }
+        [TempData] public string ErrorMessage { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
-        [TempData]
-        public string ErrorMessage { get; set; }
-
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public class InputModel
         {
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [Required]
             [EmailAddress]
             public string Email { get; set; }
@@ -91,27 +68,71 @@ namespace InvestList.Areas.Identity.Pages.Account
 
         public IActionResult OnPost(string provider, string returnUrl = null)
         {
-            // Request a redirect to the external login provider.
-            var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl });
+            var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { provider, returnUrl });
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
-            
-            // Get current culture from route or default to uk
             var culture = HttpContext.Request.RouteValues["culture"] as string ?? "uk";
-            
-            // Store culture in properties
             properties.Items["culture"] = culture;
-            
             return new ChallengeResult(provider, properties);
         }
 
         public async Task<IActionResult> OnGetCallbackAsync(string returnUrl = null, string remoteError = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
+            returnUrl ??= Url.Content("~/");
+
+            // Handle Telegram login
+            if (string.Equals(Provider, "Telegram", StringComparison.OrdinalIgnoreCase))
+            {
+                var botToken = _config["InvestRadar:Authentication:Telegram:BotToken"];
+                if (!VerifyTelegramLogin(Request.Query, botToken))
+                {
+                    _logger.LogError("Invalid Telegram login signature.");
+                    return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+                }
+
+                var loginInfo = new UserLoginInfo("Telegram", Id, "Telegram");
+                var signInResult = await _signInManager.ExternalLoginSignInAsync(
+                    loginInfo.LoginProvider,
+                    loginInfo.ProviderKey,
+                    isPersistent: false,
+                    bypassTwoFactor: true);
+
+                if (signInResult.Succeeded)
+                {
+                    _logger.LogInformation("User logged in with Telegram.");
+                    return LocalRedirect(returnUrl);
+                }
+                if (signInResult.IsLockedOut)
+                {
+                    return RedirectToPage("./Lockout");
+                }
+
+                // New user flow: create and link
+                var user = new User
+                {
+                    UserName = !string.IsNullOrEmpty(Username) ? Username : $"tg_{Id}",
+                    Email = Input?.Email ?? $"{Id}@telegram.local",
+                    EmailConfirmed = true,
+                    CreatedAt = DateTime.UtcNow
+                };
+                var createResult = await _userManager.CreateAsync(user);
+                if (!createResult.Succeeded)
+                {
+                    foreach (var e in createResult.Errors)
+                        ModelState.AddModelError(string.Empty, e.Description);
+                    return Page();
+                }
+
+                await _userManager.AddLoginAsync(user, loginInfo);
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                return LocalRedirect(returnUrl);
+            }
+
             if (remoteError != null)
             {
                 _logger.LogError("Error from external provider: {RemoteError}", remoteError);
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
+
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
@@ -119,74 +140,55 @@ namespace InvestList.Areas.Identity.Pages.Account
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
 
-            // Get the culture from properties or default to uk
-            var culture = info.AuthenticationProperties.Items["culture"] ?? "uk";
-            
-            // Sign in the user with this external login provider if the user already has a login.
-            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+            var cultureVal = info.AuthenticationProperties.Items.ContainsKey("culture")
+                ? info.AuthenticationProperties.Items["culture"]
+                : "uk";
+            var result = await _signInManager.ExternalLoginSignInAsync(
+                info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+
             if (result.Succeeded)
             {
-                _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
-                return LocalRedirect($"/{culture}{returnUrl}");
+                _logger.LogInformation("{Name} logged in with {LoginProvider}.",
+                    info.Principal.Identity.Name, info.LoginProvider);
+                return LocalRedirect($"/{cultureVal}{returnUrl}");
             }
             if (result.IsLockedOut)
             {
                 return RedirectToPage("./Lockout");
             }
-            // If user doesn't exist, create a new account for them.
-            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
 
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
             if (email != null)
             {
-                // Check if a user with the given email already exists.
                 var user = await _userManager.FindByEmailAsync(email);
-
                 if (user == null)
                 {
-                    // If user does not exist, create a new user with the external login information.
                     user = new User
                     {
                         UserName = email,
                         Email = email,
-                        EmailConfirmed = true // Automatically confirm the email.
+                        EmailConfirmed = true,
+                        CreatedAt = DateTime.UtcNow
                     };
-
-                    var createResult = await _userManager.CreateAsync(user);
-
-                    if (createResult.Succeeded)
+                    var createRes = await _userManager.CreateAsync(user);
+                    if (createRes.Succeeded)
                     {
-                        // Associate the external login provider with the new user.
-                        var addLoginResult = await _userManager.AddLoginAsync(user, info);
-
-                        if (addLoginResult.Succeeded)
-                        {
-                            _logger.LogInformation("User created and associated with {LoginProvider} provider.",
-                                info.LoginProvider);
-
-                            // Sign in the new user.
-                            await _signInManager.SignInAsync(user, isPersistent: false);
-                            return LocalRedirect(returnUrl);
-                        }
+                        await _userManager.AddLoginAsync(user, info);
+                        await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
+                        return LocalRedirect(returnUrl);
                     }
                 }
                 else
                 {
-                    // If the user already exists (but doesn't have the external login), link the external provider.
-                    var addLoginResult = await _userManager.AddLoginAsync(user, info);
-
-                    if (addLoginResult.Succeeded)
-                    {
-                        // Sign in the existing user.
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
-                    }
+                    await _userManager.AddLoginAsync(user, info);
+                    await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
+                    return LocalRedirect(returnUrl);
                 }
             }
 
-            // If we reach this point, prompt the user to create an account manually.
+            // Fallback: prompt for email
             ReturnUrl = returnUrl;
             ProviderDisplayName = info.ProviderDisplayName;
-
             if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
             {
                 Input = new InputModel
@@ -194,113 +196,41 @@ namespace InvestList.Areas.Identity.Pages.Account
                     Email = info.Principal.FindFirstValue(ClaimTypes.Email)
                 };
             }
-
             return Page();
         }
 
-        public async Task<IActionResult> OnPostConfirmationAsync(string returnUrl = null)
+        private bool VerifyTelegramLogin(IQueryCollection query, string botToken)
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
-            // Get the external login info
-            var info = await _signInManager.GetExternalLoginInfoAsync();
-            if (info == null)
+            if (!query.TryGetValue("hash", out var hashValues))
+                return false;
+            var providedHash = hashValues.ToString();
+
+            var allowed = new[] { "auth_date", "first_name", "id", "last_name", "photo_url", "username" };
+            var dataCheck = query
+                .Where(kv => allowed.Contains(kv.Key))
+                .Select(kv => $"{kv.Key}={kv.Value}")
+                .OrderBy(x => x, StringComparer.Ordinal)
+                .ToArray();
+            var dataString = string.Join("\n", dataCheck);
+
+            byte[] secret;
+            using (var sha = SHA256.Create())
             {
-                _logger.LogError("Error loading external login information during confirmation.");
-                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+                secret = sha.ComputeHash(Encoding.UTF8.GetBytes(botToken));
             }
-
-            // Get the culture from properties or default to uk
-            var culture = info.AuthenticationProperties.Items["culture"] ?? "uk";
-
-            if (ModelState.IsValid)
+            byte[] hash;
+            using (var hmac = new HMACSHA256(secret))
             {
-                 var existingUser = await _userManager.FindByEmailAsync(Input.Email);
-                if (existingUser != null)
-                {
-                    ModelState.AddModelError(string.Empty,
-                        "Емейл вже використовується. Спробуйте інший, або відновіть доступ.");
-                    return Page();
-                }
-
-                var user = CreateUser();
-
-                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-                await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-
-                var result = await _userManager.CreateAsync(user);
-                if (result.Succeeded)
-                {
-                    var roleAssign = await _userManager.AddToRoleAsync(user, Const.BusinessRole);
-                    if (roleAssign.Succeeded)
-                    {
-                        _logger.LogInformation("Role assigned for the user");
-                    }
-                    else
-                    {
-                        _logger.LogError("Role wasn't assigned {@Error}", roleAssign.Errors);
-                    }
-
-                    result = await _userManager.AddLoginAsync(user, info);
-                    if (result.Succeeded)
-                    {
-                        _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
-
-                        var userId = await _userManager.GetUserIdAsync(user);
-                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                        var callbackUrl = Url.Page(
-                            "/Account/ConfirmEmail",
-                            pageHandler: null,
-                            values: new { area = "Identity", userId = userId, code = code },
-                            protocol: Request.Scheme);
-
-                        await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                            $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                        // If account confirmation is required, we need to show the link if we don't have a real email sender
-                        if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                        {
-                            return RedirectToPage("./RegisterConfirmation", new { Email = Input.Email });
-                        }
-
-                        await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
-                        return LocalRedirect(returnUrl);
-                    }
-                }
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
+                hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(dataString));
             }
-
-            ProviderDisplayName = info.ProviderDisplayName;
-            ReturnUrl = returnUrl;
-            return Page();
-        }
-
-        private User CreateUser()
-        {
-            try
-            {
-                var instance = Activator.CreateInstance<User>();
-                instance.CreatedAt = DateTime.UtcNow;
-                return instance;
-            }
-            catch
-            {
-                throw new InvalidOperationException($"Can't create an instance of '{nameof(User)}'. " +
-                    $"Ensure that '{nameof(User)}' is not an abstract class and has a parameterless constructor, or alternatively " +
-                    $"override the external login page in /Areas/Identity/Pages/Account/ExternalLogin.cshtml");
-            }
+            var computed = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+            return computed == providedHash;
         }
 
         private IUserEmailStore<User> GetEmailStore()
         {
             if (!_userManager.SupportsUserEmail)
-            {
-                throw new NotSupportedException("The default UI requires a user store with email support.");
-            }
-
+                throw new NotSupportedException("User store needs email support.");
             return (IUserEmailStore<User>)_userStore;
         }
     }

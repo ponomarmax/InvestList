@@ -1,17 +1,20 @@
-using AutoMapper;
+using System.Globalization;
 using Core.Entities;
 using Core.Interfaces;
 using InvestList.Models.V2;
+using InvestList.Services.Invest.Queries;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Radar.Domain.Entities;
 
 namespace InvestList.Areas.Main.Pages.Invest;
 
-public class Get(IInvestRepository repository, IPostRepository postRepository, IMapper mapper, UserManager<User> userManager): PageModel
+public class Get(IInvestRepository repository, IMediator mediator,  UserManager<User> userManager): PageModel
 {
     public bool CanUserEdit { get; set; }
-    public InvestView Post { get; set; }
+    public InvestPostDetailDto Post { get; set; }
 
     public async Task<IActionResult> OnGetAsync(string id)
     {
@@ -33,16 +36,16 @@ public class Get(IInvestRepository repository, IPostRepository postRepository, I
 
         CanUserEdit = await userManager.CanEditInvestPost(User, investPost);
         
-        Post = mapper.Map<InvestView>(investPost);
-
-        var tagIds = Post.Tags.Select(x => x.Id).ToList();
-
-        var similarContent = (await postRepository.GetSimilarPosts(investPost.Post.Id, tagIds)).ToList();
+        var postWithSimilar = await mediator.Send(new GetInvestPostWithSimilarQuery
+        (
+            id,
+            CultureInfo.CurrentUICulture.TwoLetterISOLanguageName
+        ));
         
-        Post.SimilarNews = mapper.Map<IEnumerable<PostView>>(similarContent.Where(x=>x.PostType==PostType.News));
-        Post.SimilarInvests = mapper.Map<IEnumerable<PostView>>(similarContent.Where(x=>x.PostType==PostType.InvestAd));
-        ViewData.SetupPostViewSeoDetails(Post);
-        ViewData.SetupPostViewSeoDetails(Post);
+        Post = postWithSimilar.InvestPost;
+        Post.Post.SimilarNews = postWithSimilar.SimilarPosts.TryGetValue(PostType.News.ToString(), out var similarNews)?similarNews:null; 
+        Post.Post.SimilarInvests = postWithSimilar.SimilarPosts.TryGetValue(PostType.InvestAd.ToString(), out var similarAds)?similarAds:null;  
+        Radar.UI.SeoHelper.SetupPostViewSeoDetails(ViewData, Post.Post);
 
         return Page();
     }

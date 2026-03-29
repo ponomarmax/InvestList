@@ -1,26 +1,15 @@
 ﻿using System.Security.Claims;
+using System.Text.Json;
 using Core;
 using Core.Entities;
+using InvestList.Models;
 using Microsoft.AspNetCore.Identity;
+using Radar.Domain.Entities;
 
 namespace InvestList
 {
     public static class InvestmentHelper
     {
-        public static Dictionary<string, string> GetPaginationData(int pageIndex = 1,
-            IEnumerable<Guid> tagIds = null,
-            string search = null)
-        {
-            var param = new Dictionary
-                <string, string>();
-            if (pageIndex > 1)
-                param.Add("pageIndex", $"{pageIndex}");
-            if ((tagIds != null && tagIds.Any()))
-                param.Add("tagIds", string.Join(",", tagIds));
-            if(!string.IsNullOrWhiteSpace(search))
-                param.Add("search", search);
-            return param;
-        }
 
         public static async Task<bool> CanEditInvestPost(this UserManager<User> userManager, User user, InvestPost db)
         {
@@ -49,6 +38,15 @@ namespace InvestList
             if (user == null) return false;
             var userDb = await userManager.GetUserAsync(user);
             return await userManager.CanEditPost(userDb);
+        }
+
+        public static async Task<bool> HasSubscription(this UserManager<User> userManager,
+            ClaimsPrincipal? user)
+        {
+            if (user == null) return false;
+            var userDb = await userManager.GetUserAsync(user);
+            if (userDb == null) return false;
+            return userDb.SubscriptionExpiresOn.HasValue && userDb.SubscriptionExpiresOn.Value >= DateTime.UtcNow;
         }
 
         public static string FormatInvestmentDuration(int years, int months)
@@ -100,6 +98,36 @@ namespace InvestList
                 1 => $"{months} місяць",
                 >= 2 and <= 4 => $"{months} місяці",
                 _ => $"{months} місяців"
+            };
+        }
+        
+        public static UserRequestInfo GetRequestInfo(HttpContext httpContext, string userId, UserDetectionInfo detectionInfo)
+        {
+            var headers = new Dictionary<string, string>();
+            foreach (var header in httpContext.Request.Headers)
+            {
+                headers[header.Key] = header.Value;
+            }
+
+            var cookies = new Dictionary<string, string>();
+            foreach (var cookie in httpContext.Request.Cookies)
+            {
+                cookies[cookie.Key] = cookie.Value;
+            }
+
+            return new UserRequestInfo
+            {
+                UserId = userId,
+                IpAddress = httpContext.Connection.RemoteIpAddress?.ToString(),
+                UserAgent = httpContext.Request.Headers["User-Agent"],
+                Headers = JsonSerializer.Serialize(headers),
+                Cookies = JsonSerializer.Serialize(cookies),
+                MouseMoved = detectionInfo.MouseMoved,
+                NavigatorWebdriver = detectionInfo.NavigatorWebdriver,
+                ScreenHeight = detectionInfo.ScreenHeight,
+                ScreenWidth = detectionInfo.ScreenWidth,
+                HasChrome = detectionInfo.HasChrome,
+                TimeSpent = detectionInfo.TimeSpent,
             };
         }
     }

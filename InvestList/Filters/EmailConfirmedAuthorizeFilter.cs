@@ -2,10 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Common;
 using Core.Interfaces;
+using Radar.Domain.Interfaces;
 
 namespace InvestList.Filters
 {
-    public class EmailConfirmedAuthorizeFilter(IUserRepository repository, IPostRepository inVepository)
+    public class EmailConfirmedAuthorizeFilter(IUserRepository repository, IBasePostRepository inVepository)
         : IAuthorizationFilter
     {
         public void OnAuthorization(AuthorizationFilterContext context)

@@ -1,12 +1,14 @@
 using Core.Entities;
 using Core.Interfaces;
+using Radar.Domain.Entities;
+using Radar.Domain.Interfaces;
 
 namespace DataAccess.Repositories
 {
     public class CommentRepository(
         ApplicationDbContext dbContext,
         IUserRepository userRepository,
-        IPostRepository repository)
+        IBasePostRepository repository)
         : ICommentRepository
     {
         public async Task PublishAsync(PostComment comment)

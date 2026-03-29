@@ -1,47 +1,37 @@
-using AutoMapper;
+using System.Globalization;
 using Core.Entities;
-using Core.Interfaces;
-using InvestList.Models.V2;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using Radar.Application.Posts.Queries;
+using Radar.Domain.Entities;
+using Radar.UI.Models;
 
 namespace InvestList.Areas.Main.Pages.News;
 
-public class Get(IPostRepository repository, IMapper mapper, UserManager<User> userManager): PageModel
+public class Get(UserManager<User> userManager, IMediator mediator) : BaseGetPage
 {
-    public bool CanUserEdit { get; set; }
-    public PostView Post { get; set; }
-
     public async Task<IActionResult> OnGetAsync(string id)
     {
-        if (Guid.TryParse(id, out _))
-        {
-            var dbModel = await repository.Get(id);
-            if (dbModel == null)
-            {
-                return NotFound();
-            }
-
-            return RedirectToPagePermanent("./Get", new { id = dbModel.Slug });
-        }
-
         if (string.IsNullOrEmpty(id)) return NotFound();
 
-        var post = await repository.Get(id);
-        if (post == null) return NotFound();
-
         CanUserEdit = await userManager.CanEditPost(User);
-        
-        Post = mapper.Map<PostView>(post);
-
-        var tagIds = Post.Tags.Select(x => x.Id).ToList();
-
-        var similarContent = (await repository.GetSimilarPosts(post.Id, tagIds)).ToList();
-        
-        Post.SimilarNews = mapper.Map<IEnumerable<PostView>>(similarContent.Where(x=>x.PostType==PostType.News));
-        Post.SimilarInvests = mapper.Map<IEnumerable<PostView>>(similarContent.Where(x=>x.PostType==PostType.InvestAd));
-        ViewData.SetupPostViewSeoDetails(Post);
+        var postWithSimilar = await mediator.Send(new GetPostWithSimilarQuery
+        (
+            id, PostType.News.ToString(),
+            CultureInfo.CurrentUICulture.TwoLetterISOLanguageName
+        ));
+        Post = postWithSimilar.Post;
+        var hasSubscription = await userManager.HasSubscription(User);
+        ShowSubscriptionBanner = Post.IsSubscription.HasValue && Post.IsSubscription.Value &&
+                                 !hasSubscription;
+        Post.SimilarNews = postWithSimilar.SimilarPosts.TryGetValue(PostType.News.ToString(), out var similarNews)
+            ? similarNews
+            : null;
+        Post.SimilarInvests = postWithSimilar.SimilarPosts.TryGetValue(PostType.InvestAd.ToString(), out var similarAds)
+            ? similarAds
+            : null;
+        Radar.UI.SeoHelper.SetupPostViewSeoDetails(ViewData, Post);
 
         return Page();
     }

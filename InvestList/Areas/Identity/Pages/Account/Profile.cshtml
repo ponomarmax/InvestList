@@ -4,16 +4,36 @@
     ViewData["Title"] = "Профіль";
 }
 
-<div class="d-flex justify-content-center">
-    <button type="submit" class="btn btn-primary ms-1 mb-1">
-        <a asp-area="Identity" asp-page="/Account/LoginChange" class="profile_button" rel="follow">Змінити логін</a>
-    </button>
-    <button type="submit" class="btn btn-primary ms-1 mb-1">
-        <a asp-area="Identity" asp-page="/Account/PasswordChange" class="profile_button" rel="follow">Змінити пароль</a>
-    </button>
-    <button type="submit" class="btn btn-primary ms-1 mb-1">
-        <a asp-area="Identity" asp-page="/Account/DeleteAccount" class="profile_button" rel="follow">Видалити акаунт</a>
-    </button>
+<!-- ========================================================= -->
+<!--  PROFILE ACTIONS – mobile‑friendly card centred on page   -->
+<!-- ========================================================= -->
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
+
+            <div class="card shadow-sm rounded-4">
+                <div class="card-body p-4 text-center">
+
+                    <h1 class="h4 fw-semibold mb-4">Керування профілем</h1>
+
+                    <!-- action buttons stack on mobile, sit side‑by‑side on lg -->
+                    <div class="d-grid gap-2 d-lg-flex justify-content-lg-between">
+
+                        <a asp-area="Identity" asp-page="/Account/LoginChange"
+                           class="btn btn-outline-primary rounded-pill px-4 flex-fill">
+                            Змінити логін
+                        </a>
+
+                        <a asp-area="Identity" asp-page="/Account/DeleteAccount"
+                           class="btn btn-danger rounded-pill px-4 flex-fill">
+                            Видалити акаунт
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>
 
 @section Scripts {

@@ -1,0 +1,41 @@
+@page "/admin/allseo"
+
+@model InvestList.Areas.Main.Pages.Admin.AllSeoModel
+
+@{
+    ViewData["Title"] = "All SEO Settings";
+}
+
+<h1>All SEO Settings</h1>
+
+<a asp-page="./EditSeo" asp-route-pagePath="" class="btn btn-primary mb-3">Add New SEO Settings</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Page Path</th>
+            <th>Page Title</th>
+            <th>Meta Description</th>
+            <th>Page H1</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var seo in Model.SeoDetailsList)
+        {
+            <tr>
+                <td>@seo.RelativePagePath</td>
+                <td>@seo.PageTitle</td>
+                <td>@seo.MetaDescription</td>
+                <td>@seo.PageH1</td>
+                <td>
+                    <a asp-page="./EditSeo" asp-route-pagePath="@seo.RelativePagePath" class="btn btn-primary btn-sm">Edit</a>
+                    <form asp-page="./EditSeo" asp-route-Id="@seo.Id" asp-page-handler="Delete" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,23 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model (IList<Microsoft.AspNetCore.Authentication.AuthenticationScheme> ExternalLogin, string ReturnUrl)
+
+@{
+    if ((Model.ExternalLogin?.Count ?? 0) != 0)
+    {
+        <div class="d-flex flex-column align-items-center">
+            <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                <div>
+                    <p>
+                        @foreach (var provider in Model.ExternalLogin!)
+                        {
+                            <button type="submit" class="google-btn" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
+                                <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google Logo">
+                                Увійти через @provider.DisplayName
+                            </button>
+                        }
+                    </p>
+                </div>
+            </form>
+        </div>
+    }
+}

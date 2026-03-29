@@ -6,4 +6,6 @@ Disallow: /invest/edit
 Disallow: /Login
 Disallow: /Register
 Disallow: /Identity
-Sitemap: https://InvestList.com/sitemap.xml
+Disallow: /*?*
+
+Sitemap: https://invest-radar.com/sitemap.xml

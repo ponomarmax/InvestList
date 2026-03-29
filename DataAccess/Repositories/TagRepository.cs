@@ -1,14 +1,17 @@
+using System.Globalization;
 using Core.Entities;
 using Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Radar.Domain.Entities;
+using Radar.Infrastructure.Repositories;
 
 namespace DataAccess.Repositories
 {
-    public class TagRepository(ApplicationDbContext dbContext): ITagRepository
+    public class TagRepository(ApplicationDbContext dbContext): BaseTagRepository(dbContext), ITagRepository
     {
 
         private static Tag[] _tags = [];
-        private static CustomHeader[] _customeHeader = [];
+        private static Dictionary<string, CustomHeader[]>? CustomHeader = new();
         
         public async Task Add(string tagName)
         {
@@ -17,18 +20,9 @@ namespace DataAccess.Repositories
                 throw new NullReferenceException("Empty tag");
             }
 
-            dbContext.Add(new Tag { Name = tagName });
+            // dbContext.Add(new Tag { Name = tagName });
             await dbContext.SaveChangesAsync();
             _tags =  await dbContext.Tags.ToArrayAsync();
-        }
-        
-        public async Task<IEnumerable<Tag>> GetTags()
-        {
-            if (_tags == null || _tags.Length == 0)
-            {
-                _tags = await dbContext.Tags.ToArrayAsync();
-            }
-            return _tags.OrderBy(x=>x.Name);
         }
 
         public async Task SubmitCustomHeader(List<Guid> tagIds)
@@ -48,16 +42,20 @@ namespace DataAccess.Repositories
                 throw;
             }
 
-            _customeHeader = await dbContext.CustomHeaders.Include(x => x.Tag).ToArrayAsync();
+            // _customeHeader = await dbContext.CustomHeaders.Include(x => x.Tag).ToArrayAsync();
         }
         
-        public async Task<IEnumerable<CustomHeader>> GetCustomHeader()
+        public async Task<IEnumerable<CustomHeader>> GetCustomHeader(string language)
         {
-            if (_customeHeader == null || _customeHeader.Length == 0)
+            if (string.IsNullOrWhiteSpace(language) || CustomHeader == null)
+                throw new NullReferenceException("Empty custom header");
+            
+            if (CustomHeader.TryGetValue(language, out CustomHeader[] headers) && headers!=null && headers.Length > 0)
             {
-                _customeHeader = await dbContext.CustomHeaders.Include(x => x.Tag).ToArrayAsync();
+                return headers;
             }
-            return _customeHeader;
+            CustomHeader[language] = await dbContext.CustomHeaders.Include(x => x.Tag).ThenInclude(x=>x.Translations.Where(x=>x.Language==language)).ToArrayAsync();
+            return CustomHeader[language];
         }
     }
 }

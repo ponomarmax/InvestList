@@ -1,87 +1,111 @@
 @page "/news/{id}"
-@using InvestList
-@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Radar.UI.Pages.Shared.Get
 @model InvestList.Areas.Main.Pages.News.Get
 
-<div class="container mb-4">
-    @if (Model.CanUserEdit)
-    {
-        <a asp-page="./Edit" asp-route-id="@Model.Post.Id" class="btn btn-primary me-2">Редагувати</a>
-    }
+<div class="container py-4">
 
-    <a asp-page="./List" class="btn btn-secondary">Повернутись до списку</a>
-</div>
-<div class="row">
-    <div class="col-8">
-        <h1>@Model.Post.Title</h1>
-        @if (Model?.Post.Tags?.Any() == true)
-        {
-            <div class="tags mb-3">
-                @foreach (var field in Model.Post.Tags)
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex gap-2">
+            <button type="button"
+                    class="btn btn-outline-secondary btn-sm"
+                    onclick="history.back()">
+                <i class="bi bi-arrow-left me-1"></i> Назад
+            </button>
+
+            @if (Model.CanUserEdit)
+            {
+                <a asp-page="./Edit"
+                   asp-route-id="@Model.Post.Id"
+                   class="btn btn-primary btn-sm">
+                    Редагувати
+                </a>
+            }
+        </div>
+        <a asp-page="./List" class="btn btn-secondary btn-sm">Усі новини</a>
+    </div>
+
+    <div class="row gx-lg-3 gy-5">
+        <div class="col-lg-8 position-relative">
+
+            <div style="max-width:75ch;">
+
+                <h1 class="display-6 fw-semibold mb-2 text-break">@Model.Post.Title</h1>
+
+                @await Html.PartialAsync("Get/PostTags", Model.Post.Tags)
+
+                @await Html.PartialAsync("Get/PostImage", Model.Post.Image)
+
+                @if (Model.ShowSubscriptionBanner)
                 {
-                    <span class="tag_index">@field.Name</span>
+                    <div class="position-absolute top-0 start-0 w-100 h-100 bg-white bg-opacity-75 backdrop-blur"
+                         style="z-index:5;">
+                    </div>
+                }
+                else
+                {
+                    <article>
+                        @Html.Raw(Model.Post.Description)
+                    </article>
                 }
             </div>
-        }
-        @if (Model.Post.Image != null)
-        {
-            <img src="@Model.Post.Image.FilePath" alt="@Model.Post.Image.AltText" class="img-fluid rounded mb-3">
-        }
-        <div class="row mb-4">
-            <pre class="invest-get-body md:order-1 order-2">
-                @Html.Raw(Model.Post.Description)
-            </pre>
+
+            <!-- Frosted-glass overlay for guests -->
+            @if (Model.ShowSubscriptionBanner)
+            {
+                <div class="position-absolute top-0 start-0 w-100 h-100 bg-white bg-opacity-75 backdrop-blur"
+                     style="z-index:5;">
+                </div>
+            }
         </div>
-        @if (Model.Post.Links != null && Model.Post.Links.Any())
-        {
-            <div id="inputsContainer">
-                <p class="mb-2"> Посилання на статті</p>
-                <ul class="list-group">
-                    @foreach (var link in Model.Post.Links)
-                    {
-                        <li class="list-group-item">
-                            <a href="@link.Hyperlink" rel="@((link.Follow ? "follow" : "nofollow"))">
-                                <strong>@link.AnchorText</strong>
-                            </a>
-                        </li>
-                    }
-                </ul>
-            </div>
-        }
 
-        @await Html.PartialAsync("_DisplayComments", (Model.Post.Id, Model.Post.PostType, Model.Post.Comments))
+        <!-- ============ SIDEBAR ============ -->
+        <aside class="col-lg-4 pt-lg-2">
+            @await Html.PartialAsync(
+                "Get/PostSimilarSection",
+                (new GetCustomizationSimilarContent
+                {
+                    Title = "Схожі статті",
+                    BaseUrlPrefix = "News",
+                    MoreContentTitle = "Більше статей..."
+                }, Model.Post.SimilarNews, Model.Post.Tags))
 
+            <hr class="my-4"/>
+
+            @await Html.PartialAsync(
+                "Get/PostSimilarSection",
+                (new GetCustomizationSimilarContent
+                {
+                    Title = "Схожі оголошення",
+                    BaseUrlPrefix = "Invest",
+                    MoreContentTitle = "Більше оголошень..."
+                }, Model.Post.SimilarInvests, Model.Post.Tags))
+        </aside>
     </div>
-    <div class="col-4">
-        @if (Model.Post.SimilarNews != null && Model.Post.SimilarNews.Any())
-        {
-            <p>Схожі новини</p>
-            @await Html.PartialAsync("_SimilarContent", ("News", Model.Post.SimilarNews, Model.Post.Tags))
-            <a class="btn-primary"
-               asp-area="Main"
-               asp-page="/News/List"
-               asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.Post.Tags.Select(x => x.Id)))">
-                Більше новини...
-            </a>
-        }
-        <hr/>
-        @if (Model.Post.SimilarInvests != null && Model.Post.SimilarInvests.Any())
-        {
-            <p>Схожі оголошення</p>
-            @await Html.PartialAsync("_SimilarContent", ("Invest", Model.Post.SimilarInvests, Model.Post.Tags))
-            <a class="btn-primary"
-               asp-area="Main"
-               asp-page="/Invest/List"
-               asp-all-route-data="@(InvestmentHelper.GetPaginationData(tagIds: Model.Post.Tags.Select(x => x.Id)))">
-                Більше оголошень...
-            </a>
-        }
-    </div>
+
+    <section class="mt-5">
+        @await Html.PartialAsync("Get/PostLinks", Model.Post.Links)
+    </section>
+
+    <section class="mt-5">
+        @await Html.PartialAsync(
+            "_DisplayComments",
+            (Model.Post.Id, Model.Post.PostType, Model.Post.Comments))
+    </section>
 </div>
 
-<script>
-    window.onload = function() {
-        var shareUrl = encodeURIComponent(window.location.href);
-        tg_share.href ='https://t.me/share/url?url=' + shareUrl;
+@if (Model.ShowSubscriptionBanner)
+{
+    @await Html.PartialAsync("Get/SubscriptionModal")
+    @section Scripts {
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const modalElement = document.getElementById('subscribeModal');
+                const modal = new bootstrap.Modal(modalElement, {
+                    backdrop: 'static',
+                    keyboard: false
+                });
+                modal.show();
+            });
+        </script>
     }
-</script>
+}

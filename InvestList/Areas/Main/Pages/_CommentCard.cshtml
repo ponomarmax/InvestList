@@ -1,7 +1,8 @@
 @inject UserManager<User> UserManager
 @using System.Text.RegularExpressions
 @using Core.Entities
-@model InvestList.Models.Comment.CommentView
+@using Radar.Domain.Entities
+@model Radar.Application.Models.CommentView
 
 @{
     var author = await UserManager.FindByIdAsync(Model.AuthorId);

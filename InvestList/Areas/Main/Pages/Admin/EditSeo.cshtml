@@ -1,0 +1,40 @@
+@page "/admin/editseo"
+@model InvestList.Areas.Main.Pages.Admin.EditSeo
+@{
+    ViewData["Title"] = "Edit SEO Settings";
+}
+
+<h1>Edit SEO Settings for @Model?.SeoDetails?.RelativePagePath</h1>
+
+<form method="post">
+    <div class="form-group">
+        <label for="PageTitle">Page Title</label>
+        <input type="text" class="form-control" id="PageTitle" name="SeoDetails.PageTitle" value="@Model?.SeoDetails?.PageTitle" required/>
+    </div>
+
+    <div class="form-group">
+        <label for="MetaDescription">Meta Description</label>
+        <textarea class="form-control" id="MetaDescription" name="SeoDetails.MetaDescription" rows="4" required>@Model?.SeoDetails?.MetaDescription</textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="PageH1">Page H1</label>
+        <input type="text" class="form-control" id="PageH1" name="SeoDetails.PageH1" value="@Model?.SeoDetails?.PageH1"/>
+    </div>
+
+    <div class="form-group">
+        <label for="PageH1">RelativePagePath</label>
+        <input type="text" class="form-control" id="RelativePagePath" name="SeoDetails.RelativePagePath" value="@Model?.SeoDetails?.RelativePagePath"/>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Save SEO Details</button>
+    </div>
+</form>
+
+@if (Model?.SeoDetails is not null && Model?.SeoDetails?.Id != Guid.Empty)
+{
+    <form method="post" asp-page-handler="Delete" asp-route-id="@Model?.SeoDetails?.Id">
+        <button type="submit" class="btn btn-danger">Delete SEO Details</button>
+    </form>
+}

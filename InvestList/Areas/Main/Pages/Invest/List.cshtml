@@ -1,13 +1,15 @@
 @page "/invest"
 @model InvestList.Areas.Main.Pages.Invest.List
 
-<div class="container mt-5">
-    @if (Model.Entities != null && Model.Entities.Any())
+<div class="container py-4">
+
+    @if (Model.Entities?.Any() == true)
     {
-        <div class="row">
+        <!-- Masonry column layout -->
+        <div class="masonry">
             @foreach (var ad in Model.Entities)
             {
-                <div class="col-12 col-lg-6 mb-2">
+                <div class="masonry-item">
                     @await Html.PartialAsync("_InvestCard", ad)
                 </div>
             }
@@ -15,11 +17,13 @@
     }
     else
     {
-        <p>Немає оголошень</p>
+        <p class="text-muted fs-5 text-center my-5">Немає оголошень</p>
     }
 
+    @if (Model.Entities?.Any() == true)
+    {
+        <div class="d-flex justify-content-center mt-5">
+            @await Html.PartialAsync("_Pagination", ("Invest", Model.PaginationInfo, Model.TagIds))
+        </div>
+    }
 </div>
-@if (Model.Entities != null && Model.Entities.Any())
-{
-    @await Html.PartialAsync("_Pagination", ("Invest", Model.PaginationInfo, Model.TagIds))
-}

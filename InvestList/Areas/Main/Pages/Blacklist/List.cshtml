@@ -1,25 +1,35 @@
 @page "/blacklist"
 @model InvestList.Areas.Main.Pages.Blacklist.List
 
-<div class="container">
-    @if (Model.Entities != null && Model.Entities.Any())
-    {
-        <div class="row">
-            @foreach (var ad in Model.Entities)
-            {
-                <div class="col-12 col-lg-6 mb-4">
-                    @await Html.PartialAsync("_PostCard", ("Blacklist",ad))
-                </div>
-            }
-        </div>
-    }
-    else
-    {
-        <p>Немає новин про шахраїв</p>
-    }
+<section class="py-5">
+    <div class="container">
 
-</div>
-@if (Model.Entities != null && Model.Entities.Any())
+        <h1 class="h3 fw-bold mb-4">Чорний список</h1>
+
+        @if (Model.Entities?.Any() == true)
+        {
+            <div class="masonry">
+                @foreach (var ad in Model.Entities)
+                {
+                    <div class="masonry-item mb-4">
+                        @* mb-4 keeps rows apart on mobile *@
+                        @await Html.PartialAsync("List/_PostCard", ("Blacklist", ad))
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="text-muted">Немає новин про шахраїв</p>
+        }
+    </div>
+</section>
+
+@if (Model.Entities?.Any() == true)
 {
-    @await Html.PartialAsync("_Pagination", ("blacklist", Model.PaginationInfo, Model.TagIds))
+    <div class="d-flex justify-content-center mt-5">
+        @await Html.PartialAsync(
+            "_Pagination",
+            ("blacklist", Model.PaginationInfo, Model.TagIds))
+    </div>
 }

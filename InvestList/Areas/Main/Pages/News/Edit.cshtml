@@ -1,13 +1,10 @@
 @page "/news/edit/{id:guid}"
-@using Common
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model InvestList.Areas.Main.Pages.News.Edit
 
 @{
     ViewData["Title"] = "Редагувати новину";
 }
-<link href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css" rel="stylesheet"/>
-
 <hr/>
 <div class="container">
     @if (!ViewData.ModelState.IsValid)
@@ -22,106 +19,26 @@
             </ul>
         </div>
     }
-    <form method="post" asp-route-id="@Model.Id" enctype="multipart/form-data" onsubmit="copyEditorContent()">
+
+    <form id="putPostForm" method="post" enctype="multipart/form-data">
         @Html.AntiForgeryToken()
-        <div class="form-group d-flex mb-3 align-items-center">
-            <input type="checkbox" class="bigger-checkbox" checked="@Model.Post.IsActive" asp-for="Post.IsActive"/>
-            <label asp-for="@Model.Post.IsActive">Новина буде відображене після публікації</label>
+
+        @await Html.PartialAsync("PostIsActive", Model)
+        @await Html.PartialAsync("PostIsSubscription", Model)
+
+        @await Html.PartialAsync("PostLoadImage", Model)
+        @await Html.PartialAsync("PostFormTranslations", Model.Post.Translations)
+        @await Html.PartialAsync("PostFormTags", Model)
+        @await Html.PartialAsync("PostFormLinks", Model)
+
+        <div class="text-end mt-4">
+            <button type="submit" class="btn btn-success px-5">Зберегти</button>
         </div>
-        <div class="row mb-4">
-            <div class="form-group col-6">
-                <div class="mb-4">
-                    <p asp-for="Title">Заголовок новини</p>
-                    <input asp-for="Post.Title" class="form-control" placeholder="Вкажіть не менше 10 символів, не більше 200 символів"/>
-                    <span asp-validation-for="Post.Title" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="form-group col-6">
-                <div class="mb-4">
-                    <p asp-for="Title">SEO оптимізована назва</p>
-                    <input asp-for="Post.TitleSeo" class="form-control" placeholder="Вкажіть не менше 10 символів, не більше 200 символів"/>
-                    <span asp-validation-for="Post.TitleSeo" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="form-group col-6">
-                <label>Завантажте фото:</label>
-                <input id="imageFileInput" type="file" class="form-control mb-2" placeholder="Виберіть файл"/>
-                <button id="removePhotoButton" type="button" class="btn btn-outline-danger mb-2" style="display: none;">Видалити фото</button>
-                <img id="uploadedImage" src="#" alt="Investment Image" class="img-fluid resized-image mb-2" style="display: none;"/>
-                <input asp-for="Post.ImageBase64" id="ImageBase64" type="hidden" value="@Model.Post.ImageBase64"/>
-            </div>
-        </div>
-        <div class="row mb-4">
-            <div class="form-group">
-                <label asp-for="Post.Description">Опис</label>
-                <pre id="editor" class="create-description-box">
-                    @if (@Model.Post != null && @Model.Post.Description != null)
-                    {
-                        @Html.Raw(@Model.Post.Description)
-                    }
-                </pre>
-                <input type="hidden" id="PostDescription" name="Post.Description" value="@Model.Post.Description"/>
-            </div>
-        </div>
-
-        <div class="row mb-4">
-            <div class="form-group">
-                <label asp-for="Post.DescriptionSeo">SEO оптимізований опис</label>
-                <textarea rows="10" asp-for="Post.DescriptionSeo" class="form-control"></textarea>
-            </div>
-        </div>
-
-        <div class="row mb-4">
-            <div class="form-group col-6">
-                <span asp-validation-for="AvailableTags" class="text-danger"></span>
-
-                @{
-                    if (Model.AvailableTags != null)
-                    {
-                        <label asp-for="AvailableTags">Теги</label>
-                        <select rows="20" name="Post.TagIds" asp-items="Model.AvailableTags" multiple="multiple" class="listbox"></select>
-                    }
-                }
-
-            </div>
-        </div>
-
-        <div id="inputsContainer">
-            @foreach (var link in Model.Post.Links)
-            {
-                <div class="row mb-3">
-                    <div class="col">
-                        <input type="text" class="form-control" name="Post.Links[@Model.Post.Links.ToList().IndexOf(link)].AnchorText" value="@link.AnchorText" placeholder="Anchor Text"/>
-                    </div>
-                    <div class="col">
-                        <input type="text" class="form-control" name="Post.Links[@Model.Post.Links.ToList().IndexOf(link)].Hyperlink" value="@link.Hyperlink" placeholder="Hyperlink"/>
-                    </div>
-                    <div class="col">
-                        <input type="checkbox" class="form-check-input" name="Post.Links[@Model.Post.Links.ToList().IndexOf(link)].Follow" value="true" @(link.Follow.HasValue && link.Follow.Value ? "checked" : "")/>
-                        <label class="form-check-label">Follow</label>
-                    </div>
-                    <div class="col">
-                        <button type="button" class="btn btn-danger removeBtn">Remove</button>
-                    </div>
-                </div>
-            }
-        </div>
-        <button type="button" class="btn btn-primary" id="addInputsBtn">Add More Inputs</button>
-
-        <button type="submit" class="btn btn-primary">Внести зміни</button>
     </form>
-
-
 </div>
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    <script src="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.js"></script>
-    <script src="~/js/handleImageUpload.js"></script>
-    <script src="~/js/add-links.js"></script>
-    <script src="~/js/description-text.js"></script>
 }

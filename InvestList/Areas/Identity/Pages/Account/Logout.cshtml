@@ -4,17 +4,44 @@
     ViewData["Title"] = "Вийти з аккаунту";
 }
 
-<div class="d-flex justify-content-center">
-    @{
-        if (User.Identity?.IsAuthenticated ?? false)
-        {
-            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
-                <h2><button type="submit" class="nav-link btn btn-link text-dark">Натисність сюди аби вийти</button></h2>
-            </form>
-        }
-        else
-        {
-            <p>Ви успішно вийшли з облікового запису.</p>
-        }
-    }
+<!-- ========================================================= -->
+<!--  LOG‑OUT PAGE – centred card, responsive on all devices   -->
+<!-- ========================================================= -->
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
+
+            <div class="card shadow-sm rounded-4">
+                <div class="card-body p-4 text-center">
+
+                    @if (User.Identity?.IsAuthenticated ?? false)
+                    {
+                        <h1 class="h5 fw-semibold mb-4">Ви впевнені, що хочете вийти?</h1>
+
+                        <!-- POST form required by ASP‑NET Identity -->
+                        <form asp-area="Identity"
+                              asp-page="/Account/Logout"
+                              asp-route-returnUrl="@Url.Page("/", new { area = "" })"
+                              method="post"
+                              class="d-grid">
+
+                            <button type="submit"
+                                    class="btn btn-danger rounded-pill px-4">
+                                Вийти з облікового запису
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <h1 class="h5 fw-semibold mb-0">Ви успішно вийшли з облікового запису.</h1>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

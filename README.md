@@ -144,7 +144,8 @@ Project includes reusable modules designed for extensibility:
 
 **Limitations:**
 - no retry mechanism  
-- no failure monitoring  
+- no failure monitoring
+- A few credentials that you would find in app settings, it's just test account, so it doesn't matter for security policies as they were not used in production and were replaced during deployment.
 
 ---
 
